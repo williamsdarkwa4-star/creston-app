@@ -462,10 +462,10 @@ def submit_voucher():
         flash("Submission failed. Try again.", "error")
     finally:
         cur.close()
-        conn.close()
-        
+        conn.close() 
     return redirect(url_for('dashboard'))
-  @app.route('/withdraw', methods=['GET', 'POST'])
+  
+@app.route('/withdraw', methods=['GET', 'POST'])
 def withdraw():
     if 'user_id' not in session:
         return redirect(url_for('login'))
