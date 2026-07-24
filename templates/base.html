@@ -3,50 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRESTON | Premium Asset Management</title>
-    <link href="https://jsdelivr.net" rel="stylesheet">
+    <title>Creston App</title>
     <style>
-        body { background-color: #F1F5F9; color: #0F172A; }
-        .bg-creston-dark { background-color: #0F172A; }
-        .text-creston-mint { color: #10B981; }
-        .btn-creston { background-color: #10B981; color: white; border: none; }
-        .btn-creston:hover { background-color: #0D9488; color: white; }
+        /* Exact layout settings to match your phone view */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Top Dark Navigation Bar matching image dimensions */
+        .navbar {
+            background-color: #0f172a; /* Dark navy background */
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* Brand logo block */
+        .brand-logo {
+            color: #d11a2a; /* Red highlight line characteristic */
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .brand-logo span {
+            color: #4f46e5; /* Distinct purple text styling */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Nav links replicating your inline styling */
+        .nav-link-login {
+            color: #4f46e5;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .nav-btn-open {
+            color: #2dd4bf; /* Teal color theme matches your border box */
+            border: 2px solid #2dd4bf;
+            padding: 4px 10px;
+            text-decoration: none;
+            font-size: 1rem;
+            display: inline-block;
+        }
+
+        /* Main core content frame block */
+        .main-frame {
+            padding: 30px 16px;
+            max-width: 100%;
+        }
+
+        /* Large bold serif header */
+        .main-title {
+            font-family: Georgia, Cambria, "Times New Roman", Times, serif;
+            font-size: 2.3rem;
+            font-weight: bold;
+            color: #0f172a;
+            line-height: 1.15;
+            margin-bottom: 24px;
+        }
+
+        /* Text copy description layout */
+        .description-text {
+            font-size: 1.15rem;
+            color: #334155;
+            line-height: 1.45;
+            margin-bottom: 28px;
+        }
+
+        /* Bottom button alignment layout spacing */
+        .cta-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .btn-get-started {
+            background-color: #2dd4bf;
+            color: #ffffff;
+            padding: 6px 14px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.05rem;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .link-access-portal {
+            color: #7e22ce; /* Purple accent matching screenshot text link */
+            text-decoration: underline;
+            font-size: 1.05rem;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-creston-dark mb-4 shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">📈 CRESTON</a>
-            <div>
-                {% if session.username %}
-                    <span class="text-white-50 me-3">Client: <strong>{{ session.username }}</strong></span>
-                    <a href="/dashboard" class="btn btn-outline-light btn-sm me-2">Dashboard</a>
-                    <a href="/logout" class="btn btn-danger btn-sm">Sign Out</a>
-                {% else %}
-                    <a href="/login" class="btn btn-outline-light btn-sm me-2">Client Login</a>
-                    <a href="/register" class="btn btn-creston btn-sm">Open Account</a>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
-    <div class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, msg in messages %}
-                    <div class="alert alert-{{ category }} shadow-sm">{{ msg }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        {% block content %}
-        <div class="text-center py-5">
-            <h1 class="display-4 fw-bold">Institutional Capital Growth</h1>
-            <p class="lead text-muted">Secure wealth compounding engine powered by automated smart ledgers.</p>
-            <div class="mt-4">
-                <a href="/register" class="btn btn-creston btn-lg px-4 me-2 shadow-sm">Get Started</a>
-                <a href="/login" class="btn btn-outline-dark btn-lg px-4 shadow-sm">Access Portal</a>
-            </div>
-        </div>
-        {% endblock %}
+
+    <!-- Top dark banner layout strip -->
+    <div class="navbar">
+        <a href="#" class="brand-logo">📈 <span>CRESTON</span></a>
+        <a href="#" class="nav-link-login">Client Login</a>
+        <a href="#" class="nav-btn-open">Open Account</a>
     </div>
+
+    <!-- Core Body Content Block -->
+    <div class="main-frame">
+        <h1 class="main-title">Institutional Capital Growth</h1>
+        
+        <p class="description-text">
+            Secure wealth compounding engine powered by automated smart ledgers.
+        </p>
+
+        <div class="cta-container">
+            <a href="#" class="btn-get-started">Get Started</a>
+            <a href="#" class="link-access-portal">Access Portal</a>
+        </div>
+    </div>
+
 </body>
-  </html>
+</html>
