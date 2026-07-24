@@ -13,7 +13,7 @@
         }
 
         body {
-            background-color: #333333; /* Dark ambient view tracking background */
+            background-color: #1e1e1e; /* Pure dark matching your photo layout background */
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -22,44 +22,44 @@
 
         /* Top Header Action Strip Row Layout Component */
         .header-action-strip {
-            background-color: #1a1a1a;
-            padding: 16px 20px;
+            background-color: #121212;
+            padding: 18px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid #262626;
+            border-bottom: 1px solid #2d2d2d;
         }
 
         .nav-back-group {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
             text-decoration: none;
             color: #ffffff;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .log-history-btn {
-            color: #ccff00; /* Yellow highlight secondary log shortcut action button toggle */
+            color: #ccff00; /* Yellow highlight secondary log shortcut action */
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             text-decoration: none;
             letter-spacing: 0.5px;
         }
 
         /* Balance Presentation Container Widget Box Block */
         .balance-hero-widget {
-            background-color: #242424;
-            border-radius: 20px;
-            padding: 24px;
+            background-color: #262626;
+            border-radius: 16px;
+            padding: 24px 20px;
             margin: 20px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid #3d3d3d;
+            border: 1px solid #333333;
         }
 
         .balance-meta-stack {
@@ -69,7 +69,7 @@
         }
 
         .balance-stack-label {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: #888888;
             font-weight: 700;
             text-transform: uppercase;
@@ -77,25 +77,25 @@
         }
 
         .balance-stack-value {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 800;
             color: #ffffff;
         }
 
         .wallet-graphic-icon {
             font-size: 1.8rem;
-            opacity: 0.2;
+            opacity: 0.15;
         }
 
         /* Core Section Group Labels Styling Track */
         .group-section-lbl {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             color: #888888;
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 0.5px;
             padding: 0 16px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         /* Fast Selection Grid Matrix Module Setup Layout */
@@ -108,37 +108,40 @@
         }
 
         .fast-amount-node {
-            background-color: #424242;
-            border: 1px solid #4f4f4f;
-            color: #e2e8f0;
+            background-color: #333333;
+            border: 1px solid #3d3d3d;
+            color: #ffffff;
             border-radius: 12px;
             padding: 16px 8px;
             text-align: center;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .fast-amount-node.active {
-            border-color: #ccff00; /* Active custom state border matching screenshot 3 rules selection */
+            border-color: #ccff00;
             color: #ccff00;
+            background-color: #262626;
         }
 
         /* Custom Input Entry Field Block Formatting */
         .custom-entry-block {
-            background-color: #424242;
-            border: 1px solid #4f4f4f;
+            background-color: #333333;
+            border: 1px solid #3d3d3d;
             border-radius: 16px;
             padding: 16px 20px;
             margin: 0 16px 24px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .custom-input-icon {
             font-size: 1.2rem;
+            display: flex;
+            align-items: center;
         }
 
         .custom-field-control {
@@ -152,13 +155,13 @@
         }
 
         .custom-field-control::placeholder {
-            color: #777777;
+            color: #555555;
         }
 
         /* Dropdown selection lists styling configuration panel */
         .gateway-select-block {
-            background-color: #424242;
-            border: 1px solid #4f4f4f;
+            background-color: #333333;
+            border: 1px solid #3d3d3d;
             border-radius: 16px;
             padding: 16px 20px;
             margin: 0 16px 28px 16px;
@@ -171,9 +174,9 @@
         .gateway-left-meta {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
         }
 
         .select-native-overlay {
@@ -190,20 +193,20 @@
 
         /* Informational Guideline Rule Container Block Wrapper */
         .guidelines-card {
-            background-color: #2b2b2b;
-            border-radius: 20px;
+            background-color: #262626;
+            border-radius: 16px;
             padding: 20px;
             margin: 0 16px 30px 16px;
-            border: 1px solid #3d3d3d;
+            border: 1px solid #333333;
         }
 
         .guidelines-header-lbl {
             color: #ccff00;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -222,55 +225,60 @@
             line-height: 1.45;
         }
 
-        /* Primary Form Action Execution Trigger Control Button Block */
+        /* FIXED: Primary Action Execution Control Button Block */
         .initiate-button-control {
-            background-color: #a3be00; /* Vivid dark olive yellow button background matching your layout */
+            background-color: #a3be00; /* Distinct dark olive-yellow tone matching your system layout */
             color: #ffffff;
             border: none;
             width: calc(100% - 32px);
-            margin: auto auto 24px auto;
+            margin: 20px 16px 35px 16px;
             padding: 18px;
-            border-radius: 18px;
-            font-size: 1.05rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
             font-weight: 800;
             letter-spacing: 1px;
             cursor: pointer;
             text-transform: uppercase;
             text-align: center;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             display: block;
         }
 
+        .initiate-button-control:active {
+            background-color: #8fa600;
+        }
+
         .flash-alert-banner {
-            background-color: #ff3333;
+            background-color: #ef4444;
             color: white;
-            padding: 12px;
+            padding: 14px;
             text-align: center;
             font-weight: bold;
             font-size: 0.9rem;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Opened the form block cleanly here -->
     <form action="/deposit" method="POST" id="depositForm">
-        <!-- Top header action bar context layout row -->
+        
+        <!-- Top header action bar layout -->
         <div class="header-action-strip">
             <a href="/dashboard" class="nav-back-group">
-                <span>‹</span> Refill Balance
+                <span style="font-size: 1.3rem; line-height: 0;">‹</span> Refill Balance
             </a>
             <a href="/history" class="log-history-btn">LOG</a>
         </div>
 
-        {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+        {% with messages = get_flashed_messages() %}
             {% if messages %}
-                {% for msg in messages %} <div class="flash-alert-banner">{{ msg }}</div> {% endfor %}
+                {% for msg in messages %} <div class="flash-alert-banner">⚠️ {{ msg }}</div> {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <!-- Active account overview available dashboard balances element panel -->
+        <!-- Active account wallet dashboard card -->
         <div class="balance-hero-widget">
             <div class="balance-meta-stack">
                 <span class="balance-stack-label">Available Balance</span>
@@ -279,10 +287,8 @@
             <div class="wallet-graphic-icon">💼</div>
         </div>
 
-        <!-- Fast selections layout panel header label -->
+        <!-- Fast selections grid framework -->
         <div class="group-section-lbl">Fast Selection</div>
-
-        <!-- Interactive quick clicks metric array grids -->
         <div class="fast-selection-grid">
             <div class="fast-amount-node" onclick="selectAmount(50, this)">50</div>
             <div class="fast-amount-node" onclick="selectAmount(150, this)">150</div>
@@ -294,19 +300,18 @@
             <div class="fast-amount-node" onclick="selectAmount(5000, this)">5000</div>
         </div>
 
-        <!-- Custom Input field layout control component -->
+        <!-- Custom Input field module -->
         <div class="group-section-lbl">Custom Amount (GHS)</div>
         <div class="custom-entry-block">
             <span class="custom-input-icon">🪙</span>
             <input type="number" name="amount" id="customAmountInput" class="custom-field-control" placeholder="Min. 50" min="50" required>
         </div>
 
-        <!-- Gateway integration dropdown filter box selection matrix -->
+        <!-- Gateway integration dropdown filter box -->
         <div class="group-section-lbl">Select Gateway</div>
         <div class="gateway-select-block">
             <div class="gateway-left-meta">
-                <span style="color: #a3be00;">🛡️</span>
+                <span style="color: #a3be00; display: inline-flex; align-items: center;">🛡️</span>
                 <span id="gatewayDisplayLabel">Choose Channel</span>
             </div>
-            <span style="font-size: 0.8rem; color: #888888;">▼</span>
-            
+            <span style="font-size: 0.8rem; color: #666666;">▼</span>
