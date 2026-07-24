@@ -217,6 +217,62 @@
             font-size: 0.9rem;
             margin-bottom: 10px;
         }
+        /* Quick withdrawal amount buttons */
+.quick-amount-area {
+    display: flex;
+    gap: 10px;
+    padding: 0 16px;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.quick-amount-btn {
+    flex: 1;
+    min-width: 70px;
+    padding: 12px;
+    background: #424242;
+    color: white;
+    border: 1px solid #555555;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.quick-amount-btn:hover {
+    background: #a3be00;
+}
+
+
+/* Withdrawal password professional box */
+.password-field-box {
+    background-color: #424242;
+    border: 1px solid #4f4f4f;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin: 0 16px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.password-field-box input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    outline: none;
+}
+
+
+.password-field-box input::placeholder {
+    color: #777;
+}
     </style>
 </head>
 <body>
@@ -268,17 +324,121 @@
         </div>
 
         <!-- Section 3 Input block: Monetary calculation data parameters field layout row -->
-        <div class="group-section-lbl">Cashout Amount (GHS)</div>
-        <div class="custom-entry-block">
-            <span class="custom-input-icon">🪙</span>
-            <input type="number" name="withdraw_amount" id="withdrawAmountInput" class="custom-field-control" placeholder="Min. 40" min="40" oninput="calculateHandlingCharges(this.value)" required>
-            <span class="fee-indicator-badge" id="feeCalculationBox">Est. Fee: GHS 0.00</span>
-        </div>
 
-        <!-- Operational corporate framework directives informational guidelines container layout element -->
-        <div class="guidelines-card">
-            <div class="guidelines-header-lbl">⚠️ Cashout Guidelines</div>
-            <ol class="guideline-ol-list">
-                <li class="guideline-li-node">1. Minimum withdrawal threshold configuration is strictly set to <b>GHS 40</b>.</li>
-                <li class="guideline-li-node">2. System automatic processing framework levies a <b>19% operational handling charge</b> on all payouts.</li>
-                <li class="guideline-li-node">3. Settlements dispatch pipeline runs autonomously <b>24/7</b> via verification queues.</li>
+<div class="group-section-lbl">
+Cashout Amount (GHS)
+</div>
+
+
+<div class="custom-entry-block">
+
+<span class="custom-input-icon">🪙</span>
+
+<input 
+type="number"
+name="withdraw_amount"
+id="withdrawAmountInput"
+class="custom-field-control"
+placeholder="Min. 40"
+min="40"
+oninput="calculateHandlingCharges(this.value)"
+required>
+
+
+<span class="fee-indicator-badge" id="feeCalculationBox">
+Est. Fee: GHS 0.00
+</span>
+
+</div>
+
+
+<div class="quick-amount-area">
+
+<button type="button" class="quick-amount-btn" onclick="setAmount(40)">
+GHS 40
+</button>
+
+
+<button type="button" class="quick-amount-btn" onclick="setAmount(50)">
+GHS 50
+</button>
+
+
+<button type="button" class="quick-amount-btn" onclick="setAmount(100)">
+GHS 100
+</button>
+
+
+<button type="button" class="quick-amount-btn" onclick="setAmount(200)">
+GHS 200
+</button>
+
+</div>
+  <!-- Withdrawal Password -->
+
+<div class="group-section-lbl">
+Withdrawal Password
+</div>
+
+
+<div class="password-field-box">
+
+<span class="custom-input-icon">
+🔒
+</span>
+
+
+<input
+type="password"
+name="withdraw_password"
+placeholder="Enter withdrawal password"
+required>
+
+</div>
+<script>
+
+function setAmount(amount){
+
+    document.getElementById("withdrawAmountInput").value = amount;
+
+    calculateHandlingCharges(amount);
+
+}
+
+
+function calculateHandlingCharges(amount){
+
+    let feeBox = document.getElementById("feeCalculationBox");
+
+
+    if(amount){
+
+        let fee = amount * 0.19;
+
+        feeBox.innerHTML =
+        "Est. Fee: GHS " + fee.toFixed(2);
+
+    }
+
+    else{
+
+        feeBox.innerHTML =
+        "Est. Fee: GHS 0.00";
+
+    }
+
+}
+
+
+
+function updateNetworkDisplay(value){
+
+    document.getElementById("networkDisplayLabel").innerHTML =
+    value || "Choose Network";
+
+}
+
+</script>
+<button type="submit" class="initiate-button-control">
+SUBMIT WITHDRAWAL
+</button>
