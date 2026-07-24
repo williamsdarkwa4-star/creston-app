@@ -1,345 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creston - Refill Balance</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body {
-            background-color: #1e1e1e; /* Pure dark matching your photo layout background */
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+<title>Creston - Deposit</title>
 
-        /* Top Header Action Strip Row Layout Component */
-        .header-action-strip {
-            background-color: #121212;
-            padding: 18px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #2d2d2d;
-        }
+<style>
 
-        .nav-back-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.05rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .log-history-btn {
-            color: #ccff00; /* Yellow highlight secondary log shortcut action */
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-        }
-
-        /* Balance Presentation Container Widget Box Block */
-        .balance-hero-widget {
-            background-color: #262626;
-            border-radius: 16px;
-            padding: 24px 20px;
-            margin: 20px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #333333;
-        }
-
-        .balance-meta-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .balance-stack-label {
-            font-size: 0.72rem;
-            color: #888888;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .balance-stack-value {
-            font-size: 1.9rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .wallet-graphic-icon {
-            font-size: 1.8rem;
-            opacity: 0.15;
-        }
-
-        /* Core Section Group Labels Styling Track */
-        .group-section-lbl {
-            font-size: 0.75rem;
-            color: #888888;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            padding: 0 16px;
-            margin-bottom: 14px;
-        }
-
-        /* Fast Selection Grid Matrix Module Setup Layout */
-        .fast-selection-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            padding: 0 16px;
-            margin-bottom: 24px;
-        }
-
-        .fast-amount-node {
-            background-color: #333333;
-            border: 1px solid #3d3d3d;
-            color: #ffffff;
-            border-radius: 12px;
-            padding: 16px 8px;
-            text-align: center;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .fast-amount-node.active {
-            border-color: #ccff00;
-            color: #ccff00;
-            background-color: #262626;
-        }
-
-        /* Custom Input Entry Field Block Formatting */
-        .custom-entry-block {
-            background-color: #333333;
-            border: 1px solid #3d3d3d;
-            border-radius: 16px;
-            padding: 16px 20px;
-            margin: 0 16px 24px 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .custom-input-icon {
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .custom-field-control {
-            border: none;
-            background: transparent;
-            width: 100%;
-            font-size: 1.1rem;
-            color: #ffffff;
-            font-weight: 700;
-            outline: none;
-        }
-
-        .custom-field-control::placeholder {
-            color: #555555;
-        }
-
-        /* Dropdown selection lists styling configuration panel */
-        .gateway-select-block {
-            background-color: #333333;
-            border: 1px solid #3d3d3d;
-            border-radius: 16px;
-            padding: 16px 20px;
-            margin: 0 16px 28px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .gateway-left-meta {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .select-native-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        /* Informational Guideline Rule Container Block Wrapper */
-        .guidelines-card {
-            background-color: #262626;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 0 16px 30px 16px;
-            border: 1px solid #333333;
-        }
-
-        .guidelines-header-lbl {
-            color: #ccff00;
-            font-size: 0.8rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .guideline-ol-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .guideline-li-node {
-            font-size: 0.82rem;
-            color: #aaaaaa;
-            line-height: 1.45;
-        }
-
-        /* FIXED: Primary Action Execution Control Button Block */
-        .initiate-button-control {
-            background-color: #a3be00; /* Distinct dark olive-yellow tone matching your system layout */
-            color: #ffffff;
-            border: none;
-            width: calc(100% - 32px);
-            margin: 20px 16px 35px 16px;
-            padding: 18px;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            cursor: pointer;
-            text-transform: uppercase;
-            text-align: center;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            display: block;
-        }
-
-        .initiate-button-control:active {
-            background-color: #8fa600;
-        }
-
-        .flash-alert-banner {
-            background-color: #ef4444;
-            color: white;
-            padding: 14px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-        }
-    </style>
-</head>
-<script>
-function selectAmount(amount, element){
-
-    document.getElementById("customAmountInput").value = amount;
-
-    document.querySelectorAll(".fast-amount-node")
-    .forEach(btn => btn.classList.remove("active"));
-
-    element.classList.add("active");
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
 }
-</script>
-    
-    
-    <body>
 
-    <!-- Opened the form block cleanly here -->
-    <form action="/deposit" method="POST" id="depositForm">
-        
-        <!-- Top header action bar layout -->
-        <div class="header-action-strip">
-            <a href="/dashboard" class="nav-back-group">
-                <span style="font-size: 1.3rem; line-height: 0;">‹</span> Refill Balance
-            </a>
-            <a href="/history" class="log-history-btn">LOG</a>
-        </div>
+body{
+    background:#111;
+    color:white;
+    min-height:100vh;
+}
 
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for msg in messages %} <div class="flash-alert-banner">⚠️ {{ msg }}</div> {% endfor %}
-            {% endif %}
-        {% endwith %}
 
-        <!-- Active account wallet dashboard card -->
-        <div class="balance-hero-widget">
-            <div class="balance-meta-stack">
-                <span class="balance-stack-label">Available Balance</span>
-                <span class="balance-stack-value">GHS {{ available_balance }}</span>
-            </div>
-            <div class="wallet-graphic-icon">💼</div>
-        </div>
+.header{
+    background:#181818;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #333;
+}
 
-        <!-- Fast selections grid framework -->
-        <div class="group-section-lbl">Fast Selection</div>
-        <div class="fast-selection-grid">
-            <div class="fast-amount-node" onclick="selectAmount(50, this)">50</div>
-            <div class="fast-amount-node" onclick="selectAmount(150, this)">150</div>
-            <div class="fast-amount-node" onclick="selectAmount(300, this)">300</div>
-            <div class="fast-amount-node" onclick="selectAmount(500, this)">500</div>
-            <div class="fast-amount-node" onclick="selectAmount(1000, this)">1000</div>
-            <div class="fast-amount-node" onclick="selectAmount(2000, this)">2000</div>
-            <div class="fast-amount-node" onclick="selectAmount(4000, this)">4000</div>
-            <div class="fast-amount-node" onclick="selectAmount(5000, this)">5000</div>
-        </div>
+.header a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
 
-        <!-- Custom Input field module -->
-        <div class="group-section-lbl">Custom Amount (GHS)</div>
-        <div class="custom-entry-block">
-            <span class="custom-input-icon">🪙</span>
-            <input type="number" name="amount" id="customAmountInput" class="custom-field-control" placeholder="Min. 50" min="50" required>
-        </div>
 
-        <!-- Gateway integration dropdown filter box -->
-        <div class="group-section-lbl">Select Gateway</div>
-        <div class="gateway-select-block">
-            <div class="gateway-left-meta">
-                <span style="color: #a3be00; display: inline-flex; align-items: center;">🛡️</span>
-                <span id="gatewayDisplayLabel">Choose Channel</span>
-            </div>
-            <span style="font-size: 0.8rem; color: #666666;">▼</span>
-<input type="hidden" name="channel" id="channelInput" value="MTN">
+.container{
+    padding:20px;
+}
 
-<div class="gateway-select-block">
-    <div class="gateway-left-meta">
-        <span style="color:#a3be00;">🛡️</span>
-        <select name="channel" id="gatewaySelect" class="custom-field-control">
-            <option value="MTN">MTN Mobile Money</option>
-            <option value="Telecel">Telecel Cash</option>
-            <option value="AirtelTigo">AirtelTigo Money</option>
-        </select>
-    </div>
+
+.card{
+    background:#1f1f1f;
+    padding:25px;
+    border-radius:18px;
+    margin-bottom:20px;
+    border:1px solid #333;
+}
+
+
+.title{
+    font-size:24px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+
+.subtitle{
+    color:#aaa;
+    font-size:14px;
+}
+
+
+
+.balance{
+    color:#b6ff00;
+    font-size:30px;
+    font-weight:bold;
+}
+
+
+
+label{
+    display:block;
+    margin-bottom:8px;
+    color:#aaa;
+}
+
+
+input, select{
+
+    width:100%;
+    padding:16px;
+    border-radius:12px;
+    background:#2b2b2b;
+    border:1px solid #444;
+    color:white;
+    font-size:16px;
+    outline:none;
+    margin-bottom:20px;
+
+}
+
+
+
+.amount-grid{
+
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:20px;
+
+}
+
+
+
+.amount{
+
+    background:#292929;
+    padding:15px;
+    text-align:center;
+    border-radius:12px;
+    border:1px solid #444;
+    cursor:pointer;
+    font-weight:bold;
+
+}
+
+
+.amount:hover{
+
+    border-color:#b6ff00;
+    color:#b6ff00;
+
+}
+
+
+
+button{
+
+    width:100%;
+    padding:18px;
+    background:#b6ff00;
+    color:#111;
+    border:none;
+    border-radius:15px;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+
+}
+
+
+
+button:hover{
+
+    background:#9bd900;
+
+}
+
+
+
+.notice{
+
+    background:#191919;
+    padding:18px;
+    border-radius:15px;
+    color:#aaa;
+    font-size:14px;
+    line-height:1.6;
+
+}
+
+
+.flash{
+
+    background:#e53935;
+    padding:15px;
+    text-align:center;
+    font-weight:bold;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+<a href="/dashboard">
+← Dashboard
+</a>
+
+<a href="/history">
+History
+</a>
+
 </div>
-<button type="submit" class="initiate-button-control">
-    Continue Deposit
+
+
+
+{% with messages=get_flashed_messages() %}
+{% if messages %}
+{% for msg in messages %}
+
+<div class="flash">
+{{msg}}
+</div>
+
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+
+
+<div class="container">
+
+
+<div class="card">
+
+<div class="title">
+Deposit Funds
+</div>
+
+<div class="subtitle">
+Add money to your Creston account
+</div>
+
+<br>
+
+<div>
+Available Balance
+</div>
+
+<div class="balance">
+GHS {{available_balance}}
+</div>
+
+</div>
+
+
+
+
+<form action="/deposit" method="POST">
+
+
+<div class="card">
+
+
+<label>
+Quick Amount
+</label>
+
+
+<div class="amount-grid">
+
+<div class="amount" onclick="setAmount(50)">
+50
+</div>
+
+<div class="amount" onclick="setAmount(100)">
+100
+</div>
+
+<div class="amount" onclick="setAmount(300)">
+300
+</div>
+
+<div class="amount" onclick="setAmount(500)">
+500
+</div>
+
+<div class="amount" onclick="setAmount(1000)">
+1000
+</div>
+
+<div class="amount" onclick="setAmount(2000)">
+2000
+</div>
+
+</div>
+
+
+
+<label>
+Deposit Amount (GHS)
+</label>
+
+
+<input 
+type="number"
+id="amount"
+name="amount"
+placeholder="Enter amount"
+min="50"
+required>
+
+
+
+<label>
+Payment Method
+</label>
+
+
+<select name="channel">
+
+<option value="MTN">
+MTN Mobile Money
+</option>
+
+
+<option value="Telecel">
+Telecel Cash
+</option>
+
+
+<option value="AirtelTigo">
+AirtelTigo Money
+</option>
+
+
+</select>
+
+
+
+<button>
+Continue Deposit
 </button>
+
+
+</div>
+
+
+</form>
+
+
+
+<div class="notice">
+
+<b>Deposit Rules</b>
+
+<br><br>
+
+• Minimum deposit: GHS 50
+<br>
+• Use your correct mobile money details
+<br>
+• Deposits are reviewed before approval
+
+</div>
+
+
+
+</div>
+
+
+
+<script>
+
+function setAmount(value){
+
+document.getElementById("amount").value=value;
+
+}
+
+</script>
+
+
+</body>
+</html>
