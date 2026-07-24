@@ -259,7 +259,20 @@
         }
     </style>
 </head>
-<body>
+<script>
+function selectAmount(amount, element){
+
+    document.getElementById("customAmountInput").value = amount;
+
+    document.querySelectorAll(".fast-amount-node")
+    .forEach(btn => btn.classList.remove("active"));
+
+    element.classList.add("active");
+}
+</script>
+    
+    
+    <body>
 
     <!-- Opened the form block cleanly here -->
     <form action="/deposit" method="POST" id="depositForm">
@@ -315,3 +328,18 @@
                 <span id="gatewayDisplayLabel">Choose Channel</span>
             </div>
             <span style="font-size: 0.8rem; color: #666666;">▼</span>
+<input type="hidden" name="channel" id="channelInput" value="MTN">
+
+<div class="gateway-select-block">
+    <div class="gateway-left-meta">
+        <span style="color:#a3be00;">🛡️</span>
+        <select name="channel" id="gatewaySelect" class="custom-field-control">
+            <option value="MTN">MTN Mobile Money</option>
+            <option value="Telecel">Telecel Cash</option>
+            <option value="AirtelTigo">AirtelTigo Money</option>
+        </select>
+    </div>
+</div>
+<button type="submit" class="initiate-button-control">
+    Continue Deposit
+</button>
