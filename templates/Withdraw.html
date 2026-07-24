@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creston - Cashout</title>
+    <style>
+        /* Mobile-first viewport resetting rules */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #333333; /* Dark uniform aesthetic matching your deposit view */
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Header Action Strip Component Layout Row */
+        .header-action-strip {
+            background-color: #1a1a1a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #262626;
+        }
+
+        .nav-back-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .log-history-btn {
+            color: #ccff00; /* Yellow highlight token matching your branding style rules */
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        /* Balance Portfolio Insight Box Widget */
+        .balance-hero-widget {
+            background-color: #242424;
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #3d3d3d;
+        }
+
+        .balance-meta-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .balance-stack-label {
+            font-size: 0.75rem;
+            color: #888888;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-stack-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .wallet-graphic-icon {
+            font-size: 1.8rem;
+            opacity: 0.2;
+        }
+
+        /* Section Headings Form Labels Style Track */
+        .group-section-lbl {
+            font-size: 0.78rem;
+            color: #888888;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 0 16px;
+            margin-bottom: 12px;
+        }
+
+        /* Container Stack for Forms Layout Grid Control Blocks */
+        .custom-entry-block {
+            background-color: #424242;
+            border: 1px solid #4f4f4f;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 0 16px 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .custom-input-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .custom-field-control {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .custom-field-control::placeholder {
+            color: #777777;
+        }
+
+        /* Floating live computation data fee badge indicator layout */
+        .fee-indicator-badge {
+            font-size: 0.78rem;
+            color: #ffcc00;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Native overlay dropdown configurations sheet layout */
+        .select-native-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Compliance Guidelines Framework Information Box Component */
+        .guidelines-card {
+            background-color: #2b2b2b;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 0 16px 30px 16px;
+            border: 1px solid #3d3d3d;
+        }
+
+        .guidelines-header-lbl {
+            color: #ccff00;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .guideline-ol-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .guideline-li-node {
+            font-size: 0.82rem;
+            color: #aaaaaa;
+            line-height: 1.45;
+        }
+
+        /* Master execution submittal push action button layout box trigger */
+        .initiate-button-control {
+            background-color: #a3be00; /* Rich olive active yellow button fill color matching your design layout */
+            color: #ffffff;
+            border: none;
+            width: calc(100% - 32px);
+            margin: auto auto 24px auto;
+            padding: 18px;
+            border-radius: 18px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            display: block;
+        }
+
+        .initiate-button-control:active {
+            background-color: #7a8e00;
+        }
+
+        /* System notification error flash elements node */
+        .flash-alert-banner {
+            background-color: #ff3333;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <form action="/withdraw" method="POST">
+        <!-- Top window direction context status strip -->
+        <div class="header-action-strip">
+            <a href="/dashboard" class="nav-back-group">
+                <span>‹</span> Request Payout
+            </a>
+            <a href="/history" class="log-history-btn">LOG</a>
+        </div>
+
+        <!-- System internal warnings banner handler layout container -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %} <div class="flash-alert-banner">⚠️ {{ msg }}</div> {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Active financial portfolio income ledger metrics card element layout dashboard -->
+        <div class="balance-hero-widget">
+            <div class="balance-meta-stack">
+                <span class="balance-stack-label">Withdrawable Income Wallet</span>
+                <span class="balance-stack-value">GHS {{ income_balance }}</span>
+            </div>
+            <div class="wallet-graphic-icon">💰</div>
+        </div>
+
+        <!-- Section 1 Input block user network router configurations grid selection box -->
+        <div class="group-section-lbl">Select Network Provider</div>
+        <div class="custom-entry-block">
+            <span class="custom-input-icon">🛡️</span>
+            <span id="networkDisplayLabel" style="font-size: 1.1rem; font-weight: 700;">Choose Network</span>
+            <span style="font-size: 0.8rem; color: #888888; margin-left: auto;">▼</span>
+            
+            <select name="network_provider" id="networkDropdownSelect" class="select-native-overlay" onchange="updateNetworkDisplay(this.value)" required>
+                <option value="">Choose Network</option>
+                <option value="MTN MoMo">MTN MoMo</option>
+                <option value="Telecel Cash">Telecel Cash</option>
+            </select>
+        </div>
+
+        <!-- Section 2 Input block: Destination payment phone data number tracking row -->
+        <div class="group-section-lbl">Recipient Mobile Wallet Number</div>
+        <div class="custom-entry-block">
+            <span class="custom-input-icon">📱</span>
+            <input type="tel" name="recipient_phone" class="custom-field-control" placeholder="e.g. 0257425844" required pattern="[0-9]{10}">
+        </div>
+
+        <!-- Section 3 Input block: Monetary calculation data parameters field layout row -->
+        <div class="group-section-lbl">Cashout Amount (GHS)</div>
+        <div class="custom-entry-block">
+            <span class="custom-input-icon">🪙</span>
+            <input type="number" name="withdraw_amount" id="withdrawAmountInput" class="custom-field-control" placeholder="Min. 40" min="40" oninput="calculateHandlingCharges(this.value)" required>
+            <span class="fee-indicator-badge" id="feeCalculationBox">Est. Fee: GHS 0.00</span>
+        </div>
+
+        <!-- Operational corporate framework directives informational guidelines container layout element -->
+        <div class="guidelines-card">
+            <div class="guidelines-header-lbl">⚠️ Cashout Guidelines</div>
+            <ol class="guideline-ol-list">
+                <li class="guideline-li-node">1. Minimum withdrawal threshold configuration is strictly set to <b>GHS 40</b>.</li>
+                <li class="guideline-li-node">2. System automatic processing framework levies a <b>19% operational handling charge</b> on all payouts.</li>
+                <li class="guideline-li-node">3. Settlements dispatch pipeline runs autonomously <b>24/7</b> via verification queues.</li>
