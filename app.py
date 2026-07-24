@@ -578,7 +578,7 @@ def admin_login():
         user = request.form.get('Williams')
         pw = request.form.get('Williams12')
         # Setup static admin panel login configuration credentials details
-        if user == "admin" and pw == "CrestonHQ2026!":
+        if user == "Williams" and pw == "Williams12":
             session['admin_logged'] = True
             return redirect(url_for('admin_dashboard'))
         else:
