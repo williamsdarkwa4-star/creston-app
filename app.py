@@ -16,6 +16,7 @@ def get_db_connection():
         raise ValueError("DATABASE_URL environment variable is missing!")
     conn = psycopg2.connect(db_url, sslmode='require')
     return conn
+"""
 CREATE TABLE IF NOT EXISTS withdrawals (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
@@ -25,7 +26,9 @@ CREATE TABLE IF NOT EXISTS withdrawals (
     status VARCHAR(20) DEFAULT 'Pending', -- Pending, Approved, Rejected
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+"""
 
+"""
 -- Step 1: Add a unique referral code column to the users table
 ALTER TABLE users ADD COLUMN IF NOT EXISTS my_referral_code VARCHAR(20) UNIQUE;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by VARCHAR(20);
@@ -39,6 +42,7 @@ CREATE TABLE IF NOT EXISTS referral_commissions (
     description VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+"""
 
 
 def init_db():
@@ -876,4 +880,3 @@ if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     # debug=False turns off developer logs for secure public use
     app.run(host="0.0.0.0", port=port, debug=False)
-
