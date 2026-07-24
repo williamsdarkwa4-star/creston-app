@@ -129,29 +129,38 @@ def login():
         
         conn = get_db_connection()
         cur = conn.cursor()
+        # id is index 0, nickname is index 1, password is index 2
         cur.execute('SELECT id, nickname, password FROM users WHERE phone_number = %s;', (phone,))
         user = cur.fetchone()
         cur.close()
         conn.close()
         
-        if user and user['password'] == password:
-            session['user_id'] = user['id']
-            session['nickname'] = user['nickname']
+        # Fixed comparison using explicit database row item index spacing
+        if user and user[2] == password:
+            session['user_id'] = user[0]
+            session['nickname'] = user[1]
             return redirect(url_for('dashboard'))
         else:
             flash("Invalid authentication credential pairing.")
+            
     return render_template('login.html')
 
 @app.route('/dashboard')
 def dashboard():
-    if 'user_id' not in session: return redirect(url_for('login'))
+    if 'user_id' not in session: 
+        return redirect(url_for('login'))
+        
     conn = get_db_connection()
     cur = conn.cursor()
+    # income_balance is index 0, deposit_balance is index 1
     cur.execute('SELECT income_balance, deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
     wallet = cur.fetchone()
     cur.close()
     conn.close()
-    return render_template('dashboard.html', income_balance=wallet['income_balance'], deposit_balance=wallet['deposit_balance'])
+    
+    # Safely unpack the numeric tuple items cleanly for Jinja2
+    return render_template('dashboard.html', income_balance=wallet[0], deposit_balance=wallet[1])
+
 
 @app.route('/invest', methods=['POST'])
 def invest():
