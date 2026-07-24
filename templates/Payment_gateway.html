@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Creston Payment</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Arial;
+}
+
+
+body{
+
+background:#111;
+color:white;
+padding:20px;
+
+}
+
+
+
+.box{
+
+background:#1f1f1f;
+padding:25px;
+border-radius:20px;
+border:1px solid #333;
+
+}
+
+
+
+h2{
+
+color:#b6ff00;
+
+}
+
+
+.amount{
+
+font-size:30px;
+font-weight:bold;
+margin:20px 0;
+
+}
+
+
+
+.info{
+
+background:#292929;
+padding:15px;
+border-radius:12px;
+margin-bottom:20px;
+
+}
+
+
+
+input{
+
+width:100%;
+padding:15px;
+margin:10px 0;
+background:#333;
+border:1px solid #555;
+color:white;
+border-radius:10px;
+
+}
+
+
+
+button{
+
+width:100%;
+padding:16px;
+background:#b6ff00;
+border:0;
+border-radius:12px;
+font-weight:bold;
+
+}
+
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+
+<h2>
+Complete Payment
+</h2>
+
+
+<p>
+Payment Method:
+<b>{{channel}}</b>
+</p>
+
+
+<div class="amount">
+GHS {{amount}}
+</div>
+
+
+<div class="info">
+
+Send payment to:
+
+<br><br>
+
+<b>Mobile Money Number</b>
+
+<br>
+
+<h3>
+0257425844
+</h3>
+
+
+</div>
+
+
+
+<form action="/submit_deposit_proof" method="POST" enctype="multipart/form-data">
+
+
+<input type="hidden" name="amount" value="{{amount}}">
+
+
+<input type="hidden" name="channel" value="{{channel}}">
+
+
+<input 
+name="sender_name"
+placeholder="Sender Name"
+required>
+
+
+<input 
+type="file"
+name="screenshot"
+required>
+
+
+
+<button>
+Submit Deposit Proof
+</button>
+
+
+
+</form>
+
+
+</div>
+
+
+</body>
+</html>
