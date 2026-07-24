@@ -215,8 +215,8 @@ def deposit():
     if request.method == 'POST':
         amount = request.form.get('amount')
         channel = request.form.get('channel')
-        if float(amount) < 70:
-            flash("Minimum deposit requirement is GHS 70.")
+        if float(amount) < 50:
+            flash("Minimum deposit requirement is GHS 50.")
             return redirect(url_for('deposit'))
         return redirect(url_for('payment_gateway', amount=amount, channel=channel))
         
