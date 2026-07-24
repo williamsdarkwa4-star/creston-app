@@ -76,7 +76,15 @@ try:
     init_db()
 except Exception as e:
     print(f"PostgreSQL Production System Notice: {e}")
-
+try:
+    cur.execute("""
+        ALTER TABLE users
+        ADD COLUMN IF NOT EXISTS withdraw_password VARCHAR(255);
+    """)
+    conn.commit()
+except Exception as e:
+    conn.rollback()
+    print("withdraw_password column:", e)
 PLAN_CATALOG = {
     1: {"cost": 70, "daily": 8},
     2: {"cost": 100, "daily": 20},
