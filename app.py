@@ -235,20 +235,23 @@ def submit_deposit_proof():
         conn.close()
     return redirect(url_for('dashboard'))
 
-
 @app.route('/withdraw', methods=['GET', 'POST'])
 def withdraw():
+
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute(
-        "SELECT income_balance FROM users WHERE id = %s;",
-        (session['user_id'],)
-    )
+    cur.execute("""
+        SELECT income_balance, withdraw_password
+        FROM users
+        WHERE id = %s;
+    """, (session['user_id'],))
+
     user = cur.fetchone()
+
 
     if not user:
         cur.close()
@@ -256,33 +259,84 @@ def withdraw():
         flash("User account not found.")
         return redirect(url_for('login'))
 
+
     if request.method == 'POST':
 
         network = request.form.get('network_provider')
         phone = request.form.get('recipient_phone')
+        password = request.form.get('withdraw_password')
+
 
         try:
             amount = float(request.form.get('withdraw_amount'))
         except:
-            flash("Invalid withdrawal amount.")
+            flash("Enter a valid withdrawal amount.")
+            cur.close()
+            conn.close()
             return redirect(url_for('withdraw'))
 
-        balance = float(user['income_balance'])
 
+
+        # Check withdrawal password
+        if not user['withdraw_password']:
+
+            flash("Please set your withdrawal password first.")
+            cur.close()
+            conn.close()
+            return redirect(url_for('profile'))
+
+
+        if password != user['withdraw_password']:
+
+            flash("Incorrect withdrawal password.")
+            cur.close()
+            conn.close()
+            return redirect(url_for('withdraw'))
+
+
+
+        # Minimum withdrawal
         if amount < 40:
-            flash("Minimum withdrawal is GHS 40.")
+
+            flash("Minimum withdrawal amount is GHS 40.")
+            cur.close()
+            conn.close()
             return redirect(url_for('withdraw'))
 
-        if amount > balance:
+
+
+        # Balance check
+        if amount > float(user['income_balance']):
+
             flash("Insufficient income balance.")
+            cur.close()
+            conn.close()
             return redirect(url_for('withdraw'))
+
+
 
         try:
+
             # Create withdrawal request
             cur.execute("""
                 INSERT INTO transactions
-                (user_id, type, amount, recipient_phone, network_provider, status)
-                VALUES (%s,'withdrawal',%s,%s,%s,'pending');
+                (
+                    user_id,
+                    type,
+                    amount,
+                    recipient_phone,
+                    network_provider,
+                    status
+                )
+                VALUES
+                (
+                    %s,
+                    'withdrawal',
+                    %s,
+                    %s,
+                    %s,
+                    'pending'
+                );
             """,
             (
                 session['user_id'],
@@ -291,7 +345,8 @@ def withdraw():
                 network
             ))
 
-            # Lock money until admin decision
+
+            # Temporarily remove amount until admin decision
             cur.execute("""
                 UPDATE users
                 SET income_balance = income_balance - %s
@@ -302,28 +357,37 @@ def withdraw():
                 session['user_id']
             ))
 
+
             conn.commit()
 
-            flash("Withdrawal request sent successfully.")
+            flash("Withdrawal request submitted successfully.")
+
 
         except Exception as e:
+
             conn.rollback()
-            flash("Withdrawal failed.")
+            flash("Withdrawal failed. Try again.")
+
 
         finally:
+
             cur.close()
             conn.close()
 
+
         return redirect(url_for('dashboard'))
+
 
 
     cur.close()
     conn.close()
 
+
     return render_template(
         'withdraw.html',
         income_balance=user['income_balance']
     )
+
     
 # ==========================================
 # CLIENT SERVICE / SUPPORT ROUTE
