@@ -1,79 +1,359 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="row g-4" style="font-family: system-ui, -apple-system, sans-serif;">
-    <div class="col-md-4">
-        <div class="card p-4 text-center border-0 shadow-sm" style="background-color: #FFFFFF; border-radius: 16px; min-height: 280px;">
-            <div class="d-flex justify-content-center align-items-center mb-2">
-                <span style="font-size: 14px; font-weight: 600; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase;">Net Wallet Capital</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creston - Home</title>
+    <style>
+        /* Mobile-first layout configurations */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f9fc;
+            color: #111111;
+            padding-bottom: 90px; /* Leave room for fixed bottom navigation bar */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Dark Brand Banner Box */
+        .top-navbar {
+            background-color: #212121;
+            padding: 24px 16px 50px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #ffffff;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            position: relative;
+        }
+
+        .brand-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Yellow Target Core Minimalistic Profile Logo Grid */
+        .mini-logo {
+            width: 44px;
+            height: 44px;
+            background-color: #cbee00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #333333;
+        }
+
+        .mini-logo-inner {
+            width: 12px;
+            height: 12px;
+            background-color: #212121;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+        }
+
+        .brand-text-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-heading {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .brand-sub-tagline {
+            font-size: 0.65rem;
+            color: #aaaaaa;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .user-avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            background-color: #3d3d3d;
+            border-radius: 50%;
+        }
+
+        /* Wallet Overlapping Card Balance Module Dashboard */
+        .wallet-card {
+            background-color: #ffffff;
+            border-radius: 28px;
+            padding: 24px;
+            margin: -35px 16px 25px 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            z-index: 5;
+            position: relative;
+        }
+
+        .wallet-grids {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .wallet-node {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wallet-label {
+            font-size: 0.72rem;
+            color: #aaaaaa;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .wallet-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111111;
+        }
+
+        /* Financial Operational Actions Button Wrapper Links */
+        .wallet-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .action-button {
+            text-align: center;
+            padding: 14px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .action-button.filled {
+            background-color: #2c2c2c;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-button.outlined {
+            border: 1px solid #e2e8f0;
+            color: #2c2c2c;
+            background-color: #ffffff;
+        }
+
+        /* Section Investment Plans Label Header Matrix */
+        .section-container {
+            padding: 0 16px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 5px;
+            height: 20px;
+            background-color: #111111;
+            border-radius: 10px;
+        }
+
+        /* Package Dynamic Catalog Card Display Framework Blocks */
+        .plan-card {
+            background-color: #ffffff;
+            border-radius: 28px;
+            padding: 24px;
+            margin: 0 16px 20px 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid #f0f2f5;
+        }
+
+        .plan-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .plan-icon-box {
+            width: 65px;
+            height: 65px;
+            background-color: #fff5eb; /* Soft ambient icon fill backdrop */
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+        }
+
+        .plan-info-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plan-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 2px;
+        }
+
+        .plan-cost {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #111111;
+        }
+
+        /* Metric Grid Blocks */
+        .plan-metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .metric-box {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 6px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        .metric-value {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        /* Interactive Action Buy Execution Component Trigger Button */
+        .invest-now-btn {
+            background-color: #292929;
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .invest-now-btn:active {
+            background-color: #111111;
+        }
+
+        /* Fixed Mobile Tab Navigation Ribbon UI Container */
+        .bottom-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            height: 68px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-top: 1px solid #edf2f7;
+            z-index: 100;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-size: 0.72rem;
+            font-weight: 700;
+            gap: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item.active {
+            color: #111111; /* Active home navigation tab marker state indicator */
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Branding Header Segment -->
+    <div class="top-navbar">
+        <div class="brand-meta">
+            <div class="mini-logo">
+                <div class="mini-logo-inner"></div>
             </div>
-            <h2 class="display-5 fw-bold my-3" style="color: #0F172A; letter-spacing: -1px;">
-                <span style="color: #10B981; font-weight: 500; margin-right: 2px;">$</span>{{ "%.2f"|format(balance) }}
-            </h2>
-            <p class="small text-muted mb-4">Secure active compounding funds ready for distribution.</p>
-            <div class="d-grid gap-2">
-                <a href="/deposit" class="btn py-2 fw-bold text-white shadow-sm" style="background-color: #10B981; border: none; border-radius: 10px; font-size: 14px; text-decoration: none; display: block;">
-                    ⚡ Fund Wallet
-                </a>
-                <button class="btn py-2 fw-semibold" style="background-color: #F8FAFC; color: #475569; border: 1px solid #E2E8F0; border-radius: 10px; font-size: 14px;">
-                    Request Payout
-                </button>
+            <div class="brand-text-wrapper">
+                <span class="brand-heading">Creston</span>
+                <span class="brand-sub-tagline">CLEAN ENERGY. PURE PROFIT.</span>
             </div>
+        </div>
+        <div class="user-avatar-placeholder"></div>
+    </div>
+
+    <!-- Client Capital Summary Metrics Panel Card -->
+    <div class="wallet-card">
+        <div class="wallet-grids">
+            <div class="wallet-node">
+                <span class="wallet-label">Income Wallet</span>
+                <span class="wallet-amount">GHS {{ "{:,.2f}".format(income_balance) }}</span>
+            </div>
+            <div class="wallet-node">
+                <span class="wallet-label">Deposit Wallet</span>
+                <span class="wallet-amount">GHS {{ "{:,.2f}".format(deposit_balance) }}</span>
+            </div>
+        </div>
+        <div class="wallet-actions">
+            <a href="/deposit" class="action-button filled">Deposit</a>
+            <a href="/withdraw" class="action-button outlined">Withdraw</a>
         </div>
     </div>
-    
-    <div class="col-md-8">
-        <div class="d-flex justify-content-between align-items-center mb-3 px-2">
-            <h4 class="fw-bold m-0" style="color: #0F172A; font-size: 20px;">Active Portfolios</h4>
-            <a href="/invest" class="btn btn-sm px-3 py-2 fw-bold shadow-sm" style="background-color: #0F172A; color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px; text-decoration: none;">
-                + New Allocation
-            </a>
-        </div>
+
+    <!-- Investment catalog wrapper entry field list section label -->
+    <div class="section-container">
+        <h2 class="section-title">Investment Plans</h2>
+    </div>
+
+    <!-- Form layout generation iterating over all your specific plan calculations -->
+    <form action="/invest" method="POST">
         
-        <div class="card p-4 border-0 shadow-sm" style="background-color: #FFFFFF; border-radius: 16px;">
-            {% if investments %}
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0 8px;">
-                        <thead>
-                            <tr style="border-bottom: 2px solid #F1F5F9;">
-                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">Strategy Tier</th>
-                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">Principal Locked</th>
-                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">Maturity Date</th>
-                                <th class="text-muted border-0 pb-3 text-end" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in investments %}
-                            <tr style="background-color: #F8FAFC; border-radius: 10px;">
-                                <td class="fw-bold py-3" style="color: #0F172A; border: none; border-top-left-radius: 10px; border-bottom-left-radius: 10px;">
-                                    🎯 {{ item.plan_name }}
-                                </td>
-                                <td class="fw-bold text-success py-3" style="border: none;">
-                                    ${{ "%.2f"|format(item.amount) }}
-                                </td>
-                                <td class="small text-muted py-3" style="border: none;">
-                                    📅 {{ item.payout_date }}
-                                </td>
-                                <td class="py-3 text-end" style="border: none; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
-                                    <span class="badge px-3 py-2" style="background-color: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 600; border-radius: 6px; font-size: 11px; text-transform: uppercase;">
-                                        {{ item.status }}
-                                    </span>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <div class="text-center py-5">
-                    <div class="mb-3" style="font-size: 40px;">💼</div>
-                    <h5 class="fw-bold" style="color: #334155;">No Capital Deployed</h5>
-                    <p class="text-muted small mx-auto mb-4" style="max-width: 320px;">You have no active asset placements running right now.</p>
-                    <a href="/invest" class="btn btn-sm px-4 py-2 fw-bold text-decoration-none" style="border: 1px solid #E2E8F0; color: #475569; background-color: #F8FAFC; border-radius: 8px; font-size: 13px;">
-                        Explore Creston Tiers
-                    </a>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
-{% endblock %}
+        <!-- Plan 1 -->
+        <div class="plan-card">
