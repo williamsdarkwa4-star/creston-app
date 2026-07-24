@@ -1,27 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- Premium Clean White Theme Container -->
-<div class="row g-4" style="font-family: system-ui, -apple-system, sans-serif; background-color: #F1F5F9; padding: 20px; border-radius: 16px;">
-    
-    <!-- LEFT PANEL: Premium Snow-White Capital Card -->
+<div class="row g-4" style="font-family: system-ui, -apple-system, sans-serif;">
     <div class="col-md-4">
-        <div class="card p-4 text-center border-0 shadow-sm" style="background-color: #FFFFFF; border-radius: 16px; min-height: 280px; box-shadow: 0 4px 20px rgba(0,0,0,0.03) !important;">
+        <div class="card p-4 text-center border-0 shadow-sm" style="background-color: #FFFFFF; border-radius: 16px; min-height: 280px;">
             <div class="d-flex justify-content-center align-items-center mb-2">
-                <span style="font-size: 14px; font-weight: 600; color: #64748B; letter-spacing: 0.5px; text-uppercase;">Net Wallet Capital</span>
+                <span style="font-size: 14px; font-weight: 600; color: #64748B; letter-spacing: 0.5px; text-transform: uppercase;">Net Wallet Capital</span>
             </div>
-            
-            <!-- High-Impact Crisp Financial Typography -->
             <h2 class="display-5 fw-bold my-3" style="color: #0F172A; letter-spacing: -1px;">
                 <span style="color: #10B981; font-weight: 500; margin-right: 2px;">$</span>{{ "%.2f"|format(balance) }}
             </h2>
-            
             <p class="small text-muted mb-4">Secure active compounding funds ready for distribution.</p>
-            
-            <!-- Sleek Action Grid -->
             <div class="d-grid gap-2">
-                <button class="btn py-2 fw-bold text-white shadow-sm" style="background-color: #10B981; border: none; border-radius: 10px; font-size: 14px; transition: 0.2s;">
+                <a href="/deposit" class="btn py-2 fw-bold text-white shadow-sm" style="background-color: #10B981; border: none; border-radius: 10px; font-size: 14px; text-decoration: none; display: block;">
                     ⚡ Fund Wallet
-                </button>
+                </a>
                 <button class="btn py-2 fw-semibold" style="background-color: #F8FAFC; color: #475569; border: 1px solid #E2E8F0; border-radius: 10px; font-size: 14px;">
                     Request Payout
                 </button>
@@ -29,27 +21,24 @@
         </div>
     </div>
     
-    <!-- RIGHT PANEL: Smooth Table Canvas -->
     <div class="col-md-8">
-        <!-- Dashboard Header Row -->
         <div class="d-flex justify-content-between align-items-center mb-3 px-2">
             <h4 class="fw-bold m-0" style="color: #0F172A; font-size: 20px;">Active Portfolios</h4>
-            <button class="btn btn-sm px-3 py-2 fw-bold shadow-sm" style="background-color: #0F172A; color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px;">
+            <a href="/invest" class="btn btn-sm px-3 py-2 fw-bold shadow-sm" style="background-color: #0F172A; color: #FFFFFF; border: none; border-radius: 8px; font-size: 12px; text-decoration: none;">
                 + New Allocation
-            </button>
+            </a>
         </div>
         
-        <!-- White Portfolio Surface -->
-        <div class="card p-4 border-0 shadow-sm" style="background-color: #FFFFFF; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03) !important;">
+        <div class="card p-4 border-0 shadow-sm" style="background-color: #FFFFFF; border-radius: 16px;">
             {% if investments %}
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0 8px;">
                         <thead>
                             <tr style="border-bottom: 2px solid #F1F5F9;">
-                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-uppercase;">Strategy Tier</th>
-                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-uppercase;">Principal Locked</th>
-                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-uppercase;">Maturity Date</th>
-                                <th class="text-muted border-0 pb-3 text-end" style="font-size: 12px; font-weight: 600; text-uppercase;">Status</th>
+                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">Strategy Tier</th>
+                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">Principal Locked</th>
+                                <th class="text-muted border-0 pb-3" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">Maturity Date</th>
+                                <th class="text-muted border-0 pb-3 text-end" style="font-size: 12px; font-weight: 600; text-transform: uppercase;">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,7 +54,7 @@
                                     📅 {{ item.payout_date }}
                                 </td>
                                 <td class="py-3 text-end" style="border: none; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
-                                    <span class="badge px-3 py-2" style="background-color: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 600; border-radius: 6px; font-size: 11px; text-uppercase;">
+                                    <span class="badge px-3 py-2" style="background-color: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 600; border-radius: 6px; font-size: 11px; text-transform: uppercase;">
                                         {{ item.status }}
                                     </span>
                                 </td>
@@ -75,14 +64,13 @@
                     </table>
                 </div>
             {% else %}
-                <!-- Aesthetic Empty State Blueprint -->
                 <div class="text-center py-5">
                     <div class="mb-3" style="font-size: 40px;">💼</div>
                     <h5 class="fw-bold" style="color: #334155;">No Capital Deployed</h5>
-                    <p class="text-muted small mx-auto mb-4" style="max-width: 320px;">You have no active asset placements running right now. Pick an investment option below to begin compounding.</p>
-                    <button class="btn btn-sm px-4 py-2 fw-bold" style="border: 1px solid #E2E8F0; color: #475569; background-color: #F8FAFC; border-radius: 8px; font-size: 13px;">
+                    <p class="text-muted small mx-auto mb-4" style="max-width: 320px;">You have no active asset placements running right now.</p>
+                    <a href="/invest" class="btn btn-sm px-4 py-2 fw-bold text-decoration-none" style="border: 1px solid #E2E8F0; color: #475569; background-color: #F8FAFC; border-radius: 8px; font-size: 13px;">
                         Explore Creston Tiers
-                    </button>
+                    </a>
                 </div>
             {% endif %}
         </div>
