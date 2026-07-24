@@ -5,6 +5,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'creston-master-system-engine-key-2026')
@@ -40,20 +41,29 @@ def init_db():
     cur = conn.cursor()
     # 1. Primary Membership Registry User Profile Matrix Table
     cur.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            nickname VARCHAR(100) NOT NULL,
-            phone_number VARCHAR(20) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            invite_code VARCHAR(50) UNIQUE,
-            referred_by VARCHAR(50),
-            income_balance NUMERIC(15, 2) DEFAULT 0.00,
-            deposit_balance NUMERIC(15, 2) DEFAULT 10.00, -- Automatically receive GHS 10 sign up bonus
-            today_income NUMERIC(15, 2) DEFAULT 0.00,
-            total_income NUMERIC(15, 2) DEFAULT 0.00,
-            total_withdrawn NUMERIC(15, 2) DEFAULT 0.00
-        );
-    ''')
+        cur.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    nickname VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(20) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    invite_code VARCHAR(50) UNIQUE,
+    referred_by VARCHAR(50),
+    income_balance NUMERIC(15, 2) DEFAULT 0.00,
+    deposit_balance NUMERIC(15, 2) DEFAULT 10.00,
+    today_income NUMERIC(15, 2) DEFAULT 0.00,
+    total_income NUMERIC(15, 2) DEFAULT 0.00,
+    total_withdrawn NUMERIC(15, 2) DEFAULT 0.00
+);
+""")
+       cur.execute(
+    """
+    INSERT INTO users
+    (nickname, phone_number, password, invite_code, referred_by, deposit_balance)
+    VALUES (%s, %s, %s, %s, %s, 10.00)
+    """,
+    (nickname, phone, hashed_password, my_invite_code, invite_used)
+)
     # 2. Financial Auditing Transaction Ledger Table
     cur.execute('''
         CREATE TABLE IF NOT EXISTS transactions (
@@ -111,7 +121,8 @@ def register():
     if request.method == 'POST':
         nickname = request.form.get('nickname')
         phone = request.form.get('phone_number').strip()
-        password = request.form.get('password')
+        password = request.form.get("password")
+        hashed_password = generate_password_hash(password)
         invite_used = request.form.get('invite_code')
         
         my_invite_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
@@ -140,7 +151,12 @@ def register():
 def login():
     if request.method == 'POST':
         phone = request.form.get('phone_number').strip()
-        password = request.form.get('password')
+        if user and check_password_hash(user["password"], password):
+    session["user_id"] = user["id"]
+    session["nickname"] = user["nickname"]
+    return redirect(url_for("dashboard"))
+else:
+    flash("Invalid phone number or password.")
         
         conn = get_db_connection()
         cur = conn.cursor()
@@ -172,7 +188,7 @@ def dashboard():
     conn.close()
     
     # Safely unpack the numeric tuple items cleanly for Jinja2
-    return render_template('dashboard.html', income_balance=wallet[0], deposit_balance=wallet[1])
+    return render_template('dashboard.html', income_balance=wallet["income_balance"], deposit_balance=wallet["deposit_balance"])
 
 
 @app.route('/invest', methods=['POST'])
