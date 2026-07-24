@@ -109,7 +109,40 @@ def dashboard():
     except Exception as e:
         flash('Could not load portfolio: ' + str(e), 'danger')
         return render_template('dashboard.html', balance=0.00, investments=[])
-
+@app.route('/deposit', methods=['GET', 'POST'])
+def deposit():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+        
+    if request.method == 'POST':
+        try:
+            # Safely capture the input amount as a base float number
+            amount = float(request.form['amount'])
+            if amount <= 0:
+                flash('Please enter a valid deposit amount greater than $0.', 'danger')
+                return redirect(url_for('deposit'))
+                
+            conn = get_db_connection()
+            cur = conn.cursor()
+            
+            # Instantly update the user wallet balance for development/testing
+            cur.execute("""
+                UPDATE users 
+                SET wallet_balance = wallet_balance + %s 
+                WHERE id = %s
+            """, (amount, session['user_id']))
+            
+            conn.commit()
+            cur.close()
+            conn.close()
+            
+            flash(f'Successfully funded your wallet with ${amount:,.2f}!', 'success')
+            return redirect(url_for('dashboard'))
+        except Exception as e:
+            flash('Deposit processing failed: ' + str(e), 'danger')
+            
+    return render_template('deposit.html')
+    
 @app.route('/logout')
 def logout():
     session.clear()
