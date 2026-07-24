@@ -6,249 +6,477 @@ from psycopg2.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
 
-app = Flask(name)
-
-Secure fallback cryptography secret key generation
-
+app = Flask(__name__)
+# FIXED: The description text string below is now safely commented out using a '#' hash symbol
+# Secure fallback cryptography secret key generation
 app.secret_key = os.environ.get('SECRET_KEY', 'creston-master-engine-production-key-2026')
-
-Render dynamic hosted receipt storage folder path
 
 UPLOAD_FOLDER = os.path.join('static', 'receipts')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def get_db_connection():
-# STRICT RULE: Connects explicitly to your live Render PostgreSQL Database URL
-db_url = os.environ.get('DATABASE_URL')
-if not db_url:
-raise RuntimeError("DATABASE_URL environment variable is missing on Render. Please configure it in your dashboard settings.")
-# Uses RealDictCursor so database rows map beautifully to HTML keys with no indexing errors
-return psycopg2.connect(db_url, cursor_factory=RealDictCursor)
+    # FIXED: Forces the application to check your Render environment configurations string variables
+    db_url = os.environ.get('DATABASE_URL')
+    if not db_url:
+        # If Render hasn't linked the database yet, this throws an explicit error instead of falling back to a broken local link
+        raise RuntimeError("DATABASE_URL is missing. Please link your PostgreSQL database to this Web Service in your Render Dashboard.")
+    return psycopg2.connect(db_url, cursor_factory=RealDictCursor)
 
 def init_db():
-conn = get_db_connection()
-cur = conn.cursor()
-# 1. Primary Membership Registry User Profile Matrix Table
-cur.execute('''
-CREATE TABLE IF NOT EXISTS users (
-id SERIAL PRIMARY KEY,
-nickname VARCHAR(100) NOT NULL,
-phone_number VARCHAR(20) UNIQUE NOT NULL,
-password VARCHAR(255) NOT NULL,
-invite_code VARCHAR(50) UNIQUE,
-referred_by VARCHAR(50),
-income_balance NUMERIC(15, 2) DEFAULT 0.00,
-deposit_balance NUMERIC(15, 2) DEFAULT 10.00, -- Free GHS 10 sign up bonus added right here
-today_income NUMERIC(15, 2) DEFAULT 0.00,
-total_income NUMERIC(15, 2) DEFAULT 0.00,
-total_withdrawn NUMERIC(15, 2) DEFAULT 0.00
-);
-''')
-# 2. Financial Auditing Transaction Ledger Table
-cur.execute('''
-CREATE TABLE IF NOT EXISTS transactions (
-id SERIAL PRIMARY KEY,
-user_id INT REFERENCES users(id) ON DELETE CASCADE,
-type VARCHAR(50) NOT NULL, -- 'deposit' or 'withdrawal'
-amount NUMERIC(15, 2) NOT NULL,
-status VARCHAR(50) DEFAULT 'pending', -- 'pending', 'approved', 'rejected'
-channel VARCHAR(50),
-meta_sender_name VARCHAR(150),
-screenshot_file VARCHAR(255),
-recipient_phone VARCHAR(50),
-network_provider VARCHAR(50),
-timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-''')
-# 3. Active Running Power Plan Inventory Catalog Inventory Tracker Table
-cur.execute('''
-CREATE TABLE IF NOT EXISTS user_plans (
-id SERIAL PRIMARY KEY,
-user_id INT REFERENCES users(id) ON DELETE CASCADE,
-plan_type INT NOT NULL,
-purchase_price NUMERIC(15, 2) NOT NULL,
-daily_yield NUMERIC(15, 2) NOT NULL,
-date_activated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-''')
-conn.commit()
-cur.close()
-conn.close()
-
-Initialize Render database layout layers automatically on boot execution
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            nickname VARCHAR(100) NOT NULL,
+            phone_number VARCHAR(20) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            invite_code VARCHAR(50) UNIQUE,
+            referred_by VARCHAR(50),
+            income_balance NUMERIC(15, 2) DEFAULT 0.00,
+            deposit_balance NUMERIC(15, 2) DEFAULT 10.00,
+            today_income NUMERIC(15, 2) DEFAULT 0.00,
+            total_income NUMERIC(15, 2) DEFAULT 0.00,
+            total_withdrawn NUMERIC(15, 2) DEFAULT 0.00
+        );
+    ''')
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS transactions (
+            id SERIAL PRIMARY KEY,
+            user_id INT REFERENCES users(id) ON DELETE CASCADE,
+            type VARCHAR(50) NOT NULL,
+            amount NUMERIC(15, 2) NOT NULL,
+            status VARCHAR(50) DEFAULT 'pending',
+            channel VARCHAR(50),
+            meta_sender_name VARCHAR(150),
+            screenshot_file VARCHAR(255),
+            recipient_phone VARCHAR(50),
+            network_provider VARCHAR(50),
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ''')
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS user_plans (
+            id SERIAL PRIMARY KEY,
+            user_id INT REFERENCES users(id) ON DELETE CASCADE,
+            plan_type INT NOT NULL,
+            purchase_price NUMERIC(15, 2) NOT NULL,
+            daily_yield NUMERIC(15, 2) NOT NULL,
+            date_activated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ''')
+    conn.commit()
+    cur.close()
+    conn.close()
 
 try:
-init_db()
+    init_db()
 except Exception as e:
-print(f"PostgreSQL Production System Notice: {e}")
-
-Static package tracking dictionary definitions matching your 7 tiers
+    print(f"PostgreSQL Production System Notice: {e}")
 
 PLAN_CATALOG = {
-1: {"cost": 70, "daily": 8},
-2: {"cost": 100, "daily": 20},
-3: {"cost": 260, "daily": 45},
-4: {"cost": 400, "daily": 60},
-5: {"cost": 600, "daily": 100},
-6: {"cost": 800, "daily": 150},
-7: {"cost": 1000, "daily": 200}
+    1: {"cost": 70, "daily": 8},
+    2: {"cost": 100, "daily": 20},
+    3: {"cost": 260, "daily": 45},
+    4: {"cost": 400, "daily": 60},
+    5: {"cost": 600, "daily": 100},
+    6: {"cost": 800, "daily": 150},
+    7: {"cost": 1000, "daily": 200}
 }
 
-==========================================
-
-CLIENT USER INTERFACE PIPELINES
-
-==========================================
+# ==========================================
+# CLIENT USER INTERFACE PIPELINES
+# ==========================================
 
 @app.route('/')
 def home_redirect():
-# Automatically forward root domain traffic over to registration form page layout
-return redirect(url_for('register'))
+    return redirect(url_for('register'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-url_invite_code = request.args.get('invite', 'DOSLQV')
-
-if request.method == 'POST':  
-    nickname = request.form.get('nickname')  
-    phone = request.form.get('phone_number').strip()  
-    password = request.form.get('password')  
-    invite_used = request.form.get('invite_code')  
-      
-    my_invite_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))  
-      
-    conn = get_db_connection()  
-    cur = conn.cursor()  
-    try:  
-        # Mandated system rule: deposit_balance maps with a free GHS 10.00 signup allocation  
-        cur.execute(  
-            '''INSERT INTO users (nickname, phone_number, password, invite_code, referred_by, deposit_balance)   
-               VALUES (%s, %s, %s, %s, %s, 10.00);''',  
-            (nickname, phone, password, my_invite_code, invite_used)  
-        )  
-        conn.commit()  
-        flash("Account securely provisioned with GHS 10 welcome bonus! Login now.")  
-        return redirect(url_for('login'))  
-    except psycopg2.errors.UniqueViolation:  
-        conn.rollback()  
-        flash("This operational phone number string is already registered.")  
-    finally:  
-        cur.close()  
-        conn.close()  
-          
-return render_template('register.html', invite_code=url_invite_code)
+    url_invite_code = request.args.get('invite', 'DOSLQV')
+    
+    if request.method == 'POST':
+        nickname = request.form.get('nickname')
+        phone = request.form.get('phone_number').strip()
+        password = request.form.get('password')
+        invite_used = request.form.get('invite_code')
+        
+        my_invite_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        
+        conn = get_db_connection()
+        cur = conn.cursor()
+        try:
+            cur.execute(
+                '''INSERT INTO users (nickname, phone_number, password, invite_code, referred_by, deposit_balance) 
+                   VALUES (%s, %s, %s, %s, %s, 10.00);''',
+                (nickname, phone, password, my_invite_code, invite_used)
+            )
+            conn.commit()
+            flash("Account securely provisioned with GHS 10 welcome bonus! Login now.")
+            return redirect(url_for('login'))
+        except psycopg2.errors.UniqueViolation:
+            conn.rollback()
+            flash("This operational phone number string is already registered.")
+        finally:
+            cur.close()
+            conn.close()
+            
+    return render_template('register.html', invite_code=url_invite_code)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-if request.method == 'POST':
-phone = request.form.get('phone_number').strip()
-password = request.form.get('password')
-
-conn = get_db_connection()  
-    cur = conn.cursor()  
-    cur.execute('SELECT id, nickname, password FROM users WHERE phone_number = %s;', (phone,))  
-    user = cur.fetchone()  
-    cur.close()  
-    conn.close()  
-      
-    if user and user['password'] == password:  
-        session['user_id'] = user['id']  
-        session['nickname'] = user['nickname']  
-        return redirect(url_for('dashboard'))  
-    else:  
-        flash("Invalid authentication credential pairing.")  
-return render_template('login.html')
+    if request.method == 'POST':
+        phone = request.form.get('phone_number').strip()
+        password = request.form.get('password')
+        
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT id, nickname, password FROM users WHERE phone_number = %s;', (phone,))
+        user = cur.fetchone()
+        cur.close()
+        conn.close()
+        
+        # FIXED: RealDictCursor checks require referencing string keys like ['password']
+        if user and user['password'] == password:
+            session['user_id'] = user['id']
+            session['nickname'] = user['nickname']
+            return redirect(url_for('dashboard'))
+        else:
+            flash("Invalid credentials.")
+    return render_template('login.html')
 
 @app.route('/dashboard')
 def dashboard():
-if 'user_id' not in session: return redirect(url_for('login'))
-conn = get_db_connection()
-cur = conn.cursor()
-cur.execute('SELECT income_balance, deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
-wallet = cur.fetchone()
-cur.close()
-conn.close()
-return render_template('dashboard.html', income_balance=wallet['income_balance'], deposit_balance=wallet['deposit_balance'])
+    if 'user_id' not in session: return redirect(url_for('login'))
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT income_balance, deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
+    wallet = cur.fetchone()
+    cur.close()
+    conn.close()
+    return render_template('dashboard.html', income_balance=wallet['income_balance'], deposit_balance=wallet['deposit_balance'])
 
 @app.route('/invest', methods=['POST'])
 def invest():
-if 'user_id' not in session: return redirect(url_for('login'))
-plan_id = int(request.form.get('plan_id', 0))
-if plan_id not in PLAN_CATALOG: return redirect(url_for('dashboard'))
-
-plan_cost = PLAN_CATALOG[plan_id]["cost"]  
-plan_yield = PLAN_CATALOG[plan_id]["daily"]  
-  
-conn = get_db_connection()  
-cur = conn.cursor()  
-cur.execute('SELECT deposit_balance FROM users WHERE id = %s;', (session['user_id'],))  
-user = cur.fetchone()  
-  
-if float(user['deposit_balance']) < plan_cost:  
-    flash("Insufficient funds in Deposit Wallet to acquire this package.")  
-    cur.close()  
-    conn.close()  
-    return redirect(url_for('dashboard'))  
-      
-cur.execute('UPDATE users SET deposit_balance = deposit_balance - %s WHERE id = %s;', (plan_cost, session['user_id']))  
-cur.execute('INSERT INTO user_plans (user_id, plan_type, purchase_price, daily_yield) VALUES (%s, %s, %s, %s);',  
-            (session['user_id'], plan_id, plan_cost, plan_yield))  
-conn.commit()  
-cur.close()  
-conn.close()  
-flash(f"CRESTON Plan #{plan_id} activated successfully! Running compounding ledger synced.")  
-return redirect(url_for('profile'))
+    if 'user_id' not in session: return redirect(url_for('login'))
+    plan_id = int(request.form.get('plan_id', 0))
+    if plan_id not in PLAN_CATALOG: return redirect(url_for('dashboard'))
+    
+    plan_cost = PLAN_CATALOG[plan_id]["cost"]
+    plan_yield = PLAN_CATALOG[plan_id]["daily"]
+    
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
+    user = cur.fetchone()
+    
+    if float(user['deposit_balance']) < plan_cost:
+        flash("Insufficient funds.")
+        cur.close()
+        conn.close()
+        return redirect(url_for('dashboard'))
+        
+    cur.execute('UPDATE users SET deposit_balance = deposit_balance - %s WHERE id = %s;', (plan_cost, session['user_id']))
+    cur.execute('INSERT INTO user_plans (user_id, plan_type, purchase_price, daily_yield) VALUES (%s, %s, %s, %s);',
+                (session['user_id'], plan_id, plan_cost, plan_yield))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for('profile'))
 
 @app.route('/deposit', methods=['GET', 'POST'])
 def deposit():
-if 'user_id' not in session: return redirect(url_for('login'))
-conn = get_db_connection()
-cur = conn.cursor()
-cur.execute('SELECT deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
-user = cur.fetchone()
-cur.close()
-conn.close()
-
-if request.method == 'POST':  
-    amount = request.form.get('amount')  
-    channel = request.form.get('channel')  
-    if float(amount) < 70:  
-        flash("Minimum deposit requirement is GHS 70.")  
-        return redirect(url_for('deposit'))  
-    return redirect(url_for('payment_gateway', amount=amount, channel=channel))  
-      
-return render_template('deposit.html', available_balance=user['deposit_balance'])
+    if 'user_id' not in session: return redirect(url_for('login'))
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
+    
+    if request.method == 'POST':
+        amount = request.form.get('amount')
+        channel = request.form.get('channel')
+        if float(amount) < 70:
+            flash("Minimum deposit requirement is GHS 70.")
+            return redirect(url_for('deposit'))
+        return redirect(url_for('payment_gateway', amount=amount, channel=channel))
+        
+    return render_template('deposit.html', available_balance=user['deposit_balance'])
 
 @app.route('/payment_gateway')
 def payment_gateway():
-if 'user_id' not in session: return redirect(url_for('login'))
-amount = request.args.get('amount', '0.00')
-channel = request.args.get('channel', 'MTN')
-merchant_number = "0257425844"
-return render_template('payment_gateway.html', amount=amount, channel=channel, merchant_number=merchant_number)
+    if 'user_id' not in session: return redirect(url_for('login'))
+    amount = request.args.get('amount', '0.00')
+    channel = request.args.get('channel', 'MTN')
+    merchant_number = "0257425844"
+    return render_template('payment_gateway.html', amount=amount, channel=channel, merchant_number=merchant_number)
 
 @app.route('/submit_deposit_proof', methods=['POST'])
 def submit_deposit_proof():
-if 'user_id' not in session: return redirect(url_for('login'))
-sender_name = request.form.get('sender_name')
-amount = request.form.get('amount')
-channel = request.form.get('channel')
-file = request.files.get('screenshot')
-
-if file:  
-    filename = secure_filename(file.filename)  
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))  
-    conn = get_db_connection()  
-    cur = conn.cursor()  
-    cur.execute('''INSERT INTO transactions (user_id, type, amount, channel, meta_sender_name, screenshot_file, status)   
-                   VALUES (%s, 'deposit', %s, %s, %s, %s, 'pending');''',  
-                (session['user_id'], amount, channel, sender_name, filename))  
-    conn.commit()  
-    cur.close()  
-    conn.close()  
-    flash("Proof of deposit sent successfully to admin for approval.")  
-return redirect(url_for('dashboard'))
+    if 'user_id' not in session: return redirect(url_for('login'))
+    sender_name = request.form.get('sender_name')
+    amount = request.form.get('amount')
+    channel = request.form.get('channel')
+    file = request.files.get('screenshot')
+    
+    if file:
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('''INSERT INTO transactions (user_id, type, amount, channel, meta_sender_name, screenshot_file, status) 
+                       VALUES (%s, 'deposit', %s, %s, %s, %s, 'pending');''',
+                    (session['user_id'], amount, channel, sender_name, filename))
+        conn.commit()
+        cur.close()
+        conn.close()
+    return redirect(url_for('dashboard'))
 
 @app.route('/withdraw', methods=['GET', 'POST'])
 def withdraw():
+    if 'user_id' not in session: return redirect(url_for('login'))
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT income_balance FROM users WHERE id = %s;', (session['user_id'],))
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
+    
+    if request.method == 'POST':
+        network = request.form.get('network_provider')
+        phone = request.form.get('recipient_phone')
+        amount = float(request.form.get('withdraw_amount', 0))
+        
+        if amount < 40:
+            flash("Minimum payout threshold is GHS 40.")
+            return redirect(url_for('withdraw'))
+        if amount > float(user['income_balance']):
+# ==========================================
+# CLIENT SERVICE / SUPPORT ROUTE
+# ==========================================
+
+@app.route('/service')
+def service():
+    # Strict validation: ensure only authenticated accounts can reach support
+    if 'user_id' not in session: 
+        return redirect(url_for('login'))
+        
+    # Serves your custom templates/service.html layout frame instantly
+    return render_template('service.html')
+# ==========================================
+# CLIENT HISTORY ROUTE
+# ==========================================
+
+@app.route('/history')
+def history():
+    # Strict check: ensure only logged-in clients can access their statements
+    if 'user_id' not in session: 
+        return redirect(url_for('login'))
+        
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    # Queries deposits and cashout requests for this user, sorted newest first
+    cur.execute('''
+        SELECT type, amount, status, timestamp 
+        FROM transactions 
+        WHERE user_id = %s 
+        ORDER BY timestamp DESC;
+    ''', (session['user_id'],))
+    
+    logs = cur.fetchall()
+    cur.close()
+    conn.close()
+    
+    # Feeds data records directly into your templates/history.html UI view layer
+    return render_template('history.html', logs=logs)
+# ==========================================
+# CLIENT INVITATION / AFFILIATE TEAM ROUTE
+# ==========================================
+
+@app.route('/invite')
+def invite():
+    # Strict navigation validation: block unauthenticated sessions
+    if 'user_id' not in session: 
+        return redirect(url_for('login'))
+        
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    # 1. Fetch the logged-in client's custom invite code string token
+    cur.execute('SELECT invite_code FROM users WHERE id = %s;', (session['user_id'],))
+    me = cur.fetchone()
+    
+    # 2. Extract downline matching members listed under that referral code
+    cur.execute('''
+        SELECT nickname, phone_number 
+        FROM users 
+        WHERE referred_by = %s 
+        ORDER BY id DESC;
+    ''', (me['invite_code'],))
+    
+    team = cur.fetchall()
+    cur.close()
+    conn.close()
+    
+    # Passes data variables instantly into your templates/invite.html layout file
+    return render_template('invite.html', invite_code=me['invite_code'], team=team)
+# ==========================================
+# CLIENT PROFILE & MY PLANS ROUTES
+# ==========================================
+
+@app.route('/profile')
+def profile():
+    # Strict validation: prevent unauthenticated tracking access
+    if 'user_id' not in session: 
+        return redirect(url_for('login'))
+        
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    # Queries the live financial ledger metrics for this specific user row
+    cur.execute('''
+        SELECT id, phone_number, income_balance, today_income, total_income, total_withdrawn 
+        FROM users 
+        WHERE id = %s;
+    ''', (session['user_id'],))
+    
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
+    
+    # Feeds balances cleanly into your templates/profile.html interface layout
+    return render_template('profile.html', 
+                           user_id=user['id'], 
+                           phone_number=user['phone_number'], 
+                           income_balance=user['income_balance'], 
+                           today_income=user['today_income'], 
+                           total_income=user['total_income'], 
+                           total_withdrawn=user['total_withdrawn'])
+
+
+@app.route('/my_plans')
+def my_plans():
+    # Validation constraint checkpoint
+    if 'user_id' not in session: 
+        return redirect(url_for('login'))
+        
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    # Pulls all active investments bought by this client, newest first
+    cur.execute('''
+        SELECT plan_type, purchase_price, daily_yield, date_activated 
+        FROM user_plans 
+        WHERE user_id = %s 
+        ORDER BY date_activated DESC;
+    ''', (session['user_id'],))
+    
+    plans = cur.fetchall()
+    cur.close()
+    conn.close()
+    
+    # Feeds items dynamically into your templates/my_plans.html view panel ledger
+    return render_template('my_plans.html', active_plans=plans)
+# ==========================================
+# MASTER ADMINISTRATIVE SECURITY ENDPOINTS
+# ==========================================
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        user = request.form.get('username')
+        pw = request.form.get('password')
+        # Setup static admin panel login configuration credentials details
+        if user == "admin" and pw == "CrestonHQ2026!":
+            session['admin_logged'] = True
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash("Invalid security authorization credentials.")
+    return render_template('admin/login.html')
+
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT COUNT(*) as total FROM users;')
+    users_count = cur.fetchone()['total']
+    cur.execute('SELECT SUM(income_balance + deposit_balance) as total_cap FROM users;')
+    cap = cur.fetchone()['total_cap'] or 0.00
+    cur.close()
+    conn.close()
+    return render_template('admin/dashboard.html', total_users=users_count, total_capital=cap)
+
+@app.route('/admin/approvals')
+def admin_approvals():
+    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''SELECT t.id, t.type, t.amount, t.channel, t.meta_sender_name, t.screenshot_file, t.recipient_phone, t.network_provider, u.phone_number 
+                   FROM transactions t JOIN users u ON t.user_id = u.id WHERE t.status = 'pending' ORDER BY t.timestamp ASC;''')
+    txs = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('admin/approvals.html', pending_transactions=txs)
+
+@app.route('/admin/action_transaction/<int:tx_id>/<string:action>')
+def action_transaction(tx_id, action):
+    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT user_id, type, amount FROM transactions WHERE id = %s;', (tx_id,))
+    tx = cur.fetchone()
+    
+    if tx:
+        new_status = 'approved' if action == 'approve' else 'rejected'
+        cur.execute('UPDATE transactions SET status = %s WHERE id = %s;', (new_status, tx_id))
+        
+        if new_status == 'approved' and tx['type'] == 'deposit':
+            # Adds transaction amount to deposit balance upon admin confirmation
+            cur.execute('UPDATE users SET deposit_balance = deposit_balance + %s WHERE id = %s;', (tx['amount'], tx['user_id']))
+        elif new_status == 'rejected' and tx['type'] == 'withdrawal':
+            # Returns payout balance lock parameters back to user's wallet if cashout fails
+            cur.execute('UPDATE users SET income_balance = income_balance + %s WHERE id = %s;', (tx['amount'], tx['user_id']))
+        elif new_status == 'approved' and tx['type'] == 'withdrawal':
+            cur.execute('UPDATE users SET total_withdrawn = total_withdrawn + %s WHERE id = %s;', (tx['amount'], tx['user_id']))
+            
+        conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for('admin_approvals'))
+
+@app.route('/admin/users')
+def admin_users():
+    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
+    conn = get_db_connection()
+    cur = conn.cursor()
+    # Pulls complete data mapping user list phone number and current balance configurations
+    cur.execute('SELECT nickname, phone_number, (income_balance + deposit_balance) as wallet_balance FROM users ORDER BY id DESC;')
+    members = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('admin/users.html', members=members)
+
+@app.route('/admin/password_reset', methods=['GET', 'POST'])
+def admin_password_reset():
+    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
+    if request.method == 'POST':
+        phone = request.form.get('target_phone').strip()
+        new_pw = request.form.get('new_password')
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute('UPDATE users SET password = %s WHERE phone_number = %s;', (new_pw, phone))
+        conn.commit()
+        cur.close()
+        conn.close()
+        flash(f"Access password for +233 {phone} updated successfully.")
+    return render_template('admin/password_reset.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_logged', None)
+    return redirect(url_for('admin_login'))
