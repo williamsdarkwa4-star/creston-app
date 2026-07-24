@@ -314,3 +314,42 @@ def my_plan():
         'my_plans.html',
         active_plans=active_plans
     )
+ @app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            id,
+            phone_number,
+            income_balance,
+            today_income,
+            total_income,
+            total_withdrawn
+        FROM users
+        WHERE id = %s;
+    """, (session['user_id'],))
+
+    user = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if not user:
+        flash("User account not found.")
+        return redirect(url_for('login'))
+
+    return render_template(
+        "profile.html",
+        user_id=user["id"],
+        phone_number=user["phone_number"],
+        income_balance=float(user["income_balance"]),
+        today_income=float(user["today_income"]),
+        total_income=float(user["total_income"]),
+        total_withdrawn=float(user["total_withdrawn"])
+    )
+
