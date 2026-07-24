@@ -254,8 +254,8 @@ def withdraw():
             flash("Minimum payout threshold is GHS 40.")
             return redirect(url_for('withdraw'))
         if amount > float(user['income_balance']):
-           flash("Insufficient income balance.")
-           return redirect(url_for('withdraw'))
+    flash("Insufficient balance.")
+    return redirect(url_for('withdraw'))
 
 cur = get_db_connection().cursor()
 # continue the withdrawal code...
