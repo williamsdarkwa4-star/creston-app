@@ -3,69 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OLA | MY POWER PLANS</title>
+    <title>Creston - My Plans</title>
     <style>
-        body { background-color: #f4f6f9; color: #212121; font-family: sans-serif; margin: 0; padding: 15px; }
-        .nav-header { display: flex; align-items: center; padding: 10px 5px; margin-bottom: 20px; font-weight: bold; font-size: 18px; }
-        .back-btn { font-size: 24px; margin-right: 15px; text-decoration: none; color: #212121; }
-        .card { background-color: #ffffff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); margin-bottom: 15px; border-left: 5px solid #212121; }
-        .card.expired { border-left-color: #cccccc; opacity: 0.7; }
-        .title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .plan-name { font-size: 16px; font-weight: bold; }
-        .status-badge { font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
-        .badge-active { background-color: #e1ff00; color: #000; }
-        .badge-expired { background-color: #e2e8f0; color: #64748b; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; font-size: 13px; }
-        .lbl { color: #8a8a8a; margin-bottom: 2px; }
-        .val { font-weight: bold; }
-        .date { font-size: 11px; color: #aaaaaa; border-top: 1px solid #f8fafc; padding-top: 8px; }
-        .empty { text-align: center; color: #8a8a8a; padding: 50px 20px; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,sans-serif; }
+        body { background-color:#f7f9fc; padding:20px; color:#111111; }
+        .hdr { display:flex; align-items:center; gap:12px; margin-bottom:24px; font-weight:bold; font-size:1.2rem; }
+        .plan-card { background:#ffffff; border-radius:20px; padding:20px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.02); border:1px solid #edf2f7; }
+        .row-split { display:flex; justify-content:between; margin-bottom:8px; font-size:0.9rem; }
     </style>
 </head>
 <body>
-
-<div class="nav-header">
-    <a href="{{ url_for('profile') }}" class="back-btn">‹</a>
-    MY ACTIVE POWER PLANS
-</div>
-
-{% if not contracts %}
-<div class="empty">You haven't activated any investment power plans yet.</div>
-{% endif %}
-
-{% for plan in contracts %}
-<div class="card {% if not plan.is_active %}expired{% endif %}">
-    <div class="title-row">
-        <div class="plan-name">{{ plan.name }}</div>
-        <div>
-            {% if plan.is_active %}
-            <span class="status-badge badge-active">RUNNING</span>
-            {% else %}
-            <span class="status-badge badge-expired">EXPIRED</span>
-            {% endif %}
+    <div class="hdr"><a href="/profile" style="text-decoration:none; color:black;">‹</a> My Power Plans</div>
+    
+    {% if active_plans %}
+        {% for plan in active_plans %}
+        <div class="plan-card">
+            <div style="font-weight:bold; font-size:1.1rem; margin-bottom:12px; color:#2d3748;">⚡ CRESTON Plan #{{ plan.plan_type }}</div>
+            <div class="row-split"><span>Invested Capital:</span><span style="font-weight:bold;">GHS {{ plan.purchase_price }}</span></div>
+            <div class="row-split"><span>Daily Yield Rate:</span><span style="color:#34d399; font-weight:bold;">+GHS {{ plan.daily_yield }}</span></div>
+            <div class="row-split"><span>Activation Date:</span><span style="color:#718096;">{{ plan.date_activated }}</span></div>
         </div>
-    </div>
-    <div class="grid">
-        <div>
-            <div class="lbl">Purchase Price</div>
-            <div class="val">GHS {{ plan.price }}</div>
-        </div>
-        <div>
-            <div class="lbl">Daily Yield</div>
-            <div class="val">GHS {{ plan.daily }}</div>
-        </div>
-        <div>
-            <div class="lbl">Cycles Left</div>
-            <div class="val">{{ plan.days_left }} Days</div>
-        </div>
-        <div>
-            <div class="lbl">Total Generated</div>
-            <div class="val" style="color:#094a28;">GHS {{ "%.2f"|format(plan.total_earned) }}</div>
-        </div>
-    </div>
-    <div class="date">Activated: {{ plan.date }}</div>
-</div>
-{% endfor %}
-
+        {% endfor %}
+    {% else %}
+        <div style="text-align:center; color:#a0aec0; margin-top:50px;">You do not have any running power plans yet.</div>
+    {% endif %}
 </body>
 </html>
