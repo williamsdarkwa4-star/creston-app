@@ -14,11 +14,26 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def get_db_connection():
-    db_url = os.environ.get('DATABASE_URL')
-    if not db_url:
-        # Local Pydroid 3 terminal isolated manual sandbox connection parameter string
-        return psycopg2.connect("dbname=creston_db user=postgres password=secret", cursor_factory=RealDictCursor)
-    return psycopg2.connect(db_url, cursor_factory=RealDictCursor)
+    db_url = os.environ.get("DATABASE_URL")
+
+    if db_url:
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+        return psycopg2.connect(
+            db_url,
+            cursor_factory=RealDictCursor
+        )
+
+    # Local database (Pydroid)
+    return psycopg2.connect(
+        dbname="creston_db",
+        user="postgres",
+        password="secret",
+        host="localhost",
+        port=5432,
+        cursor_factory=RealDictCursor
+    )
 
 def init_db():
     conn = get_db_connection()
@@ -136,14 +151,12 @@ def login():
         conn.close()
         
         # Fixed comparison using explicit database row item index spacing
-        if user and user[2] == password:
-            session['user_id'] = user[0]
-            session['nickname'] = user[1]
-            return redirect(url_for('dashboard'))
-        else:
-            flash("Invalid authentication credential pairing.")
-            
-    return render_template('login.html')
+        if user and user["password"] == password:
+    session["user_id"] = user["id"]
+    session["nickname"] = user["nickname"]
+    return redirect(url_for("dashboard"))
+else:
+    flash("Invalid authentication credential pairing.")
 
 @app.route('/dashboard')
 def dashboard():
