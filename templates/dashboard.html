@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creston - Home</title>
     <style>
-        /* Mobile-first layout configurations */
+        /* Mobile-first structural layout configurations tracking */
         * {
             margin: 0;
             padding: 0;
@@ -16,13 +16,13 @@
         body {
             background-color: #f7f9fc;
             color: #111111;
-            padding-bottom: 90px; /* Leave room for fixed bottom navigation bar */
+            padding-bottom: 90px; /* Generous baseline space footprint layout for bottom navigation bar */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Top Dark Brand Banner Box */
+        /* Top Dark Brand Banner Layout Strip Component Box */
         .top-navbar {
             background-color: #212121;
             padding: 24px 16px 50px 16px;
@@ -41,7 +41,7 @@
             gap: 12px;
         }
 
-        /* Yellow Target Core Minimalistic Profile Logo Grid */
+        /* Yellow Target Core Minimalistic Profile Logo Grid Asset */
         .mini-logo {
             width: 44px;
             height: 44px;
@@ -87,7 +87,7 @@
             border-radius: 50%;
         }
 
-        /* Wallet Overlapping Card Balance Module Dashboard */
+        /* Wallet Overlapping Card Balance Module Dashboard Panel Layout */
         .wallet-card {
             background-color: #ffffff;
             border-radius: 28px;
@@ -125,7 +125,7 @@
             color: #111111;
         }
 
-        /* Financial Operational Actions Button Wrapper Links */
+        /* Operational Financial Link Actions Button Matrix Layout Container */
         .wallet-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -155,7 +155,7 @@
             background-color: #ffffff;
         }
 
-        /* Section Investment Plans Label Header Matrix */
+        /* Section Investment Plans Label Header Indicator Alignment */
         .section-container {
             padding: 0 16px;
             margin-bottom: 15px;
@@ -179,7 +179,7 @@
             border-radius: 10px;
         }
 
-        /* Package Dynamic Catalog Card Display Framework Blocks */
+        /* Package Catalog Card Display Framework Blocks Modules */
         .plan-card {
             background-color: #ffffff;
             border-radius: 28px;
@@ -199,7 +199,7 @@
         .plan-icon-box {
             width: 65px;
             height: 65px;
-            background-color: #fff5eb; /* Soft ambient icon fill backdrop */
+            background-color: #fff5eb;
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -225,7 +225,7 @@
             color: #111111;
         }
 
-        /* Metric Grid Blocks */
+        /* Metric Data Grid Rows */
         .plan-metrics-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -255,7 +255,7 @@
             color: #334155;
         }
 
-        /* Interactive Action Buy Execution Component Trigger Button */
+        /* Interactive Action Buy Execution Component Trigger Button Layout */
         .invest-now-btn {
             background-color: #292929;
             color: #ffffff;
@@ -271,11 +271,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .invest-now-btn:active {
-            background-color: #111111;
-        }
-
-        /* Fixed Mobile Tab Navigation Ribbon UI Container */
+        /* Fixed Mobile Tab Navigation Ribbon UI Container Panel Strip */
         .bottom-nav-bar {
             position: fixed;
             bottom: 0;
@@ -284,10 +280,10 @@
             background-color: #ffffff;
             height: 68px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(3, 1fr);
             border-top: 1px solid #edf2f7;
             z-index: 100;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
         }
 
         .nav-item {
@@ -305,11 +301,22 @@
         }
 
         .nav-item.active {
-            color: #111111; /* Active home navigation tab marker state indicator */
+            color: #111111; /* Active home navigation state indicator tracking variable color alignment */
         }
 
         .nav-icon {
             font-size: 1.2rem;
+        }
+        
+        .alert-banner-box {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin: 10px 16px;
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -329,16 +336,16 @@
         <div class="user-avatar-placeholder"></div>
     </div>
 
-    <!-- Client Capital Summary Metrics Panel Card -->
+    <!-- Client Wallet Summary Metrics Display Widget Card -->
     <div class="wallet-card">
         <div class="wallet-grids">
             <div class="wallet-node">
                 <span class="wallet-label">Income Wallet</span>
-                <span class="wallet-amount">GHS {{ "{:,.2f}".format(income_balance) }}</span>
+                <span class="wallet-amount">GHS {{ "{:,.2f}".format(income_balance|float) }}</span>
             </div>
             <div class="wallet-node">
                 <span class="wallet-label">Deposit Wallet</span>
-                <span class="wallet-amount">GHS {{ "{:,.2f}".format(deposit_balance) }}</span>
+                <span class="wallet-amount">GHS {{ "{:,.2f}".format(deposit_balance|float) }}</span>
             </div>
         </div>
         <div class="wallet-actions">
@@ -347,13 +354,3 @@
         </div>
     </div>
 
-    <!-- Investment catalog wrapper entry field list section label -->
-    <div class="section-container">
-        <h2 class="section-title">Investment Plans</h2>
-    </div>
-
-    <!-- Form layout generation iterating over all your specific plan calculations -->
-    <form action="/invest" method="POST">
-        
-        <!-- Plan 1 -->
-        <div class="plan-card">
