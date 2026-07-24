@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Pay</title>
+    <style>
+        body { background-color: #f4f6f9; color: #212121; font-family: sans-serif; margin: 0; text-align: center; }
+        .top-banner { background: linear-gradient(180deg, #094a28 0%, #157347 100%); color: white; padding: 35px 20px 60px 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; }
+        .banner-lbl { font-size: 12px; opacity: 0.8; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
+        .banner-amt { font-size: 36px; font-weight: 800; margin-top: 8px; }
+        .card-container { max-width: 400px; background-color: white; border-radius: 30px; margin: -40px auto 20px auto; padding: 30px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .chan-title { font-size: 16px; font-weight: bold; color: #444; margin-bottom: 20px; }
+        .logo-box { width: 180px; height: 180px; border: 4px solid #f1f3f5; border-radius: 20px; margin: 0 auto 25px auto; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .logo-img { width: 100%; height: auto; object-fit: contain; }
+        .copy-box { background-color: #fffbeb; border: 1px solid #fef3c7; border-radius: 15px; padding: 15px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px; color: #b45309; margin-bottom: 25px; cursor: pointer; }
+        .notice-box { background-color: #eff6ff; border-radius: 15px; padding: 15px; color: #1e40af; font-size: 13px; line-height: 1.5; text-align: left; display: flex; align-items: flex-start; margin-bottom: 35px; }
+        .btn-paid { background-color: #212121; color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; letter-spacing: 1px; }
+        /* Modal Window Popups Layout matching Screenshot 5 */
+        .modal-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
+        .modal-sheet { background-color: white; border-top-left-radius: 35px; border-top-right-radius: 35px; width: 100%; max-width: 450px; padding: 30px 25px; text-align: left; box-sizing: border-box; }
+        .modal-title { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 25px; }
+        .form-grp { margin-bottom: 20px; }
+        .form-grp label { font-size: 13px; font-weight: bold; color: #444; display: block; margin-bottom: 8px; }
+        .form-grp input[type="text"] { width: 100%; border: 1px solid #e2e8f0; background-color: #f8fafc; border-radius: 15px; padding: 15px; font-size: 15px; outline: none; box-sizing: border-box; }
+        .form-grp input[type="file"] { width: 100%; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 15px; padding: 12px; box-sizing: border-box; }
+        .btn-submit { background-color: #212121; color: white; border: none; width: 100%; padding: 16px; border-radius: 20px; font-size: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="top-banner">
+    <div class="banner-lbl">PAYMENT AMOUNT</div>
+    <div class="banner-amt">{{ "%.2f"|format(amount|float) }}</div>
+</div>
+
+<div class="card-container">
+    <div class="chan-title">Channel: {{ channel }}</div>
+    
+    <div class="logo-box">
+        {% if channel == 'MTN' %}
+            <!-- MTN Yellow Logo Asset Mockup -->
+            <div style="background-color:#fbcb04; width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:Impact; font-size:42px; color:#0c4176;">MTN</div>
+        {% else %}
+            <!-- Telecel Red Logo Asset Mockup -->
+            <div style="background-color:#e60000; width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:sans-serif; font-weight:900; font-size:64px; color:white;">t</div>
+        {% endif %}
+    </div>
+
+    <div class="copy-box" onclick="copyNumber('{{ number }}')">
+        📁 <span style="margin: 0 10px;">{{ number }}</span> 📋
+    </div>
+
+    <div class="notice-box">
+        <span style="margin-right:8px; font-size:16px;">ℹ️</span>
+        <div>Please transfer the <strong>exact amount</strong> to the number listed above. Submit your validation confirmation details below.</div>
+    </div>
+
+    <button type="button" class="btn-paid" onclick="openVerificationModal()">I HAVE PAID ➔</button>
+</div>
+
+<!-- Screenshot 5: Verification Sliding Drawer Overlay Sheet -->
+<div class="modal-bg" id="voucher-modal">
+    <div class="modal-sheet">
+        <div class="modal-title">Verify Transaction</div>
+        
+        <form action="{{ url_for('submit_voucher') }}" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="amount" value="{{ amount }}">
+            <input type="hidden" name="channel" value="{{ channel }}">
+            
+            <div class="form-grp">
+                <label>Sender's Account Name</label>
+                <input type="text" name="sender_name" placeholder="Name on bank account" required>
+            </div>
+            
+            <div class="form-grp">
+                <label>Upload Transfer Screenshot</label>
+                <input type="file" name="screenshot" accept="image/*" required>
+            </div>
+            
+            <button type="submit" class="btn-submit">CONFIRM & SUBMIT</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function copyNumber(num) {
+        navigator.clipboard.writeText(num);
+        alert("Merchant wallet string copied: " + num);
+    }
+    function openVerificationModal() {
+        document.getElementById('voucher-modal').style.display = 'flex';
+    }
+</script>
+</body>
+</html>

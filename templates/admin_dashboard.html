@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creston | Administration Matrix</title>
+    <style>
+        body { background-color: #0c0d12; color: #e2e8f0; font-family: system-ui, sans-serif; margin: 0; padding: 20px; }
+        .nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2d3142; padding-bottom: 15px; margin-bottom: 25px; }
+        .nav-links a { color: #c4df10; text-decoration: none; margin-left: 25px; font-size: 14px; font-weight: bold; }
+        .card { background-color: #171923; border: 1px solid #2d3142; border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #2d3142; }
+        .name { font-size: 16px; font-weight: bold; color: white; }
+        .phone { color: #8a94a6; font-size: 14px; margin-left: 8px; }
+        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; font-size: 13px; }
+        .lbl { color: #8a94a6; margin-bottom: 3px; }
+        .val { font-weight: bold; font-size: 14px; }
+        .control-bar { background-color: #0f111a; padding: 12px; border-radius: 10px; display: flex; gap: 10px; align-items: center; }
+        .fund-form { display: flex; gap: 6px; flex-grow: 1; }
+        .fund-form input, .fund-form select { background-color: #171923; border: 1px solid #2d3142; color: white; padding: 8px; border-radius: 6px; }
+        .btn { padding: 8px 14px; font-size: 12px; font-weight: bold; border-radius: 6px; border: none; cursor: pointer; text-transform: uppercase; }
+        .btn-add { background-color: #c4df10; color: black; }
+        .btn-ban { background-color: #ef4444; color: white; }
+        .btn-unban { background-color: #10b981; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="nav">
+    <h2>System User Matrix</h2>
+    <div class="nav-links">
+        <a href="{{ url_for('admin_approvals') }}">Reconciliation Hub Queue</a>
+        <a href="{{ url_for('admin_logout') }}" style="color:#ef4444;">Disconnect Panel</a>
+    </div>
+</div>
+
+{% for u in users %}
+<div class="card">
+    <div class="row">
+        <div>
+            <span class="name">{{ u.nickname }}</span>
+            <span class="phone">({{ u.phone }})</span>
+        </div>
+        <div>
+            {% if u.banned %}
+                <span style="color:#ef4444; font-weight:bold; font-size:12px;">🚫 ACCOUNT SUSPENDED</span>
+            {% else %}
+                <span style="color:#10b981; font-weight:bold; font-size:12px;">🟢 ACTIVE PROFILE</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="metrics">
+        <div>
+            <div class="lbl">Deposit Balance</div>
+            <div class="val">GHS {{ u.deposit }}</div>
+        </div>
+        <div>
+            <div class="lbl">Income Profits</div>
+            <div class="val">GHS {{ u.income }}</div>
+        </div>
+        <div>
+            <div class="lbl">Purchased Portfolios</div>
+            <div class="val">{{ u.plans }} Plan Tiers</div>
+        </div>
+    </div>
+    <div class="control-bar">
+        <form action="{{ url_for('admin_add_funds') }}" method="POST" class="fund-form">
+            <input type="hidden" name="user_id" value="{{ u.id }}">
+            <input type="number" name="amount" step="0.01" placeholder="Amount" required style="width:90px;">
+            <select name="target_wallet">
+                <option value="deposit_wallet">Deposit Wallet</option>
+                <option value="income_wallet">Income Wallet</option>
+            </select>
+            <button type="submit" class="btn btn-add">Inject Funds</button>
+        </form>
+        {% if u.banned %}
+            <form action="{{ url_for('admin_toggle_ban_status', user_id=u.id, ban_status=0) }}" method="POST">
+                <button type="submit" class="btn btn-unban">Release Ban</button>
+            </form>
+        {% else %}
+            <form action="{{ url_for('admin_toggle_ban_status', user_id=u.id, ban_status=1) }}" method="POST">
+                <button type="submit" class="btn btn-ban">Freeze User</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+</body>
+</html>

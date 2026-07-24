@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLA | REFERRAL PROGRAM</title>
+    <style>
+        body { background-color: #212121; color: #ffffff; font-family: sans-serif; margin: 0; padding: 15px; padding-bottom: 80px; }
+        .nav-header { display: flex; align-items: center; padding: 10px 5px; margin-bottom: 20px; }
+        .back-btn { font-size: 24px; margin-right: 15px; text-decoration: none; color: white; }
+        .title { font-size: 18px; font-weight: bold; }
+        .hero-banner { background: linear-gradient(135deg, #c4df10 0%, #a4bc0a 100%); color: #212121; border-radius: 25px; padding: 25px 20px; text-align: center; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .hero-title { font-size: 22px; font-weight: 800; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hero-desc { font-size: 13px; font-weight: 600; opacity: 0.8; margin: 0; line-height: 1.4; }
+        .stats-grid { display: flex; justify-content: space-between; margin-bottom: 25px; }
+        .stat-card { background-color: #2b2b2b; width: 48%; border-radius: 18px; padding: 15px; box-sizing: border-box; text-align: center; border: 1px solid #3a3a3a; }
+        .stat-lbl { color: #8a8a8a; font-size: 11px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+        .stat-val { font-size: 18px; font-weight: bold; color: #ffffff; }
+        .invite-section { background-color: #2b2b2b; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid #3a3a3a; margin-bottom: 25px; }
+        .sec-lbl { font-size: 13px; color: #8a8a8a; font-weight: bold; margin-bottom: 12px; text-align: left; text-transform: uppercase; }
+        .code-box { background-color: #1e1e1e; border: 1px dashed #c4df10; border-radius: 12px; padding: 14px; font-size: 20px; font-weight: 800; letter-spacing: 2px; color: #c4df10; margin-bottom: 15px; }
+        .link-box { background-color: #1e1e1e; border-radius: 12px; padding: 14px; font-size: 12px; color: #aeaeae; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 15px; border: 1px solid #1a1a1a; }
+        .btn-copy { background-color: #c4df10; color: #212121; border: none; width: 100%; padding: 15px; border-radius: 15px; font-size: 14px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .info-box { background-color: #2b2b2b; border-radius: 20px; padding: 20px; border: 1px solid #3a3a3a; }
+        .info-item { display: flex; align-items: flex-start; margin-bottom: 15px; }
+        .info-item:last-child { margin-bottom: 0; }
+        .info-icon { background-color: #1e1e1e; color: #c4df10; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; flex-shrink: 0; font-size: 13px; }
+        .info-text h4 { margin: 0 0 4px 0; font-size: 14px; color: #ffffff; }
+        .info-text p { margin: 0; font-size: 12px; color: #8a8a8a; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div class="nav-header">
+    <a href="{{ url_for('dashboard') }}" class="back-btn">‹</a>
+    <div class="title">INVITE FRIENDS</div>
+</div>
+
+<div class="hero-banner">
+    <div class="hero-title">Earn 10% Commission</div>
+    <p class="hero-desc">Invite your friends to invest with OLA and immediately claim a 10% cash bonus directly added to your income balance.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-lbl">Total Team Signups</div>
+        <div class="stat-val">{{ count }} Members</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-lbl">Commission Accrued</div>
+        <div class="stat-val" style="color: #c4df10;">GHS {{ "%.2f"|format(earnings) }}</div>
+    </div>
+</div>
+
+<div class="invite-section">
+    <div class="sec-lbl">Your Unique Referral Code</div>
+    <div class="code-box">{{ code }}</div>
+    
+    <div class="sec-lbl">Your Exclusive Invitation Link</div>
+    <div class="link-box" id="ref-link-text">{{ link }}</div>
+    
+    <button type="button" class="btn-copy" onclick="copyReferralLink()">Copy Sharing Link 📋</button>
+</div>
+
+<div class="info-box">
+    <div class="sec-lbl">How Payouts Work</div>
+    
+    <div class="info-item">
+        <div class="info-icon">1</div>
+        <div class="info-text">
+            <h4>Share Your Tracking Code</h4>
+            <p>Send your custom link or code entry token to network marketers or downlines.</p>
+        </div>
+    </div>
+    <div class="info-item">
+        <div class="info-icon">2</div>
+        <div class="info-text">
+            <h4>Downline Account Funding</h4>
+            <p>Your team registers their profiles and completes their deposit refills.</p>
+        </div>
+    </div>
+    <div class="info-item">
+        <div class="info-icon">3</div>
+        <div class="info-text">
+            <h4>Instant Commission Credit</h4>
+            <p>The moment they buy any daily investment package, 10% cash credits instantly to your income wallet.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyReferralLink() {
+        const linkText = document.getElementById('ref-link-text').innerText;
+        navigator.clipboard.writeText(linkText);
+        alert("Referral link successfully copied to your clipboard!");
+    }
+</script>
+</body>
+</html>

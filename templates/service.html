@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OLA | CUSTOMER CARE</title>
+    <style>
+        body { background-color: #2b2b2b; color: #ffffff; font-family: sans-serif; margin: 0; padding: 15px; padding-bottom: 80px; }
+        .nav-header { display: flex; align-items: center; padding: 10px 5px; margin-bottom: 25px; font-weight: bold; font-size: 18px; }
+        .back-btn { font-size: 24px; margin-right: 15px; text-decoration: none; color: #ffffff; }
+        .hero-banner { background-color: #1e1e1e; border-radius: 25px; padding: 30px 20px; text-align: center; margin-bottom: 25px; border: 1px solid #3a3a3a; }
+        .hero-icon { font-size: 40px; margin-bottom: 10px; }
+        .hero-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; color: #c4df10; }
+        .hero-desc { font-size: 12px; color: #aeaeae; margin: 0; line-height: 1.5; }
+        .section-lbl { color: #7c7c7c; font-size: 12px; font-weight: bold; margin-bottom: 12px; letter-spacing: 0.5px; text-transform: uppercase; padding-left: 5px; }
+        .service-list { background-color: #1e1e1e; border-radius: 20px; overflow: hidden; margin-bottom: 25px; border: 1px solid #3a3a3a; }
+        .service-item { display: flex; align-items: center; padding: 18px 20px; text-decoration: none; color: #ffffff; border-bottom: 1px solid #2b2b2b; }
+        .service-item:last-child { border-bottom: none; }
+        .item-icon { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right: 15px; color: white; }
+        .bg-whatsapp { background-color: #25D366; }
+        .bg-telegram { background-color: #0088cc; }
+        .bg-faq { background-color: #4b5563; }
+        .item-details { flex-grow: 1; }
+        .item-title { font-size: 14px; font-weight: bold; }
+        .item-subtitle { font-size: 11px; color: #aeaeae; margin-top: 2px; }
+        .arrow { color: #555; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="nav-header">
+    <a href="{{ url_for('dashboard') }}" class="back-btn">‹</a>
+    HELP & SUPPORT
+</div>
+
+<div class="hero-banner">
+    <div class="hero-icon">🎧</div>
+    <div class="hero-title">How can we help you?</div>
+    <p class="hero-desc">Our online support channels are active 24/7 to resolve network loading, deposits, and withdrawal queries instantly.</p>
+</div>
+
+<div class="section-lbl">Direct Channels</div>
+<div class="service-list">
+    <!-- Replace links below with your actual channel invitation groups -->
+    <a href="https://wa.me" target="_blank" class="service-item">
+        <div class="item-icon bg-whatsapp">💬</div>
+        <div class="item-details">
+            <div class="item-title">WhatsApp Support</div>
+            <div class="item-subtitle">Direct line for instant billing reconciliation</div>
+        </div>
+        <div class="arrow">›</div>
+    </a>
+    <a href="https://t.me/+G5crUBDg5uFmMmY0" target="_blank" class="service-item">
+        <div class="item-icon bg-telegram">✈️</div>
+        <div class="item-details">
+            <div class="item-title">Official Telegram Channel</div>
+            <div class="item-subtitle">Join the group for payout updates and news</div>
+        </div>
+        <div class="arrow">›</div>
+    </a>
+</div>
+
+<div class="section-lbl">Resources</div>
+<div class="service-list">
+    <a href="#" class="service-item">
+        <div class="item-icon bg-faq">❓</div>
+        <div class="item-details">
+            <div class="item-title">Frequently Asked Questions</div>
+            <div class="item-subtitle">Learn how the system generates daily yields</div>
+        </div>
+        <div class="arrow">›</div>
+    </a>
+</div>
+
+</body>
+</html>

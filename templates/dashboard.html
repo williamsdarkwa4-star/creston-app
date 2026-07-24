@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creston - Dashboard</title>
+    <style>
+        body {
+            background-color: #f7f9fb;
+            color: #111111;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding-bottom: 80px;
+        }
+        .header {
+            background-color: #212121;
+            color: #ffffff;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            padding: 30px 20px 70px 20px;
+            display: flex;
+            align-items: center;
+        }
+        .logo-circle {
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle, #e1ff00 30%, #000 70%);
+            border: 2px solid #e1ff00;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .header-title h2 { margin: 0; font-size: 20px; letter-spacing: 1px; }
+        .header-title p { margin: 2px 0 0 0; font-size: 11px; color: #ccff00; font-weight: bold; }
+        
+        .main-content {
+            max-width: 450px;
+            margin: -50px auto 0 auto;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+        .wallet-card {
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+        }
+        .wallet-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .wallet-box { width: 48%; }
+        .wallet-label { font-size: 11px; color: #888888; text-transform: uppercase; font-weight: bold; }
+        .wallet-value { font-size: 18px; font-weight: 800; color: #212121; margin-top: 5px; }
+        
+        .action-grid { display: flex; justify-content: space-between; }
+        .btn-action {
+            width: 48%;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-dark { background-color: #2b2b2b; color: white; }
+        .btn-light { background-color: white; color: #2b2b2b; border: 1px solid #dddddd; }
+
+        .section-title { font-size: 18px; font-weight: bold; margin: 25px 0 15px 5px; display: flex; align-items: center; }
+        .section-title::before { content: ""; width: 4px; height: 18px; background-color: #212121; display: inline-block; margin-right: 8px; border-radius: 2px; }
+
+        .plan-card {
+            background-color: white;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+        }
+        .plan-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .plan-icon { width: 55px; height: 55px; background-color: #fff5eb; border-radius: 16px; margin-right: 15px; }
+        .plan-name { font-size: 16px; font-weight: bold; color: #333; }
+        .plan-price { font-size: 20px; font-weight: 800; color: #111; margin-top: 2px; }
+
+        .plan-details { display: flex; justify-content: space-between; background-color: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 15px; }
+        .detail-item { text-align: center; width: 33%; }
+        .detail-lbl { font-size: 10px; color: #888888; font-weight: 600; }
+        .detail-val { font-size: 13px; font-weight: bold; color: #212121; margin-top: 3px; }
+
+        .btn-invest {
+            background: linear-gradient(to right, #2b2b2b, #444444);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .flash { color: #d9534f; font-size: 13px; text-align: center; margin-bottom: 10px; list-style: none; padding: 0; }
+
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 60px;
+            background-color: white; border-top: 1px solid #eeeeee;
+            display: flex; justify-content: space-around; align-items: center;
+        }
+        .nav-item { text-decoration: none; color: #888888; font-size: 12px; font-weight: bold; }
+        .nav-active { color: #212121; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo-circle"></div>
+    <div class="header-title">
+        <h2>CRESTON</h2>
+        <p>CLEAN ENERGY. PURE PROFIT.</p>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="wallet-card">
+        {% with msgs = get_flashed_messages() %}
+            {% if msgs %}<ul class="flash">{% for m in msgs %}<li>{{m}}</li>{% endfor %}</ul>{% endif %}
+        {% endwith %}
+        <div class="wallet-grid">
+            <div class="wallet-box">
+                <div class="wallet-label">Income Wallet</div>
+                <div class="wallet-value">GHS {{ "%.2f"|format(income) }}</div>
+            </div>
+            <div class="wallet-box">
+                <div class="wallet-label">Deposit Wallet</div>
+                <div class="wallet-value">GHS {{ "%.2f"|format(deposit) }}</div>
+            </div>
+        </div>
+        <div class="action-grid">
+            <a href="#" class="btn-action btn-dark">DEPOSIT</a>
+            <a href="#" class="btn-action btn-light">WITHDRAW</a>
+        </div>
+    </div>
+
+    <div class="section-title">Investment Plans</div>
+
+    {% for plan in plans %}
+    <div class="plan-card">
+        <div class="plan-header">
+            <div class="plan-icon"></div>
+            <div>
+                <div class="plan-name">{{ plan.name }}</div>
+                <div class="plan-price">GHS {{ plan.price }}</div>
+            </div>
+        </div>
+        <div class="plan-details">
+            <div class="detail-item">
+                <div class="detail-lbl">DAILY</div>
+                <div class="detail-val">GHS {{ plan.daily }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-lbl">VALIDITY</div>
+                <div class="detail-val">{{ plan.validity }} Days</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-lbl">TOTAL</div>
+                <div class="detail-val">GHS {{ plan.total }}</div>
+            </div>
+        </div>
+        <form action="{{ url_for('invest_plan', plan_id=plan.id) }}" method="POST">
+            <button type="submit" class="btn-invest">INVEST NOW</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="nav-bar">
+    <a href="#" class="nav-item nav-active">HOME</a>
+    <a href="#" class="nav-item">INVITE</a>
+    <a href="#" class="nav-item">PROFILE</a>
+</div>
+
+</body>
+</html>
