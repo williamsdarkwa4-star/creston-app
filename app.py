@@ -32,6 +32,8 @@ def init_db():
             nickname VARCHAR(100) NOT NULL,
             phone_number VARCHAR(20) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS withdraw_password VARCHAR(255);
             invite_code VARCHAR(50) UNIQUE,
             referred_by VARCHAR(50),
             income_balance NUMERIC(15, 2) DEFAULT 0.00,
@@ -388,7 +390,42 @@ def withdraw():
         income_balance=user['income_balance']
     )
 
-    
+ @app.route('/set_withdraw_password', methods=['GET', 'POST'])
+def set_withdraw_password():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+
+        password = request.form.get('password')
+        confirm = request.form.get('confirm_password')
+
+        if password != confirm:
+            flash("Passwords do not match.")
+            return redirect(url_for('set_withdraw_password'))
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            UPDATE users
+            SET withdraw_password=%s
+            WHERE id=%s;
+        """,
+        (
+            password,
+            session['user_id']
+        ))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        flash("Withdrawal password saved successfully.")
+        return redirect(url_for('profile'))
+
+    return render_template("set_withdraw_password.html")   
 # ==========================================
 # CLIENT SERVICE / SUPPORT ROUTE
 # ==========================================
