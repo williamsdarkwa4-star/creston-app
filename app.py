@@ -218,7 +218,7 @@ def invest():
     cur.close()
     conn.close()
     flash(f"CRESTON Plan #{plan_id} activated successfully! Running compounding ledger synced.")
-    return redirect(url_for('profile'))
+    return redirect(url_for('my_plans'))
 
 @app.route('/deposit', methods=['GET', 'POST'])
 def deposit():
@@ -286,3 +286,31 @@ def withdraw():
         phone = request.form.get('recipient_phone')
         amount = float(request.form.get('withdraw_amount', 0))
         
+@app.route('/my_plan')
+def my_plan():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            plan_type,
+            purchase_price,
+            daily_yield,
+            date_activated
+        FROM user_plans
+        WHERE user_id = %s
+        ORDER BY date_activated DESC;
+    """, (session['user_id'],))
+
+    active_plans = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        'my_plans.html',
+        active_plans=active_plans
+    )
