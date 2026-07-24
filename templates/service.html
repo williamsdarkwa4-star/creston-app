@@ -3,74 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OLA | CUSTOMER CARE</title>
+    <title>Creston - Support Center</title>
     <style>
-        body { background-color: #2b2b2b; color: #ffffff; font-family: sans-serif; margin: 0; padding: 15px; padding-bottom: 80px; }
-        .nav-header { display: flex; align-items: center; padding: 10px 5px; margin-bottom: 25px; font-weight: bold; font-size: 18px; }
-        .back-btn { font-size: 24px; margin-right: 15px; text-decoration: none; color: #ffffff; }
-        .hero-banner { background-color: #1e1e1e; border-radius: 25px; padding: 30px 20px; text-align: center; margin-bottom: 25px; border: 1px solid #3a3a3a; }
-        .hero-icon { font-size: 40px; margin-bottom: 10px; }
-        .hero-title { font-size: 18px; font-weight: bold; margin-bottom: 5px; color: #c4df10; }
-        .hero-desc { font-size: 12px; color: #aeaeae; margin: 0; line-height: 1.5; }
-        .section-lbl { color: #7c7c7c; font-size: 12px; font-weight: bold; margin-bottom: 12px; letter-spacing: 0.5px; text-transform: uppercase; padding-left: 5px; }
-        .service-list { background-color: #1e1e1e; border-radius: 20px; overflow: hidden; margin-bottom: 25px; border: 1px solid #3a3a3a; }
-        .service-item { display: flex; align-items: center; padding: 18px 20px; text-decoration: none; color: #ffffff; border-bottom: 1px solid #2b2b2b; }
-        .service-item:last-child { border-bottom: none; }
-        .item-icon { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right: 15px; color: white; }
-        .bg-whatsapp { background-color: #25D366; }
-        .bg-telegram { background-color: #0088cc; }
-        .bg-faq { background-color: #4b5563; }
-        .item-details { flex-grow: 1; }
-        .item-title { font-size: 14px; font-weight: bold; }
-        .item-subtitle { font-size: 11px; color: #aeaeae; margin-top: 2px; }
-        .arrow { color: #555; font-weight: bold; }
+        /* Mobile-first safety configurations */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f7f9fc;
+            color: #111111;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Dark Hero Support Canvas Section */
+        .support-hero-canvas {
+            background-color: #212121;
+            padding: 30px 16px 50px 16px;
+            color: #ffffff;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            position: relative;
+        }
+
+        /* Round back action alignment row matching photo layout */
+        .nav-back-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .round-back-btn {
+            width: 40px;
+            height: 40px;
+            background-color: #333333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .header-meta-stack {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .center-heading-lbl {
+            font-size: 1.15rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .center-sub-tag {
+            font-size: 0.65rem;
+            color: #aaaaaa;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Large Bold Intent Prompt Copy Block */
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            padding: 0 4px;
+        }
+
+        .prompt-description {
+            font-size: 0.9rem;
+            color: #cccccc;
+            line-height: 1.5;
+            padding: 0 4px;
+        }
+
+        /* Floating Overlapping Navigation Card Stack Setup Layout Components */
+        .cards-stack-frame {
+            margin: -30px 16px 20px 16px;
+            z-index: 5;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .channel-link-card {
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #111111;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f0f2f5;
+            transition: transform 0.2s;
+        }
+
+        .channel-link-card:active {
+            background-color: #f8fafc;
+        }
+
+        /* Large dynamic colorful circle background icon icons wrapper layout */
+        .channel-icon-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-right: 16px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Specific app color parameters mapping image look */
+        .channel-icon-circle.telegram {
+            background-color: #0088cc;
+        }
+
+        .channel-icon-circle.whatsapp {
+            background-color: #25d366;
+        }
+
+        .card-text-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            text-align: left;
+        }
+
+        .card-title-lbl {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1a202c;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .card-desc-lbl {
+            font-size: 0.72rem;
+            color: #a0aec0;
+            line-height: 1.3;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .card-chevron-marker {
+            margin-left: auto;
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        /* Banner highlight decoration container tracking layout lower sheet bottom node */
+        .accent-promo-banner {
+            background-color: #ccff00; /* Vivid bright lime yellow match */
+            border-radius: 20px;
+            padding: 16px 20px;
+            margin: 10px 16px 30px 16px;
+            text-align: center;
+            font-weight: bold;
+            color: #111111;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(204,255,0,0.2);
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
-<div class="nav-header">
-    <a href="{{ url_for('dashboard') }}" class="back-btn">‹</a>
-    HELP & SUPPORT
-</div>
-
-<div class="hero-banner">
-    <div class="hero-icon">🎧</div>
-    <div class="hero-title">How can we help you?</div>
-    <p class="hero-desc">Our online support channels are active 24/7 to resolve network loading, deposits, and withdrawal queries instantly.</p>
-</div>
-
-<div class="section-lbl">Direct Channels</div>
-<div class="service-list">
-    <!-- Replace links below with your actual channel invitation groups -->
-    <a href="https://wa.me" target="_blank" class="service-item">
-        <div class="item-icon bg-whatsapp">💬</div>
-        <div class="item-details">
-            <div class="item-title">WhatsApp Support</div>
-            <div class="item-subtitle">Direct line for instant billing reconciliation</div>
+    <!-- Upper Hero Branding Support Section Frame Block -->
+    <div class="support-hero-canvas">
+        <div class="nav-back-row">
+            <a href="/profile" class="round-back-btn">←</a>
+            <div class="header-meta-stack">
+                <span class="center-heading-lbl">Support Center</span>
+                <span class="center-sub-tag">Creston Helpdesk</span>
+            </div>
         </div>
-        <div class="arrow">›</div>
-    </a>
-    <a href="https://t.me/+G5crUBDg5uFmMmY0" target="_blank" class="service-item">
-        <div class="item-icon bg-telegram">✈️</div>
-        <div class="item-details">
-            <div class="item-title">Official Telegram Channel</div>
-            <div class="item-subtitle">Join the group for payout updates and news</div>
-        </div>
-        <div class="arrow">›</div>
-    </a>
-</div>
 
-<div class="section-lbl">Resources</div>
-<div class="service-list">
-    <a href="#" class="service-item">
-        <div class="item-icon bg-faq">❓</div>
-        <div class="item-details">
-            <div class="item-title">Frequently Asked Questions</div>
-            <div class="item-subtitle">Learn how the system generates daily yields</div>
-        </div>
-        <div class="arrow">›</div>
-    </a>
-</div>
+        <h1 class="prompt-title">How can we help you?</h1>
+        <p class="prompt-description">
+            Our technical support team is available to assist you with investment, recharge, or withdrawal queries.
+        </p>
+    </div>
+
+    <!-- Interface Link Card Stack View Module Frame Container -->
+    <div class="cards-stack-frame">
+        
+        <!-- Row Item 1: Telegram Support Chat -->
+        <a href="https://t.me" target="_blank" class="channel-link-card">
+            <div class="channel-icon-circle telegram">✈️</div>
+            <div class="card-text-stack">
+                <span class="card-title-lbl">Telegram Support</span>
+                <span class="card-desc-lbl">Reach us on Telegram</span>
+            </div>
+            <span class="card-chevron-marker">›</span>
+        </a>
+
+        <!-- Row Item 2: WhatsApp Support Chat -->
+        <a href="https://wa.me" target="_blank" class="channel-link-card">
+            <div class="channel-icon-circle whatsapp">💬</div>
+            <div class="card-text-stack">
+                <span class="card-title-lbl">WhatsApp Support</span>
+                <span class="card-desc-lbl">For any queries, contact us on WhatsApp</span>
+            </div>
+            <span class="card-chevron-marker">›</span>
+        </a>
+
+        <!-- Row Item 3: Telegram Announcement Broadcast Channel -->
+        <a href="https://t.me/+G5crUBDg5uFmMmY0"target="_blank" class="channel-link-card">
+            <div class="channel-icon-circle telegram">📢</div>
+            <div class="card-text-stack">
+                <span class="card-title-lbl">Telegram Channel</span>
+                <span class="card-desc-lbl">Join our telegram channel for updates</span>
+            </div>
+            <span class="card-chevron-marker">›</span>
+        </a>
+
+        <!-- Row Item 4: WhatsApp Announcement Updates Channel -->
+        <a href="https://whatsapp.com" target="_blank" class="channel-link-card">
+            <div class="channel-icon-circle whatsapp">🔔</div>
+            <div class="card-text-stack">
+                <span class="card-title-lbl">WhatsApp Channel</span>
+                <span class="card-desc-lbl">Join our whatsapp channel for updates</span>
+            </div>
+            <span class="card-chevron-marker">›</span>
+        </a>
+
+    </div>
+
+    <!-- Yellow Operational Promo Status Element Node Banner Matching Bottom Slice Layout -->
+    <div class="accent-promo-banner">
+        📈 CRESTON ... now in your city
+    </div>
 
 </body>
 </html>
