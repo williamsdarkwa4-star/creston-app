@@ -3,208 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OLA | PROFILE</title>
+    <title>Creston - Profile</title>
     <style>
-        body {
-            background-color: #f4f6f9;
-            color: #212121;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        /* Mobile viewport safety resetting rules */
+        * {
             margin: 0;
-            padding: 15px;
-            padding-bottom: 90px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
-        /* Top balance summary cards */
-        .summary-card {
-            background-color: #ffffff;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+
+        body {
+            background-color: #f7f9fc;
+            color: #111111;
+            padding-bottom: 90px; /* Universal spacing footprint layout for bottom navigation bar */
             display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            margin-bottom: 25px;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        .summary-box {
-            width: 48%;
-            text-align: left;
+
+        /* Top Dark Hero Branding Profile Canvas Section Component */
+        .profile-hero-canvas {
+            background-color: #212121;
+            padding: 35px 16px 55px 16px;
+            text-align: center;
+            color: #ffffff;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            position: relative;
         }
-        .summary-box:last-child {
-            border-left: 1px solid #f1f3f5;
-            padding-left: 15px;
+
+        /* Yellow Profile Target Logo Ring Asset Layout */
+        .profile-avatar-ring {
+            width: 86px;
+            height: 86px;
+            background-color: #cbee00; /* Vivid bright lime yellow-green */
+            border-radius: 50%;
+            margin: 0 auto 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 8px solid #333333;
+            box-shadow: 0 0 0 4px #cbee00;
         }
-        .summary-lbl {
-            color: #8a8a8a;
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
+
+        .avatar-inner-dot {
+            width: 26px;
+            height: 26px;
+            background-color: #212121;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+        }
+
+        .user-phone-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 1px;
             margin-bottom: 8px;
         }
-        .summary-val {
-            font-size: 20px;
+
+        /* Accent Badge License Text String */
+        .license-pill-badge {
+            background-color: #3d3d3d;
+            color: #b3b3b3;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid #4a4a4a;
+        }
+
+        /* 2x2 Floating Financial Metrics Grid Module Block Card Layout */
+        .metrics-quad-card {
+            background-color: #ffffff;
+            border-radius: 28px;
+            padding: 24px;
+            margin: -35px 16px 25px 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            z-index: 5;
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            row-gap: 24px;
+            column-gap: 15px;
+        }
+
+        .metric-stack-node {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .metric-stack-lbl {
+            font-size: 0.7rem;
+            color: #aaaaaa;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-stack-val {
+            font-size: 1.2rem;
             font-weight: 800;
             color: #111111;
         }
-        /* List headers */
-        .group-lbl {
-            color: #8a8a8a;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 0.8px;
+
+        /* Section Sub-headings Label */
+        .operations-lbl-hdr {
+            font-size: 0.72rem;
+            color: #aaaaaa;
             text-transform: uppercase;
-            margin: 25px 0 12px 5px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 0 20px;
+            margin-bottom: 12px;
         }
-        /* Menu grouping blocks */
-        .menu-list {
+
+        /* Interactive Navigation Operational Menu Lists Module Container Block */
+        .operations-list-group {
             background-color: #ffffff;
             border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            padding: 5px 0;
+            margin: 0 16px 20px 16px;
+            padding: 8px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f0f2f5;
         }
-        .menu-item {
+
+        .operation-row-item {
             display: flex;
             align-items: center;
             padding: 16px 20px;
             text-decoration: none;
-            color: #212121;
+            color: #111111;
             transition: background-color 0.2s;
         }
-        .menu-item:not(:last-child) {
-            border-bottom: 1px solid #f8fafc;
+
+        .operation-row-item:not(:last-child) {
+            border-bottom: 1px solid #f3f4f6;
         }
-        .menu-item:hover {
+
+        .operation-row-item:active {
             background-color: #f8fafc;
         }
-        /* Square icon placeholders */
-        .item-icon {
-            width: 38px;
-            height: 38px;
-            background-color: #212121;
+
+        /* Smooth rounded black utility square button icons wrapper */
+        .item-icon-backdrop {
+            width: 42px;
+            height: 42px;
+            background-color: #292929;
+            color: #ffffff;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #ffffff;
-            font-size: 16px;
-            margin-right: 18px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-size: 1.1rem;
+            margin-right: 16px;
         }
-        .item-title {
-            font-size: 15px;
+
+        .item-label-string {
+            font-size: 1rem;
             font-weight: 600;
-            flex-grow: 1;
+            color: #2d3748;
         }
-        .item-arrow {
-            color: #cccccc;
-            font-size: 16px;
+
+        .item-chevron-pointer {
+            margin-left: auto;
+            color: #cbd5e1;
+            font-size: 0.95rem;
             font-weight: bold;
         }
-        /* Fixed Bottom Tab Bar */
-        .nav-bar {
+
+        /* Fixed Baseline Universal Mobile Navigation Ribbon Tab UI Panel Container */
+        .bottom-nav-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 65px;
             background-color: #ffffff;
-            border-top: 1px solid #eeeeee;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
+            height: 68px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border-top: 1px solid #edf2f7;
+            z-index: 100;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.03);
         }
+
         .nav-item {
-            text-decoration: none;
-            color: #888888;
-            font-size: 11px;
-            font-weight: bold;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #cbd5e1;
+            font-size: 0.72rem;
+            font-weight: 700;
+            gap: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .nav-item span {
-            font-size: 18px;
-            margin-bottom: 3px;
+
+        .nav-item.active {
+            color: #111111; /* Active profile navigation tab marker state indicator alignment */
         }
-        .nav-active {
-            color: #212121;
+
+        .nav-icon {
+            font-size: 1.2rem;
         }
     </style>
 </head>
 <body>
 
-<!-- Top Earnings Display -->
-<div class="summary-card">
-    <div class="summary-box">
-        <div class="summary-lbl">TOTAL INCOME</div>
-        <div class="summary-val">GHS {{ "%.2f"|format(total_income) }}</div>
+    <!-- Upper Hero Profile Header Segment -->
+    <div class="profile-hero-canvas">
+        <div class="profile-avatar-ring">
+            <div class="avatar-inner-dot"></div>
+        </div>
+        <!-- Injected dynamic phone parameter layout token -->
+        <h2 class="user-phone-title">+233 {{ phone_number }}</h2>
+        <div class="license-pill-badge">Investment License #{{ user_id + 300 }}</div>
     </div>
-    <div class="summary-box">
-        <div class="summary-lbl">WITHDRAWN</div>
-        <div class="summary-val">GHS {{ "%.2f"|format(total_withdrawn) }}</div>
+
+    <!-- Unified 2x2 Statement Metrics Grid Canvas -->
+    <div class="metrics-quad-card">
+        <div class="metric-stack-node">
+            <span class="metric-stack-lbl">Income Balance</span>
+            <span class="metric-stack-val">GHS {{ "{:,.2f}".format(income_balance) }}</span>
+        </div>
+        <div class="metric-stack-node">
+            <span class="metric-stack-lbl">Today Income</span>
+            <span class="metric-stack-val" style="color: #34d399;">GHS {{ "{:,.2f}".format(today_income) }}</span>
+        </div>
+        <div class="metric-stack-node">
+            <span class="metric-stack-lbl">Total Income</span>
+            <span class="metric-stack-val">GHS {{ "{:,.2f}".format(total_income) }}</span>
+        </div>
+        <div class="metric-stack-node">
+            <span class="metric-stack-lbl">Withdrawn</span>
+            <span class="metric-stack-val" style="color: #ef4444;">GHS {{ "{:,.2f}".format(total_withdrawn) }}</span>
+        </div>
     </div>
-</div>
 
-<div class="group-lbl">TIDE OPERATIONS</div>
-<div class="menu-list">
-    <a href="#" class="menu-item">
-        <div class="item-icon">📅</div>
-        <div class="item-title">Daily Check-in</div>
-        <div class="item-arrow">›</div>
-    </a>
-    <!-- User Plan Page Button Connection -->
-    <a href="{{ url_for('my_plans') }}" class="menu-item">
-        <div class="item-icon">📊</div>
-        <div class="item-title">My Power Plans</div>
-        <div class="item-arrow">›</div>
-    </a>
-    <!-- History Log Connection -->
-    <a href="{{ url_for('history') }}" class="menu-item">
-        <div class="item-icon">📜</div>
-        <div class="item-title">History</div>
-        <div class="item-arrow">›</div>
-    </a>
-    <!-- Deposit Page Button Connection -->
-    <a href="{{ url_for('deposit') }}" class="menu-item">
-        <div class="item-icon">💰</div>
-        <div class="item-title">Add Funds</div>
-        <div class="item-arrow">›</div>
-    </a>
-    <!-- Withdraw Page Button Connection -->
-    <a href="{{ url_for('withdraw') }}" class="menu-item">
-        <div class="item-icon">🏧</div>
-        <div class="item-title">Withdraw Profits</div>
-        <div class="item-arrow">›</div>
-    </a>
-</div>
+    <!-- Operations Section Heading Navigation Menu Panel List -->
+    <div class="operations-lbl-hdr">Tide Operations</div>
+    <div class="operations-list-group">
+        
+        <!-- Action Row 1: Daily Check-in -->
+        <a href="/daily_checkin" class="operation-row-item">
+            <div class="item-icon-backdrop">📅</div>
+            <span class="item-label-string">Daily Check-in</span>
+            <span class="item-chevron-pointer">›</span>
+        </a>
 
-<div class="group-lbl">ACCOUNT SECURITY</div>
-<div class="menu-list">
-    <a href="#" class="menu-item">
-        <div class="item-icon">🏦</div>
-        <div class="item-title">Bank Settings</div>
-        <div class="item-arrow">›</div>
-    </a>
-    <a href="#" class="menu-item">
-        <div class="item-icon">🔒</div>
-        <div class="item-title">Change Password</div>
-        <div class="item-arrow">›</div>
-    </a>
-</div>
+        <!-- Action Row 2: Embedded user running active investments -->
+        <a href="/my_plans" class="operation-row-item">
+            <div class="item-icon-backdrop">🌱</div>
+            <span class="item-label-string">My Power Plans</span>
+            <span class="item-chevron-pointer">›</span>
+        </a>
 
-<!-- Bottom Navigation Layout matching screenshot buttons -->
-<div class="nav-bar">
-    <a href="{{ url_for('dashboard') }}" class="nav-item">
-        <span>🏠</span>HOME
-    </a>
-    <a href="{{ url_for('invite') }}" class="nav-item">
-        <span>🔗</span>INVITE
-    </a>
-    <a href="{{ url_for('profile') }}" class="nav-item nav-active">
-        <span>👤</span>PROFILE
-    </a>
-</div>
+        <!-- Action Row 3: Account Audit Ledger Statement Statement List -->
+        <a href="/history" class="operation-row-item">
+            <div class="item-icon-backdrop">🔄</div>
+            <span class="item-label-string">History</span>
+            <span class="item-chevron-pointer">›</span>
+        </a>
+
+        <!-- Logout Action item -->
+        <a href="/logout" class="operation-row-item" style="opacity: 0.6;">
+            <div class="item-icon-backdrop" style="background-color: #dc2626;">🚪</div>
+            <span class="item-label-string" style="color: #dc2626;">Secure Sign Out</span>
+            <span class="item-chevron-pointer">›</span>
+        </a>
+    </div>
+
+    <!-- Fixed Universal Mobile Ribbon Navigation Tab Control Panel Layout Frame -->
+    <div class="bottom-nav-bar">
+        <a href="/dashboard" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="/invite" class="nav-item">
+            <span class="nav-icon">👥</span>
+            <span>Invite</span>
+        </a>
+        <a href="/profile" class="nav-item active">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </div>
 
 </body>
 </html>
