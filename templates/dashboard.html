@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creston Hub</title>
     <style>
-        /* Modern UI/UX Architecture Reset */
+        /* Modern Premium Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            background-color: #f4f6f9; /* Clean light ambient backdrop */
+            background-color: #f4f6f9;
             color: #1e293b;
-            padding-bottom: 100px; /* Clear space for the bottom menu */
+            padding-bottom: 100px;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Premium Dark Header Panel */
+        /* Top Dark Brand Banner Layout */
         .top-navbar {
-            background-color: #0f172a; /* Rich professional dark navy/slate */
+            background-color: #0f172a;
             padding: 24px 20px 65px 20px;
             display: flex;
             align-items: center;
@@ -41,11 +41,10 @@
             gap: 14px;
         }
 
-        /* Bright Logo Accent Ring */
         .mini-logo {
             width: 46px;
             height: 46px;
-            background-color: #ccff00; /* Vibrant lime-yellow signature accent */
+            background-color: #ccff00;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -131,7 +130,6 @@
             color: #0f172a;
         }
 
-        /* Wallet Action Links Control Matrix */
         .wallet-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -147,7 +145,6 @@
             text-decoration: none;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-            transition: all 0.2s ease;
         }
 
         .action-button.filled {
@@ -156,21 +153,13 @@
             box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
         }
 
-        .action-button.filled:active {
-            background-color: #1e293b;
-        }
-
         .action-button.outlined {
             border: 2px solid #e2e8f0;
             color: #0f172a;
             background-color: #ffffff;
         }
 
-        .action-button.outlined:active {
-            background-color: #f8fafc;
-        }
-
-        /* Section Investment Plans Label Header Alignment */
+        /* Section Header Layout */
         .section-container {
             padding: 0 20px;
             margin-bottom: 18px;
@@ -194,23 +183,22 @@
             border-radius: 10px;
         }
 
-        /* STRICT RULE FIX: Forces every single card to block stack one-under-the-other */
+        /* Continuous Vertical Stack List CSS */
         .plans-wrapper-stack {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Uniform clean vertical gap spacing */
+            gap: 20px;
             padding: 0 16px;
             width: 100%;
         }
 
-        /* Institutional Level Plan Card Designs */
         .plan-card {
             background-color: #ffffff;
             border-radius: 24px;
             padding: 22px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
             border: 1px solid #e2e8f0;
-            width: 100%; /* Spans full screen width cleanly */
+            width: 100%;
             display: flex;
             flex-direction: column;
         }
@@ -252,7 +240,6 @@
             color: #0f172a;
         }
 
-        /* Uniform Metrics Row */
         .plan-metrics-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -283,9 +270,8 @@
             color: #334155;
         }
 
-        /* High-End Wide Active Invest Button Component Trigger */
         .invest-now-btn {
-            background-color: #0f172a; /* Elegant solid dark navy fill */
+            background-color: #0f172a;
             color: #ffffff;
             border: none;
             width: 100%;
@@ -297,7 +283,6 @@
             cursor: pointer;
             text-transform: uppercase;
             box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-            transition: all 0.2s ease;
         }
 
         .invest-now-btn:active {
@@ -305,7 +290,7 @@
             color: #0f172a;
         }
 
-        /* Fixed Mobile Tab Navigation Ribbon UI Container */
+        /* Fixed Footer Menu Ribbon */
         .bottom-nav-bar {
             position: fixed;
             bottom: 0;
@@ -335,7 +320,7 @@
         }
 
         .nav-item.active {
-            color: #0f172a; /* Dark active text alignment marker */
+            color: #0f172a;
         }
 
         .nav-icon {
@@ -357,9 +342,29 @@
 </head>
 <body>
 
-    <!-- Main Branding Header Panel -->
+    <!-- Top Dark Header Layout -->
     <div class="top-navbar">
         <div class="brand-meta">
-            <div class="mini-logo">
-                <div class="mini-logo-inner"></div>
+            <div class="mini-logo"><div class="mini-logo-inner"></div></div>
+            <div class="brand-text-wrapper">
+                <span class="brand-heading">Creston</span>
+                <span class="brand-sub-tagline">CLEAN ENERGY. PURE PROFIT.</span>
             </div>
+        </div>
+        <div class="user-avatar-placeholder"></div>
+    </div>
+
+    <!-- Balance Wallet Module -->
+    <div class="wallet-card">
+        <div class="wallet-grids">
+            <div class="wallet-node">
+                <span class="wallet-label">Income Wallet</span>
+                <span class="wallet-amount">GHS {{ "{:,.2f}".format(income_balance|float) }}</span>
+            </div>
+            <div class="wallet-node">
+                <span class="wallet-label">Deposit Wallet</span>
+                <span class="wallet-amount">GHS {{ "{:,.2f}".format(deposit_balance|float) }}</span>
+            </div>
+        </div>
+        <div class="wallet-actions">
+            <a href="/deposit" class="action-button filled">Deposit</a>
