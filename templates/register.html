@@ -1,16 +1,240 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow-sm border-0 p-4" style="background-color: #FFFFFF; border-radius: 16px;">
-            <h3 class="text-center fw-bold mb-3">Create Investor Profile</h3>
-            <form method="POST">
-                <div class="mb-3"><label class="form-label fw-semibold">Username</label><input type="text" name="username" class="form-control" required></div>
-                <div class="mb-3"><label class="form-label fw-semibold">Email Address</label><input type="email" name="email" class="form-control" required></div>
-                <div class="mb-3"><label class="form-label fw-semibold">Secure Password</label><input type="password" name="password" class="form-control" required></div>
-                <button type="submit" class="btn btn-creston w-100 py-2 fw-bold mt-2 shadow-sm" style="border-radius: 10px;">Open Free Account</button>
-            </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creston - Register</title>
+    <style>
+        /* Exact layout settings matched to your phone viewport */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #212121; /* Rich dark screen canvas matching the layout background */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Hero Header Module Block */
+        .top-hero-panel {
+            padding: 45px 20px 35px 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        /* Yellow-Green Bulls-Eye Target Logo Accent Layer */
+        .brand-target-logo {
+            width: 86px;
+            height: 86px;
+            background-color: #cbee00; /* Vivid bright lime yellow-green accent color */
+            border-radius: 50%;
+            margin: 0 auto 18px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 8px solid #2f2f2f;
+            box-shadow: 0 0 0 4px #cbee00;
+        }
+
+        .target-center-dot {
+            width: 26px;
+            height: 26px;
+            background-color: #212121;
+            border-radius: 50%;
+            border: 4px solid #ffffff;
+        }
+
+        .platform-name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .platform-tagline {
+            font-size: 0.85rem;
+            color: #b3b3b3;
+            max-width: 250px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        /* White Bottom Sheet Container Frame Panel */
+        .registration-card {
+            background-color: #ffffff;
+            border-top-left-radius: 42px; /* Smooth card curvature matching your photo top corners */
+            border-top-right-radius: 42px;
+            padding: 45px 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Form Input Track Row Fields Layout */
+        .input-track-row {
+            background-color: #f1f3f6; /* Soft gray element block fill */
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .row-icon-marker {
+            font-size: 1.15rem;
+            color: #111111;
+            width: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .country-prefix-label {
+            font-weight: 600;
+            color: #111111;
+            font-size: 1.05rem;
+        }
+
+        .text-input-field {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 1.05rem;
+            color: #222222;
+            outline: none;
+        }
+
+        .text-input-field::placeholder {
+            color: #9ea3ae;
+        }
+
+        /* Visibility mask toggle icon item placement */
+        .password-toggle-eye {
+            color: #9ea3ae;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Core Dark Submission Execution Button Control */
+        .execution-button {
+            background-color: #292929; /* Smooth black active button color */
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 18px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-top: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-transform: uppercase;
+        }
+
+        .execution-button:active {
+            background-color: #111111;
+        }
+
+        /* Navigation toggle footer segment */
+        .card-footer-nav {
+            text-align: center;
+            margin-top: auto;
+            padding-top: 35px;
+            font-size: 0.95rem;
+            color: #8c8c8c;
+        }
+
+        .footer-action-link {
+            color: #111111;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+        /* Alert notifications */
+        .system-alert-bubble {
+            color: #d93838;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top dark banner image context panel block -->
+    <div class="top-hero-panel">
+        <div class="brand-target-logo">
+            <div class="target-center-dot"></div>
+        </div>
+        <h1 class="platform-name">Creston</h1>
+        <p class="platform-tagline">Create your account to start your journey with CRESTON.</p>
+    </div>
+
+    <!-- Interactive Registration Form View Frame -->
+    <div class="registration-card">
+        
+        <!-- Flask Flash Verification Warnings Alert Node Container -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %} 
+                    <div class="system-alert-bubble">⚠️ {{ msg }}</div> 
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="/register" method="POST">
+            
+            <!-- Nickname input profile block -->
+            <div class="input-track-row">
+                <span class="row-icon-marker">👤</span>
+                <input type="text" name="nickname" class="text-input-field" placeholder="Nickname" required autocomplete="off">
+            </div>
+
+            <!-- Phone field layout with permanent region code element string token -->
+            <div class="input-track-row">
+                <span class="country-prefix-label">+233</span>
+                <input type="tel" name="phone_number" class="text-input-field" placeholder="Phone Number" required pattern="[0-9]{9,10}">
+            </div>
+
+            <!-- Password validation access control row view -->
+            <div class="input-track-row">
+                <span class="row-icon-marker">🔒</span>
+                <input type="password" name="password" class="text-input-field" placeholder="Password" required>
+                <span class="password-toggle-eye">👁️</span>
+            </div>
+
+            <!-- Referral code node tracking item panel -->
+            <div class="input-track-row">
+                <span class="row-icon-marker">🔗</span>
+                <input type="text" name="invite_code" class="text-input-field" value="DOSLQV" placeholder="Invite Code">
+            </div>
+
+            <!-- Main interactive submission form trigger control element -->
+            <button type="submit" class="execution-button">
+                REGISTER <span style="font-size: 1.05rem;">📐</span>
+            </button>
+        </form>
+
+        <!-- Redirect path block links routing back to entry view module -->
+        <div class="card-footer-nav">
+            Have an account? <a href="/login" class="footer-action-link">Login</a>
         </div>
     </div>
-</div>
-{% endblock %}
+
+</body>
+</html>
