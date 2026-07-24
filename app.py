@@ -10,7 +10,7 @@ app.secret_key = os.environ.get('SECRET_KEY', 'creston_fallback_secure_key_2026'
 def dynamic_init():
     try:
         init_db()
-        return "Creston Tables Successfully Created / Verified Live."
+        return "Creston Tables Successfully Created with Keyword-Only Safeguards."
     except Exception as e:
         return "Database Setup Failed: " + str(e)
 
@@ -57,8 +57,8 @@ def login():
             cur.close()
             conn.close()
             
-            if user and check_password_hash(user[1], password):
-                session['user_id'] = user[0]
+            if user and check_password_hash(user, password):
+                session['user_id'] = user
                 session['username'] = username
                 return redirect(url_for('dashboard'))
             else:
@@ -77,14 +77,10 @@ def dashboard():
         conn = get_db_connection()
         cur = conn.cursor()
         
-        # Get user balance
         cur.execute('SELECT wallet_balance FROM users WHERE id = %s', (session['user_id'],))
         balance_row = cur.fetchone()
+        user_balance = float(balance_row) if balance_row else 0.00
         
-        # Safe float conversion for Python templates
-        user_balance = float(balance_row[0]) if balance_row else 0.00
-        
-        # Fetch active investments
         cur.execute("""
             SELECT p.plan_name, i.amount_invested, i.status, i.payout_date 
             FROM investments i
@@ -93,14 +89,13 @@ def dashboard():
         """, (session['user_id'],))
         rows = cur.fetchall()
         
-        # Turn database tuples into easy-to-read Python dictionaries
         investment_list = []
         for row in rows:
             investment_list.append({
-                'plan_name': str(row[0]),
-                'amount': float(row[1]),
-                'status': str(row[2]),
-                'payout_date': row[3].strftime('%Y-%m-%d') if row[3] else 'N/A'
+                'plan_name': str(row),
+                'amount': float(row),
+                'status': str(row),
+                'payout_date': row.strftime('%Y-%m-%d') if row else 'N/A'
             })
             
         cur.close()
@@ -109,6 +104,7 @@ def dashboard():
     except Exception as e:
         flash('Could not load portfolio: ' + str(e), 'danger')
         return render_template('dashboard.html', balance=0.00, investments=[])
+
 @app.route('/deposit', methods=['GET', 'POST'])
 def deposit():
     if 'user_id' not in session:
@@ -116,7 +112,6 @@ def deposit():
         
     if request.method == 'POST':
         try:
-            # Safely capture the input amount as a base float number
             amount = float(request.form['amount'])
             if amount <= 0:
                 flash('Please enter a valid deposit amount greater than $0.', 'danger')
@@ -124,25 +119,18 @@ def deposit():
                 
             conn = get_db_connection()
             cur = conn.cursor()
-            
-            # Instantly update the user wallet balance for development/testing
-            cur.execute("""
-                UPDATE users 
-                SET wallet_balance = wallet_balance + %s 
-                WHERE id = %s
-            """, (amount, session['user_id']))
-            
+            cur.execute("UPDATE users SET wallet_balance = wallet_balance + %s WHERE id = %s", (amount, session['user_id']))
             conn.commit()
             cur.close()
             conn.close()
             
-            flash(f'Successfully funded your wallet with ${amount:,.2f}!', 'success')
+            flash(f'Successfully funded wallet with ${amount:,.2f}!', 'success')
             return redirect(url_for('dashboard'))
         except Exception as e:
-            flash('Deposit processing failed: ' + str(e), 'danger')
+            flash('Deposit failed: ' + str(e), 'danger')
             
     return render_template('deposit.html')
-    
+
 @app.route('/logout')
 def logout():
     session.clear()
