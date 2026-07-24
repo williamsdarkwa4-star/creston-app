@@ -3,72 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creston | Authorization Queue</title>
+    <title>Admin - Ledger Approvals</title>
     <style>
-        body { background-color: #0c0d12; color: #e2e8f0; font-family: system-ui, sans-serif; margin: 0; padding: 20px; }
-        .nav { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2d3142; padding-bottom: 15px; margin-bottom: 25px; }
-        .nav a { color: #c4df10; text-decoration: none; font-size: 14px; font-weight: bold; }
-        .title { font-size: 16px; font-weight: bold; text-transform: uppercase; color: #c4df10; margin: 30px 0 15px 0; border-left: 4px solid #c4df10; padding-left: 10px; }
-        .tx-box { background-color: #171923; border: 1px solid #2d3142; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .meta h4 { margin: 0 0 5px 0; font-size: 15px; }
-        .meta p { margin: 0; font-size: 13px; color: #8a94a6; }
-        .v-link { display: inline-block; margin-top: 8px; color: #c4df10; font-size: 12px; text-decoration: none; border: 1px dashed #c4df10; padding: 4px 8px; border-radius: 4px; }
-        .actions { display: flex; gap: 8px; }
-        .action-btn { padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; color: white; }
-        .approve { background-color: #10b981; }
-        .reject { background-color: #ef4444; }
-        .none { text-align: center; color: #8a94a6; font-size: 13px; padding: 20px; background-color: #171923; border-radius: 12px; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,sans-serif; }
+        body { background-color:#111111; color:white; padding:20px; }
+        .card { background:#1a1a1a; border-radius:18px; padding:20px; margin-bottom:16px; border:1px solid #2d2d2d; }
+        .flex-row { display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.9rem; }
+        .action-tray { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px; }
+        .btn { border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; text-transform:uppercase; text-align:center; text-decoration:none; font-size:0.85rem; }
+        .btn-approve { background-color:#34d399; color:#064e3b; }
+        .btn-reject { background-color:#ef4444; color:#ffffff; }
     </style>
 </head>
 <body>
+    <div style="margin-bottom:20px;"><a href="/admin/dashboard" style="color:#ccff00; text-decoration:none; font-weight:bold;">‹ Back Dashboard</a></div>
+    <h2 style="font-weight:800; margin-bottom:20px;">Pending Processing Ledger Queue</h2>
 
-<div class="nav">
-    <h2>Reconciliation Hub Operations</h2>
-    <a href="{{ url_for('admin_dashboard') }}">📋 Exit to User Directory</a>
-</div>
-
-<div class="title">Pending Deposit Voucher Confirmations</div>
-{% if not deposits %} <div class="none">No pending deposit slips currently awaiting verification.</div> {% endif %}
-{% for d in deposits %}
-<div class="tx-box">
-    <div class="meta">
-        <h4>GHS {{ d.amount }} [{{ d.channel }}]</h4>
-        <p>Sender Reference Name: <strong>{{ d.name }}</strong></p>
-        <p>Registrant Phone Link: {{ d.phone }}</p>
-        {% if d.file %}
-            <a href="/static/uploads/vouchers/{{ d.file }}" target="_blank" class="v-link">👁️ View Screenshot Attachment</a>
-        {% endif %}
-    </div>
-    <div class="actions">
-        <form action="{{ url_for('resolve_deposit_tx', tx_id=d.id, decision='approve') }}" method="POST">
-            <button type="submit" class="action-btn approve">Approve</button>
-        </form>
-        <form action="{{ url_for('resolve_deposit_tx', tx_id=d.id, decision='reject') }}" method="POST">
-            <button type="submit" class="action-btn reject">Reject</button>
-        </form>
-    </div>
-</div>
-{% endfor %}
-
-<div class="title">Pending Profit Cash Out Withdrawals</div>
-{% if not withdrawals %} <div class="none">No pending cash out vouchers awaiting payout execution.</div> {% endif %}
-{% for w in withdrawals %}
-<div class="tx-box">
-    <div class="meta">
-        <h4>GHS {{ w.amount }} [{{ w.channel }}]</h4>
-        <p>Recipient Mobile Account: <strong>{{ w.target }}</strong></p>
-        <p>Profile Account Link: {{ w.phone }}</p>
-    </div>
-    <div class="actions">
-        <form action="{{ url_for('resolve_withdraw_tx', tx_id=w.id, decision='approve') }}" method="POST">
-            <button type="submit" class="action-btn approve">Confirm Paid</button>
-        </form>
-        <form action="{{ url_for('resolve_withdraw_tx', tx_id=w.id, decision='reject') }}" method="POST">
-            <button type="submit" class="action-btn reject">Deny & Refund</button>
-        </form>
-    </div>
-</div>
-{% endfor %}
-
+    {% if pending_transactions %}
+        {% for tx in pending_transactions %}
+        <div class="card">
+            <div style="font-weight:bold; font-size:1.1rem; color:#ccff00; margin-bottom:12px; text-transform:uppercase;">● Pending {{ tx.type }}</div>
+            <div class="flex-row"><span style="color:#888;">User Phone:</span><span>+233 {{ tx.phone_number }}</span></div>
+            <div class="flex-row"><span style="color:#888;">Gross Amount:</span><span style="font-weight:bold; font-size:1.05rem;">GHS {{ tx.amount }}</span></div>
+            {% if tx.type == 'deposit' %}
+                <div class="flex-row"><span style="color:#888;">Sender Name:</span><span>{{ tx.meta_sender_name }}</span></div>
+                <div class="flex-row"><span style="color:#888;">Channel Used:</span><span>{{ tx.channel }}</span></div>
+                <div style="margin-top:10px;"><a href="/static/receipts/{{ tx.screenshot_file }}" target="_blank" style="color:#60a5fa; text-decoration:underline; font-size:0.85rem;">View Uploaded Screenshot Receipt ↗</a></div>
+            {% else %}
+                <div class="flex-row"><span style="color:#888;">Payout Location:</span><span>{{ tx.recipient_phone }} ({{ tx.network_provider }})</span></div>
+            {% endif %}
+            <div class="action-tray">
+                <a href="/admin/action_transaction/{{ tx.id }}/approve" class="btn btn-approve">Approve</a>
+                <a href="/admin/action_transaction/{{ tx.id }}/reject" class="btn btn-reject">Reject</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align:center; color:#444; margin-top:60px; font-weight:bold;">All processing clear. No pending actions.</div>
+    {% endif %}
 </body>
 </html>
