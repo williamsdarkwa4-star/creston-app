@@ -237,28 +237,66 @@ def submit_deposit_proof():
 
 @app.route('/withdraw', methods=['GET', 'POST'])
 def withdraw():
-    if 'user_id' not in session: return redirect(url_for('login'))
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT income_balance FROM users WHERE id = %s;', (session['user_id'],))
+
+    cur.execute(
+        'SELECT income_balance FROM users WHERE id = %s;',
+        (session['user_id'],)
+    )
     user = cur.fetchone()
+
     cur.close()
     conn.close()
-    
+
     if request.method == 'POST':
         network = request.form.get('network_provider')
         phone = request.form.get('recipient_phone')
         amount = float(request.form.get('withdraw_amount', 0))
-        
+
         if amount < 40:
             flash("Minimum payout threshold is GHS 40.")
             return redirect(url_for('withdraw'))
+
         if amount > float(user['income_balance']):
             flash("Insufficient balance.")
             return redirect(url_for('withdraw'))
 
-cur = get_db_connection().cursor()
-# continue the withdrawal code...
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute(
+            '''
+            INSERT INTO transactions 
+            (user_id, type, amount, recipient_phone, network_provider, status)
+            VALUES (%s, 'withdrawal', %s, %s, %s, 'pending');
+            ''',
+            (session['user_id'], amount, phone, network)
+        )
+
+        cur.execute(
+            '''
+            UPDATE users
+            SET income_balance = income_balance - %s
+            WHERE id = %s;
+            ''',
+            (amount, session['user_id'])
+        )
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        flash("Withdrawal request submitted successfully.")
+        return redirect(url_for('dashboard'))
+
+        return render_template(
+        'withdraw.html',
+        income_balance=user['income_balance']
+    )
 # ==========================================
 # CLIENT SERVICE / SUPPORT ROUTE
 # ==========================================
