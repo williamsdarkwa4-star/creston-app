@@ -254,6 +254,11 @@ def withdraw():
             flash("Minimum payout threshold is GHS 40.")
             return redirect(url_for('withdraw'))
         if amount > float(user['income_balance']):
+           flash("Insufficient income balance.")
+           return redirect(url_for('withdraw'))
+
+cur = get_db_connection().cursor()
+# continue the withdrawal code...
 # ==========================================
 # CLIENT SERVICE / SUPPORT ROUTE
 # ==========================================
@@ -480,3 +485,6 @@ def admin_password_reset():
 def admin_logout():
     session.pop('admin_logged', None)
     return redirect(url_for('admin_login'))
+
+if __name__ == "__main__":
+    app.run(debug=True)
