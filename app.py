@@ -235,6 +235,7 @@ def submit_deposit_proof():
         conn.close()
     return redirect(url_for('dashboard'))
 
+
 @app.route('/withdraw', methods=['GET', 'POST'])
 def withdraw():
     if 'user_id' not in session:
@@ -244,59 +245,86 @@ def withdraw():
     cur = conn.cursor()
 
     cur.execute(
-        'SELECT income_balance FROM users WHERE id = %s;',
+        "SELECT income_balance FROM users WHERE id = %s;",
         (session['user_id'],)
     )
     user = cur.fetchone()
 
+    if not user:
+        cur.close()
+        conn.close()
+        flash("User account not found.")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+
+        network = request.form.get('network_provider')
+        phone = request.form.get('recipient_phone')
+
+        try:
+            amount = float(request.form.get('withdraw_amount'))
+        except:
+            flash("Invalid withdrawal amount.")
+            return redirect(url_for('withdraw'))
+
+        balance = float(user['income_balance'])
+
+        if amount < 40:
+            flash("Minimum withdrawal is GHS 40.")
+            return redirect(url_for('withdraw'))
+
+        if amount > balance:
+            flash("Insufficient income balance.")
+            return redirect(url_for('withdraw'))
+
+        try:
+            # Create withdrawal request
+            cur.execute("""
+                INSERT INTO transactions
+                (user_id, type, amount, recipient_phone, network_provider, status)
+                VALUES (%s,'withdrawal',%s,%s,%s,'pending');
+            """,
+            (
+                session['user_id'],
+                amount,
+                phone,
+                network
+            ))
+
+            # Lock money until admin decision
+            cur.execute("""
+                UPDATE users
+                SET income_balance = income_balance - %s
+                WHERE id = %s;
+            """,
+            (
+                amount,
+                session['user_id']
+            ))
+
+            conn.commit()
+
+            flash("Withdrawal request sent successfully.")
+
+        except Exception as e:
+            conn.rollback()
+            flash("Withdrawal failed.")
+
+        finally:
+            cur.close()
+            conn.close()
+
+        return redirect(url_for('dashboard'))
+
+
     cur.close()
     conn.close()
 
-    if request.method == 'POST':
-        network = request.form.get('network_provider')
-        phone = request.form.get('recipient_phone')
-        amount = float(request.form.get('withdraw_amount', 0))
-
-        if amount < 40:
-            flash("Minimum payout threshold is GHS 40.")
-            return redirect(url_for('withdraw'))
-
-        if amount > float(user['income_balance']):
-            flash("Insufficient balance.")
-            return redirect(url_for('withdraw'))
-
-        conn = get_db_connection()
-        cur = conn.cursor()
-
-        cur.execute(
-            '''
-            INSERT INTO transactions 
-            (user_id, type, amount, recipient_phone, network_provider, status)
-            VALUES (%s, 'withdrawal', %s, %s, %s, 'pending');
-            ''',
-            (session['user_id'], amount, phone, network)
-        )
-
-        cur.execute(
-            '''
-            UPDATE users
-            SET income_balance = income_balance - %s
-            WHERE id = %s;
-            ''',
-            (amount, session['user_id'])
-        )
-
-        conn.commit()
-        cur.close()
-        conn.close()
-
-        flash("Withdrawal request submitted successfully.")
-        return redirect(url_for('dashboard'))
-
-        return render_template(
+    return render_template(
         'withdraw.html',
         income_balance=user['income_balance']
     )
+    
 # ==========================================
 # CLIENT SERVICE / SUPPORT ROUTE
 # ==========================================
@@ -431,8 +459,8 @@ def my_plans():
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
-        user = request.form.get('username')
-        pw = request.form.get('password')
+        user = request.form.get('Williams')
+        pw = request.form.get('Williams12')
         # Setup static admin panel login configuration credentials details
         if user == "admin" and pw == "CrestonHQ2026!":
             session['admin_logged'] = True
@@ -468,28 +496,111 @@ def admin_approvals():
 
 @app.route('/admin/action_transaction/<int:tx_id>/<string:action>')
 def action_transaction(tx_id, action):
-    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
+
+    if not session.get('admin_logged'):
+        return redirect(url_for('admin_login'))
+
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute('SELECT user_id, type, amount FROM transactions WHERE id = %s;', (tx_id,))
-    tx = cur.fetchone()
-    
-    if tx:
-        new_status = 'approved' if action == 'approve' else 'rejected'
-        cur.execute('UPDATE transactions SET status = %s WHERE id = %s;', (new_status, tx_id))
-        
-        if new_status == 'approved' and tx['type'] == 'deposit':
-            # Adds transaction amount to deposit balance upon admin confirmation
-            cur.execute('UPDATE users SET deposit_balance = deposit_balance + %s WHERE id = %s;', (tx['amount'], tx['user_id']))
-        elif new_status == 'rejected' and tx['type'] == 'withdrawal':
-            # Returns payout balance lock parameters back to user's wallet if cashout fails
-            cur.execute('UPDATE users SET income_balance = income_balance + %s WHERE id = %s;', (tx['amount'], tx['user_id']))
-        elif new_status == 'approved' and tx['type'] == 'withdrawal':
-            cur.execute('UPDATE users SET total_withdrawn = total_withdrawn + %s WHERE id = %s;', (tx['amount'], tx['user_id']))
-            
+
+    try:
+
+        cur.execute("""
+            SELECT user_id, type, amount, status
+            FROM transactions
+            WHERE id=%s;
+        """,(tx_id,))
+
+        tx = cur.fetchone()
+
+
+        if not tx:
+            flash("Transaction not found.")
+            return redirect(url_for('admin_approvals'))
+
+
+        # Prevent double approval
+        if tx['status'] != 'pending':
+            flash("Transaction already processed.")
+            return redirect(url_for('admin_approvals'))
+
+
+        if action == "approve":
+
+            cur.execute("""
+                UPDATE transactions
+                SET status='approved'
+                WHERE id=%s;
+            """,(tx_id,))
+
+
+            if tx['type'] == 'deposit':
+
+                cur.execute("""
+                    UPDATE users
+                    SET deposit_balance =
+                    deposit_balance + %s
+                    WHERE id=%s;
+                """,
+                (
+                    tx['amount'],
+                    tx['user_id']
+                ))
+
+
+            elif tx['type'] == 'withdrawal':
+
+                cur.execute("""
+                    UPDATE users
+                    SET total_withdrawn =
+                    total_withdrawn + %s
+                    WHERE id=%s;
+                """,
+                (
+                    tx['amount'],
+                    tx['user_id']
+                ))
+
+
+
+        elif action == "reject":
+
+            cur.execute("""
+                UPDATE transactions
+                SET status='rejected'
+                WHERE id=%s;
+            """,(tx_id,))
+
+
+            # Return withdrawal money
+            if tx['type'] == 'withdrawal':
+
+                cur.execute("""
+                    UPDATE users
+                    SET income_balance =
+                    income_balance + %s
+                    WHERE id=%s;
+                """,
+                (
+                    tx['amount'],
+                    tx['user_id']
+                ))
+
+
         conn.commit()
-    cur.close()
-    conn.close()
+        flash("Transaction updated successfully.")
+
+
+    except Exception as e:
+        conn.rollback()
+        flash("Transaction update failed.")
+
+
+    finally:
+        cur.close()
+        conn.close()
+
+
     return redirect(url_for('admin_approvals'))
 
 @app.route('/admin/users')
