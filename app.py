@@ -116,7 +116,10 @@ def register():
         phone = request.form.get('phone_number').strip()
         password = request.form.get("password")
         hashed_password = generate_password_hash(password)
-        invite_used = request.form.get('invite_code')
+        invite_used = (
+        request.form.get("invite_code")
+        or request.args.get("invite")
+          )
         
         my_invite_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
         
@@ -349,4 +352,50 @@ def profile():
         total_income=float(user["total_income"]),
         total_withdrawn=float(user["total_withdrawn"])
     )
+
+@app.route('/invite')
+def invite():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Get the logged-in user's invite code
+    cur.execute("""
+        SELECT invite_code
+        FROM users
+        WHERE id = %s;
+    """, (session['user_id'],))
+
+    user = cur.fetchone()
+
+    if not user:
+        cur.close()
+        conn.close()
+        flash("User not found.")
+        return redirect(url_for('login'))
+
+    invite_code = user["invite_code"]
+
+    # Get all users who registered with this invite code
+    cur.execute("""
+        SELECT nickname, phone_number
+        FROM users
+        WHERE referred_by = %s
+        ORDER BY id DESC;
+    """, (invite_code,))
+
+    team = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return render_template(
+        "invite.html",
+        invite_code=invite_code,
+        team=team
+    )
+
+
 
