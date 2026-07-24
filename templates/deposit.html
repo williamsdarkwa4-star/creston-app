@@ -1,28 +1,312 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="row justify-content-center" style="font-family: system-ui, -apple-system, sans-serif;">
-    <div class="col-md-5">
-        <div class="card p-4 border-0 shadow-sm" style="background-color: #FFFFFF; border-radius: 16px;">
-            <h4 class="fw-bold mb-2" style="color: #0F172A;">Fund Your Account</h4>
-            <p class="text-muted small mb-4">Add capital to your Creston wallet to begin generating yields.</p>
-            <form method="POST">
-                <div class="mb-4">
-                    <label class="form-label fw-bold small text-muted text-uppercase">Amount to Deposit (USD)</label>
-                    <div class="input-group">
-                        <span class="input-group-text border-0" style="background-color: #F8FAFC; color: #0F172A; font-weight: bold; font-size: 18px;">$</span>
-                        <input type="number" step="0.01" name="amount" class="form-control form-control-lg border-0 bg-light" placeholder="0.00" style="background-color: #F8FAFC !important; font-size: 20px; font-weight: bold; color: #0F172A;" required>
-                    </div>
-                </div>
-                <div class="p-3 mb-4" style="background-color: #F8FAFC; border-radius: 10px; border: 1px solid #E2E8F0;">
-                    <span class="d-block small text-muted fw-semibold mb-1">Instant Processing Mode</span>
-                    <span class="small d-block text-secondary">Funds reflect on dashboard balance immediately.</span>
-                </div>
-                <button type="submit" class="btn btn-lg w-100 fw-bold text-white shadow-sm" style="background-color: #10B981; border: none; border-radius: 12px; font-size: 16px;">
-                    Confirm Deposit Balance
-                </button>
-            </form>
-            <a href="/dashboard" class="d-block text-center mt-3 small text-decoration-none fw-semibold text-muted">← Return to Dashboard</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creston - Refill Balance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #333333; /* Dark ambient view tracking background */
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Header Action Strip Row Layout Component */
+        .header-action-strip {
+            background-color: #1a1a1a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #262626;
+        }
+
+        .nav-back-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .log-history-btn {
+            color: #ccff00; /* Yellow highlight secondary log shortcut action button toggle */
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        /* Balance Presentation Container Widget Box Block */
+        .balance-hero-widget {
+            background-color: #242424;
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #3d3d3d;
+        }
+
+        .balance-meta-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .balance-stack-label {
+            font-size: 0.75rem;
+            color: #888888;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-stack-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .wallet-graphic-icon {
+            font-size: 1.8rem;
+            opacity: 0.2;
+        }
+
+        /* Core Section Group Labels Styling Track */
+        .group-section-lbl {
+            font-size: 0.78rem;
+            color: #888888;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 0 16px;
+            margin-bottom: 12px;
+        }
+
+        /* Fast Selection Grid Matrix Module Setup Layout */
+        .fast-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 0 16px;
+            margin-bottom: 24px;
+        }
+
+        .fast-amount-node {
+            background-color: #424242;
+            border: 1px solid #4f4f4f;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 8px;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .fast-amount-node.active {
+            border-color: #ccff00; /* Active custom state border matching screenshot 3 rules selection */
+            color: #ccff00;
+        }
+
+        /* Custom Input Entry Field Block Formatting */
+        .custom-entry-block {
+            background-color: #424242;
+            border: 1px solid #4f4f4f;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 0 16px 24px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .custom-input-icon {
+            font-size: 1.2rem;
+        }
+
+        .custom-field-control {
+            border: none;
+            background: transparent;
+            width: 100%;
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .custom-field-control::placeholder {
+            color: #777777;
+        }
+
+        /* Dropdown selection lists styling configuration panel */
+        .gateway-select-block {
+            background-color: #424242;
+            border: 1px solid #4f4f4f;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 0 16px 28px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .gateway-left-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .select-native-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Informational Guideline Rule Container Block Wrapper */
+        .guidelines-card {
+            background-color: #2b2b2b;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 0 16px 30px 16px;
+            border: 1px solid #3d3d3d;
+        }
+
+        .guidelines-header-lbl {
+            color: #ccff00;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .guideline-ol-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .guideline-li-node {
+            font-size: 0.82rem;
+            color: #aaaaaa;
+            line-height: 1.45;
+        }
+
+        /* Primary Form Action Execution Trigger Control Button Block */
+        .initiate-button-control {
+            background-color: #a3be00; /* Vivid dark olive yellow button background matching your layout */
+            color: #ffffff;
+            border: none;
+            width: calc(100% - 32px);
+            margin: auto auto 24px auto;
+            padding: 18px;
+            border-radius: 18px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            text-decoration: none;
+            display: block;
+        }
+
+        .flash-alert-banner {
+            background-color: #ff3333;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <form action="/deposit" method="POST" id="depositForm">
+        <!-- Top header action bar context layout row -->
+        <div class="header-action-strip">
+            <a href="/dashboard" class="nav-back-group">
+                <span>‹</span> Refill Balance
+            </a>
+            <a href="/history" class="log-history-btn">LOG</a>
         </div>
-    </div>
-</div>
-{% endblock %}
+
+        {% with messages = get_flashed_messages(category_filter=["danger"]) %}
+            {% if messages %}
+                {% for msg in messages %} <div class="flash-alert-banner">{{ msg }}</div> {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Active account overview available dashboard balances element panel -->
+        <div class="balance-hero-widget">
+            <div class="balance-meta-stack">
+                <span class="balance-stack-label">Available Balance</span>
+                <span class="balance-stack-value">GHS {{ available_balance }}</span>
+            </div>
+            <div class="wallet-graphic-icon">💼</div>
+        </div>
+
+        <!-- Fast selections layout panel header label -->
+        <div class="group-section-lbl">Fast Selection</div>
+
+        <!-- Interactive quick clicks metric array grids -->
+        <div class="fast-selection-grid">
+            <div class="fast-amount-node" onclick="selectAmount(50, this)">50</div>
+            <div class="fast-amount-node" onclick="selectAmount(150, this)">150</div>
+            <div class="fast-amount-node" onclick="selectAmount(300, this)">300</div>
+            <div class="fast-amount-node" onclick="selectAmount(500, this)">500</div>
+            <div class="fast-amount-node" onclick="selectAmount(1000, this)">1000</div>
+            <div class="fast-amount-node" onclick="selectAmount(2000, this)">2000</div>
+            <div class="fast-amount-node" onclick="selectAmount(4000, this)">4000</div>
+            <div class="fast-amount-node" onclick="selectAmount(5000, this)">5000</div>
+        </div>
+
+        <!-- Custom Input field layout control component -->
+        <div class="group-section-lbl">Custom Amount (GHS)</div>
+        <div class="custom-entry-block">
+            <span class="custom-input-icon">🪙</span>
+            <input type="number" name="amount" id="customAmountInput" class="custom-field-control" placeholder="Min. 50" min="50" required>
+        </div>
+
+        <!-- Gateway integration dropdown filter box selection matrix -->
+        <div class="group-section-lbl">Select Gateway</div>
+        <div class="gateway-select-block">
+            <div class="gateway-left-meta">
+                <span style="color: #a3be00;">🛡️</span>
+                <span id="gatewayDisplayLabel">Choose Channel</span>
+            </div>
+            <span style="font-size: 0.8rem; color: #888888;">▼</span>
+            
