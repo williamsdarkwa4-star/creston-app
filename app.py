@@ -571,6 +571,11 @@ def my_plans():
 # ==========================================
 # MASTER ADMINISTRATIVE SECURITY ENDPOINTS
 # ==========================================
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("You have been logged out successfully.")
+    return redirect(url_for('login'))
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
