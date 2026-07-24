@@ -56,14 +56,7 @@ CREATE TABLE IF NOT EXISTS users (
     total_withdrawn NUMERIC(15, 2) DEFAULT 0.00
 );
 """)
-       cur.execute(
-    """
-    INSERT INTO users
-    (nickname, phone_number, password, invite_code, referred_by, deposit_balance)
-    VALUES (%s, %s, %s, %s, %s, 10.00)
-    """,
-    (nickname, phone, hashed_password, my_invite_code, invite_used)
-)
+       
     # 2. Financial Auditing Transaction Ledger Table
     cur.execute('''
         CREATE TABLE IF NOT EXISTS transactions (
@@ -134,7 +127,7 @@ def register():
             cur.execute(
                 '''INSERT INTO users (nickname, phone_number, password, invite_code, referred_by, deposit_balance) 
                    VALUES (%s, %s, %s, %s, %s, 10.00);''',
-                (nickname, phone, password, my_invite_code, invite_used)
+                (nickname, phone,hashed_password, my_invite_code, invite_used)
             )
             conn.commit()
             flash("Account securely provisioned with GHS 10 welcome bonus! Login now.")
@@ -146,33 +139,33 @@ def register():
             cur.close()
             conn.close()
     return render_template('register.html')
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         phone = request.form.get('phone_number').strip()
-        if user and check_password_hash(user["password"], password):
-    session["user_id"] = user["id"]
-    session["nickname"] = user["nickname"]
-    return redirect(url_for("dashboard"))
-else:
-    flash("Invalid phone number or password.")
-        
+        password = request.form.get('password')
+
         conn = get_db_connection()
         cur = conn.cursor()
-        # id is index 0, nickname is index 1, password is index 2
-        cur.execute('SELECT id, nickname, password FROM users WHERE phone_number = %s;', (phone,))
+
+        cur.execute(
+            "SELECT id, nickname, password FROM users WHERE phone_number=%s",
+            (phone,)
+        )
+
         user = cur.fetchone()
+
         cur.close()
         conn.close()
-        
-        # Fixed comparison using explicit database row item index spacing
-        if user and user["password"] == password:
-    session["user_id"] = user["id"]
-    session["nickname"] = user["nickname"]
-    return redirect(url_for("dashboard"))
-else:
-    flash("Invalid authentication credential pairing.")
+
+        if user and check_password_hash(user["password"], password):
+            session["user_id"] = user["id"]
+            session["nickname"] = user["nickname"]
+            return redirect(url_for("dashboard"))
+
+        flash("Invalid phone number or password.")
+
+    return render_template("login.html")
 
 @app.route('/dashboard')
 def dashboard():
@@ -286,6 +279,10 @@ def withdraw():
         phone = request.form.get('recipient_phone')
         amount = float(request.form.get('withdraw_amount', 0))
         
+        flash("Withdrawal request submitted.")
+    return redirect(url_for("dashboard"))
+return render_template("withdraw.html", income_balance=user["income_balance"])
+
 @app.route('/my_plan')
 def my_plan():
     if 'user_id' not in session:
@@ -314,7 +311,7 @@ def my_plan():
         'my_plans.html',
         active_plans=active_plans
     )
- @app.route('/profile')
+@app.route('/profile')
 def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
