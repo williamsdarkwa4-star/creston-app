@@ -390,7 +390,8 @@ def withdraw():
         income_balance=user['income_balance']
     )
 
-  @app.route('/set_withdraw_password', methods=['GET', 'POST'])
+  @app.route('/set_withdraw_password', 
+  methods=['GET', 'POST'])
  def set_withdraw_password():
 
     if 'user_id' not in session:
