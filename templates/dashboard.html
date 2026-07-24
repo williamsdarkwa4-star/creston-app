@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creston Hub</title>
+    <title>Creston - Home</title>
     <style>
-        /* Modern Premium Reset */
         * {
             margin: 0;
             padding: 0;
@@ -14,49 +13,47 @@
         }
 
         body {
-            background-color: #f4f6f9;
-            color: #1e293b;
-            padding-bottom: 100px;
+            background-color: #f7f9fc;
+            color: #111111;
+            padding-bottom: 90px;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Top Dark Brand Banner Layout */
         .top-navbar {
-            background-color: #0f172a;
-            padding: 24px 20px 65px 20px;
+            background-color: #212121;
+            padding: 24px 16px 50px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             color: #ffffff;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            position: relative;
         }
 
         .brand-meta {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         .mini-logo {
-            width: 46px;
-            height: 46px;
-            background-color: #ccff00;
+            width: 44px;
+            height: 44px;
+            background-color: #cbee00;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 4px solid #1e293b;
-            box-shadow: 0 0 0 2px #ccff00;
+            border: 4px solid #333333;
         }
 
         .mini-logo-inner {
             width: 12px;
             height: 12px;
-            background-color: #0f172a;
+            background-color: #212121;
             border-radius: 50%;
             border: 2px solid #ffffff;
         }
@@ -67,47 +64,41 @@
         }
 
         .brand-heading {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
         .brand-sub-tagline {
             font-size: 0.65rem;
-            color: #94a3b8;
-            letter-spacing: 0.8px;
-            font-weight: 700;
-            margin-top: 1px;
+            color: #aaaaaa;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         .user-avatar-placeholder {
-            width: 42px;
-            height: 42px;
-            background-color: #334155;
+            width: 40px;
+            height: 40px;
+            background-color: #3d3d3d;
             border-radius: 50%;
-            border: 2px solid #475569;
         }
 
-        /* Overlapping Account Balance Module Card */
         .wallet-card {
             background-color: #ffffff;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 24px;
-            margin: -45px 16px 30px 16px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+            margin: -35px 16px 25px 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             z-index: 5;
             position: relative;
-            border: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         .wallet-grids {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 22px;
-            border-bottom: 1px solid #f1f5f9;
-            padding-bottom: 16px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
         .wallet-node {
@@ -116,110 +107,97 @@
         }
 
         .wallet-label {
-            font-size: 0.75rem;
-            color: #94a3b8;
+            font-size: 0.72rem;
+            color: #aaaaaa;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: bold;
             letter-spacing: 0.5px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .wallet-amount {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #0f172a;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111111;
         }
 
         .wallet-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 15px;
         }
 
         .action-button {
             text-align: center;
-            padding: 15px;
+            padding: 14px;
             border-radius: 16px;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             text-decoration: none;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
 
         .action-button.filled {
-            background-color: #0f172a;
+            background-color: #2c2c2c;
             color: #ffffff;
-            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .action-button.outlined {
-            border: 2px solid #e2e8f0;
-            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            color: #2c2c2c;
             background-color: #ffffff;
         }
 
-        /* Section Header Layout */
         .section-container {
-            padding: 0 20px;
-            margin-bottom: 18px;
+            padding: 0 16px;
+            margin-bottom: 15px;
         }
 
         .section-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #0f172a;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .section-title::before {
             content: '';
             display: inline-block;
             width: 5px;
-            height: 22px;
-            background-color: #0f172a;
+            height: 20px;
+            background-color: #111111;
             border-radius: 10px;
-        }
-
-        /* Continuous Vertical Stack List CSS */
-        .plans-wrapper-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 0 16px;
-            width: 100%;
         }
 
         .plan-card {
             background-color: #ffffff;
-            border-radius: 24px;
-            padding: 22px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
+            border-radius: 28px;
+            padding: 24px;
+            margin: 0 16px 20px 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid #f0f2f5;
         }
 
         .plan-header {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .plan-icon-box {
-            width: 58px;
-            height: 58px;
-            background-color: #f1f5f9;
+            width: 65px;
+            height: 65px;
+            background-color: #fff5eb;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
-            border: 1px solid #e2e8f0;
+            font-size: 1.7rem;
         }
 
         .plan-info-title {
@@ -228,81 +206,78 @@
         }
 
         .plan-name {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: #0f172a;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d3748;
             margin-bottom: 2px;
         }
 
         .plan-cost {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #111111;
         }
 
         .plan-metrics-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .metric-box {
             background-color: #f8fafc;
             border-radius: 12px;
-            padding: 12px 6px;
+            padding: 10px 6px;
             text-align: center;
-            border: 1px solid #f1f5f9;
         }
 
         .metric-label {
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             color: #94a3b8;
             text-transform: uppercase;
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 4px;
             letter-spacing: 0.3px;
         }
 
         .metric-value {
-            font-size: 0.9rem;
-            font-weight: 800;
+            font-size: 0.85rem;
+            font-weight: 700;
             color: #334155;
         }
 
         .invest-now-btn {
-            background-color: #0f172a;
+            background-color: #292929;
             color: #ffffff;
             border: none;
             width: 100%;
             padding: 16px;
             border-radius: 16px;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
             letter-spacing: 1px;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .invest-now-btn:active {
-            background-color: #ccff00;
-            color: #0f172a;
+            background-color: #111111;
         }
 
-        /* Fixed Footer Menu Ribbon */
         .bottom-nav-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             background-color: #ffffff;
-            height: 72px;
+            height: 68px;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #edf2f7;
             z-index: 100;
-            box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
         }
 
         .nav-item {
@@ -311,41 +286,41 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            color: #94a3b8;
-            font-size: 0.75rem;
+            color: #cbd5e1;
+            font-size: 0.72rem;
             font-weight: 700;
-            gap: 5px;
+            gap: 4px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .nav-item.active {
-            color: #0f172a;
+            color: #111111;
         }
 
         .nav-icon {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
         
         .alert-banner-box {
             background-color: #fff3cd;
             color: #856404;
-            padding: 14px;
+            padding: 12px;
             text-align: center;
             font-weight: bold;
             font-size: 0.9rem;
-            margin: 0 16px 20px 16px;
-            border-radius: 16px;
-            border: 1px solid #ffeeba;
+            margin: 10px 16px;
+            border-radius: 12px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Dark Header Layout -->
     <div class="top-navbar">
         <div class="brand-meta">
-            <div class="mini-logo"><div class="mini-logo-inner"></div></div>
+            <div class="mini-logo">
+                <div class="mini-logo-inner"></div>
+            </div>
             <div class="brand-text-wrapper">
                 <span class="brand-heading">Creston</span>
                 <span class="brand-sub-tagline">CLEAN ENERGY. PURE PROFIT.</span>
@@ -354,7 +329,6 @@
         <div class="user-avatar-placeholder"></div>
     </div>
 
-    <!-- Balance Wallet Module -->
     <div class="wallet-card">
         <div class="wallet-grids">
             <div class="wallet-node">
@@ -368,3 +342,153 @@
         </div>
         <div class="wallet-actions">
             <a href="/deposit" class="action-button filled">Deposit</a>
+            <a href="/withdraw" class="action-button outlined">Withdraw</a>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <h2 class="section-title">Investment Plans</h2>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %} <div class="alert-banner-box">⚠️ {{ msg }}</div> {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Proper form container wrapping all investment items -->
+    <form action="/invest" method="POST">
+        
+        <!-- Plan 1 (GHS 70) -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon-box">🌱</div>
+                <div class="plan-info-title">
+                    <span class="plan-name">CRESTON 1</span>
+                    <span class="plan-cost">GHS 70</span>
+                </div>
+            </div>
+            <!-- Plan 2 (GHS 100) -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon-box">☀️</div>
+                <div class="plan-info-title">
+                    <span class="plan-name">CRESTON 2</span>
+                    <span class="plan-cost">GHS 100</span>
+                </div>
+            </div>
+            <div class="plan-metrics-grid">
+                <div class="metric-box"><div class="metric-label">Daily</div><div class="metric-value">GHS 20.00</div></div>
+                <div class="metric-box"><div class="metric-label">Validity</div><div class="metric-value">100 Days</div></div>
+                <div class="metric-box"><div class="metric-label">Total</div><div class="metric-value">GHS 2,000</div></div>
+            </div>
+            <button type="submit" name="plan_id" value="2" class="invest-now-btn">Invest Now</button>
+        </div>
+
+        <!-- Plan 3 (GHS 260) -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon-box">🔋</div>
+                <div class="plan-info-title">
+                    <span class="plan-name">CRESTON 3</span>
+                    <span class="plan-cost">GHS 260</span>
+                </div>
+            </div>
+            <div class="plan-metrics-grid">
+                <div class="metric-box"><div class="metric-label">Daily</div><div class="metric-value">GHS 45.00</div></div>
+                <div class="metric-box"><div class="metric-label">Validity</div><div class="metric-value">100 Days</div></div>
+                <div class="metric-box"><div class="metric-label">Total</div><div class="metric-value">GHS 4,500</div></div>
+            </div>
+            <button type="submit" name="plan_id" value="3" class="invest-now-btn">Invest Now</button>
+        </div>
+
+        <!-- Plan 4 (GHS 400) -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon-box">🌀</div>
+                <div class="plan-info-title">
+                    <span class="plan-name">CRESTON 4</span>
+                    <span class="plan-cost">GHS 400</span>
+                </div>
+            </div>
+            <div class="plan-metrics-grid">
+                <div class="metric-box"><div class="metric-label">Daily</div><div class="metric-value">GHS 60.00</div></div>
+                <div class="metric-box"><div class="metric-label">Validity</div><div class="metric-value">100 Days</div></div>
+                <div class="metric-box"><div class="metric-label">Total</div><div class="metric-value">GHS 6,000</div></div>
+            </div>
+            <button type="submit" name="plan_id" value="4" class="invest-now-btn">Invest Now</button>
+        </div>
+
+        <!-- Plan 5 (GHS 600) -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon-box">⚡</div>
+                <div class="plan-info-title">
+                    <span class="plan-name">CRESTON 5</span>
+                    <span class="plan-cost">GHS 600</span>
+                </div>
+            </div>
+            <div class="plan-metrics-grid">
+                <div class="metric-box"><div class="metric-label">Daily</div><div class="metric-value">GHS 100.00</div></div>
+                <div class="metric-box"><div class="metric-label">Validity</div><div class="metric-value">100 Days</div></div>
+                <div class="metric-box"><div class="metric-label">Total</div><div class="metric-value">GHS 10,000</div></div>
+            </div>
+            <button type="submit" name="plan_id" value="5" class="invest-now-btn">Invest Now</button>
+        </div>
+
+        <!-- Plan 6 (GHS 800) -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon-box">💠</div>
+                <div class="plan-info-title">
+                    <span class="plan-name">CRESTON 6</span>
+                    <span class="plan-cost">GHS 800</span>
+                </div>
+            </div>
+            <div class="plan-metrics-grid">
+                <div class="metric-box"><div class="metric-label">Daily</div><div class="metric-value">GHS 150.00</div></div>
+                <div class="metric-box"><div class="metric-label">Validity</div><div class="metric-value">100 Days</div></div>
+                <div class="metric-box"><div class="metric-label">Total</div><div class="metric-value">GHS 15,000</div></div>
+            </div>
+            <button type="submit" name="plan_id" value="6" class="invest-now-btn">Invest Now</button>
+        </div>
+
+        <!-- Plan 7 (GHS 1,000) -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon-box">🌍</div>
+                <div class="plan-info-title">
+                    <span class="plan-name">CRESTON 7</span>
+                    <span class="plan-cost">GHS 1,000</span>
+                </div>
+            </div>
+            <div class="plan-metrics-grid">
+                <div class="metric-box"><div class="metric-label">Daily</div><div class="metric-value">GHS 200.00</div></div>
+                <div class="metric-box"><div class="metric-label">Validity</div><div class="metric-value">100 Days</div></div>
+                <div class="metric-box"><div class="metric-label">Total</div><div class="metric-value">GHS 20,000</div></div>
+            </div>
+            <button type="submit" name="plan_id" value="7" class="invest-now-btn">Invest Now</button>
+        </div>
+    </form>
+                         <div class="plan-metrics-grid">
+    
+    <!-- Lower Bottom Navigation Buttons Menu Strip Panel -->
+    <div class="bottom-nav-bar">
+        <a href="/dashboard" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="/invite" class="nav-item">
+            <span class="nav-icon">👥</span>
+            <span>Invite</span>
+        </a>
+        <a href="/profile" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </div>
+
+</body>
+</html>
+        
+            
