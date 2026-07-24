@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creston - Home</title>
     <style>
-        /* Mobile-first structural layout configurations tracking */
         * {
             margin: 0;
             padding: 0;
@@ -16,13 +15,12 @@
         body {
             background-color: #f7f9fc;
             color: #111111;
-            padding-bottom: 90px; /* Generous baseline space footprint layout for bottom navigation bar */
+            padding-bottom: 90px;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Top Dark Brand Banner Layout Strip Component Box */
         .top-navbar {
             background-color: #212121;
             padding: 24px 16px 50px 16px;
@@ -41,7 +39,6 @@
             gap: 12px;
         }
 
-        /* Yellow Target Core Minimalistic Profile Logo Grid Asset */
         .mini-logo {
             width: 44px;
             height: 44px;
@@ -87,7 +84,6 @@
             border-radius: 50%;
         }
 
-        /* Wallet Overlapping Card Balance Module Dashboard Panel Layout */
         .wallet-card {
             background-color: #ffffff;
             border-radius: 28px;
@@ -125,7 +121,6 @@
             color: #111111;
         }
 
-        /* Operational Financial Link Actions Button Matrix Layout Container */
         .wallet-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -155,7 +150,6 @@
             background-color: #ffffff;
         }
 
-        /* Section Investment Plans Label Header Indicator Alignment */
         .section-container {
             padding: 0 16px;
             margin-bottom: 15px;
@@ -179,7 +173,6 @@
             border-radius: 10px;
         }
 
-        /* Package Catalog Card Display Framework Blocks Modules */
         .plan-card {
             background-color: #ffffff;
             border-radius: 28px;
@@ -225,7 +218,6 @@
             color: #111111;
         }
 
-        /* Metric Data Grid Rows */
         .plan-metrics-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -255,7 +247,6 @@
             color: #334155;
         }
 
-        /* Interactive Action Buy Execution Component Trigger Button Layout */
         .invest-now-btn {
             background-color: #292929;
             color: #ffffff;
@@ -271,7 +262,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* Fixed Mobile Tab Navigation Ribbon UI Container Panel Strip */
         .bottom-nav-bar {
             position: fixed;
             bottom: 0;
@@ -301,7 +291,7 @@
         }
 
         .nav-item.active {
-            color: #111111; /* Active home navigation state indicator tracking variable color alignment */
+            color: #111111;
         }
 
         .nav-icon {
@@ -322,7 +312,6 @@
 </head>
 <body>
 
-    <!-- Main Branding Header Segment -->
     <div class="top-navbar">
         <div class="brand-meta">
             <div class="mini-logo">
@@ -336,7 +325,6 @@
         <div class="user-avatar-placeholder"></div>
     </div>
 
-    <!-- Client Wallet Summary Metrics Display Widget Card -->
     <div class="wallet-card">
         <div class="wallet-grids">
             <div class="wallet-node">
@@ -354,3 +342,26 @@
         </div>
     </div>
 
+    <div class="section-container">
+        <h2 class="section-title">Investment Plans</h2>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %} <div class="alert-banner-box">⚠️ {{ msg }}</div> {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- FIXED: Wrapped all card elements into a proper POST action form execution block -->
+    <form action="/invest" method="POST">
+        
+        <!-- Plan 1 -->
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon-box">🌱</div>
+                <div class="plan-info-title">
+                    <span class="plan-name">CRESTON 1</span>
+                    <span class="plan-cost">GHS 70</span>
+                </div>
+            </div>
+            <div class="plan-metrics-grid">
