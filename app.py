@@ -3,6 +3,7 @@ import random
 import string
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
 
@@ -101,6 +102,63 @@ PLAN_CATALOG = {
     7: {"cost": 1000, "daily": 200}
 }
 
+
+
+def update_plan_income():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("""
+            SELECT id, user_id, daily_yield, date_activated
+            FROM user_plans;
+        """)
+
+        plans = cur.fetchall()
+
+        for plan in plans:
+            current_time = datetime.utcnow()
+            activated_time = plan['date_activated']
+
+            hours = (current_time - activated_time).total_seconds() / 3600
+
+            if hours >= 24:
+
+                amount = plan['daily_yield']
+
+                # Add profit to user balance
+                cur.execute("""
+                    UPDATE users
+                    SET income_balance = income_balance + %s,
+                        today_income = today_income + %s,
+                        total_income = total_income + %s
+                    WHERE id = %s;
+                """,
+                (
+                    amount,
+                    amount,
+                    amount,
+                    plan['user_id']
+                ))
+
+                # Reset the 24-hour timer
+                cur.execute("""
+                    UPDATE user_plans
+                    SET date_activated = CURRENT_TIMESTAMP
+                    WHERE id = %s;
+                """,
+                (plan['id'],))
+
+        conn.commit()
+
+    except Exception as e:
+        conn.rollback()
+        print("Income update error:", e)
+
+    finally:
+        cur.close()
+        conn.close()
+
 # ==========================================
 # CLIENT USER INTERFACE PIPELINES
 # ==========================================
@@ -173,7 +231,7 @@ def dashboard():
     cur.close()
     conn.close()
     return render_template('dashboard.html', income_balance=wallet['income_balance'], deposit_balance=wallet['deposit_balance'])
-
+       update_plan_income()
 @app.route('/invest', methods=['POST'])
 def invest():
     if 'user_id' not in session: return redirect(url_for('login'))
