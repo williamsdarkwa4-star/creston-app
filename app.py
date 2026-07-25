@@ -278,8 +278,8 @@ def deposit():
     if request.method == 'POST':
         amount = request.form.get('amount')
         channel = request.form.get('channel')
-        if float(amount) < 50:
-            flash("Minimum deposit requirement is GHS 50.")
+        if float(amount) < 60:
+            flash("Minimum deposit requirement is GHS 60.")
             return redirect(url_for('deposit'))
         return redirect(url_for('payment_gateway', amount=amount, channel=channel))
         
@@ -375,9 +375,9 @@ def withdraw():
 
 
         # Minimum withdrawal
-        if amount < 40:
+        if amount < 30:
 
-            flash("Minimum withdrawal amount is GHS 40.")
+            flash("Minimum withdrawal amount is GHS 30.")
             cur.close()
             conn.close()
             return redirect(url_for('withdraw'))
