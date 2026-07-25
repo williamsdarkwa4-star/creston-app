@@ -750,6 +750,59 @@ def admin_password_reset():
         conn.close()
         flash(f"Access password for +233 {phone} updated successfully.")
     return render_template('admin/password_reset.html')
+@app.route('/admin/adjust_balance', methods=['GET', 'POST'])
+def admin_adjust_balance():
+    if not session.get('admin_logged'):
+        return redirect(url_for('admin_login'))
+
+    if request.method == 'POST':
+        phone = request.form.get('phone_number').strip()
+        wallet = request.form.get('wallet')
+        action = request.form.get('action')
+        amount = float(request.form.get('amount'))
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute(
+            "SELECT id FROM users WHERE phone_number=%s;",
+            (phone,)
+        )
+        user = cur.fetchone()
+
+        if not user:
+            flash("User not found.")
+            cur.close()
+            conn.close()
+            return redirect(url_for('admin_adjust_balance'))
+
+        if wallet not in ["deposit_balance", "income_balance"]:
+            flash("Invalid wallet selected.")
+            cur.close()
+            conn.close()
+            return redirect(url_for('admin_adjust_balance'))
+
+        if action == "add":
+            cur.execute(
+                f"UPDATE users SET {wallet} = {wallet} + %s WHERE phone_number=%s;",
+                (amount, phone)
+            )
+            flash("Funds added successfully.")
+
+        elif action == "deduct":
+            cur.execute(
+                f"UPDATE users SET {wallet} = GREATEST({wallet} - %s, 0) WHERE phone_number=%s;",
+                (amount, phone)
+            )
+            flash("Funds deducted successfully.")
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return redirect(url_for('admin_adjust_balance'))
+
+    return render_template("admin/adjust_balance.html")
 
 @app.route('/admin/logout')
 def admin_logout():
