@@ -111,7 +111,7 @@ def home_redirect():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    url_invite_code = request.args.get('invite', 'DOSLQV')
+    url_invite_code = request.args.get('invite', 'RUFCR65')
     
     if request.method == 'POST':
         nickname = request.form.get('nickname')
