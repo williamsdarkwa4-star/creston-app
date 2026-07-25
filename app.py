@@ -90,16 +90,14 @@ def init_db():
 """) 
 
 
-        conn.commit()
-        print("Database tables created successfully")
+            conn.commit()
+    print("Database tables created successfully")
 
+except Exception as e:
+    conn.rollback()
+    print("Database setup error:", e)
 
-    except Exception as e:
-        conn.rollback()
-        print("Database setup error:", e)
-
-
-    finally:
+finally:
     cur.close()
     conn.close()
 
@@ -115,9 +113,8 @@ PLAN_CATALOG = {
     4: {"cost": 400, "daily": 60},
     5: {"cost": 600, "daily": 100},
     6: {"cost": 800, "daily": 150},
-    7: {"cost": 1000, "daily": 200}
+    7: {"cost": 1000, "daily": 200},
 }
-
 
 
 def update_plan_income():
