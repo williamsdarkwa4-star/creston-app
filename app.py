@@ -549,31 +549,88 @@ def history():
 
 @app.route('/invite')
 def invite():
-    # Strict navigation validation: block unauthenticated sessions
-    if 'user_id' not in session: 
+
+    if 'user_id' not in session:
         return redirect(url_for('login'))
-        
+
     conn = get_db_connection()
     cur = conn.cursor()
-    
-    # 1. Fetch the logged-in client's custom invite code string token
-    cur.execute('SELECT invite_code FROM users WHERE id = %s;', (session['user_id'],))
+
+    # Current user's invite code
+    cur.execute("""
+        SELECT invite_code
+        FROM users
+        WHERE id=%s
+    """,(session['user_id'],))
+
     me = cur.fetchone()
-    
-    # 2. Extract downline matching members listed under that referral code
-    cur.execute('''
-        SELECT nickname, phone_number 
-        FROM users 
-        WHERE referred_by = %s 
-        ORDER BY id DESC;
-    ''', (me['invite_code'],))
-    
+
+
+    # Find ALL people who registered with this invite code
+    cur.execute("""
+        SELECT 
+            u.nickname,
+            u.phone_number,
+
+            COALESCE(
+                (
+                SELECT SUM(amount)
+                FROM transactions
+                WHERE user_id=u.id
+                AND type='deposit'
+                AND status='approved'
+                ),0
+            ) AS deposit_amount,
+
+
+            COALESCE(
+                (
+                SELECT SUM(commission_amount)
+                FROM referral_commissions
+                WHERE referred_user_id=u.id
+                AND referrer_id=%s
+                ),0
+            ) AS commission
+
+
+        FROM users u
+
+        WHERE u.referred_by=%s
+
+        ORDER BY u.id DESC
+
+    """,
+    (
+        session['user_id'],
+        me['invite_code']
+    ))
+
+
     team = cur.fetchall()
+
+
+    # Total commission from all referrals
+    cur.execute("""
+        SELECT COALESCE(SUM(commission_amount),0) AS total
+        FROM referral_commissions
+        WHERE referrer_id=%s
+    """,
+    (session['user_id'],))
+
+
+    total_commission = cur.fetchone()['total']
+
+
     cur.close()
     conn.close()
-    
-    # Passes data variables instantly into your templates/invite.html layout file
-    return render_template('invite.html', invite_code=me['invite_code'], team=team)
+
+
+    return render_template(
+        'invite.html',
+        invite_code=me['invite_code'],
+        team=team,
+        total_commission=total_commission
+    )
 # ==========================================
 # CLIENT PROFILE & MY PLANS ROUTES
 # ==========================================
