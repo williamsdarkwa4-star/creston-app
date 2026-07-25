@@ -11,25 +11,41 @@
         .plan-card { background:#ffffff; border-radius:20px; padding:20px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.02); border:1px solid #edf2f7; }
         .row-split { display:flex; justify-content:between; margin-bottom:8px; font-size:0.9rem; }
     <style>
-.countdown-box{
-    background:#111;
-    color:white;
-    padding:20px;
-    border-radius:16px;
-    border:1px solid #333;
-    margin:15px 0;
-}
+<div class="countdown-box">
+    <h3>⏳ Next Daily Income</h3>
+    <p id="countdown{{ loop.index }}">24:00:00</p>
+</div>
 
-.countdown-box h3{
-    color:#ccff00;
-}
+<script>
+(function(){
 
-#countdown{
-    font-size:25px;
-    font-weight:bold;
-    margin-top:10px;
-}
-</style>
+    let endTime = new Date("{{ plan.date_activated }}").getTime() + 86400000;
+
+    function update(){
+
+        let now = new Date().getTime();
+        let diff = endTime - now;
+
+        if(diff < 0){
+            diff = 0;
+        }
+
+        let h = Math.floor(diff / 3600000);
+        let m = Math.floor((diff % 3600000) / 60000);
+        let s = Math.floor((diff % 60000) / 1000);
+
+        document.getElementById("countdown{{ loop.index }}").innerHTML =
+            String(h).padStart(2,'0') + ":" +
+            String(m).padStart(2,'0') + ":" +
+            String(s).padStart(2,'0');
+
+    }
+
+    update();
+    setInterval(update,1000);
+
+})();
+</script>
     
     </style>
 </head>
