@@ -609,7 +609,8 @@ def profile():
 
 
 @app.route('/my_plans')
-def plan():
+def my_plans():
+
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
@@ -617,55 +618,25 @@ def plan():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT last_income_time
+        SELECT 
+            plan_type,
+            purchase_price,
+            daily_yield,
+            date_activated
         FROM user_plans
-        WHERE user_id=%s
-        ORDER BY id DESC
-        LIMIT 1;
-    """,(session['user_id'],))
+        WHERE user_id = %s
+        ORDER BY date_activated DESC;
+    """, (session['user_id'],))
 
-    my_plan = cur.fetchone()
+    plans = cur.fetchall()
 
     cur.close()
     conn.close()
-
-    countdown = "No active plan"
-
-    if my_plans:
-        current_time = datetime.utcnow()
-        next_time =my_plans['last_income_time'] + timedelta(hours=24)
-        remaining = next_time - current_time
-
-        seconds = max(int(remaining.total_seconds()),0)
-
-        h = seconds // 3600
-        m = (seconds % 3600)//60
-        s = seconds % 60
-
-        countdown = f"{h:02d}:{m:02d}:{s:02d}"
 
     return render_template(
         'my_plans.html',
-        countdown=countdown
+        active_plans=plans
     )
-        
-    conn = get_db_connection()
-    cur = conn.cursor()
-    
-    # Pulls all active investments bought by this client, newest first
-    cur.execute('''
-        SELECT plan_type, purchase_price, daily_yield, date_activated 
-        FROM user_plans 
-        WHERE user_id = %s 
-        ORDER BY date_activated DESC;
-    ''', (session['user_id'],))
-    
-    my_plans = cur.fetchall()
-    cur.close()
-    conn.close()
-    
-    # Feeds items dynamically into your templates/my_plans.html view panel ledger
-    return render_template('my_plans.html', active_plans=plans)
 # ==========================================
 # MASTER ADMINISTRATIVE SECURITY ENDPOINTS
 # ==========================================
