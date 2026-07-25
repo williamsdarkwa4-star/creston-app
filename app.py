@@ -29,92 +29,93 @@ def init_db():
     cur = conn.cursor()
 
     try:
-        cur.execute('''
-            CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                nickname VARCHAR(100) NOT NULL,
-                phone_number VARCHAR(20) UNIQUE NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                invite_code VARCHAR(50) UNIQUE,
-                referred_by VARCHAR(50),
-                income_balance NUMERIC(15,2) DEFAULT 0.00,
-                deposit_balance NUMERIC(15,2) DEFAULT 10.00,
-                today_income NUMERIC(15,2) DEFAULT 0.00,
-                total_income NUMERIC(15,2) DEFAULT 0.00,
-                total_withdrawn NUMERIC(15,2) DEFAULT 0.00
-            );
-        ''')
 
-        # Add withdrawal password safely
-        cur.execute('''
-            ALTER TABLE users
-            ADD COLUMN IF NOT EXISTS withdraw_password VARCHAR(255);
-        ''')
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            nickname VARCHAR(100) NOT NULL,
+            phone_number VARCHAR(20) UNIQUE NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            invite_code VARCHAR(50) UNIQUE,
+            referred_by VARCHAR(50),
+            income_balance NUMERIC(15,2) DEFAULT 0.00,
+            deposit_balance NUMERIC(15,2) DEFAULT 10.00,
+            today_income NUMERIC(15,2) DEFAULT 0.00,
+            total_income NUMERIC(15,2) DEFAULT 0.00,
+            total_withdrawn NUMERIC(15,2) DEFAULT 0.00,
+            withdraw_password VARCHAR(255)
+        );
+        """)
 
-        cur.execute('''
-            CREATE TABLE IF NOT EXISTS transactions (
-                id SERIAL PRIMARY KEY,
-                user_id INT REFERENCES users(id) ON DELETE CASCADE,
-                type VARCHAR(50) NOT NULL,
-                amount NUMERIC(15,2) NOT NULL,
-                status VARCHAR(50) DEFAULT 'pending',
-                channel VARCHAR(50),
-                meta_sender_name VARCHAR(150),
-                screenshot_file VARCHAR(255),
-                recipient_phone VARCHAR(50),
-                network_provider VARCHAR(50),
-                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        ''')
-        cur.execute('''
-       ALTER TABLE user_plans
-        ADD COLUMN IF NOT EXISTS last_income_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-         ''')
 
-        cur.execute('''
-            CREATE TABLE IF NOT EXISTS user_plans (
-                id SERIAL PRIMARY KEY,
-                user_id INT REFERENCES users(id) ON DELETE CASCADE,
-                plan_type INT NOT NULL,
-                purchase_price NUMERIC(15,2) NOT NULL,
-                daily_yield NUMERIC(15,2) NOT NULL,
-                date_activated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        ''')
-          cur.execute('''
-           CREATE TABLE IF NOT EXISTS referral_commissions (
-             id SERIAL PRIMARY KEY,
-              referrer_id INT REFERENCES users(id) ON DELETE CASCADE,
-             referred_user_id INT REFERENCES users(id) ON DELETE CASCADE,
-             deposit_amount NUMERIC(15,2) DEFAULT 0.00,
-             commission_amount NUMERIC(15,2) DEFAULT 0.00,
-             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-''')
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS transactions (
+            id SERIAL PRIMARY KEY,
+            user_id INT REFERENCES users(id) ON DELETE CASCADE,
+            type VARCHAR(50) NOT NULL,
+            amount NUMERIC(15,2) NOT NULL,
+            status VARCHAR(50) DEFAULT 'pending',
+            channel VARCHAR(50),
+            meta_sender_name VARCHAR(150),
+            screenshot_file VARCHAR(255),
+            recipient_phone VARCHAR(50),
+            network_provider VARCHAR(50),
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS user_plans (
+            id SERIAL PRIMARY KEY,
+            user_id INT REFERENCES users(id) ON DELETE CASCADE,
+            plan_type INT NOT NULL,
+            purchase_price NUMERIC(15,2) NOT NULL,
+            daily_yield NUMERIC(15,2) NOT NULL,
+            date_activated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            last_income_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS referral_commissions (
+            id SERIAL PRIMARY KEY,
+            referrer_id INT REFERENCES users(id) ON DELETE CASCADE,
+            referred_user_id INT REFERENCES users(id) ON DELETE CASCADE,
+            deposit_amount NUMERIC(15,2) DEFAULT 0.00,
+            commission_amount NUMERIC(15,2) DEFAULT 0.00,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+
 
         conn.commit()
+        print("Database tables created successfully")
+
 
     except Exception as e:
         conn.rollback()
         print("Database setup error:", e)
 
+
     finally:
         cur.close()
         conn.close()
-try:
-    init_db()
-except Exception as e:
-    print(f"PostgreSQL Production System Notice: {e}")
+   try:
+      init_db()
+      except   Exception as e:
+             print(f"PostgreSQL Production System Notice: {e}")
     
-PLAN_CATALOG = {
-    1: {"cost": 70, "daily": 8},
-    2: {"cost": 100, "daily": 20},
-    3: {"cost": 260, "daily": 45},
-    4: {"cost": 400, "daily": 60},
-    5: {"cost": 600, "daily": 100},
-    6: {"cost": 800, "daily": 150},
-    7: {"cost": 1000, "daily": 200}
-}
+   PLAN_CATALOG = {
+                  1: {"cost": 70, "daily": 8},
+                  2: {"cost": 100, "daily": 20},
+                  3: {"cost": 260, "daily": 45},
+                  4: {"cost": 400, "daily": 60},
+                  5: {"cost": 600, "daily": 100},
+                  6: {"cost": 800, "daily": 150},
+                  7: {"cost": 1000, "daily": 200}
+                }
 
 
 
