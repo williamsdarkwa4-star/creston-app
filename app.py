@@ -102,20 +102,20 @@ def init_db():
     finally:
         cur.close()
         conn.close()
-   try:
-      init_db()
-      except   Exception as e:
-             print(f"PostgreSQL Production System Notice: {e}")
-    
-   PLAN_CATALOG = {
-                  1: {"cost": 70, "daily": 8},
-                  2: {"cost": 100, "daily": 20},
-                  3: {"cost": 260, "daily": 45},
-                  4: {"cost": 400, "daily": 60},
-                  5: {"cost": 600, "daily": 100},
-                  6: {"cost": 800, "daily": 150},
-                  7: {"cost": 1000, "daily": 200}
-                }
+ try:
+    init_db()
+except Exception as e:
+    print(f"PostgreSQL Production System Notice: {e}")
+
+PLAN_CATALOG = {
+    1: {"cost": 70, "daily": 8},
+    2: {"cost": 100, "daily": 20},
+    3: {"cost": 260, "daily": 45},
+    4: {"cost": 400, "daily": 60},
+    5: {"cost": 600, "daily": 100},
+    6: {"cost": 800, "daily": 150},
+    7: {"cost": 1000, "daily": 200}
+}
 
 
 
