@@ -26,6 +26,39 @@
         {% endfor %}
     {% else %}
         <div style="text-align:center; color:#a0aec0; margin-top:50px;">You do not have any running power plans yet.</div>
+  
     {% endif %}
+    <div class="income-timer">
+    <h3>Next Daily Income</h3>
+    <div id="timer">{{ countdown }}</div>
+    <p>Your plan income will be released every 24 hours</p>
+</div>
+
+<script>
+let seconds = "{{ countdown }}";
+
+if(seconds.includes(":")){
+    let t = seconds.split(":");
+    let total =
+    parseInt(t[0])*3600 +
+    parseInt(t[1])*60 +
+    parseInt(t[2]);
+
+    setInterval(()=>{
+        if(total > 0){
+            total--;
+
+            let h=Math.floor(total/3600);
+            let m=Math.floor((total%3600)/60);
+            let s=total%60;
+
+            document.getElementById("timer").innerHTML =
+            String(h).padStart(2,'0')+":"+
+            String(m).padStart(2,'0')+":"+
+            String(s).padStart(2,'0');
+        }
+    },1000);
+}
+</script>
 </body>
 </html>
