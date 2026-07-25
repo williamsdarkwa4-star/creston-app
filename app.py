@@ -81,7 +81,7 @@ def init_db():
                 date_activated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         ''')
-  cur.execute('''
+       cur.execute('''
     CREATE TABLE IF NOT EXISTS referral_commissions (
         id SERIAL PRIMARY KEY,
         referrer_id INT REFERENCES users(id) ON DELETE CASCADE,
