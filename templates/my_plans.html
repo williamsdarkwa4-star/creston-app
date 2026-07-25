@@ -1,148 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creston - My Plans</title>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,sans-serif; }
-        body { background-color:#f7f9fc; padding:20px; color:#111111; }
-        .hdr { display:flex; align-items:center; gap:12px; margin-bottom:24px; font-weight:bold; font-size:1.2rem; }
-        .plan-card { background:#ffffff; border-radius:20px; padding:20px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.02); border:1px solid #edf2f7; }
-        .row-split { display:flex; justify-content:between; margin-bottom:8px; font-size:0.9rem; }
-    <style>
-<div class="countdown-box">
-    <h3>⏳ Next Daily Income</h3>
-    <p id="countdown{{ loop.index }}">24:00:00</p>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Power Plans</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+    padding:20px;
+}
+
+.hdr{
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.plan-card{
+    background:#fff;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.row{
+    display:flex;
+    justify-content:space-between;
+    margin:10px 0;
+}
+
+.countdown{
+    margin-top:15px;
+    background:#111;
+    color:#ccff00;
+    text-align:center;
+    padding:15px;
+    border-radius:12px;
+}
+
+.timer{
+    font-size:28px;
+    font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="hdr">
+<a href="/profile">←</a>
+My Power Plans
+</div>
+
+{% if active_plans %}
+
+{% for plan in active_plans %}
+
+<div class="plan-card">
+
+<h2>Creston Plan {{ plan.plan_type }}</h2>
+
+<div class="row">
+<span>Investment</span>
+<span>GHS {{ plan.purchase_price }}</span>
+</div>
+
+<div class="row">
+<span>Daily Income</span>
+<span>GHS {{ plan.daily_yield }}</span>
+</div>
+
+<div class="row">
+<span>Activated</span>
+<span>{{ plan.date_activated }}</span>
+</div>
+
+<div class="countdown">
+
+<div>Next Daily Income</div>
+
+<div
+class="timer"
+id="timer{{ loop.index }}">
+24:00:00
+</div>
+
+</div>
+
 </div>
 
 <script>
+
 (function(){
 
-    let endTime = new Date("{{ plan.date_activated }}").getTime() + 86400000;
+let endTime = new Date("{{ plan.date_activated }}").getTime()+86400000;
 
-    function update(){
+function update(){
 
-        let now = new Date().getTime();
-        let diff = endTime - now;
+let now=new Date().getTime();
 
-        if(diff < 0){
-            diff = 0;
-        }
+let diff=endTime-now;
 
-        let h = Math.floor(diff / 3600000);
-        let m = Math.floor((diff % 3600000) / 60000);
-        let s = Math.floor((diff % 60000) / 1000);
+if(diff<0){
+diff=0;
+}
 
-        document.getElementById("countdown{{ loop.index }}").innerHTML =
-            String(h).padStart(2,'0') + ":" +
-            String(m).padStart(2,'0') + ":" +
-            String(s).padStart(2,'0');
+let h=Math.floor(diff/3600000);
 
-    }
+let m=Math.floor((diff%3600000)/60000);
 
-    update();
-    setInterval(update,1000);
+let s=Math.floor((diff%60000)/1000);
+
+document.getElementById("timer{{ loop.index }}").innerHTML=
+String(h).padStart(2,"0")+":"+
+String(m).padStart(2,"0")+":"+
+String(s).padStart(2,"0");
+
+}
+
+update();
+
+setInterval(update,1000);
 
 })();
-</script>
-    
-    </style>
-</head>
-    <script>
-function startCountdown(targetTime) {
-
-    function updateTimer() {
-
-        let now = new Date().getTime();
-        let distance = targetTime - now;
-
-        if (distance <= 0) {
-            document.getElementById("countdown").innerHTML =
-            "Income Ready";
-
-            return;
-        }
-
-        let hours = Math.floor(
-            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-
-        let minutes = Math.floor(
-            (distance % (1000 * 60 * 60)) / (1000 * 60)
-        );
-
-        let seconds = Math.floor(
-            (distance % (1000 * 60)) / 1000
-        );
-
-        document.getElementById("countdown").innerHTML =
-        hours + "h : " + minutes + "m : " + seconds + "s";
-    }
-
-    updateTimer();
-    setInterval(updateTimer, 1000);
-}
-
-
-// 24 hours from activation time
-let activated = new Date("{{ active_plans[0]['date_activated'] }}").getTime();
-
-let nextIncome = activated + (24 * 60 * 60 * 1000);
-
-startCountdown(nextIncome);
 
 </script>
-<body>
-    <div class="hdr"><a href="/profile" style="text-decoration:none; color:black;">‹</a> My Power Plans</div>
-    
-    {% if active_plans %}
-        {% for plan in active_plans %}
-        <div class="plan-card">
-            <div style="font-weight:bold; font-size:1.1rem; margin-bottom:12px; color:#2d3748;">⚡ CRESTON Plan #{{ plan.plan_type }}</div>
-            <div class="row-split"><span>Invested Capital:</span><span style="font-weight:bold;">GHS {{ plan.purchase_price }}</span></div>
-            <div class="row-split"><span>Daily Yield Rate:</span><span style="color:#34d399; font-weight:bold;">+GHS {{ plan.daily_yield }}</span></div>
-            <div class="row-split"><span>Activation Date:</span><span style="color:#718096;">{{ plan.date_activated }}</span></div>
-        </div>
-        {% endfor %}
-    {% else %}
-        <div style="text-align:center; color:#a0aec0; margin-top:50px;">You do not have any running power plans yet.</div>
-  
-    {% endif %}
-    <div class="income-timer">
-    <h3>Next Daily Income</h3>
-    <div id="timer">{{ countdown }}</div>
-    <p>Your plan income will be released every 24 hours</p>
-</div>
-<div class="countdown-box">
-    <h3>Next Income</h3>
-    <p id="countdown">Loading...</p>
-</div>
-<script>
-let seconds = "{{ countdown }}";
 
-if(seconds.includes(":")){
-    let t = seconds.split(":");
-    let total =
-    parseInt(t[0])*3600 +
-    parseInt(t[1])*60 +
-    parseInt(t[2]);
+{% endfor %}
 
-    setInterval(()=>{
-        if(total > 0){
-            total--;
+{% else %}
 
-            let h=Math.floor(total/3600);
-            let m=Math.floor((total%3600)/60);
-            let s=total%60;
+<h3 style="text-align:center;color:grey;">
+You have no active plans.
+</h3>
 
-            document.getElementById("timer").innerHTML =
-            String(h).padStart(2,'0')+":"+
-            String(m).padStart(2,'0')+":"+
-            String(s).padStart(2,'0');
-        }
-    },1000);
-}
-</script>
+{% endif %}
+
 </body>
 </html>
