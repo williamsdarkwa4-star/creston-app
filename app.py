@@ -88,8 +88,8 @@ def init_db():
                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """) 
-         conn.commit()
-            print("Database tables created successfully")
+           conn.commit()
+               print("Database tables created successfully")
 
 except Exception as e:
     conn.rollback()
