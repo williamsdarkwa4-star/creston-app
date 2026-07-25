@@ -78,16 +78,16 @@ def init_db():
         """)
 
 
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS referral_commissions (
-            id SERIAL PRIMARY KEY,
-            referrer_id INT REFERENCES users(id) ON DELETE CASCADE,
-            referred_user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            deposit_amount NUMERIC(15,2) DEFAULT 0.00,
-            commission_amount NUMERIC(15,2) DEFAULT 0.00,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """)
+       cur.execute("""
+CREATE TABLE IF NOT EXISTS referral_commissions (
+    id SERIAL PRIMARY KEY,
+    referrer_id INT REFERENCES users(id) ON DELETE CASCADE,
+    referred_user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    deposit_amount NUMERIC(15,2) DEFAULT 0.00,
+    commission_amount NUMERIC(15,2) DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+""") 
 
 
         conn.commit()
