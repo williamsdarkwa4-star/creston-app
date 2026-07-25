@@ -100,9 +100,10 @@ def init_db():
 
 
     finally:
-        cur.close()
-        conn.close()
- try:
+    cur.close()
+    conn.close()
+
+try:
     init_db()
 except Exception as e:
     print(f"PostgreSQL Production System Notice: {e}")
