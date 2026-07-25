@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Balance Control | Creston HQ</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+}
+
+body{
+    background:#080808;
+    color:#fff;
+    min-height:100vh;
+    padding:25px;
+}
+
+
+/* Header */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:650px;
+    margin:auto;
+    margin-bottom:30px;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#ccff00;
+}
+
+.back{
+    text-decoration:none;
+    color:#aaa;
+    font-size:14px;
+}
+
+
+/* Main Card */
+
+.wrapper{
+    max-width:650px;
+    margin:auto;
+}
+
+
+.card{
+
+    background:
+    linear-gradient(145deg,#171717,#0f0f0f);
+
+    border:1px solid #292929;
+
+    border-radius:25px;
+
+    padding:30px;
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,.5);
+
+}
+
+
+.title{
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:25px;
+
+}
+
+
+.icon{
+
+    width:55px;
+    height:55px;
+    background:#ccff00;
+    color:#000;
+    border-radius:18px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:25px;
+
+}
+
+
+h2{
+    font-size:24px;
+}
+
+
+.subtitle{
+    color:#888;
+    font-size:13px;
+    margin-top:4px;
+}
+
+
+
+/* Flash */
+
+.flash{
+
+    background:#102b10;
+    border:1px solid #295c29;
+    color:#8cff8c;
+
+    padding:14px;
+
+    border-radius:14px;
+
+    margin-bottom:20px;
+
+}
+
+
+
+/* Form */
+
+label{
+
+    display:block;
+
+    color:#bbb;
+
+    font-size:14px;
+
+    margin-bottom:8px;
+
+    margin-top:18px;
+
+}
+
+
+
+input,
+select{
+
+    width:100%;
+
+    padding:16px;
+
+    background:#222;
+
+    border:1px solid #333;
+
+    border-radius:14px;
+
+    color:white;
+
+    font-size:15px;
+
+}
+
+
+input:focus,
+select:focus{
+
+    border-color:#ccff00;
+
+    outline:none;
+
+}
+
+
+
+/* Button */
+
+button{
+
+    width:100%;
+
+    margin-top:30px;
+
+    padding:17px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:#ccff00;
+
+    color:#000;
+
+    font-size:16px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    opacity:.9;
+
+}
+
+
+
+/* Info Box */
+
+.info{
+
+    margin-top:25px;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    background:#121212;
+
+    border:1px solid #262626;
+
+    color:#999;
+
+    font-size:13px;
+
+    line-height:1.6;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+<div class="logo">
+Creston <span>HQ</span>
+</div>
+
+<a class="back" href="/admin/dashboard">
+← Dashboard
+</a>
+
+</div>
+
+
+
+<div class="wrapper">
+
+
+<div class="card">
+
+
+<div class="title">
+
+<div class="icon">
+💰
+</div>
+
+
+<div>
+
+<h2>Balance Control</h2>
+
+<div class="subtitle">
+Admin wallet adjustment system
+</div>
+
+</div>
+
+</div>
+
+
+
+
+{% with messages = get_flashed_messages() %}
+
+{% if messages %}
+
+<div class="flash">
+
+{% for message in messages %}
+
+{{ message }}
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+{% endwith %}
+
+
+
+
+
+<form method="POST">
+
+
+<label>
+User Phone Number
+</label>
+
+<input 
+type="text"
+name="phone_number"
+placeholder="Enter registered phone number"
+required>
+
+
+
+
+<label>
+Wallet Type
+</label>
+
+<select name="wallet" required>
+
+<option value="deposit_balance">
+Deposit Balance
+</option>
+
+<option value="income_balance">
+Income Balance
+</option>
+
+</select>
+
+
+
+
+<label>
+Transaction Action
+</label>
+
+<select name="action" required>
+
+<option value="add">
+➕ Add Funds
+</option>
+
+<option value="deduct">
+➖ Deduct Funds
+</option>
+
+</select>
+
+
+
+
+<label>
+Amount (GHS)
+</label>
+
+
+<input
+
+type="number"
+
+step="0.01"
+
+name="amount"
+
+placeholder="Enter amount"
+
+required>
+
+
+
+<button type="submit">
+
+Confirm Adjustment
+
+</button>
+
+
+</form>
+
+
+
+
+<div class="info">
+
+<strong>Security Notice</strong><br>
+
+Only authorised administrators should use this page.
+All balance adjustments should be verified before confirmation.
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+</body>
+
+</html>
