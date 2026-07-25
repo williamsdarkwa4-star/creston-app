@@ -89,7 +89,7 @@ def init_db():
 );
 """) 
            conn.commit()
-               print("Database tables created successfully")
+           print("Database tables created successfully")
 
 except Exception as e:
     conn.rollback()
