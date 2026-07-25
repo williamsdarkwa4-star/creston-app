@@ -66,6 +66,10 @@ def init_db():
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         ''')
+        cur.execute('''
+       ALTER TABLE user_plans
+        ADD COLUMN IF NOT EXISTS last_income_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+         ''')
 
         cur.execute('''
             CREATE TABLE IF NOT EXISTS user_plans (
@@ -110,7 +114,7 @@ def update_plan_income():
 
     try:
         cur.execute("""
-            SELECT id, user_id, daily_yield, date_activated
+            SELECT id, user_id, daily_yield, last_income_time
             FROM user_plans;
         """)
 
@@ -118,7 +122,7 @@ def update_plan_income():
 
         for plan in plans:
             current_time = datetime.utcnow()
-            activated_time = plan['date_activated']
+            activated_time = plan['last_income_time']
 
             hours = (current_time - activated_time).total_seconds() / 3600
 
@@ -144,7 +148,7 @@ def update_plan_income():
                 # Reset the 24-hour timer
                 cur.execute("""
                     UPDATE user_plans
-                    SET date_activated = CURRENT_TIMESTAMP
+                    SET last_income_time = CURRENT_TIMESTAMP
                     WHERE id = %s;
                 """,
                 (plan['id'],))
@@ -230,8 +234,9 @@ def dashboard():
     wallet = cur.fetchone()
     cur.close()
     conn.close()
+    update_plan_income()
     return render_template('dashboard.html', income_balance=wallet['income_balance'], deposit_balance=wallet['deposit_balance'])
-       update_plan_income()
+       
 @app.route('/invest', methods=['POST'])
 def invest():
     if 'user_id' not in session: return redirect(url_for('login'))
