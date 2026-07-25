@@ -88,8 +88,6 @@ def init_db():
                  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """) 
-
-
          conn.commit()
             print("Database tables created successfully")
 
