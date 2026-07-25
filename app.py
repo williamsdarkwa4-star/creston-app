@@ -3,7 +3,7 @@ import random
 import string
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
 
@@ -608,11 +608,46 @@ def profile():
                            total_withdrawn=user['total_withdrawn'])
 
 
-@app.route('/my_plans')
-def my_plans():
-    # Validation constraint checkpoint
-    if 'user_id' not in session: 
+@app.route('/my_plan')
+def plan():
+    if 'user_id' not in session:
         return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT last_income_time
+        FROM user_plans
+        WHERE user_id=%s
+        ORDER BY id DESC
+        LIMIT 1;
+    """,(session['user_id'],))
+
+    my_plan = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    countdown = "No active plan"
+
+    if plan:
+        current_time = datetime.utcnow()
+        next_time = plan['last_income_time'] + timedelta(hours=24)
+        remaining = next_time - current_time
+
+        seconds = max(int(remaining.total_seconds()),0)
+
+        h = seconds // 3600
+        m = (seconds % 3600)//60
+        s = seconds % 60
+
+        countdown = f"{h:02d}:{m:02d}:{s:02d}"
+
+    return render_template(
+        'plan.html',
+        countdown=countdown
+    )
         
     conn = get_db_connection()
     cur = conn.cursor()
