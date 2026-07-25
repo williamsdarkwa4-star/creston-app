@@ -608,7 +608,7 @@ def profile():
                            total_withdrawn=user['total_withdrawn'])
 
 
-@app.route('/my_plan')
+@app.route('/my_plans')
 def plan():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -631,9 +631,9 @@ def plan():
 
     countdown = "No active plan"
 
-    if plan:
+    if my_plans:
         current_time = datetime.utcnow()
-        next_time = plan['last_income_time'] + timedelta(hours=24)
+        next_time =my_plans['last_income_time'] + timedelta(hours=24)
         remaining = next_time - current_time
 
         seconds = max(int(remaining.total_seconds()),0)
@@ -645,7 +645,7 @@ def plan():
         countdown = f"{h:02d}:{m:02d}:{s:02d}"
 
     return render_template(
-        'plan.html',
+        'my_plans.html',
         countdown=countdown
     )
         
@@ -660,7 +660,7 @@ def plan():
         ORDER BY date_activated DESC;
     ''', (session['user_id'],))
     
-    plans = cur.fetchall()
+    my_plans = cur.fetchall()
     cur.close()
     conn.close()
     
