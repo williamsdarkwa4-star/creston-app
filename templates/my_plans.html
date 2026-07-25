@@ -10,8 +10,73 @@
         .hdr { display:flex; align-items:center; gap:12px; margin-bottom:24px; font-weight:bold; font-size:1.2rem; }
         .plan-card { background:#ffffff; border-radius:20px; padding:20px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.02); border:1px solid #edf2f7; }
         .row-split { display:flex; justify-content:between; margin-bottom:8px; font-size:0.9rem; }
+    <style>
+.countdown-box{
+    background:#111;
+    color:white;
+    padding:20px;
+    border-radius:16px;
+    border:1px solid #333;
+    margin:15px 0;
+}
+
+.countdown-box h3{
+    color:#ccff00;
+}
+
+#countdown{
+    font-size:25px;
+    font-weight:bold;
+    margin-top:10px;
+}
+</style>
+    
     </style>
 </head>
+    <script>
+function startCountdown(targetTime) {
+
+    function updateTimer() {
+
+        let now = new Date().getTime();
+        let distance = targetTime - now;
+
+        if (distance <= 0) {
+            document.getElementById("countdown").innerHTML =
+            "Income Ready";
+
+            return;
+        }
+
+        let hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+
+        let minutes = Math.floor(
+            (distance % (1000 * 60 * 60)) / (1000 * 60)
+        );
+
+        let seconds = Math.floor(
+            (distance % (1000 * 60)) / 1000
+        );
+
+        document.getElementById("countdown").innerHTML =
+        hours + "h : " + minutes + "m : " + seconds + "s";
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+}
+
+
+// 24 hours from activation time
+let activated = new Date("{{ active_plans[0]['date_activated'] }}").getTime();
+
+let nextIncome = activated + (24 * 60 * 60 * 1000);
+
+startCountdown(nextIncome);
+
+</script>
 <body>
     <div class="hdr"><a href="/profile" style="text-decoration:none; color:black;">‹</a> My Power Plans</div>
     
@@ -33,7 +98,10 @@
     <div id="timer">{{ countdown }}</div>
     <p>Your plan income will be released every 24 hours</p>
 </div>
-
+<div class="countdown-box">
+    <h3>Next Income</h3>
+    <p id="countdown">Loading...</p>
+</div>
 <script>
 let seconds = "{{ countdown }}";
 
