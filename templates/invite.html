@@ -33,21 +33,68 @@
         <div class="code-box" id="inviteCodeStr">{{ invite_code }}</div>
         <button class="copy-btn" onclick="copyInviteCode()">Copy Referral Link</button>
     </div>
+    <div class="invite-card">
+
+    <p style="font-size:0.85rem;color:#888;font-weight:bold;">
+        TOTAL REFERRAL INCOME
+    </p>
+
+    <h2 style="margin-top:10px;">
+        GHS {{ total_commission }}
+    </h2>
+
+</div>
 
     <div class="section-title">My Registered Team Members ({{ team|length }})</div>
-    <div class="team-list-box">
-        {% if team %}
-            {% for member in team %}
-            <div class="team-row">
-                <span style="font-weight: 600; color: #2d3748;">👤 {{ member.nickname }}</span>
-                <span style="color: #718096; font-size: 0.85rem;">+233 {{ member.phone_number[1:] if member.phone_number.startswith('0') else member.phone_number }}</span>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div style="text-align: center; color: #cbd5e1; padding: 30px; font-size: 0.9rem;">No downline network links recorded yet.</div>
-        {% endif %}
-    </div>
 
+<div class="team-list-box">
+
+    {% if team %}
+
+        {% for member in team %}
+
+        <div class="team-row" style="display:block;">
+
+            <div style="display:flex; justify-content:space-between;">
+                <span style="font-weight:700; color:#2d3748;">
+                    👤 {{ member.nickname }}
+                </span>
+
+                <span style="color:#718096;">
+                    +233 {{ member.phone_number[1:] if member.phone_number.startswith('0') else member.phone_number }}
+                </span>
+            </div>
+
+
+            <div style="margin-top:10px; font-size:0.85rem; color:#555;">
+
+                <p>
+                    💰 Friend Deposit:
+                    <b>GHS {{ member.deposit_amount }}</b>
+                </p>
+
+                <p>
+                    🎁 Your 30% Commission:
+                    <b style="color:green;">
+                        GHS {{ member.commission }}
+                    </b>
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div style="text-align:center; color:#cbd5e1; padding:30px;">
+            No downline network links recorded yet.
+        </div>
+
+    {% endif %}
+
+</div>
     <div class="bottom-nav-bar">
         <a href="/dashboard" class="nav-item"><span class="nav-icon">🏠</span><span>Home</span></a>
         <a href="/invite" class="nav-item active"><span class="nav-icon">👥</span><span>Invite</span></a>
