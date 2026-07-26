@@ -613,38 +613,26 @@ def invite():
 
     # Find ALL people who registered with this invite code
     cur.execute("""
-        SELECT 
-            u.nickname,
-            u.phone_number,
+        SELECT
+    u.nickname,
+    u.phone_number,
+    u.created_at,
 
-            COALESCE(
-                (
-                SELECT SUM(amount)
-                FROM transactions
-                WHERE user_id=u.id
-                AND type='deposit'
-                AND status='approved'
-                ),0
-            ) AS deposit_amount,
+    COALESCE(
+        (
+            SELECT SUM(amount)
+            FROM transactions
+            WHERE user_id = u.id
+            AND type='deposit'
+            AND status='approved'
+        ),0
+    ) AS deposit_amount
 
+FROM users u
 
-            COALESCE(
-                (
-                SELECT SUM(commission_amount)
-                FROM referral_commissions
-                WHERE referred_user_id=u.id
-                AND referrer_id=%s
-                ),0
-            ) AS commission
+WHERE u.referred_by = %s
 
-
-        FROM users u
-
-        WHERE u.referred_by=%s
-
-        ORDER BY u.id DESC
-
-    """,
+ORDER BY u.created_at DESC;
     (
         session['user_id'],
         me['invite_code']
