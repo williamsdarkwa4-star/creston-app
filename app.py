@@ -1038,7 +1038,27 @@ def admin_adjust_balance():
         return redirect(url_for('admin_adjust_balance'))
 
     return render_template("admin/adjust_balance.html")
+@app.route('/admin/check_referrals')
+def check_referrals():
+    if not session.get('admin_logged'):
+        return redirect(url_for('admin_login'))
 
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT nickname, phone_number, invite_code, referred_by
+        FROM users
+        ORDER BY id DESC;
+    """)
+
+    users = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return str(users)
+    
 @app.route('/admin/logout')
 def admin_logout():
     session.pop('admin_logged', None)
