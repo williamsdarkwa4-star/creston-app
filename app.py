@@ -28,8 +28,10 @@ def init_db():
     cur = conn.cursor()
 
     try:
+        cur.execute("""
         ALTER TABLE users
-       ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+        ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+    """)
         # USERS
         cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
