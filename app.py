@@ -28,10 +28,7 @@ def init_db():
     cur = conn.cursor()
 
     try:
-        cur.execute("""
-        ALTER TABLE users
-        ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-    """)
+        
         # USERS
         cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
@@ -127,7 +124,7 @@ def init_db():
             SELECT 1 FROM admins WHERE username='Williams'
         );
         """)
-
+         
         # DEFAULT PLANS
         cur.execute("""
         INSERT INTO investment_plans
@@ -146,6 +143,12 @@ def init_db():
             SELECT 1 FROM investment_plans
         );
         """)
+        try:
+        cur.execute("""
+        ALTER TABLE users
+        ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+    """)
+
 
         conn.commit()
         print("Database initialized successfully.")
