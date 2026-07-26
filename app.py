@@ -659,11 +659,12 @@ ORDER BY u.created_at DESC;
 
 
     return render_template(
-        'invite.html',
-        invite_code=me['invite_code'],
-        team=team,
-        total_commission=total_commission
-    )
+    'invite.html',
+    invite_code=me['invite_code'],
+    team=team,
+    total_commission=total_commission,
+    now=datetime.utcnow()
+)
 # ==========================================
 # CLIENT PROFILE & MY PLANS ROUTES
 # ==========================================
