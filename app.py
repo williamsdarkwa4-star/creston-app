@@ -154,8 +154,33 @@ def init_db():
     finally:
         cur.close()
         conn.close()
+def create_referral_table():
+    conn = get_db_connection()
+    cur = conn.cursor()
 
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS referral_commissions (
+        id SERIAL PRIMARY KEY,
+        referrer_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        referred_user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        deposit_amount NUMERIC(15,2) DEFAULT 0,
+        commission_percentage NUMERIC(5,2) DEFAULT 30,
+        commission_amount NUMERIC(15,2) DEFAULT 0,
+        level INTEGER DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
 
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    print("Referral table created")
+try:
+    init_db()
+except Exception as e:
+    print(e)
+ create_referral_table()
 # ==========================================
 # CLIENT USER INTERFACE PIPELINES
 # ==========================================
@@ -217,6 +242,7 @@ def login():
         else:
             flash("Invalid credentials.")
     return render_template('login.html')
+def update_plan_income():
 
 @app.route('/dashboard')
 def dashboard():
