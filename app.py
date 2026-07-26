@@ -23,152 +23,138 @@ def get_db_connection():
         # If Render hasn't linked the database yet, this throws an explicit error instead of falling back to a broken local link
         raise RuntimeError("DATABASE_URL is missing. Please link your PostgreSQL database to this Web Service in your Render Dashboard.")
     return psycopg2.connect(db_url, cursor_factory=RealDictCursor)
-
 def init_db():
     conn = get_db_connection()
     cur = conn.cursor()
 
     try:
 
+        # USERS
         cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
             nickname VARCHAR(100) NOT NULL,
             phone_number VARCHAR(20) UNIQUE NOT NULL,
             password VARCHAR(255) NOT NULL,
-            invite_code VARCHAR(50) UNIQUE,
-            referred_by VARCHAR(50),
-            income_balance NUMERIC(15,2) DEFAULT 0.00,
-            deposit_balance NUMERIC(15,2) DEFAULT 10.00,
-            today_income NUMERIC(15,2) DEFAULT 0.00,
-            total_income NUMERIC(15,2) DEFAULT 0.00,
-            total_withdrawn NUMERIC(15,2) DEFAULT 0.00,
-            withdraw_password VARCHAR(255)
+            invite_code VARCHAR(20) UNIQUE NOT NULL,
+            referred_by VARCHAR(20),
+            income_balance NUMERIC(15,2) DEFAULT 0,
+            deposit_balance NUMERIC(15,2) DEFAULT 10,
+            today_income NUMERIC(15,2) DEFAULT 0,
+            total_income NUMERIC(15,2) DEFAULT 0,
+            total_withdrawn NUMERIC(15,2) DEFAULT 0,
+            withdraw_password VARCHAR(255),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         """)
 
-
+        # INVESTMENT PLANS
         cur.execute("""
-        CREATE TABLE IF NOT EXISTS transactions (
+        CREATE TABLE IF NOT EXISTS investment_plans (
             id SERIAL PRIMARY KEY,
-            user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            type VARCHAR(50) NOT NULL,
-            amount NUMERIC(15,2) NOT NULL,
-            status VARCHAR(50) DEFAULT 'pending',
-            channel VARCHAR(50),
-            meta_sender_name VARCHAR(150),
-            screenshot_file VARCHAR(255),
-            recipient_phone VARCHAR(50),
-            network_provider VARCHAR(50),
-            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            plan_name VARCHAR(100),
+            price NUMERIC(15,2),
+            daily_profit NUMERIC(15,2),
+            duration_days INTEGER DEFAULT 180
         );
         """)
 
-
+        # USER PLANS
         cur.execute("""
         CREATE TABLE IF NOT EXISTS user_plans (
             id SERIAL PRIMARY KEY,
-            user_id INT REFERENCES users(id) ON DELETE CASCADE,
-            plan_type INT NOT NULL,
-            purchase_price NUMERIC(15,2) NOT NULL,
-            daily_yield NUMERIC(15,2) NOT NULL,
+            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+            plan_id INTEGER REFERENCES investment_plans(id),
+            purchase_price NUMERIC(15,2),
+            daily_yield NUMERIC(15,2),
+            total_received NUMERIC(15,2) DEFAULT 0,
+            days_completed INTEGER DEFAULT 0,
+            status VARCHAR(20) DEFAULT 'active',
             date_activated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             last_income_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         """)
 
-         
+        # TRANSACTIONS
         cur.execute("""
-          CREATE TABLE IF NOT EXISTS referral_commissions (
-             id SERIAL PRIMARY KEY,
-             referrer_id INT REFERENCES users(id) ON DELETE CASCADE,
-              referred_user_id INT REFERENCES users(id) ON DELETE CASCADE,
-               deposit_amount NUMERIC(15,2) DEFAULT 0.00,
-                commission_amount NUMERIC(15,2) DEFAULT 0.00,
-                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-""") 
-           conn.commit()
-           print("Database tables created successfully")
-
-except Exception as e:
-    conn.rollback()
-    print("Database setup error:", e)
-
-finally:
-    cur.close()
-    conn.close()
-
-try:
-    init_db()
-except Exception as e:
-    print(f"PostgreSQL Production System Notice: {e}")
-
-PLAN_CATALOG = {
-    1: {"cost": 70, "daily": 8},
-    2: {"cost": 100, "daily": 20},
-    3: {"cost": 260, "daily": 45},
-    4: {"cost": 400, "daily": 60},
-    5: {"cost": 600, "daily": 100},
-    6: {"cost": 800, "daily": 150},
-    7: {"cost": 1000, "daily": 200},
-}
-
-
-def update_plan_income():
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("""
-            SELECT id, user_id, daily_yield, last_income_time
-            FROM user_plans;
+        CREATE TABLE IF NOT EXISTS transactions (
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+            type VARCHAR(30),
+            amount NUMERIC(15,2),
+            status VARCHAR(30) DEFAULT 'pending',
+            channel VARCHAR(50),
+            meta_sender_name VARCHAR(150),
+            screenshot_file VARCHAR(255),
+            recipient_phone VARCHAR(30),
+            network_provider VARCHAR(30),
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
         """)
 
-        plans = cur.fetchall()
+        # REFERRAL COMMISSIONS
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS referral_commissions (
+            id SERIAL PRIMARY KEY,
+            referrer_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+            referred_user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+            deposit_amount NUMERIC(15,2) DEFAULT 0,
+            commission_percentage NUMERIC(5,2) DEFAULT 30,
+            commission_amount NUMERIC(15,2) DEFAULT 0,
+            level INTEGER DEFAULT 1,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
 
-        for plan in plans:
-            current_time = datetime.utcnow()
-            activated_time = plan['last_income_time']
+        # ADMINS
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS admins (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(100) UNIQUE,
+            password VARCHAR(255),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
 
-            hours = (current_time - activated_time).total_seconds() / 3600
+        # DEFAULT ADMIN
+        cur.execute("""
+        INSERT INTO admins (username,password)
+        SELECT 'Williams','Williams12'
+        WHERE NOT EXISTS (
+            SELECT 1 FROM admins WHERE username='Williams'
+        );
+        """)
 
-            if hours >= 24:
-
-                amount = plan['daily_yield']
-
-                # Add profit to user balance
-                cur.execute("""
-                    UPDATE users
-                    SET income_balance = income_balance + %s,
-                        today_income = today_income + %s,
-                        total_income = total_income + %s
-                    WHERE id = %s;
-                """,
-                (
-                    amount,
-                    amount,
-                    amount,
-                    plan['user_id']
-                ))
-
-                # Reset the 24-hour timer
-                cur.execute("""
-                    UPDATE user_plans
-                    SET last_income_time = CURRENT_TIMESTAMP
-                    WHERE id = %s;
-                """,
-                (plan['id'],))
+        # DEFAULT PLANS
+        cur.execute("""
+        INSERT INTO investment_plans
+        (plan_name,price,daily_profit,duration_days)
+        SELECT * FROM (
+            VALUES
+            ('Plan 1',70,8,180),
+            ('Plan 2',100,20,180),
+            ('Plan 3',260,45,180),
+            ('Plan 4',400,60,180),
+            ('Plan 5',600,100,180),
+            ('Plan 6',800,150,180),
+            ('Plan 7',1000,200,180)
+        ) AS plans(plan_name,price,daily_profit,duration_days)
+        WHERE NOT EXISTS (
+            SELECT 1 FROM investment_plans
+        );
+        """)
 
         conn.commit()
+        print("Database initialized successfully.")
 
     except Exception as e:
         conn.rollback()
-        print("Income update error:", e)
+        print("Database Error:", e)
 
     finally:
         cur.close()
         conn.close()
+
 
 # ==========================================
 # CLIENT USER INTERFACE PIPELINES
