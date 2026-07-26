@@ -28,8 +28,7 @@ def init_db():
     cur = conn.cursor()
 
     try:
-        
-        # USERS
+        # USERS TABLE
         cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -59,7 +58,7 @@ def init_db():
         );
         """)
 
-        # USER PLANS
+        # USER INVESTMENTS
         cur.execute("""
         CREATE TABLE IF NOT EXISTS user_plans (
             id SERIAL PRIMARY KEY,
@@ -92,7 +91,7 @@ def init_db():
         );
         """)
 
-        # REFERRAL COMMISSIONS
+        # REFERRALS
         cur.execute("""
         CREATE TABLE IF NOT EXISTS referral_commissions (
             id SERIAL PRIMARY KEY,
@@ -118,17 +117,18 @@ def init_db():
 
         # DEFAULT ADMIN
         cur.execute("""
-        INSERT INTO admins (username,password)
+        INSERT INTO admins(username,password)
         SELECT 'Williams','Williams12'
-        WHERE NOT EXISTS (
+        WHERE NOT EXISTS(
             SELECT 1 FROM admins WHERE username='Williams'
         );
         """)
-         
+
         # DEFAULT PLANS
         cur.execute("""
         INSERT INTO investment_plans
         (plan_name,price,daily_profit,duration_days)
+
         SELECT * FROM (
             VALUES
             ('Plan 1',70,8,180),
@@ -138,55 +138,26 @@ def init_db():
             ('Plan 5',600,100,180),
             ('Plan 6',800,150,180),
             ('Plan 7',1000,200,180)
-        ) AS plans(plan_name,price,daily_profit,duration_days)
-        WHERE NOT EXISTS (
+
+        ) AS p(plan_name,price,daily_profit,duration_days)
+
+        WHERE NOT EXISTS(
             SELECT 1 FROM investment_plans
         );
         """)
-        try:
-        cur.execute("""
-        ALTER TABLE users
-        ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-    """)
-
 
         conn.commit()
         print("Database initialized successfully.")
 
     except Exception as e:
         conn.rollback()
-        print("Database Error:", e)
+        print("Database error:", e)
 
     finally:
         cur.close()
         conn.close()
-def create_referral_table():
-    conn = get_db_connection()
-    cur = conn.cursor()
+            
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS referral_commissions (
-        id SERIAL PRIMARY KEY,
-        referrer_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        referred_user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        deposit_amount NUMERIC(15,2) DEFAULT 0,
-        commission_percentage NUMERIC(5,2) DEFAULT 30,
-        commission_amount NUMERIC(15,2) DEFAULT 0,
-        level INTEGER DEFAULT 1,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-    """)
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    print("Referral table created")
-try:
-    init_db()
-    create_referral_table()
-except Exception as e:
-    print(f"Database startup error: {e}")
 # ==========================================
 # CLIENT USER INTERFACE PIPELINES
 # ==========================================
