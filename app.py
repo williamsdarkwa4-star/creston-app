@@ -15,6 +15,43 @@ app.secret_key = os.environ.get('SECRET_KEY', 'creston-master-engine-production-
 UPLOAD_FOLDER = os.path.join('static', 'receipts')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+PLAN_CATALOG = {
+    1: {
+        "name": "Plan 1",
+        "cost": 70,
+        "daily": 8
+    },
+    2: {
+        "name": "Plan 2",
+        "cost": 100,
+        "daily": 20
+    },
+    3: {
+        "name": "Plan 3",
+        "cost": 260,
+        "daily": 45
+    },
+    4: {
+        "name": "Plan 4",
+        "cost": 400,
+        "daily": 60
+    },
+    5: {
+        "name": "Plan 5",
+        "cost": 600,
+        "daily": 100
+    },
+    6: {
+        "name": "Plan 6",
+        "cost": 800,
+        "daily": 150
+    },
+    7: {
+        "name": "Plan 7",
+        "cost": 1000,
+        "daily": 200
+    }
+}
 
 def get_db_connection():
     # FIXED: Forces the application to check your Render environment configurations string variables
