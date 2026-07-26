@@ -12,7 +12,7 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         background: #fdfdfd;
         margin: 0;
-        padding: 0 0 80px 0; /* Extra padding at bottom prevents navigation bar from overlapping content */
+        padding: 0 0 90px 0; /* Prevents navigation bar overlap */
     }
     /* Black curved top header area */
     .header-bg {
@@ -125,13 +125,13 @@
         padding: 24px 0;
     }
 
-    /* Fixed Bottom Navigation Bar */
+    /* Fixed Bottom Navigation Bar using exact Image Assets */
     .bottom-nav {
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 65px;
+        height: 70px;
         background-color: #ffffff;
         border-top: 1px solid #f0f0f0;
         display: flex;
@@ -147,22 +147,22 @@
         text-decoration: none;
         background: none;
         border: none;
-        color: #c0c0c0; /* Inactive color */
+        color: #c0c0c0; /* Gray for inactive tabs */
         font-size: 11px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         cursor: pointer;
         flex: 1;
-        padding: 8px 0;
+        padding: 6px 0;
     }
-    .nav-item svg {
-        width: 24px;
-        height: 24px;
+    .nav-icon {
+        font-size: 24px;
         margin-bottom: 4px;
-        fill: currentColor;
+        line-height: 1;
+        display: inline-block;
     }
-    /* Active Tab Highlight Style (Currently on INVITE) */
+    /* Active styling matches dark profile layout color rules */
     .nav-item.active {
         color: #1a1a1a;
     }
@@ -218,37 +218,27 @@
     </div>
 </div>
 
-<!-- Bottom Navigation Bar Connected -->
+<!-- Bottom Navigation Bar utilizing custom visual assets -->
 <nav class="bottom-nav">
     <button class="nav-item" onclick="navigateTo('home')">
-        <!-- Home Icon SVG -->
-        <svg viewBox="0 0 24 24">
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-        </svg>
+        <span class="nav-icon">🏡</span>
         <div>Home</div>
     </button>
     
     <button class="nav-item active" onclick="navigateTo('invite')">
-        <!-- Invite/Team Icon SVG -->
-        <svg viewBox="0 0 24 24">
-            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 1.34 5 3s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-        </svg>
+        <span class="nav-icon">👥</span>
         <div>Invite</div>
     </button>
     
     <button class="nav-item" onclick="navigateTo('profile')">
-        <!-- Profile Icon SVG -->
-        <svg viewBox="0 0 24 24">
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
+        <span class="nav-icon">👤</span>
         <div>Profile</div>
     </button>
 </nav>
 
 <script>
     function navigateTo(page) {
-        // Replace these URLs with your actual backend route links
-        if (page === 'dashboard') {
+        if (page === 'home') {
             window.location.href = '/home';
         } else if (page === 'invite') {
             window.location.href = '/invite';
