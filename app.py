@@ -327,16 +327,42 @@ def update_plan_income():
 
     try:
         cur.execute("""
-            SELECT id, user_id, daily_yield, last_income_time,
-                   status
-            FROM user_plans
-            WHERE status='active';
+            SELECT id, user_id, daily_yield, last_income_time
+            FROM user_plans;
         """)
 
         plans = cur.fetchall()
 
         for plan in plans:
-            pass
+            last_time = plan['last_income_time']
+
+            if datetime.utcnow() - last_time >= timedelta(hours=24):
+
+                cur.execute("""
+                    UPDATE users
+                    SET income_balance = income_balance + %s,
+                        today_income = today_income + %s,
+                        total_income = total_income + %s
+                    WHERE id=%s;
+                """,
+                (
+                    plan['daily_yield'],
+                    plan['daily_yield'],
+                    plan['daily_yield'],
+                    plan['user_id']
+                ))
+
+                cur.execute("""
+                    UPDATE user_plans
+                    SET last_income_time=%s,
+                        total_received=total_received + %s
+                    WHERE id=%s;
+                """,
+                (
+                    datetime.utcnow(),
+                    plan['daily_yield'],
+                    plan['id']
+                ))
 
         conn.commit()
 
