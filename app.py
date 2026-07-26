@@ -613,32 +613,24 @@ def invite():
 
     # Find ALL people who registered with this invite code
     cur.execute("""
-        SELECT
+SELECT
     u.nickname,
     u.phone_number,
     u.created_at,
-
     COALESCE(
         (
             SELECT SUM(amount)
             FROM transactions
             WHERE user_id = u.id
-            AND type='deposit'
-            AND status='approved'
+              AND type='deposit'
+              AND status='approved'
         ),0
     ) AS deposit_amount
-
 FROM users u
-
 WHERE u.referred_by = %s
-
 ORDER BY u.created_at DESC;
-    (
-        session['user_id'],
-        me['invite_code']
-    ))
-
-
+""", (me['invite_code'],))
+        
     team = cur.fetchall()
 
 
