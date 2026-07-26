@@ -328,7 +328,7 @@ def update_plan_income():
     try:
         cur.execute("""
             SELECT id, user_id, daily_yield, last_income_time,
-                   days_completed, status
+                   status
             FROM user_plans
             WHERE status='active';
         """)
@@ -336,7 +336,6 @@ def update_plan_income():
         plans = cur.fetchall()
 
         for plan in plans:
-            # your 24 hour credit logic here
             pass
 
         conn.commit()
@@ -348,6 +347,7 @@ def update_plan_income():
     finally:
         cur.close()
         conn.close()
+
 
 @app.route('/dashboard')
 def dashboard():
