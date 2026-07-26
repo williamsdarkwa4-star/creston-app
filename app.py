@@ -28,7 +28,10 @@ def init_db():
     cur = conn.cursor()
 
     try:
+
+        # ==========================
         # USERS TABLE
+        # ==========================
         cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -47,7 +50,10 @@ def init_db():
         );
         """)
 
+
+        # ==========================
         # INVESTMENT PLANS
+        # ==========================
         cur.execute("""
         CREATE TABLE IF NOT EXISTS investment_plans (
             id SERIAL PRIMARY KEY,
@@ -58,7 +64,10 @@ def init_db():
         );
         """)
 
-        # USER INVESTMENTS
+
+        # ==========================
+        # USER PLANS
+        # ==========================
         cur.execute("""
         CREATE TABLE IF NOT EXISTS user_plans (
             id SERIAL PRIMARY KEY,
@@ -74,7 +83,10 @@ def init_db():
         );
         """)
 
+
+        # ==========================
         # TRANSACTIONS
+        # ==========================
         cur.execute("""
         CREATE TABLE IF NOT EXISTS transactions (
             id SERIAL PRIMARY KEY,
@@ -91,7 +103,10 @@ def init_db():
         );
         """)
 
-        # REFERRALS
+
+        # ==========================
+        # REFERRAL COMMISSIONS
+        # ==========================
         cur.execute("""
         CREATE TABLE IF NOT EXISTS referral_commissions (
             id SERIAL PRIMARY KEY,
@@ -105,7 +120,10 @@ def init_db():
         );
         """)
 
+
+        # ==========================
         # ADMINS
+        # ==========================
         cur.execute("""
         CREATE TABLE IF NOT EXISTS admins (
             id SERIAL PRIMARY KEY,
@@ -115,7 +133,45 @@ def init_db():
         );
         """)
 
+
+        # ==========================
+        # REPAIR OLD DATABASE COLUMNS
+        # ==========================
+
+        cur.execute("""
+        ALTER TABLE users
+        ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+        """)
+
+
+        cur.execute("""
+        ALTER TABLE user_plans
+        ADD COLUMN IF NOT EXISTS days_completed INTEGER DEFAULT 0;
+        """)
+
+
+        cur.execute("""
+        ALTER TABLE user_plans
+        ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active';
+        """)
+
+
+        cur.execute("""
+        ALTER TABLE user_plans
+        ADD COLUMN IF NOT EXISTS last_income_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+        """)
+
+
+        cur.execute("""
+        ALTER TABLE user_plans
+        ADD COLUMN IF NOT EXISTS total_received NUMERIC(15,2) DEFAULT 0;
+        """)
+
+
+        # ==========================
         # DEFAULT ADMIN
+        # ==========================
+
         cur.execute("""
         INSERT INTO admins(username,password)
         SELECT 'Williams','Williams12'
@@ -124,10 +180,14 @@ def init_db():
         );
         """)
 
-        # DEFAULT PLANS
+
+        # ==========================
+        # DEFAULT INVESTMENT PLANS
+        # ==========================
+
         cur.execute("""
         INSERT INTO investment_plans
-        (plan_name,price,daily_profit,duration_days)
+        (plan_name, price, daily_profit, duration_days)
 
         SELECT * FROM (
             VALUES
@@ -146,16 +206,21 @@ def init_db():
         );
         """)
 
+
         conn.commit()
-        print("Database initialized successfully.")
+        print("Database initialized and repaired successfully.")
+
 
     except Exception as e:
         conn.rollback()
-        print("Database error:", e)
+        print("Database initialization error:", e)
+
 
     finally:
         cur.close()
         conn.close()
+
+
             
 
 # ==========================================
