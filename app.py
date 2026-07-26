@@ -864,8 +864,8 @@ def action_transaction(tx_id, action):
                 """,
                 (
                     tx['amount'],
-                    tx['user_id']
-                ))
+                    tx['user_id'])
+                )
 
 
         conn.commit()
