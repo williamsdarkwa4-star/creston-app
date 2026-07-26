@@ -822,8 +822,7 @@ def action_transaction(tx_id, action):
                     SET deposit_balance =
                     deposit_balance + %s
                     WHERE id=%s;
-                """,
-                (
+                """,(
                     tx['amount'],
                     tx['user_id']
                 ))
