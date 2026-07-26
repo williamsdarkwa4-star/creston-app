@@ -178,9 +178,9 @@ def create_referral_table():
     print("Referral table created")
 try:
     init_db()
+    create_referral_table()
 except Exception as e:
-    print(e)
- create_referral_table()
+    print(f"Database startup error: {e}")
 # ==========================================
 # CLIENT USER INTERFACE PIPELINES
 # ==========================================
