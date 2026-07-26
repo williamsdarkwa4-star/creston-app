@@ -932,16 +932,69 @@ def action_transaction(tx_id, action):
 
             if tx['type'] == 'deposit':
 
-                cur.execute("""
-                    UPDATE users
-                    SET deposit_balance =
-                    deposit_balance + %s
-                    WHERE id=%s;
-                """,(
-                    
-                    tx['amount'],
-                    tx['user_id']
-                ))
+    # Credit the depositor
+    cur.execute("""
+        UPDATE users
+        SET deposit_balance = deposit_balance + %s
+        WHERE id = %s;
+    """, (
+        tx['amount'],
+        tx['user_id']
+    ))
+
+    # Find who referred this user
+    cur.execute("""
+        SELECT referred_by
+        FROM users
+        WHERE id = %s;
+    """, (tx['user_id'],))
+
+    referral = cur.fetchone()
+
+    if referral and referral['referred_by']:
+
+        # Find the referrer
+        cur.execute("""
+            SELECT id
+            FROM users
+            WHERE invite_code = %s;
+        """, (referral['referred_by'],))
+
+        referrer = cur.fetchone()
+
+        if referrer:
+
+            commission = float(tx['amount']) * 0.30
+
+            # Add commission to referrer's income wallet
+            cur.execute("""
+                UPDATE users
+                SET income_balance = income_balance + %s
+                WHERE id = %s;
+            """, (
+                commission,
+                referrer['id']
+            ))
+
+            # Save commission history
+            cur.execute("""
+                INSERT INTO referral_commissions
+                (
+                    referrer_id,
+                    referred_user_id,
+                    deposit_amount,
+                    commission_percentage,
+                    commission_amount,
+                    level
+                )
+                VALUES
+                (%s,%s,%s,30,%s,1);
+            """, (
+                referrer['id'],
+                tx['user_id'],
+                tx['amount'],
+                commission
+            ))
 
 
             elif tx['type'] == 'withdrawal':
