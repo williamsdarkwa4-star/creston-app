@@ -3,193 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Referral Team</title>
-
+<title>Creston - Invite Team</title>
 <style>
-
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    margin: 0;
-    padding: 20px;
-}
-
-.container {
-    max-width: 900px;
-    margin: auto;
-}
-
-.card {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.title {
-    font-size: 22px;
-    font-weight: bold;
-    color: #1a73e8;
-}
-
-.code-box {
-    background: #eef5ff;
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-}
-
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-
-th {
-    background: #1a73e8;
-    color: white;
-    padding: 12px;
-}
-
-
-td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
-}
-
-
-tr:hover {
-    background: #f5f5f5;
-}
-
-
-.badge {
-    background: #28a745;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-}
-
-
-.no-member {
-    text-align:center;
-    color:gray;
-    padding:20px;
-}
-
-
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: #fdfdfd;
+        margin: 0;
+        padding: 0;
+    }
+    /* Black curved top header area */
+    .header-bg {
+        background-color: #1a1a1a;
+        color: white;
+        text-align: center;
+        padding: 40px 20px 80px 20px;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+    }
+    .container {
+        max-width: 500px;
+        margin: -50px auto 0 auto;
+        padding: 0 16px;
+    }
+    .card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 30px 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        text-align: center;
+    }
+    .section-subtitle {
+        color: #a0a0a0;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+    .code-box {
+        background: #f4f6fa;
+        padding: 20px;
+        border-radius: 18px;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: #111111;
+        margin-bottom: 24px;
+    }
+    .action-btn {
+        background: #1a1a1a;
+        color: white;
+        border: none;
+        border-radius: 18px;
+        padding: 16px 32px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        width: 100%;
+        max-width: 260px;
+        cursor: pointer;
+    }
+    .list-section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111111;
+        margin: 32px 0 16px 4px;
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+    /* Visual indicator bar before text */
+    .list-section-title::before {
+        content: "";
+        display: inline-block;
+        width: 4px;
+        height: 18px;
+        background-color: #1a1a1a;
+        margin-right: 8px;
+        border-radius: 2px;
+    }
+    .member-card {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 32px 24px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        border: 1px solid #f1f1f1;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th {
+        color: #888888;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #eeeeee;
+        text-align: left;
+    }
+    td {
+        padding: 14px 0;
+        border-bottom: 1px solid #f9f9f9;
+        font-size: 14px;
+        color: #333333;
+        text-align: left;
+    }
+    .badge {
+        background: #e6f4ea;
+        color: #137333;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .no-member {
+        text-align: center;
+        color: #b0b0b0;
+        font-size: 15px;
+        padding: 24px 0;
+    }
 </style>
-
 </head>
-
-
 <body>
 
+<div class="header-bg">
+    Affiliate Team
+</div>
 
 <div class="container">
+    <!-- Invitation Code Card -->
+    <div class="card">
+        <div class="section-subtitle">Your Invitation Code</div>
+        <div class="code-box">
+            {{ invite_code }}
+        </div>
+        <button class="action-btn">Copy Referral Link</button>
+    </div>
 
+    <!-- Team Members Header Count -->
+    <div class="list-section-title">
+        My Registered Team Members ({{ team|length }})
+    </div>
 
-<div class="card">
-
-<div class="title">
-Your Referral Code
+    <!-- Dynamic Members List Box -->
+    <div class="member-card">
+        {% if team %}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Joined</th>
+                <th>Deposit</th>
+            </tr>
+            {% for member in team %}
+            <tr>
+                <td><strong>{{ member.nickname }}</strong></td>
+                <td>{{ member.phone_number }}</td>
+                <td>
+                    <div>{{ member.created_at.strftime('%d %b %Y') }}</div>
+                    <span class="badge">{{ ((now - member.created_at).days) }} days</span>
+                </td>
+                <td>GHS {{ member.deposit_amount }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <div class="no-member">
+            No downline network links recorded yet.
+        </div>
+        {% endif %}
+    </div>
 </div>
-
-<div class="code-box">
-{{ invite_code }}
-</div>
-
-</div>
-
-
-
-<div class="card">
-
-<div class="title">
-Your Referral Members
-</div>
-
-
-<table>
-
-<tr>
-<th>Name</th>
-<th>Phone</th>
-<th>Joined Date</th>
-<th>Days</th>
-<th>Deposit</th>
-</tr>
-
-
-{% for member in team %}
-
-<tr>
-
-<td>
-{{ member.nickname }}
-</td>
-
-
-<td>
-{{ member.phone_number }}
-</td>
-
-
-<td>
-{{ member.created_at.strftime('%d %b %Y') }}
-</td>
-
-
-<td>
-
-<span class="badge">
-
-{{ ((now - member.created_at).days) }} days
-
-</span>
-
-</td>
-
-
-<td>
-GHS {{ member.deposit_amount }}
-</td>
-
-
-</tr>
-
-
-{% else %}
-
-<tr>
-
-<td colspan="5" class="no-member">
-
-No members registered yet
-
-</td>
-
-</tr>
-
-{% endfor %}
-
-
-</table>
-
-
-</div>
-
-
-</div>
-
 
 </body>
 </html>
