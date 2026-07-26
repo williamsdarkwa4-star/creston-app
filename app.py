@@ -1107,16 +1107,15 @@ def admin_plans():
 
     cur.execute("""
         SELECT
-            u.nickname,
-            u.phone_number,
-            p.plan_name,
-            up.purchase_price,
-            up.daily_yield,
-            up.date_activated,
-            up.last_income_time
-        FROM user_plans up
-        JOIN users u ON up.user_id = u.id
-        JOIN investment_plans p ON up.plan_id = p.id
+    u.nickname,
+    u.phone_number,
+    p.plan_name,
+    up.purchase_price,
+    up.daily_yield,
+    up.date_activated
+FROM user_plans up
+JOIN users u ON up.user_id = u.id
+JOIN investment_plans p ON up.plan_type = p.id
         ORDER BY up.date_activated DESC;
     """)
 
