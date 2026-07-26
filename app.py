@@ -28,7 +28,8 @@ def init_db():
     cur = conn.cursor()
 
     try:
-
+        ALTER TABLE users
+       ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
         # USERS
         cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
@@ -613,23 +614,28 @@ def invite():
 
     # Find ALL people who registered with this invite code
     cur.execute("""
-SELECT
-    u.nickname,
-    u.phone_number,
-    u.created_at,
-    COALESCE(
-        (
-            SELECT SUM(amount)
-            FROM transactions
-            WHERE user_id = u.id
-              AND type='deposit'
-              AND status='approved'
-        ),0
-    ) AS deposit_amount
-FROM users u
-WHERE u.referred_by = %s
-ORDER BY u.created_at DESC;
-""", (me['invite_code'],))
+    SELECT
+        u.nickname,
+        u.phone_number,
+        u.created_at,
+
+        COALESCE(
+            (
+                SELECT SUM(amount)
+                FROM transactions
+                WHERE user_id = u.id
+                AND type='deposit'
+                AND status='approved'
+            ),0
+        ) AS deposit_amount
+
+    FROM users u
+    WHERE u.referred_by = %s
+    ORDER BY u.created_at DESC;
+""",
+(
+    me['invite_code'],
+))
         
     team = cur.fetchall()
 
