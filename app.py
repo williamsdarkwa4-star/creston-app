@@ -243,6 +243,32 @@ def login():
             flash("Invalid credentials.")
     return render_template('login.html')
 def update_plan_income():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("""
+            SELECT id, user_id, daily_yield, last_income_time,
+                   days_completed, status
+            FROM user_plans
+            WHERE status='active';
+        """)
+
+        plans = cur.fetchall()
+
+        for plan in plans:
+            # your 24 hour credit logic here
+            pass
+
+        conn.commit()
+
+    except Exception as e:
+        conn.rollback()
+        print("Income error:", e)
+
+    finally:
+        cur.close()
+        conn.close()
 
 @app.route('/dashboard')
 def dashboard():
