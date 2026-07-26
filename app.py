@@ -1097,11 +1097,53 @@ def check_referrals():
     conn.close()
 
     return str(users)
-    
+@app.route('/admin/plans')
+def admin_plans():
+    if not session.get('admin_logged'):
+        return redirect(url_for('admin_login'))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            u.nickname,
+            u.phone_number,
+            p.plan_name,
+            up.purchase_price,
+            up.daily_yield,
+            up.date_activated
+        FROM user_plans up
+        JOIN users u ON up.user_id = u.id
+        JOIN investment_plans p ON up.plan_id = p.id
+        ORDER BY up.date_activated DESC;
+    """)
+
+    plans = cur.fetchall()
+from datetime import datetime, timedelta
+
+now = datetime.utcnow()
+
+for plan in plans:
+    next_income = plan['last_income_time'] + timedelta(hours=24)
+    remaining = next_income - now
+
+    if remaining.total_seconds() <= 0:
+        plan['time_left'] = "Ready to credit"
+    else:
+        hours = remaining.seconds // 3600
+        minutes = (remaining.seconds % 3600) // 60
+        plan['time_left'] = f"{hours}h {minutes}m"
+    cur.close()
+    conn.close()
+
+    return render_template("admin/plans.html", plans=plans)    
 @app.route('/admin/logout')
 def admin_logout():
     session.pop('admin_logged', None)
     return redirect(url_for('admin_login'))
 
+
+    return render_template("admin/plans.html", plans=plans)
 if __name__ == "__main__":
     app.run(debug=True)
