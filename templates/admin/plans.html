@@ -1,286 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Portal - User Directory</title>
-  <style>
-    /* Reset & Base Variables */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - User Plans</title>
 
-    body {
-      background-color: #f8fafc;
-      color: #1e293b;
-      padding: 24px;
-    }
+    <style>
+        /* --- VISUAL RESET & BACKGROUND --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-    .dashboard-wrapper {
-      max-width: 1000px;
-      margin: 0 auto;
-    }
+        body {
+            background: #f7f9fc;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    /* Header & Back Utility Controls */
-    .header-section {
-      margin-bottom: 24px;
-    }
+        h2 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+            font-size: 22px;
+            font-weight: bold;
+        }
 
-    .back-link {
-      display: inline-block;
-      text-decoration: none;
-      color: #475569;
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 12px;
-    }
+        /* Container that locks components to a mobile layout look */
+        .table-container {
+            width: 100%;
+            max-width: 480px; 
+        }
 
-    .page-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #0f172a;
-    }
+        /* --- FLOATING APP CARD STYLING --- */
+        .investment-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            border: 1px solid #f1f3f5;
+        }
 
-    /* Filter & Search Bar Utility Container */
-    .utility-bar {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 20px;
-      background-color: #ffffff;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
+        /* Card Branding Header Area */
+        .card-brand-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
 
-    .search-input {
-      flex: 1;
-      padding: 10px 14px;
-      font-size: 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      outline: none;
-    }
+        /* Square badge holding the list index number */
+        .brand-icon-space {
+            background-color: #fff9f0;
+            color: #ff9f43;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
 
-    .search-input:focus {
-      border-color: #2563eb;
-    }
+        .brand-info-text {
+            padding-left: 16px;
+        }
 
-    /* Data Table Layer Container */
-    .table-container {
-      background-color: #ffffff;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      overflow-x: auto;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
+        .brand-info-text h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 14px;
-    }
+        .brand-plan-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #111111;
+        }
 
-    th {
-      background-color: #f1f5f9;
-      color: #475569;
-      font-weight: 600;
-      padding: 14px 16px;
-      border-bottom: 1px solid #e2e8f0;
-    }
+        /* --- THREE-COLUMN METRIC SYSTEM LAYER --- */
+        .card-specs-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
 
-    td {
-      padding: 14px 16px;
-      border-bottom: 1px solid #e2e8f0;
-      color: #334155;
-      vertical-align: middle;
-    }
+        .matrix-box {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
 
-    tr:last-child td {
-      border-bottom: none;
-    }
+        .matrix-label {
+            font-size: 10px;
+            font-weight: bold;
+            color: #adb5bd;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
 
-    tr:hover td {
-      background-color: #f8fafc;
-    }
+        .matrix-value {
+            font-size: 12px;
+            font-weight: bold;
+            color: #212529;
+        }
 
-    /* Interactive Status Badges */
-    .status-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: capitalize;
-    }
+        /* --- STARK BLACK APP ACTION BUTTON --- */
+        .card-action-trigger {
+            width: 100%;
+        }
 
-    .status-active {
-      background-color: #dcfce7;
-      color: #15803d;
-    }
+        .card-action-trigger button {
+            width: 100%;
+            background-color: #111111;
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.2s;
+        }
 
-    .status-suspended {
-      background-color: #fee2e2;
-      color: #b91c1c;
-    }
+        .card-action-trigger button:hover {
+            background-color: #262626;
+        }
 
-    /* Core Action Controls */
-    .action-btn {
-      background-color: #ffffff;
-      border: 1px solid #cbd5e1;
-      color: #334155;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+        /* --- UTILITY & FALLBACK COMPONENTS --- */
+        .back-btn {
+            align-self: flex-start;
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            background: #198754;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
 
-    .action-btn:hover {
-      background-color: #f1f5f9;
-      border-color: #94a3b8;
-    }
-
-    /* Standard Pagination Pagination Elements footer */
-    .pagination-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px;
-      background-color: #ffffff;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    .pagination-info {
-      font-size: 13px;
-      color: #64748b;
-    }
-
-    .pagination-controls {
-      display: flex;
-      gap: 8px;
-    }
-
-    .page-link {
-      display: inline-block;
-      padding: 6px 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      text-decoration: none;
-      color: #334155;
-      font-size: 13px;
-      background-color: #ffffff;
-    }
-
-    .page-link:hover {
-      background-color: #f1f5f9;
-    }
-  </style>
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #ffffff;
+            border-radius: 24px;
+            color: #888888;
+            font-size: 16px;
+            border: 1px dashed #cccccc;
+        }
+    </style>
 </head>
+
 <body>
 
-  <div class="dashboard-wrapper">
-    
-    <!-- Breadcrumb Shell Section -->
-    <div class="header-section">
-      <a href="#" class="back-link">&larr; Back to Platform Dashboard</a>
-      <h1 class="page-title">User Account Directory</h1>
-    </div>
+<a href="{{ url_for('admin_dashboard') }}" class="back-btn">
+← Back to Dashboard
+</a>
 
-    <!-- Administrative Search Logic Tools -->
-    <div class="utility-bar">
-      <input type="text" class="search-input" id="directorySearch" placeholder="Search accounts by registered mobile number..." onkeyup="handleFilterSearch()">
-    </div>
+<h2>All User Investment Plans</h2>
 
-    <!-- Data Layout Grid Container Block -->
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Unique Ref</th>
-            <th>Account Owner</th>
-            <th>Mobile Identifier</th>
-            <th>Service Group</th>
-            <th>System State</th>
-            <th>Control Actions</th>
-          </tr>
-        </thead>
-        <tbody id="directoryTableBody">
-          <!-- Static System Records Examples -->
-          <tr>
-            <td>#USR-00412</td>
-            <td>Alex Mensah</td>
-            <td>+233 24 111 2222</td>
-            <td>Standard Cloud Tier</td>
-            <td><span class="status-badge status-active">Active</span></td>
-            <td><button class="action-btn" onclick="toggleStatus(this)">Modify State</button></td>
-          </tr>
-          <tr>
-            <td>#USR-00413</td>
-            <td>Grace Osei</td>
-            <td>+233 50 333 4444</td>
-            <td>Enterprise Tier</td>
-            <td><span class="status-badge status-active">Active</span></td>
-            <td><button class="action-btn" onclick="toggleStatus(this)">Modify State</button></td>
-          </tr>
-          <tr>
-            <td>#USR-00414</td>
-            <td>Kwame Asante</td>
-            <td>+233 27 555 6666</td>
-            <td>Developer Tier</td>
-            <td><span class="status-badge status-suspended">Suspended</span></td>
-            <td><button class="action-btn" onclick="toggleStatus(this)">Modify State</button></td>
-          </tr>
-        </tbody>
-      </table>
+<div class="table-container">
 
-      <!-- Client Side Pagination Layout Element -->
-      <div class="pagination-bar">
-        <div class="pagination-info">Showing 1 to 3 of 3 registered accounts</div>
-        <div class="pagination-controls">
-          <a href="#" class="page-link">Previous</a>
-          <a href="#" class="page-link">Next</a>
+{% if plans %}
+
+    {% for plan in plans %}
+    <!-- Replicated Card View Component Structure -->
+    <div class="investment-card">
+        
+        <!-- Header Info Row with User Nickname Context -->
+        <div class="card-brand-row">
+            <div class="brand-icon-space">
+                <span>#{{ loop.index }}</span>
+            </div>
+            <div class="brand-info-text">
+                <h3>{{ plan.plan_name }} ({{ plan.nickname }})</h3>
+                <div class="brand-plan-price">GHS {{ plan.purchase_price }}</div>
+            </div>
         </div>
-      </div>
+
+        <!-- Replicated 3-Box Layout Specification Row Matrix -->
+        <div class="card-specs-matrix">
+            <div class="matrix-box">
+                <span class="matrix-label">DAILY</span>
+                <span class="matrix-value">GHS {{ plan.daily_yield }}</span>
+            </div>
+            <div class="matrix-box">
+                <span class="matrix-label">PHONE</span>
+                <span class="matrix-value" style="font-size: 10px;">{{ plan.phone_number }}</span>
+            </div>
+            <div class="matrix-box">
+                <span class="matrix-label">PURCHASED</span>
+                <span class="matrix-value" style="font-size: 10px;">{{ plan.date_activated }}</span>
+            </div>
+        </div>
+
+        <!-- Solid Dark Selection Action Element -->
+        <div class="card-action-trigger">
+            <button type="button">INVEST NOW</button>
+        </div>
+
     </div>
+    {% endfor %}
 
-  </div>
+{% else %}
 
-  <script>
-    // Simple client-side text parsing lookup routine 
-    function handleFilterSearch() {
-      const value = document.getElementById('directorySearch').value.toLowerCase();
-      const rows = document.querySelectorAll('#directoryTableBody tr');
-      
-      rows.forEach(row => {
-        // Targets cell 2 specifically representing the Mobile identifier column context 
-        const cellText = row.getElementsByTagName('td')[2].textContent.toLowerCase();
-        if (cellText.includes(value)) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
-    }
+<div class="no-data">
+No investment plans found.
+</div>
 
-    // Toggle styling layout state cleanly 
-    function toggleStatus(buttonElement) {
-      const row = buttonElement.closest('tr');
-      const badge = row.querySelector('.status-badge');
-      
-      if (badge.classList.contains('status-active')) {
-        badge.className = 'status-badge status-suspended';
-        badge.textContent = 'Suspended';
-      } else {
-        badge.className = 'status-badge status-active';
-        badge.textContent = 'Active';
-      }
-    }
-  </script>
+{% endif %}
+
+</div>
 
 </body>
 </html>
