@@ -930,9 +930,8 @@ def action_transaction(tx_id, action):
             """,(tx_id,))
 
 
-            if tx['type'] == 'deposit':
+        if tx['type'] == 'deposit':
 
-    # Credit the depositor
     cur.execute("""
         UPDATE users
         SET deposit_balance = deposit_balance + %s
@@ -942,7 +941,6 @@ def action_transaction(tx_id, action):
         tx['user_id']
     ))
 
-    # Find who referred this user
     cur.execute("""
         SELECT referred_by
         FROM users
@@ -953,7 +951,6 @@ def action_transaction(tx_id, action):
 
     if referral and referral['referred_by']:
 
-        # Find the referrer
         cur.execute("""
             SELECT id
             FROM users
@@ -966,29 +963,17 @@ def action_transaction(tx_id, action):
 
             commission = float(tx['amount']) * 0.30
 
-            # Add commission to referrer's income wallet
             cur.execute("""
                 UPDATE users
                 SET income_balance = income_balance + %s
                 WHERE id = %s;
-            """, (
-                commission,
-                referrer['id']
-            ))
+            """, (commission, referrer['id']))
 
-            # Save commission history
             cur.execute("""
                 INSERT INTO referral_commissions
-                (
-                    referrer_id,
-                    referred_user_id,
-                    deposit_amount,
-                    commission_percentage,
-                    commission_amount,
-                    level
-                )
-                VALUES
-                (%s,%s,%s,30,%s,1);
+                (referrer_id, referred_user_id, deposit_amount,
+                 commission_percentage, commission_amount, level)
+                VALUES (%s, %s, %s, 30, %s, 1);
             """, (
                 referrer['id'],
                 tx['user_id'],
