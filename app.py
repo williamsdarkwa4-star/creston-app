@@ -900,115 +900,85 @@ def action_transaction(tx_id, action):
     cur = conn.cursor()
 
     try:
-
         cur.execute("""
             SELECT user_id, type, amount, status
             FROM transactions
             WHERE id=%s;
-        """,(tx_id,))
+        """, (tx_id,))
 
         tx = cur.fetchone()
-
 
         if not tx:
             flash("Transaction not found.")
             return redirect(url_for('admin_approvals'))
 
-
-        # Prevent double approval
         if tx['status'] != 'pending':
             flash("Transaction already processed.")
             return redirect(url_for('admin_approvals'))
-
 
         if action == "approve":
 
             cur.execute("""
                 UPDATE transactions
-              SET status='approved'
-               WHERE id=%s;
-           """, (tx_id,))
+                SET status='approved'
+                WHERE id=%s;
+            """, (tx_id,))
 
-    if tx['type'] == 'deposit':
-
-        # Credit depositor
-        cur.execute("""
-            UPDATE users
-            SET deposit_balance = deposit_balance + %s
-            WHERE id=%s;
-        """, (tx['amount'], tx['user_id']))
-
-        # Find referrer
-        cur.execute("""
-            SELECT referred_by
-            FROM users
-            WHERE id=%s;
-        """, (tx['user_id'],))
-
-             referral = cur.fetchone()
-
-        if referral and referral['referred_by']:
-
-            cur.execute("""
-                SELECT id
-                FROM users
-                WHERE invite_code=%s;
-            """, (referral['referred_by'],))
-
-                 referrer = cur.fetchone()
-
-            if referrer:
-
-                commission = float(tx['amount']) * 0.30
+            if tx['type'] == 'deposit':
 
                 cur.execute("""
                     UPDATE users
-                    SET income_balance = income_balance + %s
+                    SET deposit_balance = deposit_balance + %s
                     WHERE id=%s;
-                """, (commission, referrer['id']))
+                """, (tx['amount'], tx['user_id']))
 
                 cur.execute("""
-                    INSERT INTO referral_commissions
-                    (
-                        referrer_id,
-                        referred_user_id,
-                        deposit_amount,
-                        commission_percentage,
-                        commission_amount,
-                        level
-                    )
-                    VALUES (%s,%s,%s,30,%s,1);
-                """, (
-                    referrer['id'],
-                    tx['user_id'],
-                    tx['amount'],
-                    commission
-                ))
+                    SELECT referred_by
+                    FROM users
+                    WHERE id=%s;
+                """, (tx['user_id'],))
 
-    elif tx['type'] == 'withdrawal':
+                referral = cur.fetchone()
 
-        cur.execute("""
-            UPDATE users
-            SET total_withdrawn = total_withdrawn + %s
-            WHERE id=%s;
-        """, (tx['amount'], tx['user_id']))
+                if referral and referral['referred_by']:
 
-elif action == "reject":
+                    cur.execute("""
+                        SELECT id
+                        FROM users
+                        WHERE invite_code=%s;
+                    """, (referral['referred_by'],))
 
-    cur.execute("""
-        UPDATE transactions
-        SET status='rejected'
-        WHERE id=%s;
-          """, (tx_id,))
+                    referrer = cur.fetchone()
 
-    if tx['type'] == 'withdrawal':
+                    if referrer:
 
-        cur.execute("""
-            UPDATE users
-            SET income_balance = income_balance + %s
-            WHERE id=%s;
-              """, (tx['amount'], tx['user_id']))
+                        commission = float(tx['amount']) * 0.30
 
+                        cur.execute("""
+                            UPDATE users
+                            SET income_balance = income_balance + %s
+                            WHERE id=%s;
+                        """, (commission, referrer['id']))
+
+                        cur.execute("""
+                            INSERT INTO referral_commissions
+                            (referrer_id, referred_user_id, deposit_amount,
+                             commission_percentage, commission_amount, level)
+                            VALUES (%s,%s,%s,30,%s,1);
+                        """, (
+                            referrer['id'],
+                            tx['user_id'],
+                            tx['amount'],
+                            commission
+                        ))
+
+            elif tx['type'] == 'withdrawal':
+
+                cur.execute("""
+                    UPDATE users
+                    SET total_withdrawn = total_withdrawn + %s
+                    WHERE id=%s;
+                """, (tx['amount'], tx['user_id']))
 
         elif action == "reject":
 
@@ -1016,36 +986,26 @@ elif action == "reject":
                 UPDATE transactions
                 SET status='rejected'
                 WHERE id=%s;
-            """,(tx_id,))
+            """, (tx_id,))
 
-
-            # Return withdrawal money
-       if tx['type'] == 'withdrawal':
+            if tx['type'] == 'withdrawal':
 
                 cur.execute("""
                     UPDATE users
-                    SET income_balance =
-                    income_balance + %s
+                    SET income_balance = income_balance + %s
                     WHERE id=%s;
-                """,(
-                    
-                    tx['amount'],
-                    tx['user_id']
-                ))
+                """, (tx['amount'], tx['user_id']))
 
-            conn.commit()
-            flash("Transaction updated successfully.")
-
+        conn.commit()
+        flash("Transaction updated successfully.")
 
     except Exception as e:
         conn.rollback()
-        flash("Transaction update failed.")
-
+        flash(f"Transaction update failed: {e}")
 
     finally:
         cur.close()
         conn.close()
-
 
     return redirect(url_for('admin_approvals'))
 
