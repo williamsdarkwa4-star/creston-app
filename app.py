@@ -923,78 +923,91 @@ def action_transaction(tx_id, action):
 
         if action == "approve":
 
-            cur.execute("""
-                UPDATE transactions
-                SET status='approved'
-                WHERE id=%s;
-            """,(tx_id,))
-
-
-        if tx['type'] == 'deposit':
-
     cur.execute("""
-        UPDATE users
-        SET deposit_balance = deposit_balance + %s
-        WHERE id = %s;
-    """, (
-        tx['amount'],
-        tx['user_id']
-    ))
+        UPDATE transactions
+        SET status='approved'
+        WHERE id=%s;
+    """, (tx_id,))
 
-    cur.execute("""
-        SELECT referred_by
-        FROM users
-        WHERE id = %s;
-    """, (tx['user_id'],))
+    if tx['type'] == 'deposit':
 
-    referral = cur.fetchone()
-
-    if referral and referral['referred_by']:
-
+        # Credit depositor
         cur.execute("""
-            SELECT id
+            UPDATE users
+            SET deposit_balance = deposit_balance + %s
+            WHERE id=%s;
+        """, (tx['amount'], tx['user_id']))
+
+        # Find referrer
+        cur.execute("""
+            SELECT referred_by
             FROM users
-            WHERE invite_code = %s;
-        """, (referral['referred_by'],))
+            WHERE id=%s;
+        """, (tx['user_id'],))
 
-        referrer = cur.fetchone()
+        referral = cur.fetchone()
 
-        if referrer:
-
-            commission = float(tx['amount']) * 0.30
+        if referral and referral['referred_by']:
 
             cur.execute("""
-                UPDATE users
-                SET income_balance = income_balance + %s
-                WHERE id = %s;
-            """, (commission, referrer['id']))
+                SELECT id
+                FROM users
+                WHERE invite_code=%s;
+            """, (referral['referred_by'],))
 
-            cur.execute("""
-                INSERT INTO referral_commissions
-                (referrer_id, referred_user_id, deposit_amount,
-                 commission_percentage, commission_amount, level)
-                VALUES (%s, %s, %s, 30, %s, 1);
-            """, (
-                referrer['id'],
-                tx['user_id'],
-                tx['amount'],
-                commission
-            ))
+            referrer = cur.fetchone()
 
+            if referrer:
 
-            elif tx['type'] == 'withdrawal':
+                commission = float(tx['amount']) * 0.30
 
                 cur.execute("""
                     UPDATE users
-                    SET total_withdrawn =
-                    total_withdrawn + %s
+                    SET income_balance = income_balance + %s
                     WHERE id=%s;
-                """,
-                (
+                """, (commission, referrer['id']))
+
+                cur.execute("""
+                    INSERT INTO referral_commissions
+                    (
+                        referrer_id,
+                        referred_user_id,
+                        deposit_amount,
+                        commission_percentage,
+                        commission_amount,
+                        level
+                    )
+                    VALUES (%s,%s,%s,30,%s,1);
+                """, (
+                    referrer['id'],
+                    tx['user_id'],
                     tx['amount'],
-                    tx['user_id']
+                    commission
                 ))
 
+    elif tx['type'] == 'withdrawal':
+
+        cur.execute("""
+            UPDATE users
+            SET total_withdrawn = total_withdrawn + %s
+            WHERE id=%s;
+        """, (tx['amount'], tx['user_id']))
+
+elif action == "reject":
+
+    cur.execute("""
+        UPDATE transactions
+        SET status='rejected'
+        WHERE id=%s;
+    """, (tx_id,))
+
+    if tx['type'] == 'withdrawal':
+
+        cur.execute("""
+            UPDATE users
+            SET income_balance = income_balance + %s
+            WHERE id=%s;
+        """, (tx['amount'], tx['user_id']))
 
 
         elif action == "reject":
