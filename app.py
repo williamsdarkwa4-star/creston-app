@@ -956,7 +956,7 @@ def action_transaction(tx_id, action):
 
                         cur.execute("""
                             UPDATE users
-                            SET income_balance = income_balance + %s
+                            SET deposit_balance = deposit_balance  + %s
                             WHERE id=%s;
                         """, (commission, referrer['id']))
 
