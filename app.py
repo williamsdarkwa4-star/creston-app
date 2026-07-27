@@ -923,11 +923,11 @@ def action_transaction(tx_id, action):
 
         if action == "approve":
 
-    cur.execute("""
-        UPDATE transactions
-        SET status='approved'
-        WHERE id=%s;
-    """, (tx_id,))
+            cur.execute("""
+                UPDATE transactions
+              SET status='approved'
+               WHERE id=%s;
+           """, (tx_id,))
 
     if tx['type'] == 'deposit':
 
@@ -945,7 +945,7 @@ def action_transaction(tx_id, action):
             WHERE id=%s;
         """, (tx['user_id'],))
 
-        referral = cur.fetchone()
+             referral = cur.fetchone()
 
         if referral and referral['referred_by']:
 
@@ -955,7 +955,7 @@ def action_transaction(tx_id, action):
                 WHERE invite_code=%s;
             """, (referral['referred_by'],))
 
-            referrer = cur.fetchone()
+                 referrer = cur.fetchone()
 
             if referrer:
 
@@ -999,7 +999,7 @@ elif action == "reject":
         UPDATE transactions
         SET status='rejected'
         WHERE id=%s;
-    """, (tx_id,))
+          """, (tx_id,))
 
     if tx['type'] == 'withdrawal':
 
@@ -1007,7 +1007,7 @@ elif action == "reject":
             UPDATE users
             SET income_balance = income_balance + %s
             WHERE id=%s;
-        """, (tx['amount'], tx['user_id']))
+              """, (tx['amount'], tx['user_id']))
 
 
         elif action == "reject":
@@ -1033,8 +1033,8 @@ elif action == "reject":
                     tx['user_id']
                 ))
 
-        conn.commit()
-        flash("Transaction updated successfully.")
+            conn.commit()
+            flash("Transaction updated successfully.")
 
 
     except Exception as e:
