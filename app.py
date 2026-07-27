@@ -694,8 +694,13 @@ def history():
     
     # Queries deposits and cashout requests for this user, sorted newest first
     cur.execute('''
-        SELECT type, amount, status, timestamp 
-        FROM transactions 
+        SELECT
+    type,
+    amount,
+    status,
+    meta_sender_name,
+    timestamp
+FROM transactions
         WHERE user_id = %s 
         ORDER BY timestamp DESC;
     ''', (session['user_id'],))
@@ -954,23 +959,61 @@ def action_transaction(tx_id, action):
 
                         commission = float(tx['amount']) * 0.30
 
-                        cur.execute("""
-                            UPDATE users
-                            SET deposit_balance = deposit_balance  + %s
-                            WHERE id=%s;
-                        """, (commission, referrer['id']))
+# Credit the referrer's deposit balance
+cur.execute("""
+    UPDATE users
+    SET deposit_balance = deposit_balance + %s
+    WHERE id=%s;
+""", (
+    commission,
+    referrer['id']
+))
 
-                        cur.execute("""
-                            INSERT INTO referral_commissions
-                            (referrer_id, referred_user_id, deposit_amount,
-                             commission_percentage, commission_amount, level)
-                            VALUES (%s,%s,%s,30,%s,1);
-                        """, (
-                            referrer['id'],
-                            tx['user_id'],
-                            tx['amount'],
-                            commission
-                        ))
+# Save the referral commission
+cur.execute("""
+    INSERT INTO referral_commissions
+    (
+        referrer_id,
+        referred_user_id,
+        deposit_amount,
+        commission_percentage,
+        commission_amount,
+        level
+    )
+    VALUES
+    (%s,%s,%s,30,%s,1);
+""", (
+    referrer['id'],
+    tx['user_id'],
+    tx['amount'],
+    commission
+))
+
+# Add it to transaction history
+cur.execute("""
+    INSERT INTO transactions
+    (
+        user_id,
+        type,
+        amount,
+        status,
+        channel,
+        meta_sender_name
+    )
+    VALUES
+    (
+        %s,
+        'referral_commission',
+        %s,
+        'approved',
+        'Referral Bonus',
+        %s
+    );
+""", (
+    referrer['id'],
+    commission,
+    f"Friend deposited GHS {tx['amount']}. Commission credited to Deposit Balance."
+))
 
             elif tx['type'] == 'withdrawal':
 
