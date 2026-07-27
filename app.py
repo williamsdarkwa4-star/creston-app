@@ -1007,7 +1007,7 @@ def action_transaction(tx_id, action):
 
 
             # Return withdrawal money
-            if tx['type'] == 'withdrawal':
+       if tx['type'] == 'withdrawal':
 
                 cur.execute("""
                     UPDATE users
