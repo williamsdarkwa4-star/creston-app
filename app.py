@@ -421,7 +421,7 @@ def invest():
         return redirect(url_for('dashboard'))
         
     cur.execute('UPDATE users SET deposit_balance = deposit_balance - %s WHERE id = %s;', (plan_cost, session['user_id']))
-    cur.execute('INSERT INTO user_plans (user_id, plan_type, purchase_price, daily_yield) VALUES (%s, %s, %s, %s);',
+    cur.execute('INSERT INTO user_plans (user_id, plan_id, purchase_price, daily_yield) VALUES (%s, %s, %s, %s);',
                 (session['user_id'], plan_id, plan_cost, plan_yield))
     conn.commit()
     cur.close()
@@ -830,7 +830,7 @@ def my_plans():
 
     cur.execute("""
         SELECT 
-            plan_type,
+            plan_id,
             purchase_price,
             daily_yield,
             date_activated
@@ -1169,7 +1169,7 @@ def admin_plans():
     up.date_activated
 FROM user_plans up
 JOIN users u ON up.user_id = u.id
-JOIN investment_plans p ON up.plan_type = p.id
+JOIN investment_plans p ON up.plan_id = p.id
         ORDER BY up.date_activated DESC;
     """)
 
@@ -1188,4 +1188,5 @@ def admin_logout():
 
     return render_template("admin/plans.html", plans=plans)
 if __name__ == "__main__":
+    init_db()
     app.run(debug=True)
