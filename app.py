@@ -954,67 +954,73 @@ def action_transaction(tx_id, action):
                     """, (referral['referred_by'],))
 
                     referrer = cur.fetchone()
+             if referral and referral['referred_by']:
 
-               if referrer:
-                          commission = float(tx['amount']) * 0.30
+    cur.execute("""
+        SELECT id
+        FROM users
+        WHERE invite_code=%s;
+    """, (referral['referred_by'],))
 
-                                # Credit the referrer's deposit balance
-                    cur.execute("""
-                             b.           UPDATE users
-                               SET deposit_balance = deposit_balance + %s
-                               WHERE id=%s;
-                                """, (
-                               commission,
-                               referrer['id']
-                                 ))
+    referrer = cur.fetchone()
 
-                               # Save the referral commission
-                     cur.execute("""
-                                  INSERT INTO referral_commissions
-                                (
-                                     referrer_id,
-                                      referred_user_id,
-                                      deposit_amount,
-                                       commission_percentage,
-                                       commission_amount,
-                                        level
-                                     )
-                                     VALUES
-                                        (%s,%s,%s,30,%s,1);
-                                       """, (
-                                       referrer['id'],
-                                       tx['user_id'],
-                                       tx['amount'],
-                                       commission
-                                      ))
+    if referrer:
 
-                                     # Add it to history
-                            cur.execute("""
-                                     INSERT INTO transactions
-                                     (
-                                       user_id,
-                                        type,
-                                         amount,
-                                           status,
-                                           channel,
-                                            meta_sender_name
-                                            )
-                                               VALUES
-                                             (
-                                               %s,
-                                                   'referral_commission',
-                                                    %s,
-                                                    'approved',
-                                                     'Referral Bonus',
-                                                       %s
-                                                 );
-                                            """, (
-                                                   referrer['id'],
-                                                    commission,
-                                                      f"Friend deposited GHS {tx['amount']}. Commission credited to Deposit Balance."
-                            ))
-                                                    
-          
+        commission = float(tx['amount']) * 0.30
+
+        cur.execute("""
+            UPDATE users
+            SET deposit_balance = deposit_balance + %s
+            WHERE id=%s;
+        """, (
+            commission,
+            referrer['id']
+        ))
+
+        cur.execute("""
+            INSERT INTO referral_commissions
+            (
+                referrer_id,
+                referred_user_id,
+                deposit_amount,
+                commission_percentage,
+                commission_amount,
+                level
+            )
+            VALUES
+            (%s,%s,%s,30,%s,1);
+        """, (
+            referrer['id'],
+            tx['user_id'],
+            tx['amount'],
+            commission
+        ))
+
+        cur.execute("""
+            INSERT INTO transactions
+            (
+                user_id,
+                type,
+                amount,
+                status,
+                channel,
+                meta_sender_name
+            )
+            VALUES
+            (
+                %s,
+                'referral_commission',
+                %s,
+                'approved',
+                'Referral Bonus',
+                %s
+            );
+        """, (
+            referrer['id'],
+            commission,
+            f"Friend deposited GHS {tx['amount']}. Commission credited."
+        ))
+             
             elif tx['type'] == 'withdrawal':
 
                 cur.execute("""
