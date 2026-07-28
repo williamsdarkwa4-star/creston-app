@@ -974,65 +974,7 @@ def action_transaction(tx_id, action):
 
                     referrer = cur.fetchone()
 
-                    if referrer:
-
-                        commission = float(tx['amount']) * 0.30
-
-                        # Credit referral commission
-                        cur.execute("""
-                            UPDATE users
-                            SET deposit_balance = deposit_balance + %s
-                            WHERE id=%s;
-                        """, (
-                            commission,
-                            referrer['id']
-                        ))
-
-                        # Save commission history
-                        cur.execute("""
-                            INSERT INTO referral_commissions
-                            (
-                                referrer_id,
-                                referred_user_id,
-                                deposit_amount,
-                                commission_percentage,
-                                commission_amount,
-                                level
-                            )
-                            VALUES
-                            (%s,%s,%s,30,%s,1);
-                        """, (
-                            referrer['id'],
-                            tx['user_id'],
-                            tx['amount'],
-                            commission
-                        ))
-
-                        # Add transaction history
-                        cur.execute("""
-                            INSERT INTO transactions
-                            (
-                                user_id,
-                                type,
-                                amount,
-                                status,
-                                channel,
-                                meta_sender_name
-                            )
-                            VALUES
-                            (
-                                %s,
-                                'referral_commission',
-                                %s,
-                                'approved',
-                                'Referral Bonus',
-                                %s
-                            );
-                        """, (
-                            referrer['id'],
-                            commission,
-                            f"Friend deposited GHS {tx['amount']}. Commission credited."
-                        ))
+                    
              
             elif tx['type'] == 'withdrawal':
 
