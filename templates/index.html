@@ -1,12 +1,83 @@
 {% extends "base.html" %}
+
+{% block title %}
+J-O-M-A | Home
+{% endblock %}
+
 {% block content %}
+
 <div class="hero">
-  <h1>Welcome to J-O-M-A</h1>
-  <p>Modern mobile-first account demo with orange & blue design.</p>
-  {% if not current_user.is_authenticated %}
-    <p><a class="btn" href="{{ url_for('register') }}">Create account</a> <a class="btn ghost" href="{{ url_for('login') }}">Sign in</a></p>
-  {% else %}
-    <p><a class="btn" href="{{ url_for('dashboard') }}">Go to dashboard</a></p>
-  {% endif %}
+
+    <h1>Welcome to J-O-M-A</h1>
+
+    <p>
+        Modern mobile-first account platform
+        with orange & blue design.
+    </p>
+
+    <div class="orange-line"></div>
+
+    {% if not current_user.is_authenticated %}
+
+        <div class="btn-group">
+
+            <a
+                class="btn btn-primary"
+                href="{{ url_for('register') }}"
+            >
+                Create Account
+            </a>
+
+            <a
+                class="btn btn-blue"
+                href="{{ url_for('login') }}"
+            >
+                Sign In
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <a
+            class="btn btn-primary"
+            href="{{ url_for('dashboard') }}"
+        >
+            Go to Dashboard
+        </a>
+
+    {% endif %}
+
 </div>
+
+
+<!-- =========================
+     PHOTO BELOW INDEX HERO
+     ========================= -->
+
+<div class="index-photo">
+
+    <img
+        src="{{ url_for('static', filename='images/joma.jpg') }}"
+        alt="J-O-M-A"
+    >
+
+</div>
+
+
+<div class="container">
+
+    <div class="card text-center">
+
+        <h2>Welcome to J-O-M-A</h2>
+
+        <p>
+            Create your account and access your
+            J-O-M-A platform.
+        </p>
+
+    </div>
+
+</div>
+
 {% endblock %}
