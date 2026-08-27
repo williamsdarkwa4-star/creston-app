@@ -1,40 +1,140 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>{{ title or "J-O-M-A" }}</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta name="theme-color" content="#0057b8">
+
+    <title>
+        {% block title %}J-O-M-A{% endblock %}
+    </title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Main J-O-M-A stylesheet -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    {% block head %}{% endblock %}
 </head>
+
 <body>
-  <header class="topbar">
-    <div class="brand"><a href="{{ url_for('index') }}">J-O-M-A</a></div>
-    <nav>
-      {% if current_user.is_authenticated %}
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('transactions') }}">Transactions</a>
-        <a href="{{ url_for('profile') }}">Profile</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
-      {% else %}
-        <a href="{{ url_for('register') }}">Register</a>
-        <a href="{{ url_for('login') }}">Login</a>
-      {% endif %}
+
+    <!-- =========================
+         NAVIGATION
+         ========================= -->
+
+    <nav class="navbar">
+
+        <a
+            href="{{ url_for('index') }}"
+            class="logo"
+        >
+            J-<span>O</span>-M-A
+        </a>
+
+        {% if current_user.is_authenticated %}
+
+            <a
+                href="{{ url_for('dashboard') }}"
+            >
+                Dashboard
+            </a>
+
+        {% else %}
+
+            <a
+                href="{{ url_for('login') }}"
+            >
+                Sign In
+            </a>
+
+        {% endif %}
+
     </nav>
-  </header>
 
-  <main class="container">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for cat, msg in messages %}
-          <div class="flash {{ cat }}">{{ msg }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
-  </main>
 
-  <footer class="foot">
-    <small>J-O-M-A demo — orange & blue theme</small>
-  </footer>
+    <!-- =========================
+         MAIN CONTENT
+         ========================= -->
+
+    <main class="page-container">
+
+        <!-- Flask flash messages -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div style="padding: 15px 15px 0;">
+
+                    {% for category, message in messages %}
+
+                        <div
+                            class="
+                                alert
+                                {% if category == 'success' %}
+                                    alert-success
+                                {% elif category == 'danger' %}
+                                    alert-danger
+                                {% elif category == 'warning' %}
+                                    alert-warning
+                                {% else %}
+                                    alert-info
+                                {% endif %}
+                            "
+                        >
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- Page-specific content -->
+
+        {% block content %}{% endblock %}
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+         ========================= -->
+
+    <footer class="footer">
+
+        J-O-M-A
+
+        <br>
+
+        <span>Orange & Blue</span>
+
+    </footer>
+
+
+    <!-- Page-specific JavaScript -->
+
+    {% block scripts %}{% endblock %}
+
 </body>
 </html>
