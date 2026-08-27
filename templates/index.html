@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+  <h1>Welcome to J-O-M-A</h1>
+  <p>Modern mobile-first account demo with orange & blue design.</p>
+  {% if not current_user.is_authenticated %}
+    <p><a class="btn" href="{{ url_for('register') }}">Create account</a> <a class="btn ghost" href="{{ url_for('login') }}">Sign in</a></p>
+  {% else %}
+    <p><a class="btn" href="{{ url_for('dashboard') }}">Go to dashboard</a></p>
+  {% endif %}
+</div>
+{% endblock %}
