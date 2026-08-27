@@ -1,1153 +1,229 @@
+# app.py â€” main Flask application
 import os
-import random
-import string
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from datetime import datetime, timedelta
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from werkzeug.utils import secure_filename
+from flask import Flask, render_template, redirect, url_for, flash, request
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_wtf.csrf import CSRFProtect
+from models import db, User, Transaction, Investment, GiftCode, GiftClaim, Referral
+from forms import RegisterForm, LoginForm, DepositForm, InvestForm, GiftClaimForm, ProfileForm
+from datetime import datetime
+from dotenv import load_dotenv
 
-app = Flask(__name__)
-# FIXED: The description text string below is now safely commented out using a '#' hash symbol
-# Secure fallback cryptography secret key generation
-app.secret_key = os.environ.get('SECRET_KEY', 'creston-master-engine-production-key-2026')
+load_dotenv()  # loads .env if present
 
-UPLOAD_FOLDER = os.path.join('static', 'receipts')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-PLAN_CATALOG = {
-    1: {
-        "name": "Plan 1",
-        "cost": 70,
-        "daily": 8
-    },
-    2: {
-        "name": "Plan 2",
-        "cost": 100,
-        "daily": 20
-    },
-    3: {
-        "name": "Plan 3",
-        "cost": 260,
-        "daily": 45
-    },
-    4: {
-        "name": "Plan 4",
-        "cost": 400,
-        "daily": 60
-    },
-    5: {
-        "name": "Plan 5",
-        "cost": 600,
-        "daily": 100
-    },
-    6: {
-        "name": "Plan 6",
-        "cost": 800,
-        "daily": 150
-    },
-    7: {
-        "name": "Plan 7",
-        "cost": 1000,
-        "daily": 200
-    }
-}
+def create_app():
+    app = Flask(__name__, static_folder='static', template_folder='templates')
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///joma_dev.sqlite3')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-def get_db_connection():
-    # FIXED: Forces the application to check your Render environment configurations string variables
-    db_url = os.environ.get('DATABASE_URL')
-    if not db_url:
-        # If Render hasn't linked the database yet, this throws an explicit error instead of falling back to a broken local link
-        raise RuntimeError("DATABASE_URL is missing. Please link your PostgreSQL database to this Web Service in your Render Dashboard.")
-    return psycopg2.connect(db_url, cursor_factory=RealDictCursor)
-def init_db():
-    conn = get_db_connection()
-    cur = conn.cursor()
+    db.init_app(app)
+    csrf = CSRFProtect(app)
 
-    try:
+    login_manager = LoginManager()
+    login_manager.login_view = 'login'
+    login_manager.init_app(app)
 
-        # ==========================
-        # USERS TABLE
-        # ==========================
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
-            nickname VARCHAR(100) NOT NULL,
-            phone_number VARCHAR(20) UNIQUE NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            invite_code VARCHAR(20) UNIQUE NOT NULL,
-            referred_by VARCHAR(20),
-            income_balance NUMERIC(15,2) DEFAULT 0,
-            deposit_balance NUMERIC(15,2) DEFAULT 10,
-            today_income NUMERIC(15,2) DEFAULT 0,
-            total_income NUMERIC(15,2) DEFAULT 0,
-            total_withdrawn NUMERIC(15,2) DEFAULT 0,
-            withdraw_password VARCHAR(255),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """)
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
+    # Routes
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
-        # ==========================
-        # INVESTMENT PLANS
-        # ==========================
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS investment_plans (
-            id SERIAL PRIMARY KEY,
-            plan_name VARCHAR(100),
-            price NUMERIC(15,2),
-            daily_profit NUMERIC(15,2),
-            duration_days INTEGER DEFAULT 180
-        );
-        """)
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        form = RegisterForm()
+        if form.validate_on_submit():
+            username = form.username.data.strip()
+            phone = form.phone.data.strip()
+            password = form.password.data
+            referral = form.referral.data.strip() or None
+            if User.query.filter_by(username=username).first():
+                flash('Username already taken', 'warning')
+            else:
+                user = User(username=username, phone=phone)
+                user.set_password(password)
+                user.generate_referral_code()
+                # handle referral link
+                if referral:
+                    ref_user = User.query.filter_by(referral_code=referral).first()
+                    if ref_user:
+                        user.referred_by = ref_user.id
+                db.session.add(user)
+                db.session.commit()
+                # credit referral if applicable
+                if referral and ref_user:
+                    ref_user.referral_balance += 5.0
+                    db.session.add(ref_user)
+                    db.session.add(Transaction(user_id=ref_user.id, type='referral', amount=5.0, note='Referral bonus'))
+                    db.session.commit()
+                login_user(user)
+                flash('Welcome, ' + username, 'success')
+                return redirect(url_for('dashboard'))
+        return render_template('register.html', form=form)
 
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        form = LoginForm()
+        if form.validate_on_submit():
+            user = User.query.filter_by(username=form.username.data).first()
+            if user and user.check_password(form.password.data):
+                login_user(user)
+                flash('Signed in', 'success')
+                next_page = request.args.get('next') or url_for('dashboard')
+                return redirect(next_page)
+            flash('Invalid credentials', 'danger')
+        return render_template('login.html', form=form)
 
-        # ==========================
-        # USER PLANS
-        # ==========================
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS user_plans (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            plan_id INTEGER REFERENCES investment_plans(id),
-            purchase_price NUMERIC(15,2),
-            daily_yield NUMERIC(15,2),
-            total_received NUMERIC(15,2) DEFAULT 0,
-            days_completed INTEGER DEFAULT 0,
-            status VARCHAR(20) DEFAULT 'active',
-            date_activated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            last_income_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """)
+    @app.route('/logout')
+    @login_required
+    def logout():
+        logout_user()
+        flash('Signed out', 'info')
+        return redirect(url_for('index'))
 
+    @app.route('/dashboard')
+    @login_required
+    def dashboard():
+        # fetch recent transactions and investments
+        tx = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.created_at.desc()).limit(10).all()
+        invs = Investment.query.filter_by(user_id=current_user.id).order_by(Investment.start_at.desc()).all()
+        # compute accrual for display (simple linear accrual)
+        def inv_status(inv):
+            elapsed_days = (datetime.utcnow() - inv.start_at).days
+            accrued = (inv.amount * (inv.apy/100.0)) * (min(elapsed_days, inv.duration_days)/365.0)
+            matured = elapsed_days >= inv.duration_days
+            return {'elapsed_days': elapsed_days, 'accrued': accrued, 'matured': matured}
+        invs_with_status = [(inv, inv_status(inv)) for inv in invs]
+        return render_template('dashboard.html', tx=tx, invs=invs_with_status)
 
-        # ==========================
-        # TRANSACTIONS
-        # ==========================
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS transactions (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            type VARCHAR(30),
-            amount NUMERIC(15,2),
-            status VARCHAR(30) DEFAULT 'pending',
-            channel VARCHAR(50),
-            meta_sender_name VARCHAR(150),
-            screenshot_file VARCHAR(255),
-            recipient_phone VARCHAR(30),
-            network_provider VARCHAR(30),
-            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """)
-
-
-        # ==========================
-        # REFERRAL COMMISSIONS
-        # ==========================
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS referral_commissions (
-            id SERIAL PRIMARY KEY,
-            referrer_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            referred_user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-            deposit_amount NUMERIC(15,2) DEFAULT 0,
-            commission_percentage NUMERIC(5,2) DEFAULT 30,
-            commission_amount NUMERIC(15,2) DEFAULT 0,
-            level INTEGER DEFAULT 1,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """)
-
-
-        # ==========================
-        # ADMINS
-        # ==========================
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS admins (
-            id SERIAL PRIMARY KEY,
-            username VARCHAR(100) UNIQUE,
-            password VARCHAR(255),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """)
-
-
-        # ==========================
-        # REPAIR OLD DATABASE COLUMNS
-        # ==========================
-
-        cur.execute("""
-        ALTER TABLE users
-        ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-        """)
-
-
-        cur.execute("""
-        ALTER TABLE user_plans
-        ADD COLUMN IF NOT EXISTS days_completed INTEGER DEFAULT 0;
-        """)
-
-
-        cur.execute("""
-        ALTER TABLE user_plans
-        ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active';
-        """)
-
-
-        cur.execute("""
-        ALTER TABLE user_plans
-        ADD COLUMN IF NOT EXISTS last_income_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-        """)
-
-
-        cur.execute("""
-        ALTER TABLE user_plans
-        ADD COLUMN IF NOT EXISTS total_received NUMERIC(15,2) DEFAULT 0;
-        """)
-
-
-        # ==========================
-        # DEFAULT ADMIN
-        # ==========================
-
-        cur.execute("""
-        INSERT INTO admins(username,password)
-        SELECT 'Williams','Williams12'
-        WHERE NOT EXISTS(
-            SELECT 1 FROM admins WHERE username='Williams'
-        );
-        """)
-
-
-        # ==========================
-        # DEFAULT INVESTMENT PLANS
-        # ==========================
-
-        cur.execute("""
-        INSERT INTO investment_plans
-        (plan_name, price, daily_profit, duration_days)
-
-        SELECT * FROM (
-            VALUES
-            ('Plan 1',70,8,180),
-            ('Plan 2',100,20,180),
-            ('Plan 3',260,45,180),
-            ('Plan 4',400,60,180),
-            ('Plan 5',600,100,180),
-            ('Plan 6',800,150,180),
-            ('Plan 7',1000,200,180)
-
-        ) AS p(plan_name,price,daily_profit,duration_days)
-
-        WHERE NOT EXISTS(
-            SELECT 1 FROM investment_plans
-        );
-        """)
-
-
-        conn.commit()
-        print("Database initialized and repaired successfully.")
-
-
-    except Exception as e:
-        conn.rollback()
-        print("Database initialization error:", e)
-
-
-    finally:
-        cur.close()
-        conn.close()
-
-
-            
-
-# ==========================================
-# CLIENT USER INTERFACE PIPELINES
-# ==========================================
-
-@app.route('/')
-def home_redirect():
-    return redirect(url_for('register'))
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    url_invite_code = request.args.get('invite', 'RUFCR65')
-    
-    if request.method == 'POST':
-        nickname = request.form.get('nickname')
-        phone = request.form.get('phone_number').strip()
-        password = request.form.get('password')
-        invite_used = request.form.get('invite_code')
-        
-        my_invite_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-        
-        conn = get_db_connection()
-        cur = conn.cursor()
-        try:
-            cur.execute(
-                '''INSERT INTO users (nickname, phone_number, password, invite_code, referred_by, deposit_balance) 
-                   VALUES (%s, %s, %s, %s, %s, 10.00);''',
-                (nickname, phone, password, my_invite_code, invite_used)
-            )
-            conn.commit()
-            flash("Account securely provisioned with GHS 10 welcome bonus! Login now.")
-            return redirect(url_for('login'))
-        except psycopg2.errors.UniqueViolation:
-            conn.rollback()
-            flash("This operational phone number string is already registered.")
-        finally:
-            cur.close()
-            conn.close()
-            
-    return render_template('register.html', invite_code=url_invite_code)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        phone = request.form.get('phone_number').strip()
-        password = request.form.get('password')
-        
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('SELECT id, nickname, password FROM users WHERE phone_number = %s;', (phone,))
-        user = cur.fetchone()
-        cur.close()
-        conn.close()
-        
-        # FIXED: RealDictCursor checks require referencing string keys like ['password']
-        if user and user['password'] == password:
-            session['user_id'] = user['id']
-            session['nickname'] = user['nickname']
+    @app.route('/deposit', methods=['GET', 'POST'])
+    @login_required
+    def deposit():
+        form = DepositForm()
+        if form.validate_on_submit():
+            amt = form.amount.data
+            current_user.deposit_balance += float(amt)
+            db.session.add(current_user)
+            db.session.add(Transaction(user_id=current_user.id, type='deposit', amount=amt, note='Simulated deposit'))
+            db.session.commit()
+            flash('Deposit credited: $' + f"{amt:.2f}", 'success')
             return redirect(url_for('dashboard'))
+        return render_template('deposit.html', form=form)
+
+    @app.route('/invest', methods=['GET', 'POST'])
+    @login_required
+    def invest():
+        # demo static plans
+        plans = [
+            ('Starter 30d', 30, 5.0, 10.0),
+            ('Growth 90d', 90, 12.0, 50.0),
+            ('Pro 180d', 180, 25.0, 100.0)
+        ]
+        form = InvestForm()
+        form.plan.choices = [(i, f"{p[0]} â€” {p[2]}% â€¢ {p[1]}d (min ${p[3]})") for i,p in enumerate(plans)]
+        if form.validate_on_submit():
+            idx = int(form.plan.data)
+            amount = float(form.amount.data)
+            plan = plans[idx]
+            if amount > current_user.deposit_balance:
+                flash('Insufficient deposit balance', 'danger')
+            elif amount < plan[3]:
+                flash(f"Minimum for this plan is ${plan[3]}", 'warning')
+            else:
+                current_user.deposit_balance -= amount
+                inv = Investment(user_id=current_user.id, plan_name=plan[0], amount=amount, apy=plan[2], duration_days=plan[1], start_at=datetime.utcnow())
+                db.session.add(inv)
+                db.session.add(Transaction(user_id=current_user.id, type='investment', amount=amount, note=f"Invested in {plan[0]}"))
+                db.session.commit()
+                flash('Investment created', 'success')
+                return redirect(url_for('dashboard'))
+        return render_template('invest.html', form=form)
+
+    @app.route('/redeem/<int:inv_id>', methods=['POST'])
+    @login_required
+    def redeem(inv_id):
+        inv = Investment.query.filter_by(id=inv_id, user_id=current_user.id, redeemed=False).first_or_404()
+        elapsed_days = (datetime.utcnow() - inv.start_at).days
+        if elapsed_days < inv.duration_days:
+            flash('Investment not matured yet', 'warning')
         else:
-            flash("Invalid credentials.")
-    return render_template('login.html')
-def update_plan_income():
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("""
-            SELECT id, user_id, daily_yield, last_income_time
-            FROM user_plans
-        """)
-
-        plans = cur.fetchall()
-
-        for plan in plans:
-
-            now = datetime.utcnow()
-            last_time = plan['last_income_time']
-
-            if last_time is None:
-                last_time = now
-
-            hours_passed = (now - last_time).total_seconds() / 3600
-
-            if hours_passed >= 24:
-
-                profit = float(plan['daily_yield'])
-
-                # Add income to user
-                cur.execute("""
-                    UPDATE users
-                    SET 
-                        income_balance = income_balance + %s,
-                        today_income = today_income + %s,
-                        total_income = total_income + %s
-                    WHERE id=%s
-                """,
-                (
-                    profit,
-                    profit,
-                    profit,
-                    plan['user_id']
-                ))
-
-                # Reset timer for next 24 hours
-                cur.execute("""
-                    UPDATE user_plans
-                    SET
-                        last_income_time=%s,
-                        total_received=total_received + %s
-                    WHERE id=%s
-                """,
-                (
-                    now,
-                    profit,
-                    plan['id']
-                ))
-
-        conn.commit()
-
-    except Exception as e:
-        conn.rollback()
-        print("Income error:", e)
-
-    finally:
-        cur.close()
-        conn.close()
-
-
-@app.route('/dashboard')
-def dashboard():
-    if 'user_id' not in session: return redirect(url_for('login'))
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT income_balance, deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
-    wallet = cur.fetchone()
-    cur.close()
-    conn.close()
-    update_plan_income()
-    return render_template('dashboard.html', income_balance=wallet['income_balance'], deposit_balance=wallet['deposit_balance'])
-       
-@app.route('/invest', methods=['POST'])
-def invest():
-    if 'user_id' not in session: return redirect(url_for('login'))
-    plan_id = int(request.form.get('plan_id', 0))
-    if plan_id not in PLAN_CATALOG: return redirect(url_for('dashboard'))
-    
-    plan_cost = PLAN_CATALOG[plan_id]["cost"]
-    plan_yield = PLAN_CATALOG[plan_id]["daily"]
-    
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
-    user = cur.fetchone()
-    
-    if float(user['deposit_balance']) < plan_cost:
-        flash("Insufficient funds.")
-        cur.close()
-        conn.close()
+            accrued = (inv.amount * (inv.apy/100.0)) * (inv.duration_days/365.0)
+            payout = inv.amount + accrued
+            inv.redeemed = True
+            current_user.income_balance += payout
+            db.session.add(inv)
+            db.session.add(current_user)
+            db.session.add(Transaction(user_id=current_user.id, type='investment_payout', amount=payout, note='Redeemed investment'))
+            db.session.commit()
+            flash('Investment redeemed and payout credited to income balance', 'success')
         return redirect(url_for('dashboard'))
-        
-    cur.execute('UPDATE users SET deposit_balance = deposit_balance - %s WHERE id = %s;', (plan_cost, session['user_id']))
-    cur.execute('INSERT INTO user_plans (user_id, plan_id, purchase_price, daily_yield) VALUES (%s, %s, %s, %s);',
-                (session['user_id'], plan_id, plan_cost, plan_yield))
-    conn.commit()
-    cur.close()
-    conn.close()
-    return redirect(url_for('profile'))
 
-@app.route('/deposit', methods=['GET', 'POST'])
-def deposit():
-    if 'user_id' not in session: return redirect(url_for('login'))
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT deposit_balance FROM users WHERE id = %s;', (session['user_id'],))
-    user = cur.fetchone()
-    cur.close()
-    conn.close()
-    
-    if request.method == 'POST':
-        amount = request.form.get('amount')
-        channel = request.form.get('channel')
-        if float(amount) < 60:
-            flash("Minimum deposit requirement is GHS 60.")
-            return redirect(url_for('deposit'))
-        return redirect(url_for('payment_gateway', amount=amount, channel=channel))
-        
-    return render_template('deposit.html', available_balance=user['deposit_balance'])
+    @app.route('/gift-code', methods=['GET', 'POST'])
+    @login_required
+    def gift_code():
+        form = GiftClaimForm()
+        if form.validate_on_submit():
+            code_str = form.code.data.strip().upper()
+            gc = GiftCode.query.filter_by(code=code_str).first()
+            if not gc:
+                flash('Invalid gift code', 'danger')
+            else:
+                if gc.expires_at and gc.expires_at < datetime.utcnow():
+                    flash('Code expired', 'warning')
+                elif gc.uses >= gc.max_uses:
+                    flash('Code fully claimed', 'warning')
+                else:
+                    # check claimed by user
+                    already = GiftClaim.query.filter_by(code=code_str, user_id=current_user.id).first()
+                    if already:
+                        flash('You already claimed this code', 'info')
+                    else:
+                        gc.uses += 1
+                        claim = GiftClaim(code=code_str, user_id=current_user.id)
+                        current_user.deposit_balance += gc.amount
+                        tx = Transaction(user_id=current_user.id, type='gift', amount=gc.amount, note=f'Gift code {code_str}')
+                        db.session.add_all([gc, claim, current_user, tx])
+                        db.session.commit()
+                        flash(f'Gift claimed: ${gc.amount:.2f}', 'success')
+                        return redirect(url_for('dashboard'))
+        return render_template('gift_code.html', form=form)
 
-@app.route('/payment_gateway')
-def payment_gateway():
-    if 'user_id' not in session: return redirect(url_for('login'))
-    amount = request.args.get('amount', '0.00')
-    channel = request.args.get('channel', 'MTN')
-    merchant_number = "0257425844"
-    return render_template('payment_gateway.html', amount=amount, channel=channel, merchant_number=merchant_number)
+    @app.route('/transactions')
+    @login_required
+    def transactions():
+        tx = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.created_at.desc()).all()
+        return render_template('transactions.html', tx=tx)
 
-@app.route('/submit_deposit_proof', methods=['POST'])
-def submit_deposit_proof():
-    if 'user_id' not in session: return redirect(url_for('login'))
-    sender_name = request.form.get('sender_name')
-    amount = request.form.get('amount')
-    channel = request.form.get('channel')
-    file = request.files.get('screenshot')
-    
-    if file:
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('''INSERT INTO transactions (user_id, type, amount, channel, meta_sender_name, screenshot_file, status) 
-                       VALUES (%s, 'deposit', %s, %s, %s, %s, 'pending');''',
-                    (session['user_id'], amount, channel, sender_name, filename))
-        conn.commit()
-        cur.close()
-        conn.close()
-    return redirect(url_for('dashboard'))
-
-@app.route('/withdraw', methods=['GET', 'POST'])
-def withdraw():
-
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT income_balance, withdraw_password
-        FROM users
-        WHERE id = %s;
-    """, (session['user_id'],))
-
-    user = cur.fetchone()
-
-
-    if not user:
-        cur.close()
-        conn.close()
-        flash("User account not found.")
-        return redirect(url_for('login'))
-
-
-    if request.method == 'POST':
-
-        network = request.form.get('network_provider')
-        phone = request.form.get('recipient_phone')
-        password = request.form.get('withdraw_password')
-
-
-        try:
-            amount = float(request.form.get('withdraw_amount'))
-        except:
-            flash("Enter a valid withdrawal amount.")
-            cur.close()
-            conn.close()
-            return redirect(url_for('withdraw'))
-
-
-
-        # Check withdrawal password
-        if not user['withdraw_password']:
-
-            flash("Please set your withdrawal password first.")
-            cur.close()
-            conn.close()
+    @app.route('/profile', methods=['GET', 'POST'])
+    @login_required
+    def profile():
+        form = ProfileForm(obj=current_user)
+        if form.validate_on_submit():
+            current_user.phone = form.phone.data.strip()
+            if form.password.data:
+                current_user.set_password(form.password.data)
+            db.session.add(current_user); db.session.commit()
+            flash('Profile updated', 'success')
             return redirect(url_for('profile'))
-
-
-        if password != user['withdraw_password']:
-
-            flash("Incorrect withdrawal password.")
-            cur.close()
-            conn.close()
-            return redirect(url_for('withdraw'))
-
-
-
-        # Minimum withdrawal
-        if amount < 30:
-
-            flash("Minimum withdrawal amount is GHS 30.")
-            cur.close()
-            conn.close()
-            return redirect(url_for('withdraw'))
-
-
-
-        # Balance check
-        if amount > float(user['income_balance']):
-
-            flash("Insufficient income balance.")
-            cur.close()
-            conn.close()
-            return redirect(url_for('withdraw'))
-
-
-
-        try:
-
-            # Create withdrawal request
-            cur.execute("""
-                INSERT INTO transactions
-                (
-                    user_id,
-                    type,
-                    amount,
-                    recipient_phone,
-                    network_provider,
-                    status
-                )
-                VALUES
-                (
-                    %s,
-                    'withdrawal',
-                    %s,
-                    %s,
-                    %s,
-                    'pending'
-                );
-            """,
-            (
-                session['user_id'],
-                amount,
-                phone,
-                network
-            ))
-
-
-            # Temporarily remove amount until admin decision
-            cur.execute("""
-                UPDATE users
-                SET income_balance = income_balance - %s
-                WHERE id = %s;
-            """,
-            (
-                amount,
-                session['user_id']
-            ))
-
-
-            conn.commit()
-
-            flash("Withdrawal request submitted successfully.")
-
-
-        except Exception as e:
-
-            conn.rollback()
-            flash("Withdrawal failed. Try again.")
-
-
-        finally:
-
-            cur.close()
-            conn.close()
-
-
-        return redirect(url_for('dashboard'))
-
-
-
-    cur.close()
-    conn.close()
-
-
-    return render_template(
-        'withdraw.html',
-        income_balance=user['income_balance']
-    )
-
-@app.route('/set_withdraw_password', 
-methods=['GET', 'POST'])
-def set_withdraw_password():
-
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-
-        password = request.form.get('password')
-        confirm = request.form.get('confirm_password')
-
-        if password != confirm:
-            flash("Passwords do not match.")
-            return redirect(url_for('set_withdraw_password'))
-
-        conn = get_db_connection()
-        cur = conn.cursor()
-
-        cur.execute("""
-            UPDATE users
-            SET withdraw_password=%s
-            WHERE id=%s;
-        """,
-        (
-            password,
-            session['user_id']
-        ))
-
-        conn.commit()
-        cur.close()
-        conn.close()
-
-        flash("Withdrawal password saved successfully.")
-        return redirect(url_for('profile'))
-
-    return render_template("set_withdraw_password.html")   
-# ==========================================
-# CLIENT SERVICE / SUPPORT ROUTE
-# ==========================================
-
-@app.route('/service')
-def service():
-    # Strict validation: ensure only authenticated accounts can reach support
-    if 'user_id' not in session: 
-        return redirect(url_for('login'))
-        
-    # Serves your custom templates/service.html layout frame instantly
-    return render_template('service.html')
-# ==========================================
-# CLIENT HISTORY ROUTE
-# ==========================================
-
-@app.route('/history')
-def history():
-    # Strict check: ensure only logged-in clients can access their statements
-    if 'user_id' not in session: 
-        return redirect(url_for('login'))
-        
-    conn = get_db_connection()
-    cur = conn.cursor()
-    
-    # Queries deposits and cashout requests for this user, sorted newest first
-    cur.execute('''
-        SELECT
-    type,
-    amount,
-    status,
-    meta_sender_name,
-    timestamp
-FROM transactions
-        WHERE user_id = %s 
-        ORDER BY timestamp DESC;
-    ''', (session['user_id'],))
-    
-    logs = cur.fetchall()
-    cur.close()
-    conn.close()
-    
-    # Feeds data records directly into your templates/history.html UI view layer
-    return render_template('history.html', logs=logs)
-# ==========================================
-# CLIENT INVITATION / AFFILIATE TEAM ROUTE
-# ==========================================
-
-@app.route('/invite')
-def invite():
-
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    # Current user's invite code
-    cur.execute("""
-        SELECT invite_code
-        FROM users
-        WHERE id=%s
-    """,(session['user_id'],))
-
-    me = cur.fetchone()
-
-
-    # Find ALL people who registered with this invite code
-    cur.execute("""
-    SELECT
-        u.nickname,
-        u.phone_number,
-        u.created_at,
-
-        COALESCE(
-            (
-                SELECT SUM(amount)
-                FROM transactions
-                WHERE user_id = u.id
-                AND type='deposit'
-                AND status='approved'
-            ),0
-        ) AS deposit_amount
-
-    FROM users u
-    WHERE u.referred_by = %s
-    ORDER BY u.created_at DESC;
-""",
-(
-    me['invite_code'],
-))
-        
-    team = cur.fetchall()
-
-
-    # Total commission from all referrals
-    cur.execute("""
-        SELECT COALESCE(SUM(commission_amount),0) AS total
-        FROM referral_commissions
-        WHERE referrer_id=%s
-    """,
-    (session['user_id'],))
-
-
-    total_commission = cur.fetchone()['total']
-
-
-    cur.close()
-    conn.close()
-
-
-    return render_template(
-    'invite.html',
-    invite_code=me['invite_code'],
-    team=team,
-    total_commission=total_commission,
-    now=datetime.utcnow()
-)
-# ==========================================
-# CLIENT PROFILE & MY PLANS ROUTES
-# ==========================================
-
-@app.route('/profile')
-def profile():
-    # Strict validation: prevent unauthenticated tracking access
-    if 'user_id' not in session: 
-        return redirect(url_for('login'))
-        
-    conn = get_db_connection()
-    cur = conn.cursor()
-    
-    # Queries the live financial ledger metrics for this specific user row
-    cur.execute('''
-        SELECT id, phone_number, income_balance, today_income, total_income, total_withdrawn 
-        FROM users 
-        WHERE id = %s;
-    ''', (session['user_id'],))
-    
-    user = cur.fetchone()
-    cur.close()
-    conn.close()
-    
-    # Feeds balances cleanly into your templates/profile.html interface layout
-    return render_template('profile.html', 
-                           user_id=user['id'], 
-                           phone_number=user['phone_number'], 
-                           income_balance=user['income_balance'], 
-                           today_income=user['today_income'], 
-                           total_income=user['total_income'], 
-                           total_withdrawn=user['total_withdrawn'])
-
-
-@app.route('/my_plans')
-def my_plans():
-
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT 
-            plan_id,
-            purchase_price,
-            daily_yield,
-            date_activated
-        FROM user_plans
-        WHERE user_id = %s
-        ORDER BY date_activated DESC;
-    """, (session['user_id'],))
-
-    plans = cur.fetchall()
-
-    cur.close()
-    conn.close()
-
-    return render_template(
-        'my_plans.html',
-        active_plans=plans
-    )
-# ==========================================
-# MASTER ADMINISTRATIVE SECURITY ENDPOINTS
-# ==========================================
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash("You have been logged out successfully.")
-    return redirect(url_for('login'))
-
-@app.route('/admin/login', methods=['GET', 'POST'])
-def admin_login():
-    if request.method == 'POST':
-        user = request.form.get('Williams')
-        pw = request.form.get('Williams12')
-        # Setup static admin panel login configuration credentials details
-        if user == "Williams" and pw == "Williams12":
-            session['admin_logged'] = True
-            return redirect(url_for('admin_dashboard'))
-        else:
-            flash("Invalid security authorization credentials.")
-    return render_template('admin/login.html')
-
-@app.route('/admin/dashboard')
-def admin_dashboard():
-    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT COUNT(*) as total FROM users;')
-    users_count = cur.fetchone()['total']
-    cur.execute('SELECT SUM(income_balance + deposit_balance) as total_cap FROM users;')
-    cap = cur.fetchone()['total_cap'] or 0.00
-    cur.close()
-    conn.close()
-    return render_template('admin/dashboard.html', total_users=users_count, total_capital=cap)
-
-@app.route('/admin/approvals')
-def admin_approvals():
-    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('''SELECT t.id, t.type, t.amount, t.channel, t.meta_sender_name, t.screenshot_file, t.recipient_phone, t.network_provider, u.phone_number 
-                   FROM transactions t JOIN users u ON t.user_id = u.id WHERE t.status = 'pending' ORDER BY t.timestamp ASC;''')
-    txs = cur.fetchall()
-    cur.close()
-    conn.close()
-    return render_template('admin/approvals.html', pending_transactions=txs)
-
-@app.route('/admin/action_transaction/<int:tx_id>/<string:action>')
-def action_transaction(tx_id, action):
-
-    if not session.get('admin_logged'):
-        return redirect(url_for('admin_login'))
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    try:
-        cur.execute("""
-            SELECT user_id, type, amount, status
-            FROM transactions
-            WHERE id=%s;
-        """, (tx_id,))
-
-        tx = cur.fetchone()
-
-        if not tx:
-            flash("Transaction not found.")
-            return redirect(url_for('admin_approvals'))
-
-        if tx['status'] != 'pending':
-            flash("Transaction already processed.")
-            return redirect(url_for('admin_approvals'))
-
-        if action == "approve":
-
-            cur.execute("""
-                UPDATE transactions
-                SET status='approved'
-                WHERE id=%s;
-            """, (tx_id,))
-
-            if tx['type'] == 'deposit':
-
-                cur.execute("""
-                    UPDATE users
-                    SET deposit_balance = deposit_balance + %s
-                    WHERE id=%s;
-                """, (tx['amount'], tx['user_id']))
-
-                cur.execute("""
-                    SELECT referred_by
-                    FROM users
-                    WHERE id=%s;
-                """, (tx['user_id'],))
-
-                referral = cur.fetchone()
-
-                if referral and referral['referred_by']:
-
-                    cur.execute("""
-                        SELECT id
-                        FROM users
-                        WHERE invite_code=%s;
-                    """, (referral['referred_by'],))
-
-                    referrer = cur.fetchone()
-             if referral and referral['referred_by']:
-
-    cur.execute("""
-        SELECT id
-        FROM users
-        WHERE invite_code=%s;
-    """, (referral['referred_by'],))
-
-                referral = cur.fetchone()
-
-                if referral and referral['referred_by']:
-
-                    cur.execute("""
-                        SELECT id
-                        FROM users
-                        WHERE invite_code=%s;
-                    """, (referral['referred_by'],))
-
-                    referrer = cur.fetchone()
-
-                    
-             
-            elif tx['type'] == 'withdrawal':
-
-                cur.execute("""
-                    UPDATE users
-                    SET total_withdrawn = total_withdrawn + %s
-                    WHERE id=%s;
-                """, (tx['amount'], tx['user_id']))
-
-        elif action == "reject":
-
-            cur.execute("""
-                UPDATE transactions
-                SET status='rejected'
-                WHERE id=%s;
-            """, (tx_id,))
-
-            if tx['type'] == 'withdrawal':
-
-                cur.execute("""
-                    UPDATE users
-                    SET income_balance = income_balance + %s
-                    WHERE id=%s;
-                """, (tx['amount'], tx['user_id']))
-
-        conn.commit()
-        flash("Transaction updated successfully.")
-
-    except Exception as e:
-        conn.rollback()
-        flash(f"Transaction update failed: {e}")
-
-    finally:
-        cur.close()
-        conn.close()
-
-    return redirect(url_for('admin_approvals'))
-
-@app.route('/admin/users')
-def admin_users():
-    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
-    conn = get_db_connection()
-    cur = conn.cursor()
-    # Pulls complete data mapping user list phone number and current balance configurations
-    cur.execute('SELECT nickname, phone_number, (income_balance + deposit_balance) as wallet_balance FROM users ORDER BY id DESC;')
-    members = cur.fetchall()
-    cur.close()
-    conn.close()
-    return render_template('admin/users.html', members=members)
-
-@app.route('/admin/password_reset', methods=['GET', 'POST'])
-def admin_password_reset():
-    if not session.get('admin_logged'): return redirect(url_for('admin_login'))
-    if request.method == 'POST':
-        phone = request.form.get('target_phone').strip()
-        new_pw = request.form.get('new_password')
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute('UPDATE users SET password = %s WHERE phone_number = %s;', (new_pw, phone))
-        conn.commit()
-        cur.close()
-        conn.close()
-        flash(f"Access password for +233 {phone} updated successfully.")
-    return render_template('admin/password_reset.html')
-@app.route('/admin/adjust_balance', methods=['GET', 'POST'])
-def admin_adjust_balance():
-    if not session.get('admin_logged'):
-        return redirect(url_for('admin_login'))
-
-    if request.method == 'POST':
-        phone = request.form.get('phone_number').strip()
-        wallet = request.form.get('wallet')
-        action = request.form.get('action')
-        amount = float(request.form.get('amount'))
-
-        conn = get_db_connection()
-        cur = conn.cursor()
-
-        cur.execute(
-            "SELECT id FROM users WHERE phone_number=%s;",
-            (phone,)
-        )
-        user = cur.fetchone()
-
-        if not user:
-            flash("User not found.")
-            cur.close()
-            conn.close()
-            return redirect(url_for('admin_adjust_balance'))
-
-        if wallet not in ["deposit_balance", "income_balance"]:
-            flash("Invalid wallet selected.")
-            cur.close()
-            conn.close()
-            return redirect(url_for('admin_adjust_balance'))
-
-        if action == "add":
-            cur.execute(
-                f"UPDATE users SET {wallet} = {wallet} + %s WHERE phone_number=%s;",
-                (amount, phone)
-            )
-            flash("Funds added successfully.")
-
-        elif action == "deduct":
-            cur.execute(
-                f"UPDATE users SET {wallet} = GREATEST({wallet} - %s, 0) WHERE phone_number=%s;",
-                (amount, phone)
-            )
-            flash("Funds deducted successfully.")
-
-        conn.commit()
-        cur.close()
-        conn.close()
-
-        return redirect(url_for('admin_adjust_balance'))
-
-    return render_template("admin/adjust_balance.html")
-@app.route('/admin/check_referrals')
-def check_referrals():
-    if not session.get('admin_logged'):
-        return redirect(url_for('admin_login'))
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT nickname, phone_number, invite_code, referred_by
-        FROM users
-        ORDER BY id DESC;
-    """)
-
-    users = cur.fetchall()
-
-    cur.close()
-    conn.close()
-
-    return str(users)
-@app.route('/admin/plans')
-def admin_plans():
-    if not session.get('admin_logged'):
-        return redirect(url_for('admin_login'))
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        SELECT
-    u.nickname,
-    u.phone_number,
-    p.plan_name,
-    up.purchase_price,
-    up.daily_yield,
-    up.date_activated
-FROM user_plans up
-JOIN users u ON up.user_id = u.id
-JOIN investment_plans p ON up.plan_id = p.id
-        ORDER BY up.date_activated DESC;
-    """)
-
-    plans = cur.fetchall()
-
-    cur.close()
-    conn.close()
-
-    return render_template("admin/plans.html", plans=plans)
-    
-@app.route('/admin/logout')
-def admin_logout():
-    session.pop('admin_logged', None)
-    return redirect(url_for('admin_login'))
-
-
-    return render_template("admin/plans.html", plans=plans)
-if __name__ == "__main__":
-    init_db()
-    app.run(debug=True)
+        return render_template('profile.html', form=form)
+
+    # admin route (simple)
+    @app.route('/admin')
+    @login_required
+    def admin():
+        if not current_user.is_admin:
+            return "Forbidden", 403
+        users = User.query.order_by(User.created_at.desc()).limit(200).all()
+        tx = Transaction.query.order_by(Transaction.created_at.desc()).limit(200).all()
+        gifts = GiftCode.query.order_by(GiftCode.created_at.desc()).all()
+        return render_template('admin.html', users=users, tx=tx, gifts=gifts)
+
+    return app
+
+# entrypoint
+app = create_app()
+if __name__ == '__main__':
+    app.run(debug=(os.environ.get('FLASK_ENV') == 'development'))
