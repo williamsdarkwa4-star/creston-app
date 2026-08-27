@@ -59,7 +59,7 @@
             <div class="balance-content">
                 <span>Deposit Balance</span>
                 <strong>
-                    ${{ "%.2f"|format(current_user.deposit_balance) }}
+                    GHS{{ "%.2f"|format(current_user.deposit_balance) }}
                 </strong>
             </div>
         </div>
@@ -74,7 +74,7 @@
             <div class="balance-content">
                 <span>Income Balance</span>
                 <strong>
-                    ${{ "%.2f"|format(current_user.income_balance) }}
+                    GHS{{ "%.2f"|format(current_user.income_balance) }}
                 </strong>
             </div>
         </div>
@@ -89,7 +89,7 @@
             <div class="balance-content">
                 <span>Referral Balance</span>
                 <strong>
-                    ${{ "%.2f"|format(current_user.referral_balance) }}
+                    GHS{{ "%.2f"|format(current_user.referral_balance) }}
                 </strong>
             </div>
         </div>
@@ -98,13 +98,13 @@
         <!-- Withdrawable -->
         <div class="balance-card withdraw-card">
             <div class="balance-icon">
-                $
+               ¢ 
             </div>
 
             <div class="balance-content">
                 <span>Withdrawable</span>
                 <strong>
-                    ${{ "%.2f"|format(current_user.withdrawable_balance) }}
+                    GHS{{ "%.2f"|format(current_user.withdrawable_balance) }}
                 </strong>
             </div>
         </div>
