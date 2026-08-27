@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create investment</h2>
+<form method="post" class="card">
+  {{ form.hidden_tag() }}
+  <label>{{ form.plan.label }} {{ form.plan() }}</label>
+  <label>{{ form.amount.label }} {{ form.amount() }}</label>
+  <div class="row">
+    {{ form.submit(class_="btn") }}
+    <a class="btn ghost" href="{{ url_for('dashboard') }}">Cancel</a>
+  </div>
+</form>
+<p class="muted">Note: demo uses simple linear accrual, redeem to credit income balance.</p>
+{% endblock %}
