@@ -1,0 +1,1188 @@
+/* =========================================================
+   J-O-M-A GLOBAL STYLE
+   Orange + Blue Theme
+   Mobile First
+   ========================================================= */
+
+:root {
+    --blue: #0057b8;
+    --blue-dark: #003f88;
+    --blue-light: #087bea;
+    --orange: #ff7900;
+    --orange-dark: #e96800;
+
+    --white: #ffffff;
+    --background: #f4f7fb;
+    --card: #ffffff;
+
+    --text: #172033;
+    --text-light: #667085;
+    --border: #e4e9f0;
+
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #f59e0b;
+
+    --shadow: 0 10px 30px rgba(0, 60, 120, 0.10);
+    --radius: 16px;
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family:
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: var(--background);
+    color: var(--text);
+
+    min-height: 100vh;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MAIN MOBILE CONTAINER
+   ========================================================= */
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.navbar {
+    width: 100%;
+    background: var(--blue);
+
+    color: var(--white);
+
+    padding: 15px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.12);
+}
+
+.navbar .logo,
+.logo {
+    font-size: 21px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.navbar .logo span,
+.logo span {
+    color: var(--orange);
+}
+
+.navbar a {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--blue-light)
+        );
+
+    color: white;
+
+    padding: 35px 22px;
+
+    border-radius: 0 0 25px 25px;
+
+    text-align: center;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    background: rgba(255, 121, 0, 0.15);
+
+    border-radius: 50%;
+
+    right: -70px;
+    top: -70px;
+}
+
+.hero h1 {
+    font-size: 30px;
+    font-weight: 900;
+    margin-bottom: 10px;
+
+    position: relative;
+    z-index: 1;
+}
+
+.hero p {
+    font-size: 14px;
+    line-height: 1.6;
+
+    opacity: 0.95;
+
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =========================================================
+   ORANGE ACCENT
+   ========================================================= */
+
+.orange-line {
+    width: 65px;
+    height: 5px;
+
+    background: var(--orange);
+
+    border-radius: 20px;
+
+    margin: 15px auto;
+}
+
+.orange-text {
+    color: var(--orange);
+}
+
+.blue-text {
+    color: var(--blue);
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.card {
+    background: var(--card);
+
+    border-radius: var(--radius);
+
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+    box-shadow: var(--shadow);
+
+    border: 1px solid rgba(0, 87, 184, 0.05);
+}
+
+.card h2,
+.card h3 {
+    color: var(--blue);
+    margin-bottom: 8px;
+}
+
+.card p {
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   DASHBOARD HEADER
+   ========================================================= */
+
+.dashboard-header {
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--blue-light)
+        );
+
+    color: white;
+
+    padding: 25px 20px;
+
+    border-radius: 0 0 25px 25px;
+
+    margin-bottom: 18px;
+}
+
+.dashboard-header h1 {
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+.dashboard-header p {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+
+/* =========================================================
+   BALANCE CARD
+   ========================================================= */
+
+.balance-card {
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue-dark),
+            var(--blue)
+        );
+
+    color: white;
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 10px 25px rgba(0, 87, 184, 0.25);
+}
+
+.balance-card .label {
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+.balance-card .amount {
+    font-size: 32px;
+    font-weight: 900;
+
+    margin-top: 7px;
+}
+
+.balance-card .currency {
+    color: var(--orange);
+}
+
+
+/* =========================================================
+   STAT GRID
+   ========================================================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+.stat-card {
+    background: white;
+
+    padding: 18px 14px;
+
+    border-radius: 15px;
+
+    box-shadow: var(--shadow);
+
+    border-top: 3px solid var(--orange);
+}
+
+.stat-card .icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255, 121, 0, 0.12);
+
+    color: var(--orange);
+
+    border-radius: 10px;
+
+    margin-bottom: 10px;
+}
+
+.stat-card .label {
+    color: var(--text-light);
+    font-size: 12px;
+}
+
+.stat-card .value {
+    color: var(--blue);
+    font-size: 19px;
+    font-weight: 800;
+
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    min-height: 48px;
+
+    padding: 13px 18px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background: var(--orange);
+    color: white;
+
+    box-shadow:
+        0 6px 15px rgba(255, 121, 0, 0.25);
+}
+
+.btn-primary:hover {
+    background: var(--orange-dark);
+}
+
+.btn-blue {
+    background: var(--blue);
+    color: white;
+
+    box-shadow:
+        0 6px 15px rgba(0, 87, 184, 0.20);
+}
+
+.btn-blue:hover {
+    background: var(--blue-dark);
+}
+
+.btn-outline {
+    background: white;
+
+    color: var(--blue);
+
+    border: 2px solid var(--blue);
+}
+
+.btn-orange-outline {
+    background: white;
+
+    color: var(--orange);
+
+    border: 2px solid var(--orange);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+
+/* =========================================================
+   BUTTON GROUP
+   ========================================================= */
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-group .btn {
+    flex: 1;
+}
+
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+.form-card {
+    background: white;
+
+    padding: 25px 20px;
+
+    border-radius: 20px;
+
+    box-shadow: var(--shadow);
+
+    margin-top: 20px;
+}
+
+.form-card h2 {
+    text-align: center;
+
+    color: var(--blue);
+
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+
+    color: var(--text);
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-bottom: 7px;
+}
+
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+select,
+textarea {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    background: #fbfcff;
+
+    color: var(--text);
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: 0.2s ease;
+}
+
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--blue);
+
+    box-shadow:
+        0 0 0 3px rgba(0, 87, 184, 0.10);
+
+    background: white;
+}
+
+
+/* =========================================================
+   INPUT WITH ICON
+   ========================================================= */
+
+.input-group {
+    position: relative;
+}
+
+.input-group input {
+    padding-left: 42px;
+}
+
+.input-icon {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--blue);
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.alert {
+    padding: 13px 15px;
+
+    border-radius: 11px;
+
+    margin-bottom: 15px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.alert-success {
+    background: #ecfdf3;
+    color: #166534;
+    border-left: 4px solid var(--success);
+}
+
+.alert-danger {
+    background: #fef2f2;
+    color: #991b1b;
+    border-left: 4px solid var(--danger);
+}
+
+.alert-warning {
+    background: #fffbeb;
+    color: #92400e;
+    border-left: 4px solid var(--warning);
+}
+
+.alert-info {
+    background: #eff6ff;
+    color: #1e40af;
+    border-left: 4px solid var(--blue);
+}
+
+
+/* =========================================================
+   PLAN CARDS
+   ========================================================= */
+
+.plans {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.plan-card {
+    background: white;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow);
+
+    border: 1px solid #e8edf3;
+}
+
+.plan-header {
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--blue-light)
+        );
+
+    color: white;
+
+    padding: 18px;
+
+    position: relative;
+}
+
+.plan-header h3 {
+    font-size: 20px;
+    margin-bottom: 3px;
+}
+
+.plan-badge {
+    display: inline-block;
+
+    background: var(--orange);
+
+    color: white;
+
+    padding: 5px 10px;
+
+    border-radius: 30px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    margin-bottom: 8px;
+}
+
+.plan-body {
+    padding: 18px;
+}
+
+.plan-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid #edf0f4;
+
+    font-size: 13px;
+}
+
+.plan-row:last-child {
+    border-bottom: none;
+}
+
+.plan-row .label {
+    color: var(--text-light);
+}
+
+.plan-row .value {
+    color: var(--blue);
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   TRANSACTIONS
+   ========================================================= */
+
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.transaction {
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.transaction-left {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+.transaction-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 87, 184, 0.10);
+
+    color: var(--blue);
+}
+
+.transaction-title {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.transaction-date {
+    font-size: 11px;
+    color: var(--text-light);
+
+    margin-top: 3px;
+}
+
+.transaction-amount {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.amount-positive {
+    color: var(--success);
+}
+
+.amount-negative {
+    color: var(--danger);
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+
+    background: white;
+
+    border-radius: 15px;
+
+    box-shadow: var(--shadow);
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 500px;
+}
+
+th {
+    background: var(--blue);
+
+    color: white;
+
+    padding: 13px;
+
+    text-align: left;
+
+    font-size: 12px;
+}
+
+td {
+    padding: 13px;
+
+    border-bottom: 1px solid #edf0f4;
+
+    font-size: 12px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge {
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 30px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+.badge-blue {
+    background: #e8f2ff;
+    color: var(--blue);
+}
+
+.badge-orange {
+    background: #fff0e3;
+    color: var(--orange-dark);
+}
+
+.badge-success {
+    background: #eaf8ef;
+    color: #15803d;
+}
+
+.badge-danger {
+    background: #feecec;
+    color: #b91c1c;
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.profile-card {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 25px 20px;
+
+    box-shadow: var(--shadow);
+
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 12px;
+
+    background: var(--blue);
+
+    color: white;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+
+    font-weight: 900;
+
+    border: 5px solid #e6f0fb;
+}
+
+.profile-name {
+    font-size: 20px;
+
+    color: var(--blue);
+
+    font-weight: 800;
+}
+
+.profile-info {
+    margin-top: 20px;
+
+    text-align: left;
+}
+
+.profile-info-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #edf0f4;
+
+    font-size: 13px;
+}
+
+.profile-info-row:last-child {
+    border-bottom: none;
+}
+
+.profile-info-row .label {
+    color: var(--text-light);
+}
+
+.profile-info-row .value {
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   REFERRAL
+   ========================================================= */
+
+.referral-card {
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue),
+            var(--blue-light)
+        );
+
+    color: white;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 25px rgba(0, 87, 184, 0.20);
+}
+
+.referral-card h3 {
+    margin-bottom: 7px;
+}
+
+.referral-code {
+    background: white;
+
+    color: var(--blue);
+
+    padding: 13px;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+
+    margin: 15px 0;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+    text-align: center;
+
+    padding: 25px 15px;
+
+    color: #98a2b3;
+
+    font-size: 11px;
+}
+
+.footer span {
+    color: var(--orange);
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.loading {
+    width: 35px;
+    height: 35px;
+
+    border: 4px solid #e5edf7;
+
+    border-top-color: var(--orange);
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    background: white;
+
+    padding: 35px 20px;
+
+    border-radius: 18px;
+
+    text-align: center;
+
+    box-shadow: var(--shadow);
+}
+
+.empty-state .icon {
+    font-size: 38px;
+
+    color: var(--orange);
+
+    margin-bottom: 10px;
+}
+
+.empty-state h3 {
+    color: var(--blue);
+
+    margin-bottom: 7px;
+}
+
+.empty-state p {
+    color: var(--text-light);
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   DIVIDERS
+   ========================================================= */
+
+.divider {
+    height: 1px;
+
+    background: #edf0f4;
+
+    margin: 18px 0;
+}
+
+
+/* =========================================================
+   SPACING
+   ========================================================= */
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-small {
+    font-size: 12px;
+}
+
+.text-muted {
+    color: var(--text-light);
+}
+
+.text-blue {
+    color: var(--blue);
+}
+
+.text-orange {
+    color: var(--orange);
+}
+
+.text-success {
+    color: var(--success);
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 700px) {
+
+    body {
+        padding: 25px 0;
+    }
+
+    .page-container,
+    .container {
+        max-width: 450px;
+    }
+
+    .navbar {
+        border-radius: 18px 18px 0 0;
+    }
+
+    .hero {
+        border-radius: 20px;
+    }
+}
