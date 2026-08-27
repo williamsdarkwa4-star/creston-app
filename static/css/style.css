@@ -1,30 +1,35 @@
 /* =========================================================
-   J-O-M-A GLOBAL STYLE
-   Orange + Blue Theme
-   Mobile First
+   J-O-M-A — GLOBAL STYLESHEET
+   Orange + Blue | Mobile First
    ========================================================= */
 
 :root {
     --blue: #0057b8;
-    --blue-dark: #003f88;
+    --blue-dark: #003d82;
     --blue-light: #087bea;
+
     --orange: #ff7900;
-    --orange-dark: #e96800;
+    --orange-dark: #e86500;
+    --orange-light: #fff0e3;
 
     --white: #ffffff;
     --background: #f4f7fb;
     --card: #ffffff;
 
     --text: #172033;
-    --text-light: #667085;
-    --border: #e4e9f0;
+    --muted: #667085;
+    --border: #e2e8f0;
 
     --success: #16a34a;
     --danger: #dc2626;
     --warning: #f59e0b;
 
-    --shadow: 0 10px 30px rgba(0, 60, 120, 0.10);
+    --shadow: 0 8px 25px rgba(0, 60, 120, 0.10);
+    --shadow-blue: 0 8px 22px rgba(0, 87, 184, 0.20);
+    --shadow-orange: 0 8px 22px rgba(255, 121, 0, 0.22);
+
     --radius: 16px;
+    --radius-large: 22px;
 }
 
 
@@ -43,18 +48,26 @@ html {
 }
 
 body {
+    min-height: 100vh;
+
     margin: 0;
     padding: 0;
+
+    background: var(--background);
+
+    color: var(--text);
+
     font-family:
         Inter,
         Arial,
         Helvetica,
         sans-serif;
 
-    background: var(--background);
-    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+}
 
-    min-height: 100vh;
+img {
+    max-width: 100%;
 }
 
 a {
@@ -75,62 +88,80 @@ button {
 
 
 /* =========================================================
-   MAIN MOBILE CONTAINER
+   MAIN LAYOUT
    ========================================================= */
 
 .container {
     width: 100%;
     max-width: 450px;
+
     margin: 0 auto;
+
     padding: 15px;
 }
 
 .page-container {
     width: 100%;
     max-width: 450px;
-    margin: 0 auto;
+
     min-height: 100vh;
+
+    margin: 0 auto;
 }
 
 
 /* =========================================================
-   NAVBAR
+   NAVIGATION
    ========================================================= */
 
 .navbar {
     width: 100%;
-    background: var(--blue);
 
-    color: var(--white);
+    min-height: 62px;
 
-    padding: 15px 18px;
+    padding: 13px 18px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue-dark),
+            var(--blue)
+        );
+
+    color: var(--white);
+
     position: sticky;
     top: 0;
+
     z-index: 1000;
 
-    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.12);
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
-.navbar .logo,
 .logo {
     font-size: 21px;
+
     font-weight: 900;
+
     letter-spacing: 1px;
 }
 
-.navbar .logo span,
 .logo span {
     color: var(--orange);
 }
 
 .navbar a {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.navbar a:hover {
+    color: var(--orange);
 }
 
 
@@ -139,24 +170,44 @@ button {
    ========================================================= */
 
 .hero {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 38px 22px;
+
+    text-align: center;
+
+    color: var(--white);
+
     background:
         linear-gradient(
             135deg,
+            var(--blue-dark),
             var(--blue),
             var(--blue-light)
         );
 
-    color: white;
+    border-radius: 0 0 26px 26px;
 
-    padding: 35px 22px;
+    box-shadow:
+        0 8px 25px rgba(0, 87, 184, 0.18);
+}
 
-    border-radius: 0 0 25px 25px;
+.hero::before {
+    content: "";
 
-    text-align: center;
+    position: absolute;
 
-    position: relative;
+    width: 170px;
+    height: 170px;
 
-    overflow: hidden;
+    right: -75px;
+    top: -75px;
+
+    background: rgba(255, 121, 0, 0.18);
+
+    border-radius: 50%;
 }
 
 .hero::after {
@@ -164,50 +215,55 @@ button {
 
     position: absolute;
 
-    width: 180px;
-    height: 180px;
+    width: 100px;
+    height: 100px;
 
-    background: rgba(255, 121, 0, 0.15);
+    left: -55px;
+    bottom: -55px;
+
+    background: rgba(255, 255, 255, 0.08);
 
     border-radius: 50%;
-
-    right: -70px;
-    top: -70px;
 }
 
 .hero h1 {
-    font-size: 30px;
-    font-weight: 900;
-    margin-bottom: 10px;
-
     position: relative;
-    z-index: 1;
+    z-index: 2;
+
+    font-size: 30px;
+
+    font-weight: 900;
+
+    margin-bottom: 10px;
 }
 
 .hero p {
+    position: relative;
+    z-index: 2;
+
     font-size: 14px;
+
     line-height: 1.6;
 
     opacity: 0.95;
 
-    position: relative;
-    z-index: 1;
+    margin-bottom: 10px;
 }
 
 
 /* =========================================================
-   ORANGE ACCENT
+   ORANGE ACCENTS
    ========================================================= */
 
 .orange-line {
     width: 65px;
     height: 5px;
 
+    margin: 15px auto;
+
     background: var(--orange);
 
     border-radius: 20px;
-
-    margin: 15px auto;
 }
 
 .orange-text {
@@ -220,32 +276,72 @@ button {
 
 
 /* =========================================================
+   INDEX PAGE PHOTO
+   ========================================================= */
+
+.index-photo {
+    width: 100%;
+
+    padding: 15px;
+
+    background: var(--background);
+}
+
+.index-photo img {
+    display: block;
+
+    width: 100%;
+    max-width: 450px;
+
+    height: 230px;
+
+    margin: 0 auto;
+
+    object-fit: cover;
+
+    border-radius: 19px;
+
+    border: 3px solid var(--white);
+
+    box-shadow: var(--shadow);
+}
+
+
+/* =========================================================
    CARDS
    ========================================================= */
 
 .card {
-    background: var(--card);
-
-    border-radius: var(--radius);
+    width: 100%;
 
     padding: 20px;
 
     margin-bottom: 15px;
 
-    box-shadow: var(--shadow);
+    background: var(--card);
 
-    border: 1px solid rgba(0, 87, 184, 0.05);
+    border: 1px solid rgba(0, 87, 184, 0.06);
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
 }
 
 .card h2,
 .card h3 {
     color: var(--blue);
+
     margin-bottom: 8px;
+
+    font-weight: 800;
 }
 
 .card p {
-    color: var(--text-light);
+    color: var(--muted);
+
     line-height: 1.6;
+
+    font-size: 14px;
 }
 
 
@@ -254,29 +350,33 @@ button {
    ========================================================= */
 
 .dashboard-header {
-    background:
-        linear-gradient(
-            135deg,
-            var(--blue),
-            var(--blue-light)
-        );
-
-    color: white;
+    margin-bottom: 18px;
 
     padding: 25px 20px;
 
-    border-radius: 0 0 25px 25px;
+    color: white;
 
-    margin-bottom: 18px;
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue-dark),
+            var(--blue-light)
+        );
+
+    border-radius: 0 0 25px 25px;
 }
 
 .dashboard-header h1 {
     font-size: 25px;
+
+    font-weight: 900;
+
     margin-bottom: 5px;
 }
 
 .dashboard-header p {
     font-size: 13px;
+
     opacity: 0.9;
 }
 
@@ -286,6 +386,12 @@ button {
    ========================================================= */
 
 .balance-card {
+    padding: 24px;
+
+    margin-bottom: 18px;
+
+    color: white;
+
     background:
         linear-gradient(
             135deg,
@@ -293,28 +399,23 @@ button {
             var(--blue)
         );
 
-    color: white;
-
     border-radius: 20px;
 
-    padding: 24px;
-
-    margin-bottom: 18px;
-
-    box-shadow:
-        0 10px 25px rgba(0, 87, 184, 0.25);
+    box-shadow: var(--shadow-blue);
 }
 
 .balance-card .label {
     font-size: 13px;
+
     opacity: 0.85;
 }
 
 .balance-card .amount {
-    font-size: 32px;
-    font-weight: 900;
-
     margin-top: 7px;
+
+    font-size: 32px;
+
+    font-weight: 900;
 }
 
 .balance-card .currency {
@@ -323,7 +424,7 @@ button {
 
 
 /* =========================================================
-   STAT GRID
+   STATISTICS
    ========================================================= */
 
 .stats-grid {
@@ -337,15 +438,15 @@ button {
 }
 
 .stat-card {
-    background: white;
-
     padding: 18px 14px;
+
+    background: white;
 
     border-radius: 15px;
 
-    box-shadow: var(--shadow);
-
     border-top: 3px solid var(--orange);
+
+    box-shadow: var(--shadow);
 }
 
 .stat-card .icon {
@@ -356,26 +457,29 @@ button {
     align-items: center;
     justify-content: center;
 
-    background: rgba(255, 121, 0, 0.12);
+    margin-bottom: 10px;
 
     color: var(--orange);
 
-    border-radius: 10px;
+    background: var(--orange-light);
 
-    margin-bottom: 10px;
+    border-radius: 10px;
 }
 
 .stat-card .label {
-    color: var(--text-light);
+    color: var(--muted);
+
     font-size: 12px;
 }
 
 .stat-card .value {
-    color: var(--blue);
-    font-size: 19px;
-    font-weight: 800;
-
     margin-top: 4px;
+
+    color: var(--blue);
+
+    font-size: 19px;
+
+    font-weight: 800;
 }
 
 
@@ -384,16 +488,16 @@ button {
    ========================================================= */
 
 .btn {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
     width: 100%;
 
     min-height: 48px;
 
     padding: 13px 18px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
 
     border: none;
 
@@ -401,66 +505,100 @@ button {
 
     font-size: 14px;
 
-    font-weight: 700;
+    font-weight: 800;
 
     transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
+        0.2s ease;
 }
 
 .btn:active {
     transform: scale(0.98);
 }
 
+
+/* ORANGE BUTTON */
+
 .btn-primary {
-    background: var(--orange);
     color: white;
 
-    box-shadow:
-        0 6px 15px rgba(255, 121, 0, 0.25);
+    background: var(--orange);
+
+    box-shadow: var(--shadow-orange);
 }
 
 .btn-primary:hover {
     background: var(--orange-dark);
+
+    transform: translateY(-1px);
 }
 
+
+/* BLUE BUTTON */
+
 .btn-blue {
-    background: var(--blue);
     color: white;
 
-    box-shadow:
-        0 6px 15px rgba(0, 87, 184, 0.20);
+    background: var(--blue);
+
+    box-shadow: var(--shadow-blue);
 }
 
 .btn-blue:hover {
     background: var(--blue-dark);
+
+    transform: translateY(-1px);
 }
 
-.btn-outline {
-    background: white;
 
+/* OUTLINE BUTTON */
+
+.btn-outline {
     color: var(--blue);
+
+    background: white;
 
     border: 2px solid var(--blue);
 }
 
-.btn-orange-outline {
-    background: white;
+.btn-outline:hover {
+    color: white;
 
+    background: var(--blue);
+}
+
+
+/* ORANGE OUTLINE */
+
+.btn-orange-outline {
     color: var(--orange);
+
+    background: white;
 
     border: 2px solid var(--orange);
 }
 
-.btn-danger {
-    background: var(--danger);
+.btn-orange-outline:hover {
     color: white;
+
+    background: var(--orange);
 }
 
-.btn-success {
-    background: var(--success);
+
+/* DANGER */
+
+.btn-danger {
     color: white;
+
+    background: var(--danger);
+}
+
+
+/* SUCCESS */
+
+.btn-success {
+    color: white;
+
+    background: var(--success);
 }
 
 
@@ -469,7 +607,10 @@ button {
    ========================================================= */
 
 .btn-group {
+    width: 100%;
+
     display: flex;
+
     gap: 10px;
 }
 
@@ -483,23 +624,27 @@ button {
    ========================================================= */
 
 .form-card {
-    background: white;
+    width: 100%;
 
     padding: 25px 20px;
+
+    margin-top: 20px;
+
+    background: white;
 
     border-radius: 20px;
 
     box-shadow: var(--shadow);
-
-    margin-top: 20px;
 }
 
 .form-card h2 {
-    text-align: center;
+    margin-bottom: 20px;
 
     color: var(--blue);
 
-    margin-bottom: 20px;
+    text-align: center;
+
+    font-weight: 900;
 }
 
 .form-group {
@@ -509,13 +654,13 @@ button {
 .form-group label {
     display: block;
 
+    margin-bottom: 7px;
+
     color: var(--text);
 
     font-size: 13px;
 
     font-weight: 700;
-
-    margin-bottom: 7px;
 }
 
 .form-control,
@@ -528,15 +673,17 @@ select,
 textarea {
     width: 100%;
 
-    padding: 13px 14px;
+    min-height: 46px;
+
+    padding: 12px 14px;
+
+    color: var(--text);
+
+    background: #fbfcff;
 
     border: 1px solid var(--border);
 
     border-radius: 11px;
-
-    background: #fbfcff;
-
-    color: var(--text);
 
     outline: none;
 
@@ -545,21 +692,27 @@ textarea {
     transition: 0.2s ease;
 }
 
+textarea {
+    min-height: 100px;
+
+    resize: vertical;
+}
+
 .form-control:focus,
 input:focus,
 select:focus,
 textarea:focus {
+    background: white;
+
     border-color: var(--blue);
 
     box-shadow:
         0 0 0 3px rgba(0, 87, 184, 0.10);
-
-    background: white;
 }
 
 
 /* =========================================================
-   INPUT WITH ICON
+   INPUT ICON
    ========================================================= */
 
 .input-group {
@@ -591,9 +744,9 @@ textarea:focus {
 .alert {
     padding: 13px 15px;
 
-    border-radius: 11px;
-
     margin-bottom: 15px;
+
+    border-radius: 11px;
 
     font-size: 13px;
 
@@ -601,88 +754,101 @@ textarea:focus {
 }
 
 .alert-success {
-    background: #ecfdf3;
     color: #166534;
+
+    background: #ecfdf3;
+
     border-left: 4px solid var(--success);
 }
 
 .alert-danger {
-    background: #fef2f2;
     color: #991b1b;
+
+    background: #fef2f2;
+
     border-left: 4px solid var(--danger);
 }
 
 .alert-warning {
-    background: #fffbeb;
     color: #92400e;
+
+    background: #fffbeb;
+
     border-left: 4px solid var(--warning);
 }
 
 .alert-info {
-    background: #eff6ff;
     color: #1e40af;
+
+    background: #eff6ff;
+
     border-left: 4px solid var(--blue);
 }
 
 
 /* =========================================================
-   PLAN CARDS
+   PLAN SECTION
    ========================================================= */
 
 .plans {
     display: flex;
+
     flex-direction: column;
+
     gap: 15px;
 }
 
 .plan-card {
+    overflow: hidden;
+
     background: white;
+
+    border: 1px solid #e8edf3;
 
     border-radius: 18px;
 
-    overflow: hidden;
-
     box-shadow: var(--shadow);
-
-    border: 1px solid #e8edf3;
 }
 
 .plan-header {
+    position: relative;
+
+    padding: 18px;
+
+    color: white;
+
     background:
         linear-gradient(
             135deg,
             var(--blue),
             var(--blue-light)
         );
-
-    color: white;
-
-    padding: 18px;
-
-    position: relative;
 }
 
 .plan-header h3 {
-    font-size: 20px;
     margin-bottom: 3px;
+
+    font-size: 20px;
+
+    font-weight: 900;
 }
 
 .plan-badge {
     display: inline-block;
 
-    background: var(--orange);
+    padding: 5px 10px;
+
+    margin-bottom: 8px;
 
     color: white;
 
-    padding: 5px 10px;
+    background: var(--orange);
 
     border-radius: 30px;
 
     font-size: 11px;
 
-    font-weight: 800;
-
-    margin-bottom: 8px;
+    font-weight: 900;
 }
 
 .plan-body {
@@ -691,6 +857,8 @@ textarea:focus {
 
 .plan-row {
     display: flex;
+
+    align-items: center;
 
     justify-content: space-between;
 
@@ -706,11 +874,12 @@ textarea:focus {
 }
 
 .plan-row .label {
-    color: var(--text-light);
+    color: var(--muted);
 }
 
 .plan-row .value {
     color: var(--blue);
+
     font-weight: 800;
 }
 
@@ -721,29 +890,32 @@ textarea:focus {
 
 .transaction-list {
     display: flex;
+
     flex-direction: column;
 
     gap: 10px;
 }
 
 .transaction {
-    background: white;
-
-    border-radius: 14px;
-
-    padding: 14px;
-
     display: flex;
 
     align-items: center;
 
     justify-content: space-between;
 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 14px;
+
+    background: white;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .transaction-left {
     display: flex;
+
     align-items: center;
 
     gap: 11px;
@@ -753,31 +925,35 @@ textarea:focus {
     width: 40px;
     height: 40px;
 
-    border-radius: 10px;
-
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    background: rgba(0, 87, 184, 0.10);
-
     color: var(--blue);
+
+    background: #eaf3ff;
+
+    border-radius: 10px;
 }
 
 .transaction-title {
     font-size: 13px;
+
     font-weight: 700;
 }
 
 .transaction-date {
-    font-size: 11px;
-    color: var(--text-light);
-
     margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 11px;
 }
 
 .transaction-amount {
     font-size: 14px;
+
     font-weight: 800;
 }
 
@@ -796,6 +972,7 @@ textarea:focus {
 
 .table-wrapper {
     width: 100%;
+
     overflow-x: auto;
 
     background: white;
@@ -808,17 +985,17 @@ textarea:focus {
 table {
     width: 100%;
 
-    border-collapse: collapse;
-
     min-width: 500px;
+
+    border-collapse: collapse;
 }
 
 th {
-    background: var(--blue);
+    padding: 13px;
 
     color: white;
 
-    padding: 13px;
+    background: var(--blue);
 
     text-align: left;
 
@@ -855,23 +1032,27 @@ tr:last-child td {
 }
 
 .badge-blue {
-    background: #e8f2ff;
     color: var(--blue);
+
+    background: #e8f2ff;
 }
 
 .badge-orange {
-    background: #fff0e3;
     color: var(--orange-dark);
+
+    background: var(--orange-light);
 }
 
 .badge-success {
-    background: #eaf8ef;
     color: #15803d;
+
+    background: #eaf8ef;
 }
 
 .badge-danger {
-    background: #feecec;
     color: #b91c1c;
+
+    background: #feecec;
 }
 
 
@@ -880,46 +1061,47 @@ tr:last-child td {
    ========================================================= */
 
 .profile-card {
+    padding: 25px 20px;
+
+    text-align: center;
+
     background: white;
 
     border-radius: 20px;
 
-    padding: 25px 20px;
-
     box-shadow: var(--shadow);
-
-    text-align: center;
 }
 
 .profile-avatar {
     width: 75px;
     height: 75px;
 
-    margin: 0 auto 12px;
+    display: flex;
 
-    background: var(--blue);
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 12px;
 
     color: white;
 
-    border-radius: 50%;
+    background: var(--blue);
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 5px solid #e6f0fb;
+
+    border-radius: 50%;
 
     font-size: 28px;
 
     font-weight: 900;
-
-    border: 5px solid #e6f0fb;
 }
 
 .profile-name {
-    font-size: 20px;
-
     color: var(--blue);
 
-    font-weight: 800;
+    font-size: 20px;
+
+    font-weight: 900;
 }
 
 .profile-info {
@@ -945,7 +1127,7 @@ tr:last-child td {
 }
 
 .profile-info-row .label {
-    color: var(--text-light);
+    color: var(--muted);
 }
 
 .profile-info-row .value {
@@ -958,43 +1140,83 @@ tr:last-child td {
    ========================================================= */
 
 .referral-card {
-    background:
-        linear-gradient(
-            135deg,
-            var(--blue),
-            var(--blue-light)
-        );
+    padding: 22px;
 
     color: white;
 
-    padding: 22px;
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue-dark),
+            var(--blue-light)
+        );
 
     border-radius: 18px;
 
-    box-shadow:
-        0 10px 25px rgba(0, 87, 184, 0.20);
+    box-shadow: var(--shadow-blue);
 }
 
 .referral-card h3 {
     margin-bottom: 7px;
+
+    font-weight: 900;
 }
 
 .referral-code {
-    background: white;
+    padding: 13px;
+
+    margin: 15px 0;
 
     color: var(--blue);
 
-    padding: 13px;
+    background: white;
 
     border-radius: 10px;
 
     text-align: center;
 
-    font-weight: 900;
-
     letter-spacing: 2px;
 
-    margin: 15px 0;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 35px 20px;
+
+    text-align: center;
+
+    background: white;
+
+    border-radius: 18px;
+
+    box-shadow: var(--shadow);
+}
+
+.empty-state .icon {
+    margin-bottom: 10px;
+
+    color: var(--orange);
+
+    font-size: 38px;
+}
+
+.empty-state h3 {
+    margin-bottom: 7px;
+
+    color: var(--blue);
+}
+
+.empty-state p {
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.6;
 }
 
 
@@ -1003,11 +1225,11 @@ tr:last-child td {
    ========================================================= */
 
 .footer {
-    text-align: center;
-
     padding: 25px 15px;
 
     color: #98a2b3;
+
+    text-align: center;
 
     font-size: 11px;
 }
@@ -1015,7 +1237,7 @@ tr:last-child td {
 .footer span {
     color: var(--orange);
 
-    font-weight: 700;
+    font-weight: 800;
 }
 
 
@@ -1027,6 +1249,8 @@ tr:last-child td {
     width: 35px;
     height: 35px;
 
+    margin: 20px auto;
+
     border: 4px solid #e5edf7;
 
     border-top-color: var(--orange);
@@ -1034,8 +1258,6 @@ tr:last-child td {
     border-radius: 50%;
 
     animation: spin 0.8s linear infinite;
-
-    margin: 20px auto;
 }
 
 @keyframes spin {
@@ -1046,59 +1268,22 @@ tr:last-child td {
 
 
 /* =========================================================
-   EMPTY STATE
-   ========================================================= */
-
-.empty-state {
-    background: white;
-
-    padding: 35px 20px;
-
-    border-radius: 18px;
-
-    text-align: center;
-
-    box-shadow: var(--shadow);
-}
-
-.empty-state .icon {
-    font-size: 38px;
-
-    color: var(--orange);
-
-    margin-bottom: 10px;
-}
-
-.empty-state h3 {
-    color: var(--blue);
-
-    margin-bottom: 7px;
-}
-
-.empty-state p {
-    color: var(--text-light);
-
-    font-size: 13px;
-
-    line-height: 1.6;
-}
-
-
-/* =========================================================
-   DIVIDERS
+   DIVIDER
    ========================================================= */
 
 .divider {
+    width: 100%;
+
     height: 1px;
 
-    background: #edf0f4;
-
     margin: 18px 0;
+
+    background: #edf0f4;
 }
 
 
 /* =========================================================
-   SPACING
+   UTILITY CLASSES
    ========================================================= */
 
 .mt-10 {
@@ -1125,11 +1310,6 @@ tr:last-child td {
     margin-bottom: 20px;
 }
 
-
-/* =========================================================
-   TEXT
-   ========================================================= */
-
 .text-center {
     text-align: center;
 }
@@ -1143,7 +1323,7 @@ tr:last-child td {
 }
 
 .text-muted {
-    color: var(--text-light);
+    color: var(--muted);
 }
 
 .text-blue {
@@ -1164,7 +1344,35 @@ tr:last-child td {
 
 
 /* =========================================================
-   DESKTOP
+   MOBILE BUTTON STACK
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .btn-group .btn {
+        width: 100%;
+    }
+
+    .hero h1 {
+        font-size: 27px;
+    }
+
+    .hero {
+        padding: 32px 18px;
+    }
+
+    .balance-card .amount {
+        font-size: 28px;
+    }
+}
+
+
+/* =========================================================
+   LARGER SCREENS
    ========================================================= */
 
 @media (min-width: 700px) {
@@ -1179,6 +1387,10 @@ tr:last-child td {
     }
 
     .navbar {
+        max-width: 450px;
+
+        margin: 0 auto;
+
         border-radius: 18px 18px 0 0;
     }
 
