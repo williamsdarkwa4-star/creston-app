@@ -1,54 +1,1156 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Dashboard</h2>
-<div class="card balance">
-  <p>Welcome, <strong>{{ current_user.username }}</strong> • ID: {{ current_user.id }} • Ref: <strong>{{ current_user.referral_code }}</strong></p>
-  <div class="balances">
-    <div><small>Deposit</small><div class="big">${{ "%.2f"|format(current_user.deposit_balance) }}</div></div>
-    <div><small>Income</small><div class="big">${{ "%.2f"|format(current_user.income_balance) }}</div></div>
-    <div><small>Referral</small><div class="big">${{ "%.2f"|format(current_user.referral_balance) }}</div></div>
-    <div><small>Withdrawable</small><div class="big">${{ "%.2f"|format(current_user.withdrawable_balance) }}</div></div>
-  </div>
-  <p class="muted">Use Deposit to credit demo funds (server-side only).</p>
-  <p><a class="btn" href="{{ url_for('deposit') }}">Deposit</a> <a class="btn" href="{{ url_for('invest') }}">Invest</a> <a class="btn" href="{{ url_for('gift_code') }}">Gift Code</a></p>
+
+<div class="dashboard-page"><!-- Dashboard Header -->
+<section class="dashboard-header">
+    <div class="dashboard-welcome">
+        <span class="welcome-label">WELCOME BACK</span>
+        <h1>{{ current_user.username }}</h1>
+        <p>Your account overview</p>
+    </div>
+
+    <div class="user-ref">
+        <span>Account ID</span>
+        <strong>#{{ current_user.id }}</strong>
+    </div>
+</section>
+
+
+<!-- Account Information -->
+<section class="account-card">
+
+    <div class="account-top">
+        <div>
+            <span class="section-label">REFERRAL CODE</span>
+            <strong class="referral-code">
+                {{ current_user.referral_code }}
+            </strong>
+        </div>
+
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            Active
+        </div>
+    </div>
+
+</section>
+
+
+<!-- Balance Overview -->
+<section class="balance-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="section-label">ACCOUNT BALANCES</span>
+            <h2>Financial Overview</h2>
+        </div>
+    </div>
+
+
+    <div class="balance-grid">
+
+        <!-- Deposit -->
+        <div class="balance-card deposit-card">
+            <div class="balance-icon">
+                ↓
+            </div>
+
+            <div class="balance-content">
+                <span>Deposit Balance</span>
+                <strong>
+                    ${{ "%.2f"|format(current_user.deposit_balance) }}
+                </strong>
+            </div>
+        </div>
+
+
+        <!-- Income -->
+        <div class="balance-card income-card">
+            <div class="balance-icon">
+                +
+            </div>
+
+            <div class="balance-content">
+                <span>Income Balance</span>
+                <strong>
+                    ${{ "%.2f"|format(current_user.income_balance) }}
+                </strong>
+            </div>
+        </div>
+
+
+        <!-- Referral -->
+        <div class="balance-card referral-card">
+            <div class="balance-icon">
+                ↗
+            </div>
+
+            <div class="balance-content">
+                <span>Referral Balance</span>
+                <strong>
+                    ${{ "%.2f"|format(current_user.referral_balance) }}
+                </strong>
+            </div>
+        </div>
+
+
+        <!-- Withdrawable -->
+        <div class="balance-card withdraw-card">
+            <div class="balance-icon">
+                $
+            </div>
+
+            <div class="balance-content">
+                <span>Withdrawable</span>
+                <strong>
+                    ${{ "%.2f"|format(current_user.withdrawable_balance) }}
+                </strong>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Quick Actions -->
+<section class="quick-actions">
+
+    <div class="section-heading">
+        <div>
+            <span class="section-label">QUICK ACTIONS</span>
+            <h2>Manage Account</h2>
+        </div>
+    </div>
+
+    <div class="action-grid">
+
+        <a href="{{ url_for('deposit') }}" class="action-card">
+            <div class="action-icon orange-icon">+</div>
+            <div>
+                <strong>Deposit</strong>
+                <span>Add funds</span>
+            </div>
+            <b>›</b>
+        </a>
+
+        <a href="{{ url_for('invest') }}" class="action-card">
+            <div class="action-icon blue-icon">↗</div>
+            <div>
+                <strong>Invest</strong>
+                <span>View investments</span>
+            </div>
+            <b>›</b>
+        </a>
+
+        <a href="{{ url_for('gift_code') }}" class="action-card">
+            <div class="action-icon orange-icon">🎁</div>
+            <div>
+                <strong>Gift Code</strong>
+                <span>Redeem a code</span>
+            </div>
+            <b>›</b>
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- Active Investments -->
+<section class="dashboard-card">
+
+    <div class="card-heading">
+        <div>
+            <span class="section-label">PORTFOLIO</span>
+            <h2>Active Investments</h2>
+        </div>
+
+        <span class="count-badge">
+            {{ invs|length }}
+        </span>
+    </div>
+
+
+    {% if invs|length == 0 %}
+
+        <div class="empty-state">
+            <div class="empty-icon">📊</div>
+
+            <h3>No investments yet</h3>
+
+            <p>
+                Your active investments will appear here
+                once you create one.
+            </p>
+
+            <a href="{{ url_for('invest') }}" class="btn btn-primary">
+                Start Investing
+            </a>
+        </div>
+
+    {% else %}
+
+        <div class="investment-list">
+
+            {% for inv, status in invs %}
+
+            <div class="investment-item">
+
+                <div class="investment-top">
+
+                    <div>
+                        <span class="investment-label">
+                            INVESTMENT PLAN
+                        </span>
+
+                        <h3>{{ inv.plan_name }}</h3>
+                    </div>
+
+                    {% if inv.redeemed %}
+                        <span class="investment-status redeemed">
+                            Redeemed
+                        </span>
+                    {% elif status.matured %}
+                        <span class="investment-status matured">
+                            Matured
+                        </span>
+                    {% else %}
+                        <span class="investment-status active">
+                            Active
+                        </span>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="investment-details">
+
+                    <div>
+                        <span>Amount</span>
+                        <strong>
+                            ${{ "%.2f"|format(inv.amount) }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>APY</span>
+                        <strong>
+                            {{ inv.apy }}%
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Duration</span>
+                        <strong>
+                            {{ inv.duration_days }} days
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Elapsed</span>
+                        <strong>
+                            {{ status.elapsed_days }} days
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="accrued-box">
+
+                    <span>Accrued Amount</span>
+
+                    <strong>
+                        ${{ "%.2f"|format(status.accrued) }}
+                    </strong>
+
+                </div>
+
+
+                {% if not inv.redeemed and status.matured %}
+
+                <form
+                    action="{{ url_for('redeem', inv_id=inv.id) }}"
+                    method="post"
+                    class="redeem-form"
+                >
+                    {{ csrf_token() }}
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Redeem Investment
+                    </button>
+                </form>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- Recent Transactions -->
+<section class="dashboard-card">
+
+    <div class="card-heading">
+
+        <div>
+            <span class="section-label">ACCOUNT ACTIVITY</span>
+            <h2>Recent Transactions</h2>
+        </div>
+
+        <span class="activity-icon">↔</span>
+
+    </div>
+
+
+    {% if tx|length == 0 %}
+
+        <div class="empty-state compact">
+            <div class="empty-icon">🧾</div>
+
+            <h3>No transactions</h3>
+
+            <p>
+                Your recent account activity will appear here.
+            </p>
+        </div>
+
+    {% else %}
+
+        <div class="transaction-list">
+
+            {% for t in tx %}
+
+            <div class="transaction-item">
+
+                <div class="transaction-icon">
+                    {% if t.amount >= 0 %}
+                        +
+                    {% else %}
+                        −
+                    {% endif %}
+                </div>
+
+                <div class="transaction-info">
+
+                    <strong>
+                        {{ t.type }}
+                    </strong>
+
+                    <span>
+                        {{ t.created_at }}
+
+                        {% if t.note %}
+                            • {{ t.note }}
+                        {% endif %}
+                    </span>
+
+                </div>
+
+                <div
+                    class="
+                        transaction-amount
+                        {% if t.amount >= 0 %}
+                            positive
+                        {% else %}
+                            negative
+                        {% endif %}
+                    "
+                >
+                    {% if t.amount >= 0 %}+{% else %}-{% endif %}${{
+                        "%.2f"|format(t.amount|abs)
+                    }}
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- Demo Notice -->
+<div class="dashboard-notice">
+    <span>ⓘ</span>
+    <p>
+        Deposit and account balances shown here are managed
+        by the application server.
+    </p>
 </div>
 
-<div class="grid">
-  <div class="card">
-    <h3>Active investments</h3>
-    {% if invs|length == 0 %}<p>No investments yet.</p>{% else %}
-      <ul class="list">
-      {% for inv, status in invs %}
-        <li>
-          <div><strong>{{ inv.plan_name }}</strong> • ${{ "%.2f"|format(inv.amount) }} • {{ inv.apy }}% • {{ inv.duration_days }}d {% if inv.redeemed %}(redeemed){% endif %}</div>
-          <div>
-            <small>Elapsed {{ status.elapsed_days }}d</small>
-            <div>Accrued: ${{ "%.2f"|format(status.accrued) }}</div>
-            {% if not inv.redeemed and status.matured %}
-              <form action="{{ url_for('redeem', inv_id=inv.id) }}" method="post" style="display:inline">
-                {{ csrf_token() }}
-                <button class="btn">Redeem</button>
-              </form>
-            {% endif %}
-          </div>
-        </li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  </div>
+</div><style>
 
-  <div class="card">
-    <h3>Recent transactions</h3>
-    {% if tx|length == 0 %}<p>No transactions</p>{% else %}
-      <ul class="list">
-        {% for t in tx %}
-          <li>
-            <div>{{ t.type }} • ${{ "%.2f"|format(t.amount) }}</div>
-            <div class="muted">{{ t.created_at }} {% if t.note %}• {{ t.note }}{% endif %}</div>
-          </li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  </div>
-</div>
-{% endblock %}
+/* ================================
+   DASHBOARD
+================================ */
+
+.dashboard-page {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding-bottom: 30px;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.dashboard-header {
+    background: linear-gradient(
+        135deg,
+        #003f88,
+        #0057b8,
+        #087bea
+    );
+
+    color: #fff;
+
+    padding: 25px 20px;
+
+    border-radius: 0 0 25px 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    box-shadow: 0 10px 25px rgba(0, 60, 120, 0.18);
+}
+
+.welcome-label,
+.section-label {
+    display: block;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+    color: #7b8794;
+
+    margin-bottom: 5px;
+}
+
+.dashboard-header .welcome-label {
+    color: rgba(255,255,255,.72);
+}
+
+.dashboard-header h1 {
+    margin: 0;
+
+    font-size: 25px;
+
+    font-weight: 900;
+}
+
+.dashboard-header p {
+    margin: 4px 0 0;
+
+    font-size: 12px;
+
+    opacity: .85;
+}
+
+.user-ref {
+    text-align: right;
+}
+
+.user-ref span {
+    display: block;
+
+    font-size: 10px;
+
+    opacity: .7;
+}
+
+.user-ref strong {
+    font-size: 14px;
+}
+
+
+/* ================================
+   ACCOUNT CARD
+================================ */
+
+.account-card {
+    background: #fff;
+
+    margin: -1px 15px 20px;
+
+    padding: 16px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 8px 25px rgba(0,60,120,.09);
+
+    position: relative;
+
+    z-index: 2;
+}
+
+.account-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.referral-code {
+    display: block;
+
+    color: #0057b8;
+
+    font-size: 16px;
+
+    letter-spacing: 1.5px;
+}
+
+.status-badge {
+    background: #eaf8ef;
+
+    color: #15803d;
+
+    padding: 6px 10px;
+
+    border-radius: 30px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+.status-dot {
+    display: inline-block;
+
+    width: 6px;
+    height: 6px;
+
+    background: #16a34a;
+
+    border-radius: 50%;
+
+    margin-right: 4px;
+}
+
+
+/* ================================
+   SECTION HEADINGS
+================================ */
+
+.balance-section,
+.quick-actions {
+    padding: 0 15px;
+
+    margin-bottom: 22px;
+}
+
+.section-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+.section-heading h2,
+.card-heading h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+
+/* ================================
+   BALANCES
+================================ */
+
+.balance-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+}
+
+.balance-card {
+    background: #fff;
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 6px 20px rgba(0,60,120,.07);
+
+    border-top: 3px solid #0057b8;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.balance-card:nth-child(even) {
+    border-top-color: #ff7900;
+}
+
+.balance-icon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    background: #eaf2ff;
+
+    color: #0057b8;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 900;
+
+    font-size: 17px;
+}
+
+.balance-card:nth-child(even) .balance-icon {
+    background: #fff0e3;
+
+    color: #ff7900;
+}
+
+.balance-content {
+    min-width: 0;
+}
+
+.balance-content span {
+    display: block;
+
+    color: #667085;
+
+    font-size: 10px;
+
+    margin-bottom: 3px;
+}
+
+.balance-content strong {
+    display: block;
+
+    color: #172033;
+
+    font-size: 16px;
+
+    font-weight: 900;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ================================
+   ACTIONS
+================================ */
+
+.action-grid {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.action-card {
+    background: #fff;
+
+    padding: 13px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    box-shadow: 0 5px 18px rgba(0,60,120,.06);
+
+    transition: transform .2s ease;
+}
+
+.action-card:active {
+    transform: scale(.98);
+}
+
+.action-icon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+
+    font-weight: 900;
+}
+
+.orange-icon {
+    background: #fff0e3;
+
+    color: #ff7900;
+}
+
+.blue-icon {
+    background: #e8f2ff;
+
+    color: #0057b8;
+}
+
+.action-card div:nth-child(2) {
+    flex: 1;
+}
+
+.action-card strong {
+    display: block;
+
+    color: #172033;
+
+    font-size: 14px;
+}
+
+.action-card span {
+    display: block;
+
+    color: #667085;
+
+    font-size: 11px;
+
+    margin-top: 2px;
+}
+
+.action-card b {
+    color: #98a2b3;
+
+    font-size: 23px;
+}
+
+
+/* ================================
+   DASHBOARD CARDS
+================================ */
+
+.dashboard-card {
+    background: #fff;
+
+    margin: 0 15px 16px;
+
+    padding: 18px;
+
+    border-radius: 17px;
+
+    box-shadow: 0 7px 22px rgba(0,60,120,.07);
+}
+
+.card-heading {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.count-badge {
+    background: #e8f2ff;
+
+    color: #0057b8;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 900;
+}
+
+.activity-icon {
+    color: #ff7900;
+
+    font-size: 22px;
+}
+
+
+/* ================================
+   INVESTMENTS
+================================ */
+
+.investment-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.investment-item {
+    border: 1px solid #e8edf3;
+
+    border-radius: 14px;
+
+    padding: 15px;
+
+    background: #fbfcff;
+}
+
+.investment-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 14px;
+}
+
+.investment-label {
+    color: #98a2b3;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.investment-top h3 {
+    margin: 3px 0 0;
+
+    color: #0057b8;
+
+    font-size: 16px;
+}
+
+.investment-status {
+    padding: 5px 8px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+}
+
+.investment-status.active {
+    background: #eaf8ef;
+    color: #15803d;
+}
+
+.investment-status.matured {
+    background: #fff0e3;
+    color: #e96800;
+}
+
+.investment-status.redeemed {
+    background: #e8f2ff;
+    color: #0057b8;
+}
+
+.investment-details {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    background: #fff;
+
+    border-radius: 11px;
+}
+
+.investment-details span {
+    display: block;
+
+    color: #667085;
+
+    font-size: 10px;
+
+    margin-bottom: 3px;
+}
+
+.investment-details strong {
+    color: #172033;
+
+    font-size: 13px;
+}
+
+.accrued-box {
+    margin-top: 10px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #fff0e3,
+        #fff8f2
+    );
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.accrued-box span {
+    color: #667085;
+
+    font-size: 11px;
+}
+
+.accrued-box strong {
+    color: #ff7900;
+
+    font-size: 15px;
+}
+
+.redeem-form {
+    margin-top: 10px;
+}
+
+.redeem-form .btn {
+    width: 100%;
+}
+
+
+/* ================================
+   TRANSACTIONS
+================================ */
+
+.transaction-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.transaction-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 11px;
+
+    border-radius: 11px;
+
+    background: #fbfcff;
+}
+
+.transaction-icon {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #e8f2ff;
+
+    color: #0057b8;
+
+    font-weight: 900;
+}
+
+.transaction-info {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.transaction-info strong {
+    display: block;
+
+    color: #172033;
+
+    font-size: 12px;
+}
+
+.transaction-info span {
+    display: block;
+
+    color: #98a2b3;
+
+    font-size: 9px;
+
+    margin-top: 3px;
+
+    overflow-wrap: anywhere;
+}
+
+.transaction-amount {
+    font-size: 12px;
+
+    font-weight: 900;
+
+    white-space: nowrap;
+}
+
+.transaction-amount.positive {
+    color: #16a34a;
+}
+
+.transaction-amount.negative {
+    color: #dc2626;
+}
+
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.empty-state {
+    text-align: center;
+
+    padding: 20px 10px;
+}
+
+.empty-state.compact {
+    padding: 15px 5px;
+}
+
+.empty-icon {
+    font-size: 32px;
+
+    margin-bottom: 7px;
+}
+
+.empty-state h3 {
+    color: #172033;
+
+    font-size: 15px;
+
+    margin-bottom: 5px;
+}
+
+.empty-state p {
+    color: #667085;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    margin-bottom: 14px;
+}
+
+.empty-state .btn {
+    max-width: 220px;
+
+    margin: 0 auto;
+}
+
+
+/* ================================
+   NOTICE
+================================ */
+
+.dashboard-notice {
+    margin: 0 15px;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    color: #1e40af;
+
+    display: flex;
+
+    gap: 8px;
+
+    align-items: flex-start;
+}
+
+.dashboard-notice span {
+    font-size: 14px;
+}
+
+.dashboard-notice p {
+    margin: 0;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 360px) {
+
+    .dashboard-header {
+        padding: 22px 15px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 21px;
+    }
+
+    .balance-card {
+        padding: 12px 10px;
+    }
+
+    .balance-content strong {
+        font-size: 14px;
+    }
+
+}
+
+</style>{% endblock %}
