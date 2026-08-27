@@ -4,3 +4,7 @@ Flask-WTF>=1.0
 Flask-SQLAlchemy>=3.0
 psycopg2-binary>=2.9
 python-dotenv>=0.21
+Flask
+Flask-Login
+gunicorn
+psycopg2-binary
