@@ -7,12 +7,12 @@
 
   <style>
     :root {
-      --brand-orange: #ff6f2d;
-      --input-bg: #edf2f9;
-      --text-dark: #2d3142;
+      --orange: #ff6f2d;
+      --blue: #2339b3;
+      --blue-dark: #1a2a8c;
+      --input-bg: rgba(255, 255, 255, 0.90);
+      --text-dark: #252936;
       --text-muted: #7c879d;
-      --btn-blue: #2339b3;
-      --btn-blue-dark: #1a2a8c;
       --white: #ffffff;
     }
 
@@ -25,187 +25,189 @@
         BlinkMacSystemFont,
         "Segoe UI",
         Roboto,
-        Helvetica,
         Arial,
         sans-serif;
     }
 
     body {
-      background: #f0f2f5;
       min-height: 100vh;
+      background: #f0f2f5;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
     }
 
-    /* Main mobile screen */
+    /* Main screen */
     .register-screen {
       width: 100%;
       max-width: 420px;
       min-height: 100vh;
-      background: var(--brand-orange);
-      display: flex;
-      flex-direction: column;
+
       position: relative;
       overflow: hidden;
-      padding-bottom: 30px;
+
+      background-image:
+        linear-gradient(
+          rgba(255, 255, 255, 0.42),
+          rgba(255, 255, 255, 0.42)
+        ),
+        url("/static/background.jpg");
+
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+
+      padding-bottom: 35px;
     }
 
-    /* Hero section */
-    .hero-banner {
-      width: 100%;
-      height: 250px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
+    /* Soft light overlay */
+    .page-overlay {
+      position: absolute;
+      inset: 0;
+
       background:
         linear-gradient(
           180deg,
-          rgba(255, 111, 45, 0) 50%,
-          rgba(255, 111, 45, 1) 100%
+          rgba(255, 255, 255, 0.18),
+          rgba(255, 111, 45, 0.20)
         );
+
+      pointer-events: none;
+      z-index: 0;
     }
 
-    /* Decorative background */
-    .hero-bg-simulation {
-      position: absolute;
-      inset: 0;
+    /* Hero */
+    .hero-banner {
+      height: 245px;
+      position: relative;
+
       display: flex;
-      opacity: 0.65;
-      z-index: 1;
+      justify-content: center;
+      align-items: flex-end;
+
+      z-index: 2;
     }
 
-    .hero-panel {
-      flex: 1;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-    }
-
-    .hero-panel:nth-child(1) {
-      background:
-        linear-gradient(135deg, #a90000, #e53935);
-    }
-
-    .hero-panel:nth-child(2) {
-      background:
-        linear-gradient(135deg, #005c2a, #159447);
-    }
-
-    .hero-panel:nth-child(3) {
-      background:
-        linear-gradient(135deg, #b86600, #f5a623);
-    }
-
-    /* Language button */
+    /* Language */
     .language-dropdown {
       position: absolute;
       top: 20px;
       right: 16px;
-      z-index: 10;
 
-      background: var(--white);
-      color: var(--btn-blue);
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--blue);
 
-      padding: 8px 18px;
-      border-radius: 20px;
+      padding: 9px 17px;
+      border-radius: 22px;
 
       font-size: 14px;
       font-weight: 600;
 
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+
       cursor: pointer;
+      z-index: 5;
     }
 
     /* JOMA logo */
     .center-logo-badge {
-      position: absolute;
-      bottom: 20px;
-      z-index: 5;
+      width: 96px;
+      height: 96px;
 
-      width: 88px;
-      height: 88px;
+      position: absolute;
+      bottom: 18px;
 
       border-radius: 50%;
-      background: #ffffff;
 
-      border: 3px solid #ffffff;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      background: #ffffff;
+      border: 4px solid rgba(255, 255, 255, 0.95);
+
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.18);
+
+      overflow: hidden;
 
       display: flex;
       flex-direction: column;
+
       justify-content: center;
       align-items: center;
 
-      overflow: hidden;
+      z-index: 5;
     }
 
-    .logo-top-curve {
+    .logo-top {
       width: 100%;
       height: 35%;
-      background: #ff6f2d;
+      background: var(--orange);
     }
 
-    .logo-text-strip {
+    .logo-name {
       width: 100%;
-      background: #ffffff;
-      color: #2339b3;
 
-      font-size: 15px;
-      font-weight: 900;
+      padding: 3px 0;
+
+      background: #ffffff;
+      color: var(--blue);
+
       text-align: center;
 
-      padding: 2px 0;
+      font-size: 16px;
+      font-weight: 900;
+
       letter-spacing: 1px;
     }
 
-    .logo-bottom-curve {
+    .logo-bottom {
       width: 100%;
       height: 35%;
-      background: #2339b3;
+      background: var(--blue);
     }
 
     /* Form */
     .form-container {
+      position: relative;
+      z-index: 3;
+
       padding: 0 24px;
+
       display: flex;
       flex-direction: column;
-      position: relative;
-      z-index: 5;
     }
 
     .form-heading {
       color: #ffffff;
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      letter-spacing: 0.3px;
+
+      font-size: 25px;
+      font-weight: 750;
+
+      margin-bottom: 23px;
+
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.22);
     }
 
-    /* Input fields */
+    /* Input */
     .input-wrapper {
       width: 100%;
-      height: 54px;
-
-      background: var(--input-bg);
-      border-radius: 12px;
+      height: 55px;
 
       display: flex;
       align-items: center;
 
+      background: var(--input-bg);
+
+      border: 1px solid rgba(255, 255, 255, 0.55);
+
+      border-radius: 14px;
+
       padding: 0 16px;
-      margin-bottom: 16px;
+
+      margin-bottom: 15px;
 
       box-shadow:
-        inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        0 5px 15px rgba(0, 0, 0, 0.08);
 
-      transition: 0.2s ease;
-    }
-
-    .input-wrapper:focus-within {
-      box-shadow:
-        0 0 0 2px rgba(35, 57, 179, 0.2);
+      backdrop-filter: blur(5px);
     }
 
     .input-wrapper input {
@@ -214,9 +216,11 @@
 
       border: none;
       outline: none;
+
       background: transparent;
 
       color: var(--text-dark);
+
       font-size: 15px;
     }
 
@@ -224,88 +228,87 @@
       color: var(--text-muted);
     }
 
-    /* Country code */
+    /* Country */
     .country-code-prefix {
-      color: var(--btn-blue);
+      color: var(--blue);
+
       font-weight: 700;
-      font-size: 16px;
 
-      padding-right: 14px;
-      margin-right: 14px;
+      padding-right: 13px;
+      margin-right: 13px;
 
-      border-right: 1px solid #c2cbd6;
+      border-right: 1px solid #c5ccd7;
+
       white-space: nowrap;
     }
 
     /* Icons */
-    .field-icon {
-      width: 20px;
-      height: 20px;
-
-      fill: var(--text-muted);
-      cursor: pointer;
-
-      margin-left: 8px;
-      flex-shrink: 0;
-    }
-
+    .field-icon,
     .referral-icon {
       width: 20px;
       height: 20px;
 
       fill: var(--text-muted);
-      margin-right: 12px;
 
       flex-shrink: 0;
+    }
+
+    .field-icon {
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .referral-icon {
+      margin-right: 12px;
     }
 
     /* Register button */
     .submit-button {
       width: 100%;
-      height: 50px;
+      height: 52px;
 
-      background: var(--btn-blue);
-      color: #ffffff;
+      margin-top: 10px;
+      margin-bottom: 23px;
 
       border: none;
-      border-radius: 25px;
+      border-radius: 27px;
+
+      background: var(--blue);
+      color: #ffffff;
 
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 750;
+
       letter-spacing: 1px;
       text-transform: uppercase;
 
-      margin-top: 12px;
-      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
 
       cursor: pointer;
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-
       box-shadow:
-        0 4px 12px rgba(35, 57, 179, 0.3);
+        0 7px 18px rgba(35, 57, 179, 0.32);
 
       transition: 0.2s ease;
     }
 
     .submit-button:hover {
-      background: var(--btn-blue-dark);
+      background: var(--blue-dark);
     }
 
     .submit-button:active {
       transform: scale(0.98);
     }
 
-    /* Disabled/loading state */
-    .submit-button.loading {
+    .submit-button:disabled {
+      opacity: 0.88;
       cursor: not-allowed;
-      opacity: 0.9;
     }
 
-    /* Loading spinner */
+    /* Loading */
     .loader {
       width: 19px;
       height: 19px;
@@ -324,23 +327,25 @@
       }
     }
 
-    /* Login link */
+    /* Login */
     .footer-redirect-link {
       color: #ffffff;
+
       text-align: center;
 
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 600;
 
       text-decoration: none;
-      opacity: 0.95;
+
+      text-shadow:
+        0 2px 7px rgba(0, 0, 0, 0.25);
     }
 
     .footer-redirect-link:hover {
       text-decoration: underline;
     }
 
-    /* Small screens */
     @media (max-width: 360px) {
       .form-container {
         padding-left: 18px;
@@ -348,11 +353,7 @@
       }
 
       .hero-banner {
-        height: 230px;
-      }
-
-      .form-heading {
-        font-size: 22px;
+        height: 225px;
       }
     }
   </style>
@@ -362,34 +363,24 @@
 
   <div class="register-screen">
 
+    <div class="page-overlay"></div>
+
     <!-- Hero -->
     <div class="hero-banner">
 
-      <div class="hero-bg-simulation">
-        <div class="hero-panel"></div>
-        <div class="hero-panel"></div>
-        <div class="hero-panel"></div>
-      </div>
-
-      <!-- Language -->
       <div class="language-dropdown">
         Language
       </div>
 
-      <!-- JOMA Logo -->
       <div class="center-logo-badge">
-        <div class="logo-top-curve"></div>
-
-        <div class="logo-text-strip">
-          JOMA
-        </div>
-
-        <div class="logo-bottom-curve"></div>
+        <div class="logo-top"></div>
+        <div class="logo-name">JOMA</div>
+        <div class="logo-bottom"></div>
       </div>
 
     </div>
 
-    <!-- Registration form -->
+    <!-- Form -->
     <main class="form-container">
 
       <h1 class="form-heading">
@@ -404,10 +395,9 @@
         </span>
 
         <input
-          type="text"
+          type="tel"
           id="phone"
-          placeholder="Enter Username Number"
-          aria-label="Username or Phone Number"
+          placeholder="Enter phone number"
           autocomplete="tel"
         >
 
@@ -420,7 +410,6 @@
           type="password"
           id="password"
           placeholder="Please new password"
-          aria-label="Password"
           autocomplete="new-password"
         >
 
@@ -428,9 +417,8 @@
           class="field-icon"
           onclick="togglePassword('password', this)"
           viewBox="0 0 24 24"
-          aria-label="Show password"
         >
-          <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.01-.16c0-1.66 1.34-3 3-3l-.16.01z"/>
+          <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27z"/>
         </svg>
 
       </div>
@@ -442,7 +430,6 @@
           type="password"
           id="confirmPassword"
           placeholder="Please new password again"
-          aria-label="Confirm Password"
           autocomplete="new-password"
         >
 
@@ -450,9 +437,8 @@
           class="field-icon"
           onclick="togglePassword('confirmPassword', this)"
           viewBox="0 0 24 24"
-          aria-label="Show password"
         >
-          <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 1.66 1.34 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.01-.16c0-1.66-1.34-3-3-3l-.16.01z"/>
+          <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7z"/>
         </svg>
 
       </div>
@@ -463,17 +449,14 @@
         <svg
           class="referral-icon"
           viewBox="0 0 24 24"
-          aria-hidden="true"
         >
           <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
         </svg>
 
         <input
           type="text"
-          id="referral"
           value="50012a4e"
           readonly
-          aria-label="Referral Code"
         >
 
       </div>
@@ -490,11 +473,7 @@
         </span>
       </button>
 
-      <!-- Login -->
-      <a
-        href="#"
-        class="footer-redirect-link"
-      >
+      <a href="#" class="footer-redirect-link">
         I already have an account
       </a>
 
@@ -505,7 +484,6 @@
 
   <script>
 
-    /* Password visibility */
     function togglePassword(inputId, icon) {
 
       const input = document.getElementById(inputId);
@@ -521,47 +499,51 @@
     }
 
 
-    /* Register loading state */
     function registerAccount() {
 
-      const button = document.getElementById("registerButton");
-      const buttonText = document.getElementById("buttonText");
+      const button =
+        document.getElementById("registerButton");
 
-      const phone = document.getElementById("phone").value.trim();
-      const password = document.getElementById("password").value;
+      const buttonText =
+        document.getElementById("buttonText");
+
+      const phone =
+        document.getElementById("phone").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
       const confirmPassword =
         document.getElementById("confirmPassword").value;
 
-      /* Basic validation */
+
       if (!phone || !password || !confirmPassword) {
+
         alert("Please complete all required fields.");
+
         return;
       }
+
 
       if (password !== confirmPassword) {
+
         alert("Passwords do not match.");
+
         return;
       }
 
-      /* Prevent repeated clicks */
-      button.disabled = true;
-      button.classList.add("loading");
 
-      /* Show loading */
+      button.disabled = true;
+
       buttonText.innerHTML = `
         <span class="loader"></span>
         Loading...
       `;
 
-      /*
-        This is where the real registration request
-        can later be connected to the JOMA backend.
-      */
 
-      setTimeout(function () {
+      setTimeout(() => {
 
         button.disabled = false;
-        button.classList.remove("loading");
 
         buttonText.textContent = "Register";
 
