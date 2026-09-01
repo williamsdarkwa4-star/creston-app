@@ -1,557 +1,914 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JOMA - Create Account</title>
-
-  <style>
-    :root {
-      --orange: #ff6f2d;
-      --blue: #2339b3;
-      --blue-dark: #1a2a8c;
-      --input-bg: rgba(255, 255, 255, 0.90);
-      --text-dark: #252936;
-      --text-muted: #7c879d;
-      --white: #ffffff;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      background: #f0f2f5;
-      display: flex;
-      justify-content: center;
-    }
-
-    /* Main screen */
-    .register-screen {
-      width: 100%;
-      max-width: 420px;
-      min-height: 100vh;
-
-      position: relative;
-      overflow: hidden;
-
-      background-image:
-        linear-gradient(
-          rgba(255, 255, 255, 0.42),
-          rgba(255, 255, 255, 0.42)
-        ),
-        url("/static/Screenshot_20260830_134225_Chrome.jpg");
-
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-
-      padding-bottom: 35px;
-    }
-
-    /* Soft light overlay */
-    .page-overlay {
-      position: absolute;
-      inset: 0;
-
-      background:
-        linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.18),
-          rgba(255, 111, 45, 0.20)
-        );
-
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Hero */
-    .hero-banner {
-      height: 245px;
-      position: relative;
-
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-
-      z-index: 2;
-    }
-
-    /* Language */
-    .language-dropdown {
-      position: absolute;
-      top: 20px;
-      right: 16px;
-
-      background: rgba(255, 255, 255, 0.92);
-      color: var(--blue);
-
-      padding: 9px 17px;
-      border-radius: 22px;
-
-      font-size: 14px;
-      font-weight: 600;
+    <meta charset="UTF-8">
 
-      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1.0,
+                   maximum-scale=1.0,
+                   user-scalable=no">
 
-      cursor: pointer;
-      z-index: 5;
-    }
+    <title>JOMA - Create Account</title>
 
-    /* JOMA logo */
-    .center-logo-badge {
-      width: 96px;
-      height: 96px;
+    <style>
 
-      position: absolute;
-      bottom: 18px;
+        :root {
+            --orange: #ff6f2d;
+            --blue: #2339b3;
+            --blue-dark: #1a2a8c;
 
-      border-radius: 50%;
+            --input-bg: rgba(255,255,255,.92);
 
-      background: #ffffff;
-      border: 4px solid rgba(255, 255, 255, 0.95);
+            --text-dark: #252936;
+            --text-muted: #7c879d;
 
-      box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.18);
+            --white: #ffffff;
+            --danger: #dc3545;
+            --success: #20a464;
+        }
 
-      overflow: hidden;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
 
-      display: flex;
-      flex-direction: column;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+        }
 
-      justify-content: center;
-      align-items: center;
+        html {
+            min-height: 100%;
+        }
 
-      z-index: 5;
-    }
+        body {
+            min-height: 100vh;
 
-    .logo-top {
-      width: 100%;
-      height: 35%;
-      background: var(--orange);
-    }
+            margin: 0;
 
-    .logo-name {
-      width: 100%;
+            display: flex;
+            justify-content: center;
 
-      padding: 3px 0;
+            background: #e5e7eb;
 
-      background: #ffffff;
-      color: var(--blue);
+            color: var(--text-dark);
+        }
 
-      text-align: center;
 
-      font-size: 16px;
-      font-weight: 900;
+        /* =========================================
+           MAIN MOBILE SCREEN
+        ========================================= */
 
-      letter-spacing: 1px;
-    }
+        .register-screen {
 
-    .logo-bottom {
-      width: 100%;
-      height: 35%;
-      background: var(--blue);
-    }
+            width: 100%;
+            max-width: 420px;
 
-    /* Form */
-    .form-container {
-      position: relative;
-      z-index: 3;
+            min-height: 100vh;
 
-      padding: 0 24px;
+            position: relative;
 
-      display: flex;
-      flex-direction: column;
-    }
+            overflow: hidden;
 
-    .form-heading {
-      color: #ffffff;
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,.42),
+                    rgba(255,255,255,.42)
+                ),
+                url("/static/Screenshot_20260830_134225_Chrome.jpg");
 
-      font-size: 25px;
-      font-weight: 750;
+            background-size: cover;
 
-      margin-bottom: 23px;
+            background-position: center;
 
-      text-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.22);
-    }
+            padding-bottom: 35px;
+        }
 
-    /* Input */
-    .input-wrapper {
-      width: 100%;
-      height: 55px;
 
-      display: flex;
-      align-items: center;
+        /* =========================================
+           LIGHT PAGE OVERLAY
+        ========================================= */
 
-      background: var(--input-bg);
+        .page-overlay {
 
-      border: 1px solid rgba(255, 255, 255, 0.55);
+            position: absolute;
 
-      border-radius: 14px;
+            inset: 0;
 
-      padding: 0 16px;
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(255,255,255,.15),
+                    rgba(255,111,45,.18)
+                );
 
-      margin-bottom: 15px;
+            pointer-events: none;
 
-      box-shadow:
-        0 5px 15px rgba(0, 0, 0, 0.08);
+            z-index: 0;
+        }
 
-      backdrop-filter: blur(5px);
-    }
 
-    .input-wrapper input {
-      width: 100%;
-      height: 100%;
+        /* =========================================
+           HERO
+        ========================================= */
 
-      border: none;
-      outline: none;
+        .hero-banner {
 
-      background: transparent;
+            height: 245px;
 
-      color: var(--text-dark);
+            position: relative;
 
-      font-size: 15px;
-    }
+            display: flex;
 
-    .input-wrapper input::placeholder {
-      color: var(--text-muted);
-    }
+            justify-content: center;
 
-    /* Country */
-    .country-code-prefix {
-      color: var(--blue);
+            align-items: flex-end;
 
-      font-weight: 700;
+            z-index: 2;
+        }
 
-      padding-right: 13px;
-      margin-right: 13px;
 
-      border-right: 1px solid #c5ccd7;
+        /* =========================================
+           LANGUAGE
+        ========================================= */
 
-      white-space: nowrap;
-    }
+        .language-dropdown {
 
-    /* Icons */
-    .field-icon,
-    .referral-icon {
-      width: 20px;
-      height: 20px;
+            position: absolute;
 
-      fill: var(--text-muted);
+            top: 20px;
+            right: 16px;
 
-      flex-shrink: 0;
-    }
+            padding: 9px 17px;
 
-    .field-icon {
-      cursor: pointer;
-      margin-left: 8px;
-    }
+            border-radius: 22px;
 
-    .referral-icon {
-      margin-right: 12px;
-    }
+            background:
+                rgba(255,255,255,.92);
 
-    /* Register button */
-    .submit-button {
-      width: 100%;
-      height: 52px;
+            color: var(--blue);
 
-      margin-top: 10px;
-      margin-bottom: 23px;
+            font-size: 14px;
 
-      border: none;
-      border-radius: 27px;
+            font-weight: 600;
 
-      background: var(--blue);
-      color: #ffffff;
+            box-shadow:
+                0 5px 18px
+                rgba(0,0,0,.12);
 
-      font-size: 16px;
-      font-weight: 750;
+            z-index: 5;
+        }
 
-      letter-spacing: 1px;
-      text-transform: uppercase;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
+        /* =========================================
+           JOMA LOGO
+        ========================================= */
 
-      cursor: pointer;
+        .center-logo-badge {
 
-      box-shadow:
-        0 7px 18px rgba(35, 57, 179, 0.32);
+            width: 96px;
+            height: 96px;
 
-      transition: 0.2s ease;
-    }
+            position: absolute;
 
-    .submit-button:hover {
-      background: var(--blue-dark);
-    }
+            bottom: 18px;
 
-    .submit-button:active {
-      transform: scale(0.98);
-    }
+            border-radius: 50%;
 
-    .submit-button:disabled {
-      opacity: 0.88;
-      cursor: not-allowed;
-    }
+            background: white;
 
-    /* Loading */
-    .loader {
-      width: 19px;
-      height: 19px;
+            border: 4px solid
+                rgba(255,255,255,.95);
 
-      border: 3px solid rgba(255, 255, 255, 0.35);
-      border-top-color: #ffffff;
+            overflow: hidden;
 
-      border-radius: 50%;
+            box-shadow:
+                0 8px 25px
+                rgba(0,0,0,.18);
 
-      animation: spin 0.75s linear infinite;
-    }
+            display: flex;
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
+            flex-direction: column;
 
-    /* Login */
-    .footer-redirect-link {
-      color: #ffffff;
+            justify-content: center;
 
-      text-align: center;
+            align-items: center;
 
-      font-size: 15px;
-      font-weight: 600;
+            z-index: 5;
+        }
 
-      text-decoration: none;
+        .logo-top {
 
-      text-shadow:
-        0 2px 7px rgba(0, 0, 0, 0.25);
-    }
+            width: 100%;
+            height: 35%;
 
-    .footer-redirect-link:hover {
-      text-decoration: underline;
-    }
+            background:
+                var(--orange);
+        }
 
-    @media (max-width: 360px) {
-      .form-container {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
+        .logo-name {
 
-      .hero-banner {
-        height: 225px;
-      }
-    }
-  </style>
+            width: 100%;
+
+            padding: 3px 0;
+
+            background: white;
+
+            color: var(--blue);
+
+            text-align: center;
+
+            font-size: 16px;
+
+            font-weight: 900;
+
+            letter-spacing: 1px;
+        }
+
+        .logo-bottom {
+
+            width: 100%;
+            height: 35%;
+
+            background:
+                var(--blue);
+        }
+
+
+        /* =========================================
+           FORM
+        ========================================= */
+
+        .form-container {
+
+            position: relative;
+
+            z-index: 3;
+
+            padding: 0 24px;
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        /* =========================================
+           HEADING
+        ========================================= */
+
+        .form-heading {
+
+            color: white;
+
+            font-size: 25px;
+
+            font-weight: 750;
+
+            margin-bottom: 23px;
+
+            text-shadow:
+                0 2px 8px
+                rgba(0,0,0,.22);
+        }
+
+
+        /* =========================================
+           FLASH MESSAGES
+        ========================================= */
+
+        .flash-container {
+
+            margin-bottom: 15px;
+        }
+
+        .flash-message {
+
+            padding: 12px 14px;
+
+            margin-bottom: 8px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,.95);
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0,0,0,.10);
+        }
+
+        .flash-message.error {
+
+            color: var(--danger);
+
+            border-left:
+                4px solid var(--danger);
+        }
+
+        .flash-message.success {
+
+            color: var(--success);
+
+            border-left:
+                4px solid var(--success);
+        }
+
+
+        /* =========================================
+           INPUT WRAPPER
+        ========================================= */
+
+        .input-wrapper {
+
+            width: 100%;
+
+            height: 55px;
+
+            display: flex;
+
+            align-items: center;
+
+            background:
+                var(--input-bg);
+
+            border:
+                1px solid
+                rgba(255,255,255,.55);
+
+            border-radius: 14px;
+
+            padding: 0 16px;
+
+            margin-bottom: 15px;
+
+            box-shadow:
+                0 5px 15px
+                rgba(0,0,0,.08);
+
+            backdrop-filter:
+                blur(5px);
+        }
+
+
+        /* =========================================
+           INPUT
+        ========================================= */
+
+        .input-wrapper input {
+
+            width: 100%;
+
+            height: 100%;
+
+            border: none;
+
+            outline: none;
+
+            background: transparent;
+
+            color:
+                var(--text-dark);
+
+            font-size: 15px;
+        }
+
+        .input-wrapper input::placeholder {
+
+            color:
+                var(--text-muted);
+        }
+
+
+        /* =========================================
+           COUNTRY CODE
+        ========================================= */
+
+        .country-code-prefix {
+
+            color:
+                var(--blue);
+
+            font-weight: 700;
+
+            padding-right: 13px;
+
+            margin-right: 13px;
+
+            border-right:
+                1px solid
+                #c5ccd7;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================================
+           ICONS
+        ========================================= */
+
+        .field-icon,
+        .referral-icon {
+
+            width: 20px;
+
+            height: 20px;
+
+            fill:
+                var(--text-muted);
+
+            flex-shrink: 0;
+        }
+
+        .field-icon {
+
+            cursor: pointer;
+
+            margin-left: 8px;
+
+            opacity: .55;
+
+            transition:
+                opacity .2s ease;
+        }
+
+        .referral-icon {
+
+            margin-right: 12px;
+        }
+
+
+        /* =========================================
+           REGISTER BUTTON
+        ========================================= */
+
+        .submit-button {
+
+            width: 100%;
+
+            height: 52px;
+
+            margin-top: 10px;
+
+            margin-bottom: 23px;
+
+            border: none;
+
+            border-radius: 27px;
+
+            background:
+                var(--blue);
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 750;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 10px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 7px 18px
+                rgba(35,57,179,.32);
+
+            transition:
+                .2s ease;
+        }
+
+        .submit-button:hover {
+
+            background:
+                var(--blue-dark);
+        }
+
+        .submit-button:active {
+
+            transform:
+                scale(.98);
+        }
+
+
+        /* =========================================
+           LOGIN LINK
+        ========================================= */
+
+        .footer-redirect-link {
+
+            color: white;
+
+            text-align: center;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            text-decoration: none;
+
+            text-shadow:
+                0 2px 7px
+                rgba(0,0,0,.25);
+        }
+
+        .footer-redirect-link:hover {
+
+            text-decoration:
+                underline;
+        }
+
+
+        /* =========================================
+           LOADING
+        ========================================= */
+
+        .loader {
+
+            width: 19px;
+
+            height: 19px;
+
+            border:
+                3px solid
+                rgba(255,255,255,.35);
+
+            border-top-color:
+                white;
+
+            border-radius: 50%;
+
+            animation:
+                spin .75s linear infinite;
+        }
+
+        @keyframes spin {
+
+            to {
+                transform:
+                    rotate(360deg);
+            }
+        }
+
+
+        /* =========================================
+           SMALL SCREENS
+        ========================================= */
+
+        @media (max-width: 360px) {
+
+            .form-container {
+
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .hero-banner {
+
+                height: 225px;
+            }
+
+            .center-logo-badge {
+
+                width: 88px;
+                height: 88px;
+            }
+
+            .form-heading {
+
+                font-size: 23px;
+            }
+        }
+
+    </style>
 </head>
+
 
 <body>
 
-  <div class="register-screen">
+<div class="register-screen">
 
     <div class="page-overlay"></div>
 
-    <!-- Hero -->
-    <div class="hero-banner">
 
-      <div class="language-dropdown">
-        Language
-      </div>
+    <!-- =========================================
+         HERO
+    ========================================== -->
 
-      <div class="center-logo-badge">
-        <div class="logo-top"></div>
-        <div class="logo-name">JOMA</div>
-        <div class="logo-bottom"></div>
-      </div>
+    <section class="hero-banner">
 
-    </div>
+        <div class="language-dropdown">
+            Language
+        </div>
 
-    <!-- Form -->
+
+        <div class="center-logo-badge">
+
+            <div class="logo-top"></div>
+
+            <div class="logo-name">
+                JOMA
+            </div>
+
+            <div class="logo-bottom"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         REGISTRATION FORM
+    ========================================== -->
+
     <main class="form-container">
 
-      <h1 class="form-heading">
-        Create Account
-      </h1>
+        <h1 class="form-heading">
+            Create Account
+        </h1>
 
-      <!-- Phone -->
-      <div class="input-wrapper">
 
-        <span class="country-code-prefix">
-          +233
-        </span>
+        <!-- =====================================
+             FLASK FLASH MESSAGES
+        ====================================== -->
 
-        <input
-          type="tel"
-          id="phone"
-          placeholder="Enter phone number"
-          autocomplete="tel"
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-container">
+
+                    {% for category, message in messages %}
+
+                        <div class="flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =====================================
+             REAL FLASK FORM
+        ====================================== -->
+
+        <form
+            method="POST"
+            action="{{ url_for('register') }}"
+            id="registerForm"
         >
 
-      </div>
 
-      <!-- Password -->
-      <div class="input-wrapper">
+            <!-- =================================
+                 PHONE
+            ================================== -->
 
-        <input
-          type="password"
-          id="password"
-          placeholder="Please new password"
-          autocomplete="new-password"
+            <div class="input-wrapper">
+
+                <span class="country-code-prefix">
+                    +233
+                </span>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter phone number"
+                    autocomplete="tel"
+                    inputmode="numeric"
+                    required
+                >
+
+            </div>
+
+
+            <!-- =================================
+                 PASSWORD
+            ================================== -->
+
+            <div class="input-wrapper">
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Please new password"
+                    autocomplete="new-password"
+                    minlength="6"
+                    required
+                >
+
+
+                <svg
+                    class="field-icon"
+                    onclick="togglePassword('password', this)"
+                    viewBox="0 0 24 24"
+                    aria-label="Show password"
+                >
+
+                    <path
+                        d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <!-- =================================
+                 CONFIRM PASSWORD
+            ================================== -->
+
+            <div class="input-wrapper">
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirm_password"
+                    placeholder="Please new password again"
+                    autocomplete="new-password"
+                    minlength="6"
+                    required
+                >
+
+
+                <svg
+                    class="field-icon"
+                    onclick="togglePassword('confirmPassword', this)"
+                    viewBox="0 0 24 24"
+                    aria-label="Show password"
+                >
+
+                    <path
+                        d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <!-- =================================
+                 REFERRAL CODE
+            ================================== -->
+
+            <div class="input-wrapper">
+
+                <svg
+                    class="referral-icon"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path
+                        d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                    />
+
+                </svg>
+
+
+                <input
+                    type="text"
+                    id="referral_code"
+                    name="referral_code"
+                    value="{{ referral_code or '' }}"
+                    placeholder="Referral code"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <!-- =================================
+                 REGISTER
+            ================================== -->
+
+            <button
+                type="submit"
+                id="registerButton"
+                class="submit-button"
+            >
+
+                <span id="buttonText">
+                    Register
+                </span>
+
+            </button>
+
+        </form>
+
+
+        <!-- =====================================
+             LOGIN
+        ====================================== -->
+
+        <a
+            href="{{ url_for('login') }}"
+            class="footer-redirect-link"
         >
-
-        <svg
-          class="field-icon"
-          onclick="togglePassword('password', this)"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27z"/>
-        </svg>
-
-      </div>
-
-      <!-- Confirm password -->
-      <div class="input-wrapper">
-
-        <input
-          type="password"
-          id="confirmPassword"
-          placeholder="Please new password again"
-          autocomplete="new-password"
-        >
-
-        <svg
-          class="field-icon"
-          onclick="togglePassword('confirmPassword', this)"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7z"/>
-        </svg>
-
-      </div>
-
-      <!-- Referral -->
-      <div class="input-wrapper">
-
-        <svg
-          class="referral-icon"
-          viewBox="0 0 24 24"
-        >
-          <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-
-        <input
-          type="text"
-          value="50012a4e"
-          readonly
-        >
-
-      </div>
-
-      <!-- Register -->
-      <button
-        type="button"
-        id="registerButton"
-        class="submit-button"
-        onclick="registerAccount()"
-      >
-        <span id="buttonText">
-          Register
-        </span>
-      </button>
-
-      <a href="#" class="footer-redirect-link">
-        I already have an account
-      </a>
+            I already have an account
+        </a>
 
     </main>
 
-  </div>
+</div>
 
 
-  <script>
+<script>
+
+    /* =========================================
+       PASSWORD VISIBILITY
+    ========================================= */
 
     function togglePassword(inputId, icon) {
 
-      const input = document.getElementById(inputId);
+        const input =
+            document.getElementById(inputId);
 
-      if (input.type === "password") {
-        input.type = "text";
-        icon.style.opacity = "1";
-      } else {
-        input.type = "password";
-        icon.style.opacity = "0.55";
-      }
+        if (input.type === "password") {
 
+            input.type = "text";
+
+            icon.style.opacity = "1";
+
+        } else {
+
+            input.type = "password";
+
+            icon.style.opacity = ".55";
+        }
     }
 
 
-    function registerAccount() {
+    /* =========================================
+       REAL FORM SUBMISSION LOADING STATE
+    ========================================= */
 
-      const button =
+    const form =
+        document.getElementById("registerForm");
+
+    const button =
         document.getElementById("registerButton");
 
-      const buttonText =
+    const buttonText =
         document.getElementById("buttonText");
 
-      const phone =
-        document.getElementById("phone").value.trim();
 
-      const password =
-        document.getElementById("password").value;
+    form.addEventListener("submit", function(event) {
 
-      const confirmPassword =
-        document.getElementById("confirmPassword").value;
+        const password =
+            document.getElementById("password").value;
 
-
-      if (!phone || !password || !confirmPassword) {
-
-        alert("Please complete all required fields.");
-
-        return;
-      }
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
 
 
-      if (password !== confirmPassword) {
+        /* Browser-side validation */
 
-        alert("Passwords do not match.");
+        if (password !== confirmPassword) {
 
-        return;
-      }
+            event.preventDefault();
 
+            alert("Passwords do not match.");
 
-      button.disabled = true;
-
-      buttonText.innerHTML = `
-        <span class="loader"></span>
-        Loading...
-      `;
+            return;
+        }
 
 
-      setTimeout(() => {
+        /* Let Flask receive the form */
 
-        button.disabled = false;
+        button.disabled = true;
 
-        buttonText.textContent = "Register";
+        buttonText.innerHTML = `
+            <span class="loader"></span>
+            Creating...
+        `;
 
-      }, 2000);
+    });
 
-    }
-
-  </script>
+</script>
 
 </body>
 </html>
