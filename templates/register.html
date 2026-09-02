@@ -8,18 +8,15 @@
 
 <style>
 
-/* =========================
+/* =====================================================
    RESET
-========================= */
+===================================================== */
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 html,
@@ -29,28 +26,27 @@ body{
 }
 
 body{
-    background:#f4f7fb;
-    color:#172033;
+    background:#f5f8fc;
+    color:#182235;
     overflow-x:hidden;
 }
 
 
-/* =========================
-   BACKGROUND PHOTO
-========================= */
+/* =====================================================
+   BACKGROUND
+===================================================== */
 
 .background{
     position:fixed;
     inset:0;
+    z-index:-10;
 
-    z-index:-5;
-
-    background-image:
+    background:
         linear-gradient(
-            rgba(255,255,255,.76),
-            rgba(244,247,251,.88)
+            rgba(255,255,255,.84),
+            rgba(245,248,252,.94)
         ),
-        url("/static/your-background-photo.jpg");
+        url("/static/background.jpg");
 
     background-size:cover;
     background-position:center;
@@ -58,223 +54,91 @@ body{
 }
 
 
-/* =========================
-   SOFT BLUE EFFECT
-========================= */
+/* =====================================================
+   SOFT BACKGROUND EFFECT
+===================================================== */
 
-.background:after{
+.background::after{
     content:"";
-
     position:absolute;
     inset:0;
 
     background:
         radial-gradient(
-            circle at 15% 15%,
-            rgba(25,86,220,.10),
+            circle at 10% 10%,
+            rgba(33,97,207,.10),
             transparent 30%
         ),
         radial-gradient(
-            circle at 90% 80%,
-            rgba(25,86,220,.08),
-            transparent 35%
+            circle at 90% 85%,
+            rgba(255,145,0,.08),
+            transparent 30%
         );
 
     pointer-events:none;
 }
 
 
-/* =========================
-   FLOATING DECORATION
-========================= */
-
-.floating-x{
-    position:fixed;
-
-    top:13%;
-    right:7%;
-
-    width:52px;
-    height:52px;
-
-    border:1px solid rgba(30,83,190,.16);
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    color:#2161cf;
-
-    font-size:23px;
-    font-weight:900;
-
-    opacity:.25;
-
-    animation:floatX 4s ease-in-out infinite;
-
-    z-index:-1;
-}
-
-@keyframes floatX{
-
-    0%,100%{
-        transform:translateY(0) rotate(0deg);
-    }
-
-    50%{
-        transform:translateY(25px) rotate(8deg);
-    }
-}
-
-
-/* =========================
+/* =====================================================
    PAGE
-========================= */
+===================================================== */
 
 .page{
     width:100%;
-    max-width:470px;
-
+    max-width:450px;
     min-height:100vh;
 
-    margin:auto;
+    margin:0 auto;
 
-    padding:22px 17px 40px;
+    padding:20px 16px 35px;
 }
 
 
-/* =========================
-   BRAND
-========================= */
+/* =====================================================
+   TOP MESSAGE
+===================================================== */
 
-.brand{
-    text-align:center;
-
-    padding:12px 0 24px;
-}
-
-.brand-logo{
-    width:70px;
-    height:70px;
-
-    margin:0 auto 13px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border-radius:21px;
-
-    background:#2161cf;
-
-    color:#fff;
-
-    font-size:27px;
-    font-weight:900;
-
-    box-shadow:
-        0 10px 30px rgba(33,97,207,.25);
-}
-
-.brand h1{
-    font-size:27px;
-
-    font-weight:900;
-
-    letter-spacing:-.6px;
-
-    color:#172033;
-
-    margin-bottom:5px;
-}
-
-.brand p{
-    color:#7c8799;
-
-    font-size:12px;
-}
-
-
-/* =========================
-   CARD
-========================= */
-
-.card{
-    background:rgba(255,255,255,.96);
-
-    border:1px solid #e5eaf2;
-
-    border-radius:22px;
-
-    padding:25px 20px 24px;
-
-    box-shadow:
-        0 20px 60px rgba(29,52,87,.13);
-
-    backdrop-filter:blur(12px);
-}
-
-
-/* =========================
-   CARD HEADER
-========================= */
-
-.card-header{
-    margin-bottom:21px;
-}
-
-.card-header h2{
-    color:#172033;
-
-    font-size:23px;
-
-    font-weight:800;
-
-    margin-bottom:6px;
-}
-
-.card-header p{
-    color:#7d8798;
-
-    font-size:12px;
-
-    line-height:1.5;
-}
-
-
-/* =========================
-   TEMPORARY NOTIFICATION
-========================= */
-
-.toast-container{
+.top-message-container{
     position:fixed;
 
-    top:18px;
+    top:15px;
     left:50%;
-
-    transform:translateX(-50%);
 
     width:calc(100% - 30px);
     max-width:420px;
 
+    transform:
+        translate(-50%,-120px);
+
+    opacity:0;
+
     z-index:10000;
 
     pointer-events:none;
+
+    transition:
+        transform .35s ease,
+        opacity .35s ease;
 }
 
-.toast{
+.top-message-container.show{
+    transform:
+        translate(-50%,0);
+
+    opacity:1;
+}
+
+.top-message{
     display:flex;
     align-items:center;
 
-    gap:11px;
+    gap:10px;
 
-    padding:13px 15px;
+    padding:12px 14px;
 
     background:#ffffff;
 
-    border:1px solid #dfe5ee;
+    border:1px solid #e1e7ef;
 
     border-left:4px solid #2161cf;
 
@@ -283,71 +147,160 @@ body{
     box-shadow:
         0 12px 35px rgba(20,40,75,.16);
 
-    color:#253047;
+    color:#273348;
 
     font-size:12px;
+
     line-height:1.4;
-
-    opacity:0;
-
-    transform:
-        translateY(-25px)
-        scale(.97);
-
-    transition:
-        opacity .3s ease,
-        transform .3s ease;
 }
 
-.toast.show{
-    opacity:1;
-
-    transform:
-        translateY(0)
-        scale(1);
-}
-
-.toast-icon{
+.top-message-icon{
     width:25px;
     height:25px;
 
     flex-shrink:0;
 
-    border-radius:50%;
-
-    background:#eaf1ff;
-
-    color:#2161cf;
-
     display:flex;
     align-items:center;
     justify-content:center;
+
+    border-radius:50%;
+
+    background:#edf3ff;
+
+    color:#2161cf;
 
     font-size:13px;
     font-weight:900;
 }
 
 
-/* =========================
+/* =====================================================
+   BRAND
+===================================================== */
+
+.brand{
+    text-align:center;
+
+    padding:12px 0 20px;
+}
+
+.brand-logo{
+    width:68px;
+    height:68px;
+
+    margin:0 auto 11px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2161cf,
+            #174fae
+        );
+
+    color:#ffffff;
+
+    font-size:28px;
+    font-weight:900;
+
+    box-shadow:
+        0 10px 28px rgba(33,97,207,.23);
+}
+
+.brand h1{
+    color:#172033;
+
+    font-size:27px;
+
+    font-weight:900;
+
+    letter-spacing:-.6px;
+
+    margin-bottom:5px;
+}
+
+.brand p{
+    color:#8993a3;
+
+    font-size:11px;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.card{
+    width:100%;
+
+    background:rgba(255,255,255,.97);
+
+    border:1px solid #e4e9f1;
+
+    border-radius:20px;
+
+    padding:23px 19px 22px;
+
+    box-shadow:
+        0 18px 55px rgba(28,51,85,.12);
+
+    backdrop-filter:blur(12px);
+}
+
+
+/* =====================================================
+   CARD HEADER
+===================================================== */
+
+.card-header{
+    margin-bottom:19px;
+}
+
+.card-header h2{
+    color:#182235;
+
+    font-size:22px;
+
+    font-weight:800;
+
+    margin-bottom:5px;
+}
+
+.card-header p{
+    color:#8791a1;
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+
+/* =====================================================
    FLASH MESSAGES
-========================= */
+===================================================== */
 
 .message{
-    padding:12px 14px;
+    padding:11px 13px;
 
     border-radius:10px;
 
-    margin-bottom:16px;
-
-    font-size:12px;
-
-    line-height:1.5;
+    margin-bottom:14px;
 
     text-align:center;
+
+    font-size:11px;
+
+    line-height:1.5;
 }
 
 .success{
-    background:#eef8f2;
+    background:#eef9f2;
 
     color:#198754;
 
@@ -359,30 +312,30 @@ body{
 
     color:#dc3545;
 
-    border:1px solid #f2caca;
+    border:1px solid #f1cccc;
 }
 
 
-/* =========================
-   REFERRAL NOTICE
-========================= */
+/* =====================================================
+   REFERRAL INFORMATION
+===================================================== */
 
 .referral-box{
-    background:#f4f7ff;
+    padding:12px 13px;
 
-    border:1px solid #e0e8fa;
+    margin-bottom:18px;
+
+    background:#f3f7ff;
+
+    border:1px solid #dfe8fa;
 
     border-left:3px solid #2161cf;
 
     border-radius:10px;
 
-    padding:13px;
+    color:#7a8699;
 
-    margin-bottom:20px;
-
-    color:#718096;
-
-    font-size:11px;
+    font-size:10px;
 
     line-height:1.6;
 }
@@ -392,80 +345,79 @@ body{
 }
 
 
-/* =========================
+/* =====================================================
    FORM
-========================= */
+===================================================== */
 
 .form-group{
-    margin-bottom:16px;
+    margin-bottom:14px;
 }
 
 label{
     display:block;
 
-    color:#4b5567;
+    margin-bottom:6px;
 
-    font-size:11px;
+    color:#4d586a;
 
-    font-weight:700;
+    font-size:10px;
 
-    margin-bottom:7px;
+    font-weight:800;
 
-    letter-spacing:.2px;
+    letter-spacing:.3px;
 }
 
 
-/* =========================
-   INPUT BOX
-========================= */
+/* =====================================================
+   INPUT
+===================================================== */
 
 .input-box{
-    height:53px;
-
     width:100%;
+    height:51px;
 
     display:flex;
     align-items:center;
 
     background:#f9fbfd;
 
-    border:1px solid #dfe5ee;
+    border:1px solid #dfe5ed;
 
-    border-radius:11px;
+    border-radius:10px;
 
     transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
+        .2s ease;
 }
 
 .input-box:focus-within{
-    border-color:#2161cf;
-
     background:#ffffff;
+
+    border-color:#2161cf;
 
     box-shadow:
         0 0 0 3px rgba(33,97,207,.08);
 }
 
 .input-icon{
-    width:45px;
+    width:43px;
+
+    height:100%;
 
     display:flex;
-
     align-items:center;
     justify-content:center;
 
-    color:#8290a5;
+    color:#8290a4;
 
-    font-size:16px;
+    font-size:15px;
+
+    flex-shrink:0;
 }
 
 .input-box input{
     flex:1;
 
     width:100%;
-
     height:100%;
 
     border:none;
@@ -475,34 +427,35 @@ label{
 
     color:#172033;
 
-    font-size:13px;
+    font-size:12px;
 
-    padding-right:10px;
+    padding-right:9px;
 }
 
 .input-box input::placeholder{
-    color:#9aa5b5;
+    color:#9aa4b3;
 }
 
 
-/* =========================
-   PASSWORD
-========================= */
+/* =====================================================
+   PASSWORD TOGGLE
+===================================================== */
 
 .password-toggle{
-    width:45px;
-
+    width:43px;
     height:100%;
 
     border:none;
 
     background:transparent;
 
-    color:#8490a3;
+    color:#8793a5;
 
     cursor:pointer;
 
-    font-size:15px;
+    font-size:14px;
+
+    flex-shrink:0;
 
     transition:.2s ease;
 }
@@ -516,38 +469,42 @@ label{
 }
 
 .password-note{
-    margin-top:6px;
+    margin-top:5px;
 
-    color:#9aa3b2;
+    color:#9ca5b2;
 
     font-size:9px;
 }
 
 
-/* =========================
+/* =====================================================
    REGISTER BUTTON
-========================= */
+===================================================== */
 
 .register-btn{
     width:100%;
+    height:53px;
 
-    height:55px;
-
-    margin-top:8px;
+    margin-top:6px;
 
     border:none;
 
-    border-radius:11px;
+    border-radius:10px;
 
-    background:#2161cf;
+    background:
+        linear-gradient(
+            135deg,
+            #2161cf,
+            #174fae
+        );
 
     color:#ffffff;
 
-    font-size:14px;
+    font-size:13px;
 
     font-weight:900;
 
-    letter-spacing:.7px;
+    letter-spacing:.6px;
 
     cursor:pointer;
 
@@ -560,15 +517,14 @@ label{
 
     transition:
         transform .15s ease,
-        background .2s ease,
         box-shadow .2s ease;
 }
 
 .register-btn:hover{
-    background:#174fae;
-
     box-shadow:
-        0 10px 26px rgba(33,97,207,.28);
+        0 10px 28px rgba(33,97,207,.29);
+
+    transform:translateY(-1px);
 }
 
 .register-btn:active{
@@ -581,19 +537,19 @@ label{
     color:transparent;
 }
 
-.register-btn.loading:after{
+.register-btn.loading::after{
     content:"";
 
     position:absolute;
 
-    width:19px;
-    height:19px;
+    width:18px;
+    height:18px;
 
     top:50%;
     left:50%;
 
-    margin-left:-9.5px;
-    margin-top:-9.5px;
+    margin-left:-9px;
+    margin-top:-9px;
 
     border:2px solid rgba(255,255,255,.35);
 
@@ -605,16 +561,16 @@ label{
 }
 
 
-/* =========================
-   LOGIN
-========================= */
+/* =====================================================
+   LOGIN LINK
+===================================================== */
 
 .login-link{
     text-align:center;
 
-    margin-top:19px;
+    margin-top:18px;
 
-    color:#7d8798;
+    color:#858f9f;
 
     font-size:11px;
 }
@@ -634,42 +590,32 @@ label{
 }
 
 
-/* =========================
+/* =====================================================
    SECURITY
-========================= */
+===================================================== */
 
 .security{
-    margin-top:19px;
+    margin-top:17px;
 
-    padding-top:15px;
+    padding-top:14px;
 
-    border-top:1px solid #e7ebf1;
+    border-top:1px solid #e8ecf2;
 
     text-align:center;
 
-    color:#9aa3b1;
+    color:#9aa3b0;
 
     font-size:9px;
-
-    letter-spacing:.2px;
 }
 
 
-/* =========================
-   FULL PAGE BLUE LOADING
-========================= */
+/* =====================================================
+   BLUE LOADING SCREEN
+===================================================== */
 
 .page-loader{
     position:fixed;
-
     inset:0;
-
-    background:
-        linear-gradient(
-            145deg,
-            #2161cf,
-            #174da8
-        );
 
     display:none;
 
@@ -677,6 +623,13 @@ label{
     justify-content:center;
 
     flex-direction:column;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2161cf,
+            #174da8
+        );
 
     z-index:9999;
 }
@@ -686,8 +639,14 @@ label{
 }
 
 .loader-logo{
-    width:65px;
-    height:65px;
+    width:64px;
+    height:64px;
+
+    margin-bottom:17px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     border-radius:19px;
 
@@ -695,19 +654,12 @@ label{
 
     color:#2161cf;
 
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
     font-size:27px;
 
     font-weight:900;
 
-    margin-bottom:18px;
-
     box-shadow:
-        0 10px 30px rgba(0,0,0,.15);
+        0 10px 30px rgba(0,0,0,.16);
 
     animation:
         loaderPulse 1.3s ease-in-out infinite;
@@ -717,6 +669,8 @@ label{
     width:29px;
     height:29px;
 
+    margin-bottom:12px;
+
     border:3px solid rgba(255,255,255,.30);
 
     border-top-color:#ffffff;
@@ -725,8 +679,6 @@ label{
 
     animation:
         spin .7s linear infinite;
-
-    margin-bottom:13px;
 }
 
 .loader-text{
@@ -734,15 +686,15 @@ label{
 
     font-size:11px;
 
-    letter-spacing:.5px;
+    letter-spacing:.4px;
 
-    opacity:.9;
+    opacity:.92;
 }
 
 
-/* =========================
+/* =====================================================
    ANIMATIONS
-========================= */
+===================================================== */
 
 @keyframes spin{
     to{
@@ -751,7 +703,6 @@ label{
 }
 
 @keyframes loaderPulse{
-
     0%,100%{
         transform:scale(1);
     }
@@ -762,76 +713,82 @@ label{
 }
 
 
-/* =========================
+/* =====================================================
    MOBILE
-========================= */
+===================================================== */
 
 @media(max-width:360px){
 
     .page{
-        padding:18px 12px 30px;
+        padding:
+            17px
+            12px
+            30px;
     }
 
     .brand-logo{
-        width:64px;
-        height:64px;
+        width:62px;
+        height:62px;
 
-        border-radius:19px;
+        border-radius:18px;
 
         font-size:25px;
     }
 
     .brand h1{
-        font-size:23px;
+        font-size:24px;
     }
 
     .card{
-        padding:22px 16px;
+        padding:
+            21px
+            15px
+            20px;
     }
 
     .card-header h2{
-        font-size:21px;
+        font-size:20px;
+    }
+
+    .input-box{
+        height:49px;
+    }
+
+    .register-btn{
+        height:51px;
     }
 }
 
 </style>
 </head>
 
+
 <body>
 
 
-<!-- =========================
+<!-- =====================================================
      BACKGROUND
-========================= -->
+===================================================== -->
 
 <div class="background"></div>
 
 
-<!-- =========================
-     FLOATING DECORATION
-========================= -->
+<!-- =====================================================
+     TOP TEMPORARY MESSAGE
+===================================================== -->
 
-<div class="floating-x">
-    J
-</div>
+<div
+    class="top-message-container"
+    id="topMessageContainer"
+>
 
+    <div class="top-message">
 
-<!-- =========================
-     TEMPORARY MESSAGE
-========================= -->
-
-<div class="toast-container">
-
-    <div
-        class="toast"
-        id="toastMessage"
-    >
-
-        <div class="toast-icon">
+        <div class="top-message-icon">
             !
         </div>
 
-        <div id="toastText">
+        <div id="topMessageText">
             Please fill in all required fields.
         </div>
 
@@ -840,9 +797,9 @@ label{
 </div>
 
 
-<!-- =========================
+<!-- =====================================================
      BLUE LOADING SCREEN
-========================= -->
+===================================================== -->
 
 <div
     class="page-loader"
@@ -865,367 +822,363 @@ label{
 <div class="page">
 
 
-    <!-- =========================
-         BRAND
-    ========================= -->
+<!-- =====================================================
+     BRAND
+===================================================== -->
 
-    <div class="brand">
+<div class="brand">
 
-        <div class="brand-logo">
-            J
-        </div>
+    <div class="brand-logo">
+        J
+    </div>
 
-        <h1>
-            JOMA
-        </h1>
+    <h1>
+        JOMA
+    </h1>
+
+    <p>
+        Welcome to the JOMA platform
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     REGISTER CARD
+===================================================== -->
+
+<div class="card">
+
+
+    <div class="card-header">
+
+        <h2>
+            Create Account
+        </h2>
 
         <p>
-            Welcome to the JOMA platform
+            Enter your information below to continue.
         </p>
 
     </div>
 
 
-    <!-- =========================
-         REGISTER CARD
-    ========================= -->
+    <!-- =================================================
+         FLASH MESSAGES
+    ================================================= -->
 
-    <div class="card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
 
-        <div class="card-header">
+        {% for category, message in messages %}
 
-            <h2>
-                Create Account
-            </h2>
+            <div
+                class="message {{ category }}"
+                data-flash-message="{{ message }}"
+            >
+                {{ message }}
+            </div>
 
-            <p>
-                Enter your information below to continue.
-            </p>
+        {% endfor %}
+
+    {% endwith %}
+
+
+    <!-- =================================================
+         REFERRAL MESSAGE
+    ================================================= -->
+
+    {% if invite_code %}
+
+        <div class="referral-box">
+
+            Referral code detected:
+
+            <strong>
+                {{ invite_code }}
+            </strong>
+
+            <br>
+
+            Your account will be linked to this referral code.
+
+        </div>
+
+    {% else %}
+
+        <div class="referral-box">
+
+            <strong>Referral code</strong>
+            is optional. You can register without one.
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =================================================
+         REGISTER FORM
+    ================================================= -->
+
+    <form
+        method="POST"
+        action="{{ url_for('register') }}"
+        id="registerForm"
+        novalidate
+    >
+
+
+        <!-- FULL NAME -->
+
+        <div class="form-group">
+
+            <label for="fullname">
+                FULL NAME
+            </label>
+
+            <div class="input-box">
+
+                <div class="input-icon">
+                    👤
+                </div>
+
+                <input
+                    type="text"
+                    id="fullname"
+                    name="fullname"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                >
+
+            </div>
 
         </div>
 
 
-        <!-- =========================
-             FLASH MESSAGES
-        ========================= -->
+        <!-- USERNAME -->
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        <div class="form-group">
 
-            {% for category, message in messages %}
+            <label for="username">
+                USERNAME
+            </label>
 
-                <div class="message {{ category }}">
-                    {{ message }}
+            <div class="input-box">
+
+                <div class="input-icon">
+                    @
                 </div>
 
-            {% endfor %}
-
-        {% endwith %}
-
-
-        <!-- =========================
-             REFERRAL NOTICE
-        ========================= -->
-
-        {% if invite_code %}
-
-            <div class="referral-box">
-
-                Referral code detected:
-
-                <strong>
-                    {{ invite_code }}
-                </strong>
-
-                <br>
-
-                Your account will be linked to this referral code.
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Choose a username"
+                    autocomplete="username"
+                >
 
             </div>
 
-        {% else %}
+        </div>
 
-            <div class="referral-box">
 
-                <strong>Referral code</strong>
+        <!-- PHONE -->
 
-                is optional. You can register without one.
+        <div class="form-group">
+
+            <label for="phone">
+                PHONE NUMBER
+            </label>
+
+            <div class="input-box">
+
+                <div class="input-icon">
+                    📱
+                </div>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    autocomplete="tel"
+                >
 
             </div>
 
-        {% endif %}
+        </div>
 
 
-        <!-- =========================
-             FORM
-        ========================= -->
+        <!-- LOGIN PASSWORD -->
 
-        <form
-            method="POST"
-            action="{{ url_for('register') }}"
-            id="registerForm"
-        >
+        <div class="form-group">
 
+            <label for="password">
+                LOGIN PASSWORD
+            </label>
 
-            <!-- FULL NAME -->
+            <div class="input-box">
 
-            <div class="form-group">
-
-                <label for="fullname">
-                    FULL NAME
-                </label>
-
-                <div class="input-box">
-
-                    <div class="input-icon">
-                        👤
-                    </div>
-
-                    <input
-                        type="text"
-                        id="fullname"
-                        name="fullname"
-                        placeholder="Enter your full name"
-                        autocomplete="name"
-                        required
-                    >
-
+                <div class="input-icon">
+                    🔒
                 </div>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a login password"
+                    autocomplete="new-password"
+                >
+
+                <button
+                    type="button"
+                    class="password-toggle"
+                    onclick="togglePassword('password', this)"
+                >
+                    ◉
+                </button>
 
             </div>
 
+            <div class="password-note">
+                Minimum 6 characters.
+            </div>
 
-            <!-- USERNAME -->
+        </div>
 
-            <div class="form-group">
 
-                <label for="username">
-                    USERNAME
-                </label>
+        <!-- WITHDRAWAL PASSWORD -->
 
-                <div class="input-box">
+        <div class="form-group">
 
-                    <div class="input-icon">
-                        @
-                    </div>
+            <label for="withdraw_password">
+                WITHDRAWAL PASSWORD
+            </label>
 
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        placeholder="Choose a username"
-                        autocomplete="username"
-                        required
-                    >
+            <div class="input-box">
 
+                <div class="input-icon">
+                    🔐
                 </div>
+
+                <input
+                    type="password"
+                    id="withdraw_password"
+                    name="withdraw_password"
+                    placeholder="Create withdrawal password"
+                    autocomplete="new-password"
+                >
+
+                <button
+                    type="button"
+                    class="password-toggle"
+                    onclick="togglePassword(
+                        'withdraw_password',
+                        this
+                    )"
+                >
+                    ◉
+                </button>
 
             </div>
 
-
-            <!-- PHONE -->
-
-            <div class="form-group">
-
-                <label for="phone">
-                    PHONE NUMBER
-                </label>
-
-                <div class="input-box">
-
-                    <div class="input-icon">
-                        📱
-                    </div>
-
-                    <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        placeholder="Enter your phone number"
-                        autocomplete="tel"
-                        required
-                    >
-
-                </div>
-
+            <div class="password-note">
+                Minimum 6 characters.
             </div>
 
-
-            <!-- LOGIN PASSWORD -->
-
-            <div class="form-group">
-
-                <label for="password">
-                    LOGIN PASSWORD
-                </label>
-
-                <div class="input-box">
-
-                    <div class="input-icon">
-                        🔒
-                    </div>
-
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Create a login password"
-                        autocomplete="new-password"
-                        minlength="6"
-                        required
-                    >
-
-                    <button
-                        type="button"
-                        class="password-toggle"
-                        onclick="togglePassword(
-                            'password',
-                            this
-                        )"
-                    >
-                        ◉
-                    </button>
-
-                </div>
-
-                <div class="password-note">
-                    Minimum 6 characters.
-                </div>
-
-            </div>
+        </div>
 
 
-            <!-- WITHDRAWAL PASSWORD -->
+        <!-- REFERRAL CODE -->
 
-            <div class="form-group">
+        <div class="form-group">
 
-                <label for="withdraw_password">
-                    WITHDRAWAL PASSWORD
-                </label>
+            <label for="referred_by">
 
-                <div class="input-box">
+                REFERRAL CODE
 
-                    <div class="input-icon">
-                        🔐
-                    </div>
-
-                    <input
-                        type="password"
-                        id="withdraw_password"
-                        name="withdraw_password"
-                        placeholder="Create withdrawal password"
-                        autocomplete="new-password"
-                        minlength="6"
-                        required
-                    >
-
-                    <button
-                        type="button"
-                        class="password-toggle"
-                        onclick="togglePassword(
-                            'withdraw_password',
-                            this
-                        )"
-                    >
-                        ◉
-                    </button>
-
-                </div>
-
-                <div class="password-note">
-                    Used when authorizing withdrawals.
-                </div>
-
-            </div>
-
-
-            <!-- REFERRAL CODE -->
-
-            <div class="form-group">
-
-                <label for="referred_by">
-
-                    REFERRAL CODE
-
-                    <span style="
+                <span
+                    style="
                         color:#9aa3b1;
                         font-weight:normal;
-                    ">
-                        (OPTIONAL)
-                    </span>
+                    "
+                >
+                    (OPTIONAL)
+                </span>
 
-                </label>
+            </label>
 
-                <div class="input-box referral-input">
+            <div class="input-box">
 
-                    <div class="input-icon">
-                        🎁
-                    </div>
-
-                    <input
-                        type="text"
-                        id="referred_by"
-                        name="referred_by"
-                        value="{{ invite_code or '' }}"
-                        placeholder="Enter referral code"
-                    >
-
+                <div class="input-icon">
+                    🎁
                 </div>
+
+                <input
+                    type="text"
+                    id="referred_by"
+                    name="referred_by"
+                    value="{{ invite_code or '' }}"
+                    placeholder="Enter referral code"
+                >
 
             </div>
 
-
-            <!-- CREATE ACCOUNT -->
-
-            <button
-                type="submit"
-                class="register-btn"
-                id="registerButton"
-            >
-                CREATE ACCOUNT
-            </button>
-
-
-        </form>
-
-
-        <!-- =========================
-             LOGIN
-        ========================= -->
-
-        <div class="login-link">
-
-            Already have an account?
-
-            <a href="{{ url_for('login') }}">
-                Login
-            </a>
-
         </div>
 
 
-        <!-- =========================
-             SECURITY
-        ========================= -->
+        <!-- CREATE ACCOUNT -->
 
-        <div class="security">
+        <button
+            type="submit"
+            class="register-btn"
+            id="registerButton"
+        >
+            CREATE ACCOUNT
+        </button>
 
-            🔒 Your account information is securely handled.
 
-        </div>
+    </form>
+
+
+    <!-- =================================================
+         LOGIN
+    ================================================= -->
+
+    <div class="login-link">
+
+        Already have an account?
+
+        <a href="{{ url_for('login') }}">
+            Login
+        </a>
 
     </div>
+
+
+    <!-- =================================================
+         SECURITY
+    ================================================= -->
+
+    <div class="security">
+
+        🔒 Your account information is securely handled.
+
+    </div>
+
+
+</div>
 
 </div>
 
 
 <script>
 
-
-/* =========================
+/* =====================================================
    PASSWORD TOGGLE
-========================= */
+===================================================== */
 
-function togglePassword(id,button){
+function togglePassword(id, button){
 
     const input =
         document.getElementById(id);
@@ -1247,49 +1200,49 @@ function togglePassword(id,button){
         button.textContent = "◉";
 
     }
-
 }
 
 
-/* =========================
-   TEMPORARY TOAST MESSAGE
-========================= */
+/* =====================================================
+   TOP MESSAGE
+===================================================== */
 
-function showToast(message){
+function showTopMessage(message){
 
-    const toast =
-        document.getElementById("toastMessage");
+    const container =
+        document.getElementById(
+            "topMessageContainer"
+        );
 
-    const toastText =
-        document.getElementById("toastText");
+    const text =
+        document.getElementById(
+            "topMessageText"
+        );
 
-    if(!toast || !toastText){
+    if(!container || !text){
         return;
     }
 
-    toastText.textContent = message;
+    text.textContent = message;
 
-    toast.classList.add("show");
+    container.classList.add("show");
 
     clearTimeout(
-        window.toastTimer
+        window.topMessageTimer
     );
 
-    window.toastTimer =
-        setTimeout(
-            function(){
+    window.topMessageTimer =
+        setTimeout(function(){
 
-                toast.classList.remove("show");
+            container.classList.remove("show");
 
-            },
-            3000
-        );
+        },3500);
 }
 
 
-/* =========================
-   FORM
-========================= */
+/* =====================================================
+   REGISTER FORM
+===================================================== */
 
 const registerForm =
     document.getElementById(
@@ -1312,11 +1265,6 @@ if(registerForm){
     registerForm.addEventListener(
         "submit",
         function(event){
-
-            /*
-             * Check the fields before
-             * allowing the form to submit.
-             */
 
             const fullname =
                 document.getElementById(
@@ -1344,7 +1292,7 @@ if(registerForm){
                 ).value;
 
 
-            /* Empty field message */
+            /* Required fields */
 
             if(
                 !fullname ||
@@ -1356,7 +1304,7 @@ if(registerForm){
 
                 event.preventDefault();
 
-                showToast(
+                showTopMessage(
                     "Please fill in all required fields."
                 );
 
@@ -1364,13 +1312,13 @@ if(registerForm){
             }
 
 
-            /* Password length */
+            /* Login password */
 
             if(password.length < 6){
 
                 event.preventDefault();
 
-                showToast(
+                showTopMessage(
                     "Password must be at least 6 characters."
                 );
 
@@ -1378,15 +1326,13 @@ if(registerForm){
             }
 
 
-            /* Withdrawal password length */
+            /* Withdrawal password */
 
-            if(
-                withdrawPassword.length < 6
-            ){
+            if(withdrawPassword.length < 6){
 
                 event.preventDefault();
 
-                showToast(
+                showTopMessage(
                     "Withdrawal password must be at least 6 characters."
                 );
 
@@ -1395,8 +1341,8 @@ if(registerForm){
 
 
             /*
-             * Everything looks okay.
-             * Allow Flask to receive the POST.
+             * Form is valid.
+             * Allow Flask to receive POST.
              */
 
             if(registerButton){
@@ -1421,42 +1367,62 @@ if(registerForm){
 }
 
 
-/* =========================
-   AUTO HIDE SERVER MESSAGES
-========================= */
+/* =====================================================
+   SHOW FLASK FLASH MESSAGE AT TOP
+===================================================== */
 
-setTimeout(
-    function(){
+const flashMessage =
+    document.querySelector(
+        "[data-flash-message]"
+    );
 
-        const messages =
-            document.querySelectorAll(
-                ".message"
-            );
+if(flashMessage){
 
-        messages.forEach(
-            function(message){
-
-                message.style.transition =
-                    "opacity .4s ease";
-
-                message.style.opacity =
-                    "0";
-
-                setTimeout(
-                    function(){
-
-                        message.remove();
-
-                    },
-                    450
-                );
-
-            }
+    const message =
+        flashMessage.getAttribute(
+            "data-flash-message"
         );
 
-    },
-    4000
-);
+    if(message){
+
+        setTimeout(function(){
+
+            showTopMessage(message);
+
+        },200);
+
+    }
+
+}
+
+
+/* =====================================================
+   REMOVE NORMAL FLASH MESSAGES
+===================================================== */
+
+setTimeout(function(){
+
+    const messages =
+        document.querySelectorAll(
+            ".message"
+        );
+
+    messages.forEach(function(message){
+
+        message.style.transition =
+            "opacity .4s ease";
+
+        message.style.opacity = "0";
+
+        setTimeout(function(){
+
+            message.remove();
+
+        },450);
+
+    });
+
+},4000);
 
 </script>
 
