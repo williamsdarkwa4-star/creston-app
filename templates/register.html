@@ -1,679 +1,963 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width,
-                   initial-scale=1.0,
-                   maximum-scale=1.0,
-                   user-scalable=no">
+<title>Register - JOMA</title>
 
-    <title>JOMA - Create Account</title>
+<style>
 
-    <style>
+/* =========================
+   RESET
+========================= */
 
-        :root {
-            --orange: #ff6f2d;
-            --blue: #2339b3;
-            --blue-dark: #1a2a8c;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
 
-            --input-bg: rgba(255,255,255,.92);
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
 
-            --text-dark: #252936;
-            --text-muted: #7c879d;
+body{
+    background:#f4f7fb;
+    color:#172033;
+    overflow-x:hidden;
+}
 
-            --white: #ffffff;
-            --danger: #dc3545;
-            --success: #20a464;
-        }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+/* =========================
+   BACKGROUND PHOTO
+========================= */
 
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Roboto,
-                Arial,
-                sans-serif;
-        }
+.background{
+    position:fixed;
+    inset:0;
 
-        html {
-            min-height: 100%;
-        }
+    z-index:-5;
 
-        body {
-            min-height: 100vh;
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.76),
+            rgba(244,247,251,.88)
+        ),
+        url("/static/your-background-photo.jpg");
 
-            margin: 0;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+}
 
-            display: flex;
-            justify-content: center;
 
-            background: #e5e7eb;
+/* =========================
+   SOFT BLUE EFFECT
+========================= */
 
-            color: var(--text-dark);
-        }
+.background:after{
+    content:"";
 
+    position:absolute;
+    inset:0;
 
-        /* =========================================
-           MAIN MOBILE SCREEN
-        ========================================= */
+    background:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(25,86,220,.10),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(25,86,220,.08),
+            transparent 35%
+        );
 
-        .register-screen {
+    pointer-events:none;
+}
 
-            width: 100%;
-            max-width: 420px;
 
-            min-height: 100vh;
+/* =========================
+   FLOATING DECORATION
+========================= */
 
-            position: relative;
+.floating-x{
+    position:fixed;
 
-            overflow: hidden;
+    top:13%;
+    right:7%;
 
-            background-image:
-                linear-gradient(
-                    rgba(255,255,255,.42),
-                    rgba(255,255,255,.42)
-                ),
-                url("/static/Screenshot_20260830_134225_Chrome.jpg");
+    width:52px;
+    height:52px;
 
-            background-size: cover;
+    border:1px solid rgba(30,83,190,.16);
 
-            background-position: center;
+    border-radius:50%;
 
-            padding-bottom: 35px;
-        }
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
+    color:#2161cf;
 
-        /* =========================================
-           LIGHT PAGE OVERLAY
-        ========================================= */
+    font-size:23px;
+    font-weight:900;
 
-        .page-overlay {
+    opacity:.25;
 
-            position: absolute;
+    animation:floatX 4s ease-in-out infinite;
 
-            inset: 0;
+    z-index:-1;
+}
 
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(255,255,255,.15),
-                    rgba(255,111,45,.18)
-                );
+@keyframes floatX{
 
-            pointer-events: none;
+    0%,100%{
+        transform:translateY(0) rotate(0deg);
+    }
 
-            z-index: 0;
-        }
+    50%{
+        transform:translateY(25px) rotate(8deg);
+    }
+}
 
 
-        /* =========================================
-           HERO
-        ========================================= */
+/* =========================
+   PAGE
+========================= */
 
-        .hero-banner {
+.page{
+    width:100%;
+    max-width:470px;
 
-            height: 245px;
+    min-height:100vh;
 
-            position: relative;
+    margin:auto;
 
-            display: flex;
+    padding:22px 17px 40px;
+}
 
-            justify-content: center;
 
-            align-items: flex-end;
+/* =========================
+   BRAND
+========================= */
 
-            z-index: 2;
-        }
+.brand{
+    text-align:center;
 
+    padding:12px 0 24px;
+}
 
-        /* =========================================
-           LANGUAGE
-        ========================================= */
+.brand-logo{
+    width:70px;
+    height:70px;
 
-        .language-dropdown {
+    margin:0 auto 13px;
 
-            position: absolute;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-            top: 20px;
-            right: 16px;
+    border-radius:21px;
 
-            padding: 9px 17px;
+    background:#2161cf;
 
-            border-radius: 22px;
+    color:#fff;
 
-            background:
-                rgba(255,255,255,.92);
+    font-size:27px;
+    font-weight:900;
 
-            color: var(--blue);
+    box-shadow:
+        0 10px 30px rgba(33,97,207,.25);
+}
 
-            font-size: 14px;
+.brand h1{
+    font-size:27px;
 
-            font-weight: 600;
+    font-weight:900;
 
-            box-shadow:
-                0 5px 18px
-                rgba(0,0,0,.12);
+    letter-spacing:-.6px;
 
-            z-index: 5;
-        }
+    color:#172033;
 
+    margin-bottom:5px;
+}
 
-        /* =========================================
-           JOMA LOGO
-        ========================================= */
+.brand p{
+    color:#7c8799;
 
-        .center-logo-badge {
+    font-size:12px;
+}
 
-            width: 96px;
-            height: 96px;
 
-            position: absolute;
+/* =========================
+   CARD
+========================= */
 
-            bottom: 18px;
+.card{
+    background:rgba(255,255,255,.96);
 
-            border-radius: 50%;
+    border:1px solid #e5eaf2;
 
-            background: white;
+    border-radius:22px;
 
-            border: 4px solid
-                rgba(255,255,255,.95);
+    padding:25px 20px 24px;
 
-            overflow: hidden;
+    box-shadow:
+        0 20px 60px rgba(29,52,87,.13);
 
-            box-shadow:
-                0 8px 25px
-                rgba(0,0,0,.18);
+    backdrop-filter:blur(12px);
+}
 
-            display: flex;
 
-            flex-direction: column;
+/* =========================
+   CARD HEADER
+========================= */
 
-            justify-content: center;
+.card-header{
+    margin-bottom:21px;
+}
 
-            align-items: center;
+.card-header h2{
+    color:#172033;
 
-            z-index: 5;
-        }
+    font-size:23px;
 
-        .logo-top {
+    font-weight:800;
 
-            width: 100%;
-            height: 35%;
+    margin-bottom:6px;
+}
 
-            background:
-                var(--orange);
-        }
+.card-header p{
+    color:#7d8798;
 
-        .logo-name {
+    font-size:12px;
 
-            width: 100%;
+    line-height:1.5;
+}
 
-            padding: 3px 0;
 
-            background: white;
+/* =========================
+   TEMPORARY NOTIFICATION
+========================= */
 
-            color: var(--blue);
+.toast-container{
+    position:fixed;
 
-            text-align: center;
+    top:18px;
+    left:50%;
 
-            font-size: 16px;
+    transform:translateX(-50%);
 
-            font-weight: 900;
+    width:calc(100% - 30px);
+    max-width:420px;
 
-            letter-spacing: 1px;
-        }
+    z-index:10000;
 
-        .logo-bottom {
+    pointer-events:none;
+}
 
-            width: 100%;
-            height: 35%;
+.toast{
+    display:flex;
+    align-items:center;
 
-            background:
-                var(--blue);
-        }
+    gap:11px;
 
+    padding:13px 15px;
 
-        /* =========================================
-           FORM
-        ========================================= */
+    background:#ffffff;
 
-        .form-container {
+    border:1px solid #dfe5ee;
 
-            position: relative;
+    border-left:4px solid #2161cf;
 
-            z-index: 3;
+    border-radius:12px;
 
-            padding: 0 24px;
+    box-shadow:
+        0 12px 35px rgba(20,40,75,.16);
 
-            display: flex;
+    color:#253047;
 
-            flex-direction: column;
-        }
+    font-size:12px;
+    line-height:1.4;
 
+    opacity:0;
 
-        /* =========================================
-           HEADING
-        ========================================= */
+    transform:
+        translateY(-25px)
+        scale(.97);
 
-        .form-heading {
+    transition:
+        opacity .3s ease,
+        transform .3s ease;
+}
 
-            color: white;
+.toast.show{
+    opacity:1;
 
-            font-size: 25px;
+    transform:
+        translateY(0)
+        scale(1);
+}
 
-            font-weight: 750;
+.toast-icon{
+    width:25px;
+    height:25px;
 
-            margin-bottom: 23px;
+    flex-shrink:0;
 
-            text-shadow:
-                0 2px 8px
-                rgba(0,0,0,.22);
-        }
+    border-radius:50%;
 
+    background:#eaf1ff;
 
-        /* =========================================
-           FLASH MESSAGES
-        ========================================= */
+    color:#2161cf;
 
-        .flash-container {
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-            margin-bottom: 15px;
-        }
+    font-size:13px;
+    font-weight:900;
+}
 
-        .flash-message {
 
-            padding: 12px 14px;
+/* =========================
+   FLASH MESSAGES
+========================= */
 
-            margin-bottom: 8px;
+.message{
+    padding:12px 14px;
 
-            border-radius: 10px;
+    border-radius:10px;
 
-            background:
-                rgba(255,255,255,.95);
+    margin-bottom:16px;
 
-            font-size: 14px;
+    font-size:12px;
 
-            font-weight: 600;
+    line-height:1.5;
 
-            box-shadow:
-                0 4px 12px
-                rgba(0,0,0,.10);
-        }
+    text-align:center;
+}
 
-        .flash-message.error {
+.success{
+    background:#eef8f2;
 
-            color: var(--danger);
+    color:#198754;
 
-            border-left:
-                4px solid var(--danger);
-        }
+    border:1px solid #ccebd9;
+}
 
-        .flash-message.success {
+.error{
+    background:#fff1f1;
 
-            color: var(--success);
+    color:#dc3545;
 
-            border-left:
-                4px solid var(--success);
-        }
+    border:1px solid #f2caca;
+}
 
 
-        /* =========================================
-           INPUT WRAPPER
-        ========================================= */
+/* =========================
+   REFERRAL NOTICE
+========================= */
 
-        .input-wrapper {
+.referral-box{
+    background:#f4f7ff;
 
-            width: 100%;
+    border:1px solid #e0e8fa;
 
-            height: 55px;
+    border-left:3px solid #2161cf;
 
-            display: flex;
+    border-radius:10px;
 
-            align-items: center;
+    padding:13px;
 
-            background:
-                var(--input-bg);
+    margin-bottom:20px;
 
-            border:
-                1px solid
-                rgba(255,255,255,.55);
+    color:#718096;
 
-            border-radius: 14px;
+    font-size:11px;
 
-            padding: 0 16px;
+    line-height:1.6;
+}
 
-            margin-bottom: 15px;
+.referral-box strong{
+    color:#2161cf;
+}
 
-            box-shadow:
-                0 5px 15px
-                rgba(0,0,0,.08);
 
-            backdrop-filter:
-                blur(5px);
-        }
+/* =========================
+   FORM
+========================= */
 
+.form-group{
+    margin-bottom:16px;
+}
 
-        /* =========================================
-           INPUT
-        ========================================= */
+label{
+    display:block;
 
-        .input-wrapper input {
+    color:#4b5567;
 
-            width: 100%;
+    font-size:11px;
 
-            height: 100%;
+    font-weight:700;
 
-            border: none;
+    margin-bottom:7px;
 
-            outline: none;
+    letter-spacing:.2px;
+}
 
-            background: transparent;
 
-            color:
-                var(--text-dark);
+/* =========================
+   INPUT BOX
+========================= */
 
-            font-size: 15px;
-        }
+.input-box{
+    height:53px;
 
-        .input-wrapper input::placeholder {
+    width:100%;
 
-            color:
-                var(--text-muted);
-        }
+    display:flex;
+    align-items:center;
 
+    background:#f9fbfd;
 
-        /* =========================================
-           COUNTRY CODE
-        ========================================= */
+    border:1px solid #dfe5ee;
 
-        .country-code-prefix {
+    border-radius:11px;
 
-            color:
-                var(--blue);
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
 
-            font-weight: 700;
+.input-box:focus-within{
+    border-color:#2161cf;
 
-            padding-right: 13px;
+    background:#ffffff;
 
-            margin-right: 13px;
+    box-shadow:
+        0 0 0 3px rgba(33,97,207,.08);
+}
 
-            border-right:
-                1px solid
-                #c5ccd7;
+.input-icon{
+    width:45px;
 
-            white-space: nowrap;
-        }
+    display:flex;
 
+    align-items:center;
+    justify-content:center;
 
-        /* =========================================
-           ICONS
-        ========================================= */
+    color:#8290a5;
 
-        .field-icon,
-        .referral-icon {
+    font-size:16px;
+}
 
-            width: 20px;
+.input-box input{
+    flex:1;
 
-            height: 20px;
+    width:100%;
 
-            fill:
-                var(--text-muted);
+    height:100%;
 
-            flex-shrink: 0;
-        }
+    border:none;
+    outline:none;
 
-        .field-icon {
+    background:transparent;
 
-            cursor: pointer;
+    color:#172033;
 
-            margin-left: 8px;
+    font-size:13px;
 
-            opacity: .55;
+    padding-right:10px;
+}
 
-            transition:
-                opacity .2s ease;
-        }
+.input-box input::placeholder{
+    color:#9aa5b5;
+}
 
-        .referral-icon {
 
-            margin-right: 12px;
-        }
+/* =========================
+   PASSWORD
+========================= */
 
+.password-toggle{
+    width:45px;
 
-        /* =========================================
-           REGISTER BUTTON
-        ========================================= */
+    height:100%;
 
-        .submit-button {
+    border:none;
 
-            width: 100%;
+    background:transparent;
 
-            height: 52px;
+    color:#8490a3;
 
-            margin-top: 10px;
+    cursor:pointer;
 
-            margin-bottom: 23px;
+    font-size:15px;
 
-            border: none;
+    transition:.2s ease;
+}
 
-            border-radius: 27px;
+.password-toggle:hover{
+    color:#2161cf;
+}
 
-            background:
-                var(--blue);
+.password-toggle:active{
+    transform:scale(.9);
+}
 
-            color: white;
+.password-note{
+    margin-top:6px;
 
-            font-size: 16px;
+    color:#9aa3b2;
 
-            font-weight: 750;
+    font-size:9px;
+}
 
-            letter-spacing: 1px;
 
-            text-transform: uppercase;
+/* =========================
+   REGISTER BUTTON
+========================= */
 
-            display: flex;
+.register-btn{
+    width:100%;
 
-            justify-content: center;
+    height:55px;
 
-            align-items: center;
+    margin-top:8px;
 
-            gap: 10px;
+    border:none;
 
-            cursor: pointer;
+    border-radius:11px;
 
-            box-shadow:
-                0 7px 18px
-                rgba(35,57,179,.32);
+    background:#2161cf;
 
-            transition:
-                .2s ease;
-        }
+    color:#ffffff;
 
-        .submit-button:hover {
+    font-size:14px;
 
-            background:
-                var(--blue-dark);
-        }
+    font-weight:900;
 
-        .submit-button:active {
+    letter-spacing:.7px;
 
-            transform:
-                scale(.98);
-        }
+    cursor:pointer;
 
+    position:relative;
 
-        /* =========================================
-           LOGIN LINK
-        ========================================= */
+    overflow:hidden;
 
-        .footer-redirect-link {
+    box-shadow:
+        0 8px 22px rgba(33,97,207,.22);
 
-            color: white;
+    transition:
+        transform .15s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
 
-            text-align: center;
+.register-btn:hover{
+    background:#174fae;
 
-            font-size: 15px;
+    box-shadow:
+        0 10px 26px rgba(33,97,207,.28);
+}
 
-            font-weight: 600;
+.register-btn:active{
+    transform:scale(.98);
+}
 
-            text-decoration: none;
+.register-btn.loading{
+    pointer-events:none;
 
-            text-shadow:
-                0 2px 7px
-                rgba(0,0,0,.25);
-        }
+    color:transparent;
+}
 
-        .footer-redirect-link:hover {
+.register-btn.loading:after{
+    content:"";
 
-            text-decoration:
-                underline;
-        }
+    position:absolute;
 
+    width:19px;
+    height:19px;
 
-        /* =========================================
-           LOADING
-        ========================================= */
+    top:50%;
+    left:50%;
 
-        .loader {
+    margin-left:-9.5px;
+    margin-top:-9.5px;
 
-            width: 19px;
+    border:2px solid rgba(255,255,255,.35);
 
-            height: 19px;
+    border-top-color:#ffffff;
 
-            border:
-                3px solid
-                rgba(255,255,255,.35);
+    border-radius:50%;
 
-            border-top-color:
-                white;
+    animation:spin .7s linear infinite;
+}
 
-            border-radius: 50%;
 
-            animation:
-                spin .75s linear infinite;
-        }
+/* =========================
+   LOGIN
+========================= */
 
-        @keyframes spin {
+.login-link{
+    text-align:center;
 
-            to {
-                transform:
-                    rotate(360deg);
-            }
-        }
+    margin-top:19px;
 
+    color:#7d8798;
 
-        /* =========================================
-           SMALL SCREENS
-        ========================================= */
+    font-size:11px;
+}
 
-        @media (max-width: 360px) {
+.login-link a{
+    color:#2161cf;
 
-            .form-container {
+    font-weight:800;
 
-                padding-left: 18px;
-                padding-right: 18px;
-            }
+    text-decoration:none;
 
-            .hero-banner {
+    margin-left:3px;
+}
 
-                height: 225px;
-            }
+.login-link a:hover{
+    text-decoration:underline;
+}
 
-            .center-logo-badge {
 
-                width: 88px;
-                height: 88px;
-            }
+/* =========================
+   SECURITY
+========================= */
 
-            .form-heading {
+.security{
+    margin-top:19px;
 
-                font-size: 23px;
-            }
-        }
+    padding-top:15px;
 
-    </style>
+    border-top:1px solid #e7ebf1;
+
+    text-align:center;
+
+    color:#9aa3b1;
+
+    font-size:9px;
+
+    letter-spacing:.2px;
+}
+
+
+/* =========================
+   FULL PAGE BLUE LOADING
+========================= */
+
+.page-loader{
+    position:fixed;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            145deg,
+            #2161cf,
+            #174da8
+        );
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    flex-direction:column;
+
+    z-index:9999;
+}
+
+.page-loader.show{
+    display:flex;
+}
+
+.loader-logo{
+    width:65px;
+    height:65px;
+
+    border-radius:19px;
+
+    background:#ffffff;
+
+    color:#2161cf;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:27px;
+
+    font-weight:900;
+
+    margin-bottom:18px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.15);
+
+    animation:
+        loaderPulse 1.3s ease-in-out infinite;
+}
+
+.loader-spinner{
+    width:29px;
+    height:29px;
+
+    border:3px solid rgba(255,255,255,.30);
+
+    border-top-color:#ffffff;
+
+    border-radius:50%;
+
+    animation:
+        spin .7s linear infinite;
+
+    margin-bottom:13px;
+}
+
+.loader-text{
+    color:#ffffff;
+
+    font-size:11px;
+
+    letter-spacing:.5px;
+
+    opacity:.9;
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes loaderPulse{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.07);
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:360px){
+
+    .page{
+        padding:18px 12px 30px;
+    }
+
+    .brand-logo{
+        width:64px;
+        height:64px;
+
+        border-radius:19px;
+
+        font-size:25px;
+    }
+
+    .brand h1{
+        font-size:23px;
+    }
+
+    .card{
+        padding:22px 16px;
+    }
+
+    .card-header h2{
+        font-size:21px;
+    }
+}
+
+</style>
 </head>
-
 
 <body>
 
-<div class="register-screen">
 
-    <div class="page-overlay"></div>
+<!-- =========================
+     BACKGROUND
+========================= -->
+
+<div class="background"></div>
 
 
-    <!-- =========================================
-         HERO
-    ========================================== -->
+<!-- =========================
+     FLOATING DECORATION
+========================= -->
 
-    <section class="hero-banner">
+<div class="floating-x">
+    J
+</div>
 
-        <div class="language-dropdown">
-            Language
+
+<!-- =========================
+     TEMPORARY MESSAGE
+========================= -->
+
+<div class="toast-container">
+
+    <div
+        class="toast"
+        id="toastMessage"
+    >
+
+        <div class="toast-icon">
+            !
         </div>
 
-
-        <div class="center-logo-badge">
-
-            <div class="logo-top"></div>
-
-            <div class="logo-name">
-                JOMA
-            </div>
-
-            <div class="logo-bottom"></div>
-
+        <div id="toastText">
+            Please fill in all required fields.
         </div>
 
-    </section>
+    </div>
+
+</div>
 
 
-    <!-- =========================================
-         REGISTRATION FORM
-    ========================================== -->
+<!-- =========================
+     BLUE LOADING SCREEN
+========================= -->
 
-    <main class="form-container">
+<div
+    class="page-loader"
+    id="pageLoader"
+>
 
-        <h1 class="form-heading">
-            Create Account
+    <div class="loader-logo">
+        J
+    </div>
+
+    <div class="loader-spinner"></div>
+
+    <div class="loader-text">
+        Creating your account...
+    </div>
+
+</div>
+
+
+<div class="page">
+
+
+    <!-- =========================
+         BRAND
+    ========================= -->
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            J
+        </div>
+
+        <h1>
+            JOMA
         </h1>
 
+        <p>
+            Welcome to the JOMA platform
+        </p>
 
-        <!-- =====================================
-             FLASK FLASH MESSAGES
-        ====================================== -->
+    </div>
+
+
+    <!-- =========================
+         REGISTER CARD
+    ========================= -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2>
+                Create Account
+            </h2>
+
+            <p>
+                Enter your information below to continue.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             FLASH MESSAGES
+        ========================= -->
 
         {% with messages = get_flashed_messages(with_categories=true) %}
 
-            {% if messages %}
+            {% for category, message in messages %}
 
-                <div class="flash-container">
-
-                    {% for category, message in messages %}
-
-                        <div class="flash-message {{ category }}">
-                            {{ message }}
-                        </div>
-
-                    {% endfor %}
-
+                <div class="message {{ category }}">
+                    {{ message }}
                 </div>
 
-            {% endif %}
+            {% endfor %}
 
         {% endwith %}
 
 
-        <!-- =====================================
-             REAL FLASK FORM
-        ====================================== -->
+        <!-- =========================
+             REFERRAL NOTICE
+        ========================= -->
+
+        {% if invite_code %}
+
+            <div class="referral-box">
+
+                Referral code detected:
+
+                <strong>
+                    {{ invite_code }}
+                </strong>
+
+                <br>
+
+                Your account will be linked to this referral code.
+
+            </div>
+
+        {% else %}
+
+            <div class="referral-box">
+
+                <strong>Referral code</strong>
+
+                is optional. You can register without one.
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =========================
+             FORM
+        ========================= -->
 
         <form
             method="POST"
@@ -682,231 +966,497 @@
         >
 
 
-            <!-- =================================
-                 PHONE
-            ================================== -->
+            <!-- FULL NAME -->
 
-            <div class="input-wrapper">
+            <div class="form-group">
 
-                <span class="country-code-prefix">
-                    +233
-                </span>
+                <label for="fullname">
+                    FULL NAME
+                </label>
 
-                <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    placeholder="Enter phone number"
-                    autocomplete="tel"
-                    inputmode="numeric"
-                    required
-                >
+                <div class="input-box">
 
-            </div>
+                    <div class="input-icon">
+                        👤
+                    </div>
 
+                    <input
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        required
+                    >
 
-            <!-- =================================
-                 PASSWORD
-            ================================== -->
-
-            <div class="input-wrapper">
-
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Please new password"
-                    autocomplete="new-password"
-                    minlength="6"
-                    required
-                >
-
-
-                <svg
-                    class="field-icon"
-                    onclick="togglePassword('password', this)"
-                    viewBox="0 0 24 24"
-                    aria-label="Show password"
-                >
-
-                    <path
-                        d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"
-                    />
-
-                </svg>
+                </div>
 
             </div>
 
 
-            <!-- =================================
-                 CONFIRM PASSWORD
-            ================================== -->
+            <!-- USERNAME -->
 
-            <div class="input-wrapper">
+            <div class="form-group">
 
-                <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirm_password"
-                    placeholder="Please new password again"
-                    autocomplete="new-password"
-                    minlength="6"
-                    required
-                >
+                <label for="username">
+                    USERNAME
+                </label>
 
+                <div class="input-box">
 
-                <svg
-                    class="field-icon"
-                    onclick="togglePassword('confirmPassword', this)"
-                    viewBox="0 0 24 24"
-                    aria-label="Show password"
-                >
+                    <div class="input-icon">
+                        @
+                    </div>
 
-                    <path
-                        d="M12 5C7 5 2.73 8.11 1 12c1.73 3.89 6 7 11 7s9.27-3.11 11-7c-1.73-3.89-6-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"
-                    />
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Choose a username"
+                        autocomplete="username"
+                        required
+                    >
 
-                </svg>
+                </div>
 
             </div>
 
 
-            <!-- =================================
-                 REFERRAL CODE
-            ================================== -->
+            <!-- PHONE -->
 
-            <div class="input-wrapper">
+            <div class="form-group">
 
-                <svg
-                    class="referral-icon"
-                    viewBox="0 0 24 24"
-                >
+                <label for="phone">
+                    PHONE NUMBER
+                </label>
 
-                    <path
-                        d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                    />
+                <div class="input-box">
 
-                </svg>
+                    <div class="input-icon">
+                        📱
+                    </div>
 
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        autocomplete="tel"
+                        required
+                    >
 
-                <input
-                    type="text"
-                    id="referral_code"
-                    name="referral_code"
-                    value="{{ referral_code or '' }}"
-                    placeholder="Referral code"
-                    autocomplete="off"
-                >
+                </div>
 
             </div>
 
 
-            <!-- =================================
-                 REGISTER
-            ================================== -->
+            <!-- LOGIN PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    LOGIN PASSWORD
+                </label>
+
+                <div class="input-box">
+
+                    <div class="input-icon">
+                        🔒
+                    </div>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a login password"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword(
+                            'password',
+                            this
+                        )"
+                    >
+                        ◉
+                    </button>
+
+                </div>
+
+                <div class="password-note">
+                    Minimum 6 characters.
+                </div>
+
+            </div>
+
+
+            <!-- WITHDRAWAL PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="withdraw_password">
+                    WITHDRAWAL PASSWORD
+                </label>
+
+                <div class="input-box">
+
+                    <div class="input-icon">
+                        🔐
+                    </div>
+
+                    <input
+                        type="password"
+                        id="withdraw_password"
+                        name="withdraw_password"
+                        placeholder="Create withdrawal password"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword(
+                            'withdraw_password',
+                            this
+                        )"
+                    >
+                        ◉
+                    </button>
+
+                </div>
+
+                <div class="password-note">
+                    Used when authorizing withdrawals.
+                </div>
+
+            </div>
+
+
+            <!-- REFERRAL CODE -->
+
+            <div class="form-group">
+
+                <label for="referred_by">
+
+                    REFERRAL CODE
+
+                    <span style="
+                        color:#9aa3b1;
+                        font-weight:normal;
+                    ">
+                        (OPTIONAL)
+                    </span>
+
+                </label>
+
+                <div class="input-box referral-input">
+
+                    <div class="input-icon">
+                        🎁
+                    </div>
+
+                    <input
+                        type="text"
+                        id="referred_by"
+                        name="referred_by"
+                        value="{{ invite_code or '' }}"
+                        placeholder="Enter referral code"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- CREATE ACCOUNT -->
 
             <button
                 type="submit"
+                class="register-btn"
                 id="registerButton"
-                class="submit-button"
             >
-
-                <span id="buttonText">
-                    Register
-                </span>
-
+                CREATE ACCOUNT
             </button>
+
 
         </form>
 
 
-        <!-- =====================================
+        <!-- =========================
              LOGIN
-        ====================================== -->
+        ========================= -->
 
-        <a
-            href="{{ url_for('login') }}"
-            class="footer-redirect-link"
-        >
-            I already have an account
-        </a>
+        <div class="login-link">
 
-    </main>
+            Already have an account?
+
+            <a href="{{ url_for('login') }}">
+                Login
+            </a>
+
+        </div>
+
+
+        <!-- =========================
+             SECURITY
+        ========================= -->
+
+        <div class="security">
+
+            🔒 Your account information is securely handled.
+
+        </div>
+
+    </div>
 
 </div>
 
 
 <script>
 
-    /* =========================================
-       PASSWORD VISIBILITY
-    ========================================= */
 
-    function togglePassword(inputId, icon) {
+/* =========================
+   PASSWORD TOGGLE
+========================= */
 
-        const input =
-            document.getElementById(inputId);
+function togglePassword(id,button){
 
-        if (input.type === "password") {
+    const input =
+        document.getElementById(id);
 
-            input.type = "text";
-
-            icon.style.opacity = "1";
-
-        } else {
-
-            input.type = "password";
-
-            icon.style.opacity = ".55";
-        }
+    if(!input){
+        return;
     }
 
+    if(input.type === "password"){
 
-    /* =========================================
-       REAL FORM SUBMISSION LOADING STATE
-    ========================================= */
+        input.type = "text";
 
-    const form =
-        document.getElementById("registerForm");
+        button.textContent = "○";
 
-    const button =
-        document.getElementById("registerButton");
+    }else{
 
-    const buttonText =
-        document.getElementById("buttonText");
+        input.type = "password";
 
+        button.textContent = "◉";
 
-    form.addEventListener("submit", function(event) {
+    }
 
-        const password =
-            document.getElementById("password").value;
-
-        const confirmPassword =
-            document.getElementById("confirmPassword").value;
+}
 
 
-        /* Browser-side validation */
+/* =========================
+   TEMPORARY TOAST MESSAGE
+========================= */
 
-        if (password !== confirmPassword) {
+function showToast(message){
 
-            event.preventDefault();
+    const toast =
+        document.getElementById("toastMessage");
 
-            alert("Passwords do not match.");
+    const toastText =
+        document.getElementById("toastText");
 
-            return;
+    if(!toast || !toastText){
+        return;
+    }
+
+    toastText.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+    window.toastTimer =
+        setTimeout(
+            function(){
+
+                toast.classList.remove("show");
+
+            },
+            3000
+        );
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+const registerForm =
+    document.getElementById(
+        "registerForm"
+    );
+
+const registerButton =
+    document.getElementById(
+        "registerButton"
+    );
+
+const pageLoader =
+    document.getElementById(
+        "pageLoader"
+    );
+
+
+if(registerForm){
+
+    registerForm.addEventListener(
+        "submit",
+        function(event){
+
+            /*
+             * Check the fields before
+             * allowing the form to submit.
+             */
+
+            const fullname =
+                document.getElementById(
+                    "fullname"
+                ).value.trim();
+
+            const username =
+                document.getElementById(
+                    "username"
+                ).value.trim();
+
+            const phone =
+                document.getElementById(
+                    "phone"
+                ).value.trim();
+
+            const password =
+                document.getElementById(
+                    "password"
+                ).value;
+
+            const withdrawPassword =
+                document.getElementById(
+                    "withdraw_password"
+                ).value;
+
+
+            /* Empty field message */
+
+            if(
+                !fullname ||
+                !username ||
+                !phone ||
+                !password ||
+                !withdrawPassword
+            ){
+
+                event.preventDefault();
+
+                showToast(
+                    "Please fill in all required fields."
+                );
+
+                return;
+            }
+
+
+            /* Password length */
+
+            if(password.length < 6){
+
+                event.preventDefault();
+
+                showToast(
+                    "Password must be at least 6 characters."
+                );
+
+                return;
+            }
+
+
+            /* Withdrawal password length */
+
+            if(
+                withdrawPassword.length < 6
+            ){
+
+                event.preventDefault();
+
+                showToast(
+                    "Withdrawal password must be at least 6 characters."
+                );
+
+                return;
+            }
+
+
+            /*
+             * Everything looks okay.
+             * Allow Flask to receive the POST.
+             */
+
+            if(registerButton){
+
+                registerButton.classList.add(
+                    "loading"
+                );
+
+            }
+
+            if(pageLoader){
+
+                pageLoader.classList.add(
+                    "show"
+                );
+
+            }
+
         }
+    );
+
+}
 
 
-        /* Let Flask receive the form */
+/* =========================
+   AUTO HIDE SERVER MESSAGES
+========================= */
 
-        button.disabled = true;
+setTimeout(
+    function(){
 
-        buttonText.innerHTML = `
-            <span class="loader"></span>
-            Creating...
-        `;
+        const messages =
+            document.querySelectorAll(
+                ".message"
+            );
 
-    });
+        messages.forEach(
+            function(message){
+
+                message.style.transition =
+                    "opacity .4s ease";
+
+                message.style.opacity =
+                    "0";
+
+                setTimeout(
+                    function(){
+
+                        message.remove();
+
+                    },
+                    450
+                );
+
+            }
+        );
+
+    },
+    4000
+);
 
 </script>
 
