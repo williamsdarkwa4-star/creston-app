@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Withdrawal Accounts - JOMA</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    padding-bottom:80px;
+}
+
+.header{
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:white;
+    padding:30px 20px;
+    text-align:center;
+    border-radius:0 0 30px 30px;
+}
+
+.container{
+    padding:20px;
+    max-width:700px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    margin-bottom:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.card h2{
+    color:#2563eb;
+    margin-bottom:12px;
+}
+
+.info{
+    line-height:28px;
+    color:#475569;
+}
+
+.back{
+    display:block;
+    background:#e2e8f0;
+    color:#0f172a;
+    text-decoration:none;
+    text-align:center;
+    padding:14px;
+    border-radius:14px;
+    margin-bottom:18px;
+    font-weight:bold;
+}
+
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    padding:14px;
+    box-shadow:0 -5px 15px rgba(0,0,0,.1);
+}
+
+.bottom-nav a{
+    text-decoration:none;
+    color:#2563eb;
+    text-align:center;
+    font-weight:bold;
+    font-size:13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Withdrawal Accounts</h1>
+    <p>Manage user withdrawal accounts</p>
+</div>
+
+<div class="container">
+
+<a class="back" href="{{ url_for('admin_dashboard') }}">
+    ← Back to Dashboard
+</a>
+
+{% for account in accounts %}
+
+<div class="card">
+
+    <h2>👤 {{ account.username }}</h2>
+
+    <div class="info">
+
+        <b>User Phone:</b>
+        {{ account.user_phone }}
+
+        <br>
+
+        <b>Account Name:</b>
+        {{ account.account_name }}
+
+        <br>
+
+        <b>Account Phone:</b>
+        {{ account.phone }}
+
+        <br>
+
+        <b>Network:</b>
+        {{ account.network }}
+
+        <br>
+
+        <b>Account ID:</b>
+        {{ account.id }}
+
+    </div>
+
+</div>
+
+{% else %}
+
+<div class="card">
+
+    <h2>No Withdrawal Accounts</h2>
+
+    <div class="info">
+        No withdrawal accounts have been registered yet.
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<div class="bottom-nav">
+
+<a href="{{ url_for('admin_dashboard') }}">
+🏠<br>Dashboard
+</a>
+
+<a href="{{ url_for('admin_users') }}">
+👥<br>Users
+</a>
+
+<a href="{{ url_for('admin_deposits') }}">
+💳<br>Deposits
+</a>
+
+<a href="{{ url_for('admin_withdrawals') }}">
+💸<br>Withdrawals
+</a>
+
+</div>
+
+</body>
+</html>
