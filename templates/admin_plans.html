@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Admin - Plan Management</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --dark: #0b0b0b;
+            --card: #111111;
+            --card2: #151515;
+
+            --green: #3cdc3c;
+            --green-dark: #1e9f1e;
+
+            --white: #ffffff;
+            --muted: #888888;
+            --border: #242424;
+            --red: #ff4545;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #000000;
+            color: #ffffff;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+
+            margin: 0 auto;
+
+            padding: 15px;
+
+            padding-bottom: 50px;
+        }
+
+        /* HEADER */
+
+        .header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 15px;
+
+            margin-bottom: 15px;
+
+            background: #0b0b0b;
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+        }
+
+        .header-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .header-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            color: #000000;
+
+            background: var(--green);
+
+            border-radius: 10px;
+
+            font-size: 18px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+        .header p {
+            margin-top: 3px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+        .logout {
+            color: #ffffff;
+
+            text-decoration: none;
+
+            padding: 9px 12px;
+
+            background: #151515;
+
+            border: 1px solid var(--border);
+
+            border-radius: 8px;
+
+            font-size: 10px;
+        }
+
+        .logout:active {
+            transform: scale(.96);
+        }
+
+        /* FLASH */
+
+        .flash-container {
+            margin-bottom: 12px;
+        }
+
+        .flash {
+            padding: 11px 12px;
+
+            margin-bottom: 7px;
+
+            border-radius: 8px;
+
+            font-size: 10px;
+        }
+
+        .flash.success {
+            color: #000000;
+
+            background: var(--green);
+        }
+
+        .flash.error {
+            color: #ffffff;
+
+            background: #3a1111;
+
+            border: 1px solid #722222;
+        }
+
+        /* CARDS */
+
+        .card {
+            margin-bottom: 15px;
+
+            padding: 15px;
+
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+        }
+
+        .card-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            margin-bottom: 12px;
+
+            color: #ffffff;
+
+            font-size: 14px;
+
+            font-weight: 800;
+        }
+
+        .card-title i {
+            color: var(--green);
+        }
+
+        .card-description {
+            margin-bottom: 13px;
+
+            color: var(--muted);
+
+            font-size: 9px;
+
+            line-height: 1.5;
+        }
+
+        /* FORM */
+
+        .form-group {
+            margin-bottom: 11px;
+        }
+
+        .form-label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #bbbbbb;
+
+            font-size: 9px;
+
+            font-weight: 600;
+        }
+
+        select {
+            width: 100%;
+
+            padding: 11px;
+
+            color: #ffffff;
+
+            background: #080808;
+
+            border: 1px solid #292929;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 10px;
+        }
+
+        select:focus {
+            border-color: var(--green);
+        }
+
+        .assign-button {
+            width: 100%;
+
+            padding: 11px;
+
+            border: none;
+
+            color: #000000;
+
+            background: var(--green);
+
+            border-radius: 8px;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+        }
+
+        .assign-button:active {
+            transform: scale(.98);
+        }
+
+        /* PLAN PREVIEW */
+
+        .plan-preview {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 7px;
+
+            margin-top: 10px;
+        }
+
+        .preview-item {
+            padding: 9px;
+
+            background: #080808;
+
+            border: 1px solid #202020;
+
+            border-radius: 7px;
+        }
+
+        .preview-label {
+            color: #555555;
+
+            font-size: 7px;
+        }
+
+        .preview-value {
+            margin-top: 3px;
+
+            color: var(--green);
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+        /* PLAN LIST */
+
+        .plans-list {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+        .plan-row {
+            padding: 11px;
+
+            background: #0b0b0b;
+
+            border: 1px solid #202020;
+
+            border-radius: 9px;
+        }
+
+        .plan-top {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 8px;
+
+            margin-bottom: 8px;
+        }
+
+        .user-name {
+            color: #ffffff;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+        .user-phone {
+            margin-top: 2px;
+
+            color: #555555;
+
+            font-size: 8px;
+        }
+
+        .plan-name {
+            color: var(--green);
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+        .plan-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 6px;
+
+            margin-bottom: 9px;
+        }
+
+        .detail {
+            padding: 7px;
+
+            background: #111111;
+
+            border-radius: 6px;
+        }
+
+        .detail-label {
+            color: #555555;
+
+            font-size: 7px;
+        }
+
+        .detail-value {
+            margin-top: 2px;
+
+            color: #cccccc;
+
+            font-size: 8px;
+
+            font-weight: 700;
+        }
+
+        .plan-footer {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            padding-top: 7px;
+
+            border-top: 1px solid #1b1b1b;
+        }
+
+        .status {
+            padding: 5px 8px;
+
+            border-radius: 20px;
+
+            color: #000000;
+
+            background: var(--green);
+
+            font-size: 7px;
+
+            font-weight: 800;
+        }
+
+        .status.inactive {
+            color: #ffffff;
+
+            background: #333333;
+        }
+
+        .delete-button {
+            padding: 7px 9px;
+
+            color: #ffffff;
+
+            background: #261010;
+
+            border: 1px solid #572020;
+
+            border-radius: 6px;
+
+            font-size: 8px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .delete-button:active {
+            transform: scale(.96);
+        }
+
+        /* EMPTY */
+
+        .empty {
+            padding: 30px 15px;
+
+            text-align: center;
+
+            color: #555555;
+
+            background: #090909;
+
+            border: 1px solid #181818;
+
+            border-radius: 9px;
+
+            font-size: 10px;
+        }
+
+        .empty i {
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 22px;
+        }
+
+        /* BACK */
+
+        .back-link {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            margin-bottom: 12px;
+
+            color: var(--green);
+
+            text-decoration: none;
+
+            font-size: 9px;
+
+            font-weight: 700;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 500px) {
+
+            .container {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 15px;
+            }
+
+            .plan-preview {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .plan-details {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="header-left">
+
+            <div class="header-icon">
+                <i class="fa-solid fa-boxes-stacked"></i>
+            </div>
+
+            <div>
+
+                <h1>
+                    Plan Management
+                </h1>
+
+                <p>
+                    Assign and manage user plans
+                </p>
+
+            </div>
+
+        </div>
+
+        <a
+            href="{{ url_for('admin_logout') }}"
+            class="logout"
+        >
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+        </a>
+
+    </header>
+
+
+    <!-- FLASH -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="flash-container">
+
+                {% for category, message in messages %}
+
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- BACK -->
+
+    <a
+        href="{{ url_for('admin_dashboard') }}"
+        class="back-link"
+    >
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+        Back to Admin Dashboard
+
+    </a>
+
+
+    <!-- ASSIGN PLAN -->
+
+    <section class="card">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-user-plus"></i>
+
+            Give Plan to User
+
+        </div>
+
+        <p class="card-description">
+
+            Select a registered user and an available plan.
+            The selected plan will be added directly to the
+            user's account without deducting their deposit balance.
+
+        </p>
+
+
+        <form
+            method="POST"
+            action="{{ url_for('admin_assign_plan') }}"
+        >
+
+            <!-- USER -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Select User
+                </label>
+
+                <select
+                    name="user_id"
+                    required
+                >
+
+                    <option value="">
+                        -- Select User --
+                    </option>
+
+                    {% for user in users %}
+
+                        <option value="{{ user.id }}">
+
+                            {{ user.username }}
+
+                            {% if user.fullname %}
+                                - {{ user.fullname }}
+                            {% endif %}
+
+                            {% if user.phone %}
+                                - {{ user.phone }}
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- PLAN -->
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Select Available Plan
+                </label>
+
+                <select
+                    name="plan_id"
+                    id="planSelect"
+                    required
+                >
+
+                    <option value="">
+                        -- Select Plan --
+                    </option>
+
+                    {% for plan in available_plans %}
+
+                        <option
+                            value="{{ plan.id }}"
+                            data-investment="{{ plan.investment_amount }}"
+                            data-daily="{{ plan.daily_income }}"
+                            data-duration="{{ plan.duration }}"
+                        >
+
+                            {{ plan.plan_name }}
+                            -
+                            GHS {{ "%.2f"|format(plan.investment_amount|float) }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- PLAN PREVIEW -->
+
+            <div
+                class="plan-preview"
+                id="planPreview"
+            >
+
+                <div class="preview-item">
+
+                    <div class="preview-label">
+                        Investment
+                    </div>
+
+                    <div
+                        class="preview-value"
+                        id="previewInvestment"
+                    >
+                        GHS 0.00
+                    </div>
+
+                </div>
+
+
+                <div class="preview-item">
+
+                    <div class="preview-label">
+                        Daily Income
+                    </div>
+
+                    <div
+                        class="preview-value"
+                        id="previewDaily"
+                    >
+                        GHS 0.00
+                    </div>
+
+                </div>
+
+
+                <div class="preview-item">
+
+                    <div class="preview-label">
+                        Duration
+                    </div>
+
+                    <div
+                        class="preview-value"
+                        id="previewDuration"
+                    >
+                        0 days
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="assign-button"
+                style="margin-top: 12px;"
+            >
+
+                <i class="fa-solid fa-gift"></i>
+
+                Give Plan to User
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- EXISTING USER PLANS -->
+
+    <section class="card">
+
+        <div class="card-title">
+
+            <i class="fa-solid fa-list-check"></i>
+
+            Assigned Plans
+
+        </div>
+
+        {% if user_plans %}
+
+            <div class="plans-list">
+
+                {% for plan in user_plans %}
+
+                    <div class="plan-row">
+
+                        <div class="plan-top">
+
+                            <div>
+
+                                <div class="user-name">
+
+                                    {{ plan.username }}
+
+                                </div>
+
+                                {% if plan.fullname %}
+
+                                    <div class="user-phone">
+
+                                        {{ plan.fullname }}
+
+                                    </div>
+
+                                {% endif %}
+
+                                {% if plan.phone %}
+
+                                    <div class="user-phone">
+
+                                        {{ plan.phone }}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="plan-name">
+
+                                {{ plan.plan_name }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="plan-details">
+
+                            <div class="detail">
+
+                                <div class="detail-label">
+                                    Investment
+                                </div>
+
+                                <div class="detail-value">
+
+                                    GHS
+                                    {{ "%.2f"|format(
+                                        plan.investment_amount|float
+                                    ) }}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="detail">
+
+                                <div class="detail-label">
+                                    Daily Income
+                                </div>
+
+                                <div class="detail-value">
+
+                                    GHS
+                                    {{ "%.2f"|format(
+                                        plan.daily_income|float
+                                    ) }}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="detail">
+
+                                <div class="detail-label">
+                                    Duration
+                                </div>
+
+                                <div class="detail-value">
+
+                                    {{ plan.duration }} days
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="plan-footer">
+
+                            {% if plan.active %}
+
+                                <span class="status">
+                                    ACTIVE
+                                </span>
+
+                            {% else %}
+
+                                <span class="status inactive">
+                                    INACTIVE
+                                </span>
+
+                            {% endif %}
+
+
+                            <form
+                                method="POST"
+                                action="{{
+                                    url_for(
+                                        'admin_delete_plan',
+                                        plan_record_id=plan.id
+                                    )
+                                }}"
+                                onsubmit="
+                                    return confirm(
+                                        'Delete this plan from the user?'
+                                    );
+                                "
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="delete-button"
+                                >
+
+                                    <i class="fa-solid fa-trash"></i>
+
+                                    Delete Plan
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty">
+
+                <i class="fa-solid fa-box-open"></i>
+
+                No plans have been assigned yet.
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+
+<script>
+
+    const planSelect =
+        document.getElementById("planSelect");
+
+    const previewInvestment =
+        document.getElementById("previewInvestment");
+
+    const previewDaily =
+        document.getElementById("previewDaily");
+
+    const previewDuration =
+        document.getElementById("previewDuration");
+
+
+    planSelect.addEventListener(
+        "change",
+        function () {
+
+            const option =
+                this.options[this.selectedIndex];
+
+
+            if (!option.value) {
+
+                previewInvestment.textContent =
+                    "GHS 0.00";
+
+                previewDaily.textContent =
+                    "GHS 0.00";
+
+                previewDuration.textContent =
+                    "0 days";
+
+                return;
+            }
+
+
+            const investment =
+                option.dataset.investment || "0";
+
+            const daily =
+                option.dataset.daily || "0";
+
+            const duration =
+                option.dataset.duration || "0";
+
+
+            previewInvestment.textContent =
+                "GHS " +
+                Number(investment).toFixed(2);
+
+
+            previewDaily.textContent =
+                "GHS " +
+                Number(daily).toFixed(2);
+
+
+            previewDuration.textContent =
+                duration +
+                " days";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
