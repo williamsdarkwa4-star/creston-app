@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Manage User - JOMA</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    padding-bottom:90px;
+}
+
+.header{
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:white;
+    padding:30px 20px;
+    text-align:center;
+    border-radius:0 0 30px 30px;
+}
+
+.header h1{
+    font-size:25px;
+}
+
+.header p{
+    margin-top:8px;
+    color:#dbeafe;
+}
+
+.container{
+    padding:20px;
+    max-width:600px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:20px;
+    margin-bottom:18px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.card h2{
+    color:#2563eb;
+    margin-bottom:16px;
+    font-size:20px;
+}
+
+.info{
+    color:#475569;
+    line-height:30px;
+}
+
+.balance{
+    margin-top:15px;
+    padding:15px;
+    background:#f8fafc;
+    border-radius:15px;
+}
+
+.balance strong{
+    color:#2563eb;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border-radius:13px;
+    border:1px solid #dbe1e8;
+    outline:none;
+    margin-bottom:10px;
+    font-size:15px;
+}
+
+input:focus{
+    border-color:#2563eb;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:13px;
+    color:white;
+    font-weight:bold;
+    font-size:15px;
+    cursor:pointer;
+    margin-top:5px;
+}
+
+.add{
+    background:#16a34a;
+}
+
+.deduct{
+    background:#dc2626;
+}
+
+.update{
+    background:#2563eb;
+}
+
+.back{
+    display:block;
+    width:100%;
+    padding:14px;
+    border-radius:13px;
+    background:#e2e8f0;
+    color:#0f172a;
+    text-align:center;
+    text-decoration:none;
+    font-weight:bold;
+    margin-bottom:18px;
+}
+
+.notice{
+    background:#eff6ff;
+    color:#1e40af;
+    padding:13px;
+    border-radius:13px;
+    margin-bottom:18px;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    padding:14px;
+    box-shadow:0 -5px 15px rgba(0,0,0,.1);
+}
+
+.bottom-nav a{
+    text-decoration:none;
+    color:#2563eb;
+    text-align:center;
+    font-weight:bold;
+    font-size:13px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+    <h1>Manage User</h1>
+
+    <p>Zenith Capital Admin</p>
+
+</div>
+
+
+<div class="container">
+
+    <a class="back" href="{{ url_for('admin_users') }}">
+        ← Back to Users
+    </a>
+
+
+    <div class="notice">
+        ⚙️ Changes made here directly update this user's demo account.
+        Review the amount and action before submitting.
+    </div>
+
+
+    <!-- USER INFORMATION -->
+
+    <div class="card">
+
+        <h2>👤 User Information</h2>
+
+        <div class="info">
+
+            <b>Full Name:</b>
+            {{ user.fullname or "Not provided" }}
+
+            <br>
+
+            <b>Username:</b>
+            {{ user.username }}
+
+            <br>
+
+            <b>Phone:</b>
+            {{ user.phone }}
+
+            <br>
+
+            <b>User ID:</b>
+            {{ user.id }}
+
+            <br>
+
+            <b>Referral Code:</b>
+            {{ user.referral_code or "N/A" }}
+
+        </div>
+
+    </div>
+
+
+    <!-- BALANCES -->
+
+    <div class="card">
+
+        <h2>💰 Account Balances</h2>
+
+        <div class="balance">
+
+            Deposit Account:
+            <strong>
+                GHS {{ "%.2f"|format(account.deposit_account or 0) }}
+            </strong>
+
+        </div>
+
+        <div class="balance">
+
+            Withdrawal Account:
+            <strong>
+                GHS {{ "%.2f"|format(account.withdraw_account or 0) }}
+            </strong>
+
+        </div>
+
+        <div class="balance">
+
+            Income Account:
+            <strong>
+                GHS {{ "%.2f"|format(account.income_account or 0) }}
+            </strong>
+
+        </div>
+
+        <div class="balance">
+
+            Referral Account:
+            <strong>
+                GHS {{ "%.2f"|format(account.referral_account or 0) }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- DEPOSIT ACCOUNT -->
+
+    <div class="card">
+
+        <h2>💳 Deposit Account</h2>
+
+        <form method="POST">
+
+            <input
+                type="number"
+                name="amount"
+                min="0.01"
+                step="0.01"
+                placeholder="Enter amount"
+                required
+            >
+
+            <button
+                type="submit"
+                name="action"
+                value="add_deposit"
+                class="add">
+
+                ➕ Add Deposit Balance
+
+            </button>
+
+        </form>
+
+
+        <form method="POST">
+
+            <input
+                type="number"
+                name="amount"
+                min="0.01"
+                step="0.01"
+                placeholder="Enter amount to deduct"
+                required
+            >
+
+            <button
+                type="submit"
+                name="action"
+                value="deduct_deposit"
+                class="deduct">
+
+                ➖ Deduct Deposit Balance
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- WITHDRAWAL ACCOUNT -->
+
+    <div class="card">
+
+        <h2>💸 Withdrawal Account</h2>
+
+        <form method="POST">
+
+            <input
+                type="number"
+                name="amount"
+                min="0.01"
+                step="0.01"
+                placeholder="Enter amount"
+                required
+            >
+
+            <button
+                type="submit"
+                name="action"
+                value="add_withdraw"
+                class="add">
+
+                ➕ Add Withdrawal Balance
+
+            </button>
+
+        </form>
+
+
+        <form method="POST">
+
+            <input
+                type="number"
+                name="amount"
+                min="0.01"
+                step="0.01"
+                placeholder="Enter amount to deduct"
+                required
+            >
+
+            <button
+                type="submit"
+                name="action"
+                value="deduct_withdraw"
+                class="deduct">
+
+                ➖ Deduct Withdrawal Balance
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- LOGIN PASSWORD -->
+
+    <div class="card">
+
+        <h2>🔐 Login Password</h2>
+
+        <form method="POST">
+
+            <input
+                type="password"
+                name="new_password"
+                placeholder="Enter new login password"
+                minlength="6"
+                required
+            >
+
+            <button
+                type="submit"
+                name="action"
+                value="update_password"
+                class="update">
+
+                Update Login Password
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- WITHDRAWAL PASSWORD -->
+
+    <div class="card">
+
+        <h2>🔑 Withdrawal Password</h2>
+
+        <form method="POST">
+
+            <input
+                type="password"
+                name="new_password"
+                placeholder="Enter new withdrawal password"
+                minlength="6"
+                required
+            >
+
+            <button
+                type="submit"
+                name="action"
+                value="update_withdraw_password"
+                class="update">
+
+                Update Withdrawal Password
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+</div>
+
+
+<div class="bottom-nav">
+
+    <a href="{{ url_for('admin_dashboard') }}">
+        🏠<br>
+        Dashboard
+    </a>
+
+    <a href="{{ url_for('admin_users') }}">
+        👥<br>
+        Users
+    </a>
+
+    <a href="{{ url_for('admin_deposits') }}">
+        💳<br>
+        Deposits
+    </a>
+
+    <a href="{{ url_for('admin_withdrawals') }}">
+        💸<br>
+        Withdrawals
+    </a>
+
+</div>
+
+</body>
+
+</html>
