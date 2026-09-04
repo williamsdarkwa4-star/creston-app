@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admin Login - JOMA</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-box{
+    width:90%;
+    max-width:400px;
+    background:white;
+    padding:30px;
+    border-radius:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+.logo{
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    color:white;
+    padding:25px;
+    text-align:center;
+    border-radius:20px;
+    margin-bottom:25px;
+}
+
+.logo h1{
+    font-size:28px;
+}
+
+.logo p{
+    color:white;
+    margin-top:8px;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    border-radius:15px;
+    border:1px solid #ddd;
+    outline:none;
+    font-size:15px;
+}
+
+input:focus{
+    border-color:#2563eb;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    margin-top:15px;
+    border:none;
+    border-radius:15px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.error{
+    background:#fee2e2;
+    color:#b91c1c;
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:10px;
+    text-align:center;
+}
+
+.success{
+    background:#dcfce7;
+    color:#15803d;
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:10px;
+    text-align:center;
+}
+
+.notice{
+    text-align:center;
+    color:#64748b;
+    margin-top:15px;
+    font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="logo">
+
+        <h1>Admin Panel</h1>
+
+        <p>Zenith Capital</p>
+
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% for category, message in messages %}
+
+            <div class="{{ category }}">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin_login') }}">
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Admin Username"
+            autocomplete="username"
+            required
+        >
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Admin Password"
+            autocomplete="current-password"
+            required
+        >
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <div class="notice">
+        Authorized administrators only
+    </div>
+
+</div>
+
+</body>
+</html>
