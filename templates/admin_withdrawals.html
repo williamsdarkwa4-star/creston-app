@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Withdraw - Zenith Capital</title>
+
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+
+body{
+
+background:#f4f7fb;
+padding-bottom:80px;
+
+}
+
+
+
+.header{
+
+background:linear-gradient(135deg,#0f172a,#2563eb);
+color:white;
+padding:30px;
+text-align:center;
+border-radius:0 0 30px 30px;
+
+}
+
+
+
+.container{
+
+padding:20px;
+
+}
+
+
+
+.card{
+
+background:white;
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+
+
+.card h2{
+
+color:#2563eb;
+margin-bottom:15px;
+
+}
+
+
+
+.info{
+
+background:#f8fafc;
+padding:15px;
+border-radius:15px;
+line-height:28px;
+margin-bottom:15px;
+
+}
+
+
+
+.status{
+
+color:#f59e0b;
+font-weight:bold;
+
+}
+
+
+
+.buttons{
+
+display:flex;
+gap:10px;
+
+}
+
+
+
+button{
+
+flex:1;
+padding:13px;
+border:none;
+border-radius:15px;
+color:white;
+font-weight:bold;
+
+}
+
+
+
+.approve{
+
+background:#16a34a;
+
+}
+
+
+
+.reject{
+
+background:#dc2626;
+
+}
+
+
+
+.search{
+
+width:100%;
+padding:15px;
+border-radius:15px;
+border:1px solid #ddd;
+margin-bottom:20px;
+
+}
+
+
+
+
+.bottom-nav{
+
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:15px;
+box-shadow:0 -5px 15px rgba(0,0,0,.1);
+
+}
+
+
+
+.bottom-nav a{
+
+text-decoration:none;
+color:#2563eb;
+text-align:center;
+font-weight:bold;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<div class="header">
+
+<h1>Withdrawal Management</h1>
+
+<p>Approve or reject withdrawals</p>
+
+</div>
+
+
+
+
+<div class="container">
+
+
+
+<input class="search"
+placeholder="Search user phone or username">
+
+
+
+
+
+{% for withdrawal in withdrawals %}
+
+<div class="card">
+
+    <h2>Withdrawal #{{ withdrawal.id }}</h2>
+
+    <div class="info">
+
+        <b>User:</b>
+        {{ withdrawal.username }}
+
+        <br>
+
+        <b>Phone:</b>
+        {{ withdrawal.phone }}
+
+        <br>
+
+        <b>Amount:</b>
+        GHS {{ "%.2f"|format(withdrawal.amount) }}
+
+        <br>
+
+        <b>Account Name:</b>
+        {{ withdrawal.account_name or "Not provided" }}
+
+        <br>
+
+        <b>Mobile Money:</b>
+        {{ withdrawal.account_phone or "Not provided" }}
+
+        <br>
+
+        <b>Network:</b>
+        {{ withdrawal.network or "Not provided" }}
+
+        <br>
+
+        <b>Status:</b>
+        <span class="status">
+            {{ withdrawal.status|capitalize }}
+        </span>
+
+    </div>
+
+    {% if withdrawal.status == "pending" %}
+
+    <div class="buttons">
+
+        <form method="POST"
+              action="{{ url_for('admin_withdraw_action',
+                                 withdrawal_id=withdrawal.id,
+                                 action='approve') }}"
+              style="flex:1;">
+
+            <button class="approve" type="submit">
+                Approve
+            </button>
+
+        </form>
+
+        <form method="POST"
+              action="{{ url_for('admin_withdraw_action',
+                                 withdrawal_id=withdrawal.id,
+                                 action='reject') }}"
+              style="flex:1;">
+
+            <button class="reject" type="submit">
+                Reject
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% else %}
+
+<div class="card">
+
+    <h2>No Withdrawals</h2>
+
+    <div class="info">
+        There are currently no withdrawal requests.
+    </div>
+
+</div>
+
+{% endfor %}
+<div class="buttons">
+
+
+
+
+
+
+<div class="bottom-nav">
+
+
+<a href="/admin_dashboard">
+🏠<br>
+Dashboard
+</a>
+
+
+<a href="/admin_users">
+👥<br>
+Users
+</a>
+
+
+<a href="/admin_withdraw">
+💸<br>
+Withdraw
+</a>
+
+
+</div>
+
+
+
+</body>
+
+</html>
