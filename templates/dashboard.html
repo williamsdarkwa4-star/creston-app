@@ -1,1748 +1,3503 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JOMA Dashboard</title>
+<title>JOMA | Football Collection</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+>
+
+<script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
-:root{
-    --primary:#1726a8;
-    --primary-dark:#101b82;
-    --green:#27c77b;
-    --orange:#ff9f24;
-    --blue:#4388ed;
-    --purple:#7650e8;
-    --bg:#f1f2f7;
-    --white:#fff;
-    --text:#24242b;
-    --muted:#777b88;
-    --border:#e5e6ef;
-}
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+    font-family:"Inter",Arial,sans-serif;
+}
+
+:root{
+    --blue:#1726a8;
+    --blue-dark:#101b82;
+    --blue-light:#2945d8;
+
+    --orange:#ff9f24;
+    --orange-dark:#ed850d;
+    --orange-light:#ffbd5d;
+
+    --bg:#f4f7fb;
+    --surface:#ffffff;
+    --surface2:#f8faff;
+
+    --text:#111827;
+    --muted:#788195;
+
+    --border:#e5e9f2;
+
+    --success:#20b26b;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-    background:#dfe2e8;
+    margin:0;
+    background:#e9edf5;
     color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,
-    "Segoe UI",Roboto,Arial,sans-serif;
+    min-height:100vh;
+    padding-bottom:82px;
 }
 
-button{
-    font-family:inherit;
-    cursor:pointer;
-}
-
-.app{
+.phone-container{
     width:100%;
-    max-width:450px;
+    max-width:480px;
     min-height:100vh;
     margin:auto;
-    background:var(--bg);
-    position:relative;
-    overflow-x:hidden;
-    padding-bottom:75px;
-}
-
-
-/* =========================
-   TOP BANNER
-========================= */
-
-.top-banner{
-    height:190px;
     position:relative;
     overflow:hidden;
-    background:#12246e;
-}
-
-.top-banner::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background-image:
-        linear-gradient(
-            to bottom,
-            rgba(10,27,83,.12),
-            rgba(10,27,83,.35)
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(23,38,168,.09),
+            transparent 35%
         ),
-        url("images/joma-banner.jpg");
-    background-size:cover;
-    background-position:center;
-    filter:brightness(.92);
-    transform:scale(1.02);
-}
-
-.banner-overlay{
-    position:absolute;
-    inset:0;
-    background:linear-gradient(
-        to bottom,
-        rgba(0,0,0,.03),
-        rgba(0,0,0,.22)
-    );
+        var(--bg);
 }
 
 
-/* =========================
+/* =====================================================
    HEADER
-========================= */
+===================================================== */
 
-.header{
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
-    height:55px;
-    padding:0 14px;
+.top-header{
+    height:64px;
+
     display:flex;
     align-items:center;
     justify-content:space-between;
-    z-index:5;
+
+    padding:0 15px;
+
+    background:rgba(255,255,255,.96);
+
+    border-bottom:1px solid var(--border);
+
+    backdrop-filter:blur(20px);
+
+    position:sticky;
+    top:0;
+    z-index:100;
 }
 
 .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.brand-logo{
+    width:39px;
+    height:39px;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--orange) 0%,
+            var(--orange) 48%,
+            var(--blue) 49%,
+            var(--blue) 100%
+        );
+
     color:white;
-    font-size:20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
     font-weight:900;
-    letter-spacing:1px;
-    text-shadow:0 2px 5px rgba(0,0,0,.25);
+    font-size:15px;
+
+    box-shadow:
+        0 5px 16px rgba(23,38,168,.18);
 }
 
-.header-actions{
-    display:flex;
-    gap:7px;
+.brand-text strong{
+    display:block;
+
+    color:var(--blue);
+
+    font-size:14px;
+    font-weight:900;
+
+    letter-spacing:.8px;
 }
 
-.header-btn{
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    border:1px solid rgba(255,255,255,.35);
-    background:rgba(255,255,255,.17);
-    backdrop-filter:blur(8px);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+.brand-text span{
+    display:block;
+
+    color:var(--muted);
+
+    font-size:7px;
+
+    margin-top:2px;
+
+    letter-spacing:.3px;
 }
 
-.header-btn svg{
-    width:17px;
-    height:17px;
-    fill:currentColor;
-}
+.header-button{
+    width:39px;
+    height:39px;
 
+    border-radius:11px;
 
-/* =========================
-   PROFILE
-========================= */
-
-.profile-card{
-    position:relative;
-    z-index:10;
-    margin:-1px 11px 0;
-    background:white;
-    border-radius:16px;
-    min-height:265px;
-    box-shadow:0 4px 16px rgba(22,30,70,.10);
-    padding:0 13px 13px;
-}
-
-.profile-top{
-    min-height:80px;
     display:flex;
     align-items:center;
     justify-content:center;
-    position:relative;
+
+    color:var(--blue);
+
+    background:#f4f6ff;
+
+    border:1px solid #e0e5fa;
+
+    text-decoration:none;
+
+    transition:.2s;
 }
 
-.profile-logo{
-    position:absolute;
-    left:0;
-    top:-30px;
-    width:65px;
-    height:65px;
-    border-radius:50%;
+.header-button:active{
+    transform:scale(.92);
+}
+
+.header-button svg{
+    width:18px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+    height:215px;
+
+    position:relative;
+
     overflow:hidden;
-    background:white;
-    border:3px solid white;
-    box-shadow:0 3px 10px rgba(0,0,0,.18);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--blue-dark),
+            var(--blue)
+        );
 }
 
-.profile-logo img{
+.hero-image{
+    position:absolute;
+
+    inset:0;
+
     width:100%;
     height:100%;
+
     object-fit:cover;
+
+    opacity:.78;
+
+    transition:
+        opacity .4s ease,
+        transform 5s ease;
+
+    transform:scale(1.03);
 }
 
-.logo-fallback{
+.hero::after{
+    content:"";
+
     position:absolute;
+
     inset:0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(16,27,130,.10),
+            rgba(16,27,130,.45),
+            rgba(7,14,65,.94)
+        );
+
+    pointer-events:none;
+}
+
+.hero-content{
+    position:absolute;
+
+    z-index:5;
+
+    left:16px;
+    right:16px;
+    bottom:22px;
+}
+
+.eyebrow{
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:5px 9px;
+
+    border-radius:20px;
+
+    background:rgba(255,159,36,.16);
+
+    border:1px solid rgba(255,189,93,.45);
+
+    color:#ffd18d;
+
+    font-size:8px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+}
+
+.eyebrow span{
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:var(--orange);
+
+    box-shadow:
+        0 0 8px rgba(255,159,36,.8);
+}
+
+.hero h1{
+    color:white;
+
+    font-size:23px;
+
+    line-height:1.1;
+
+    font-weight:900;
+
+    margin-bottom:6px;
+}
+
+.hero h1 span{
+    color:var(--orange);
+}
+
+.hero p{
+    font-size:9px;
+
+    color:#dce3ff;
+
+    line-height:1.5;
+
+    max-width:310px;
+}
+
+.hero-dots{
+    position:absolute;
+
+    right:16px;
+    bottom:24px;
+
+    z-index:10;
+
     display:flex;
+
+    gap:4px;
+}
+
+.hero-dot{
+    width:5px;
+    height:5px;
+
+    border-radius:10px;
+
+    background:rgba(255,255,255,.45);
+
+    transition:.3s;
+}
+
+.hero-dot.active{
+    width:17px;
+
+    background:var(--orange);
+
+    box-shadow:
+        0 0 8px rgba(255,159,36,.65);
+}
+
+
+/* =====================================================
+   QUICK ACTIONS
+===================================================== */
+
+.top-actions{
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:7px;
+
+    padding:10px;
+
+    background:white;
+
+    border-bottom:1px solid var(--border);
+}
+
+.action-btn{
+    text-decoration:none;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #f6f8fc
+        );
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+
+    padding:10px 4px;
+
+    text-align:center;
+
+    color:var(--text);
+
+    transition:.2s;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.action-btn:active{
+    transform:scale(.96);
+}
+
+.action-icon{
+    width:29px;
+    height:29px;
+
+    margin:auto auto 5px;
+
+    display:flex;
+
     align-items:center;
     justify-content:center;
-    background:linear-gradient(135deg,#1726a8,#5865df);
+
+    border-radius:9px;
+
+    background:#f0f3ff;
+}
+
+.action-icon svg{
+    width:15px;
+    height:15px;
+}
+
+.action-label{
+    font-size:8px;
+
+    color:#667085;
+
+    font-weight:600;
+}
+
+
+/* =====================================================
+   ACCOUNT
+===================================================== */
+
+.account{
+    margin:14px 10px;
+
+    padding:15px;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--blue),
+            var(--blue-dark)
+        );
+
+    border:1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        0 12px 30px rgba(23,38,168,.18);
+
     color:white;
-    font-size:15px;
+}
+
+.account-header{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:9px;
+}
+
+.account-header h3{
+    font-size:12px;
+
+    font-weight:800;
+}
+
+.account-header span{
+    font-size:8px;
+
+    color:#cbd3ff;
+}
+
+.balance-main{
+    font-size:23px;
+
     font-weight:900;
+
+    margin-bottom:13px;
 }
 
-.user-number{
-    margin-top:5px;
-    font-size:19px;
-    font-weight:700;
-    letter-spacing:.6px;
+.balance-main small{
+    font-size:8px;
+
+    color:#cbd3ff;
+
+    font-weight:500;
+}
+
+.balance-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    border-top:
+        1px solid rgba(255,255,255,.14);
+
+    padding-top:11px;
+}
+
+.balance-box{
+    padding:0 7px;
+
+    border-right:
+        1px solid rgba(255,255,255,.14);
+}
+
+.balance-box:last-child{
+    border-right:none;
+}
+
+.balance-box label{
+    display:block;
+
+    color:#bfc8f5;
+
+    font-size:7px;
+
+    margin-bottom:4px;
+}
+
+.balance-box strong{
+    font-size:9px;
+
+    color:white;
 }
 
 
-/* =========================
-   VIP PROGRESS
-========================= */
+/* =====================================================
+   SECTION
+===================================================== */
 
-.vip-progress{
-    width:100%;
+.section{
+    padding:0 10px;
+}
+
+.section-head{
+    display:flex;
+
+    align-items:end;
+
+    justify-content:space-between;
+
+    margin:18px 2px 10px;
+}
+
+.section-head h2{
+    font-size:18px;
+
+    letter-spacing:-.4px;
+
+    color:#111827;
+}
+
+.section-head p{
+    font-size:8px;
+
+    color:var(--muted);
+
     margin-top:3px;
 }
 
-.vip-labels{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:5px;
+.section-head a{
+    color:var(--blue);
+
+    text-decoration:none;
+
+    font-size:8px;
+
+    font-weight:800;
 }
 
-.vip-badge{
-    min-width:58px;
-    height:25px;
-    border-radius:6px;
+
+/* =====================================================
+   SHOE GRID
+===================================================== */
+
+.product-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:8px;
+}
+
+.product-card{
+    background:white;
+
+    padding:10px;
+
+    min-width:0;
+
     display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    position:relative;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:13px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 5px 15px rgba(30,50,90,.05);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.product-card:active{
+    transform:scale(.985);
+}
+
+.product-card::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+    right:0;
+
+    height:3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--orange),
+            var(--blue)
+        );
+}
+
+.vip-tag{
+    width:100%;
+
+    color:var(--blue);
+
+    font-weight:900;
+
+    font-size:11px;
+
+    margin:2px 0 8px;
+
+    text-align:left;
+}
+
+.vip-tag span{
+    float:right;
+
+    color:#8a94a8;
+
+    font-size:7px;
+
+    font-weight:700;
+}
+
+
+/* =====================================================
+   SHOE IMAGE
+===================================================== */
+
+.product-img-box{
+    width:100%;
+
+    height:145px;
+
+    display:flex;
+
     align-items:center;
     justify-content:center;
-    font-size:10px;
+
+    margin-bottom:9px;
+
+    overflow:hidden;
+
+    border-radius:10px;
+
+    background:
+        radial-gradient(
+            circle at 50% 45%,
+            #ffffff,
+            #edf1fa
+        );
+
+    border:1px solid #e7eaf2;
+
+    position:relative;
+}
+
+.product-img-box::after{
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent 60%,
+            rgba(23,38,168,.05)
+        );
+
+    pointer-events:none;
+}
+
+.product-img-box img{
+    width:100%;
+    height:100%;
+
+    object-fit:contain;
+
+    padding:5px;
+
+    transition:
+        transform .5s ease,
+        opacity .3s ease;
+}
+
+.product-card:hover
+.product-img-box img{
+    transform:scale(1.07);
+}
+
+
+/* =====================================================
+   SHOE FALLBACK
+===================================================== */
+
+.image-fallback{
+    display:none;
+
+    width:100%;
+    height:100%;
+
+    align-items:center;
+
+    justify-content:center;
+
+    position:absolute;
+
+    inset:0;
+}
+
+.fake-shoe{
+    width:105px;
+    height:48px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #cdd4e4
+        );
+
+    border-radius:
+        55px 25px 18px 15px;
+
+    transform:rotate(-8deg);
+
+    border:2px solid #aeb7ca;
+
+    position:relative;
+
+    box-shadow:
+        0 12px 20px rgba(23,38,168,.15);
+}
+
+.fake-shoe::after{
+    content:"JOMA";
+
+    position:absolute;
+
+    right:23px;
+    top:16px;
+
+    color:var(--blue);
+
+    font-size:8px;
+
     font-weight:900;
 }
 
-.vip-zero{
-    background:linear-gradient(135deg,#727987,#d9dce2);
-    color:white;
-}
 
-.vip-one{
-    background:linear-gradient(135deg,#d9a624,#54a948);
-    color:white;
-}
+/* =====================================================
+   INFO
+===================================================== */
 
-.progress-number{
-    font-size:11px;
-    font-weight:600;
-    color:#33343b;
-}
-
-.progress-track{
+.info-row{
     width:100%;
-    height:10px;
-    background:#e8e8e9;
-    border-radius:20px;
-    overflow:hidden;
-}
 
-.progress-value{
-    width:0%;
-    height:100%;
-    background:linear-gradient(90deg,#1c2cb8,#4f5be0);
-}
+    font-size:8px;
 
-
-/* =========================
-   STATISTICS
-========================= */
-
-.statistics{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:7px;
-    margin-top:13px;
-}
-
-.stat-card{
-    min-height:70px;
-    border-radius:10px;
-    background:linear-gradient(145deg,#f5f7ff,#eaf0ff);
-    border:1px solid #e1e5f1;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-}
-
-.stat-value{
-    color:var(--primary);
-    font-size:14px;
-    font-weight:800;
     margin-bottom:5px;
+
+    color:#7d8799;
+
+    text-align:left;
 }
 
-.stat-label{
-    font-size:10px;
-    color:#33343a;
+.info-row span{
+    color:#3d4656;
+
+    font-weight:700;
+
+    float:right;
+}
+
+.info-row .income{
+    color:var(--orange-dark);
+}
+
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+.price-tag{
+    width:100%;
+
+    color:var(--blue);
+
+    font-weight:900;
+
+    font-size:14px;
+
+    margin:7px 0 9px;
+
+    text-align:left;
+}
+
+.price-tag small{
+    font-size:7px;
+
+    color:#8992a3;
+
     font-weight:500;
 }
 
 
-/* =========================
-   QUICK ACTIONS
-========================= */
+/* =====================================================
+   BUY BUTTON
+===================================================== */
 
-.quick-actions{
-    background:white;
-    border-radius:13px;
-    margin:11px 0;
-    padding:11px 6px;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:2px;
-    box-shadow:0 3px 12px rgba(0,0,0,.05);
+.buy-btn{
+    width:100%;
+
+    min-height:33px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--orange),
+            var(--orange-dark)
+        );
+
+    color:white;
+
+    border:none;
+
+    border-radius:7px;
+
+    padding:7px 0;
+
+    font-weight:900;
+
+    font-size:9px;
+
+    cursor:pointer;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:5px;
+
+    transition:.2s;
+
+    box-shadow:
+        0 5px 12px rgba(255,159,36,.18);
 }
 
-.quick-action{
-    border:none;
-    background:transparent;
+.buy-btn:active{
+    transform:scale(.95);
+}
+
+.buy-btn svg{
+    width:13px;
+    height:13px;
+}
+
+
+/* =====================================================
+   LOCKED
+===================================================== */
+
+.locked{
+    opacity:.72;
+}
+
+.locked .product-img-box img{
+    filter:grayscale(.25);
+}
+
+.locked .vip-tag{
+    color:#7c8494;
+}
+
+.locked-button{
+    width:100%;
+
+    min-height:33px;
+
+    border:
+        1px solid #e1e5ed;
+
+    border-radius:7px;
+
+    background:#f3f5f9;
+
+    color:#8a93a3;
+
+    font-size:9px;
+
+    font-weight:700;
+
     display:flex;
-    flex-direction:column;
+
     align-items:center;
+
+    justify-content:center;
+
     gap:5px;
 }
 
-.quick-icon{
-    width:40px;
-    height:40px;
-    border-radius:50%;
+.locked-button svg{
+    width:13px;
+}
+
+
+/* =====================================================
+   INFORMATION CARD
+===================================================== */
+
+.info{
+    margin:16px 10px;
+
+    padding:13px;
+
+    border-radius:13px;
+
+    background:white;
+
+    border:
+        1px solid #e4e8f1;
+
     display:flex;
+
+    gap:9px;
+
+    box-shadow:
+        0 5px 15px rgba(30,50,90,.04);
+}
+
+.info-icon{
+    min-width:31px;
+    height:31px;
+
+    border-radius:9px;
+
+    display:flex;
+
     align-items:center;
     justify-content:center;
-    color:white;
+
+    color:var(--blue);
+
+    background:#eef1ff;
 }
 
-.quick-icon svg{
-    width:20px;
-    height:20px;
-    fill:none;
-    stroke:currentColor;
-    stroke-width:1.7;
+.info-icon svg{
+    width:15px;
 }
 
-.deposit-icon{background:#30c878}
-.withdraw-icon{background:#ffad2f}
-.service-icon{background:#478bed}
-.channel-icon{background:#7650e8}
+.info h4{
+    font-size:9px;
 
-.quick-label{
-    font-size:10px;
-    font-weight:700;
+    margin-bottom:3px;
+
+    color:#182033;
 }
 
+.info p{
+    font-size:7px;
 
-/* =========================
-   TABS
-========================= */
+    line-height:1.5;
 
-.tabs{
-    margin:0 0 10px;
-    background:white;
-    border:1px solid #1a278e;
-    border-radius:11px;
-    padding:3px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-}
-
-.tab{
-    height:43px;
-    border:none;
-    background:transparent;
-    border-radius:8px;
-    color:var(--primary);
-    font-size:11px;
-    font-weight:600;
-}
-
-.tab.active{
-    background:var(--primary);
-    color:white;
+    color:var(--muted);
 }
 
 
-/* =========================
-   PLAN LIST
-========================= */
-
-.plans{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.plan-card{
-    background:white;
-    border-radius:12px;
-    padding:9px;
-    box-shadow:0 3px 12px rgba(0,0,0,.05);
-    border:1px solid #ececf1;
-}
-
-.plan-content{
-    display:grid;
-    grid-template-columns:43% 57%;
-    gap:8px;
-}
-
-
-/* =========================
-   PLAN PHOTO
-========================= */
-
-.plan-image{
-    height:185px;
-    border-radius:7px;
-    overflow:hidden;
-    position:relative;
-    background:#dedee2;
-}
-
-.plan-image img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-
-.plan-level{
-    position:absolute;
-    top:5px;
-    left:5px;
-    background:linear-gradient(90deg,#218f2d,#b5c42d);
-    color:white;
-    padding:3px 7px;
-    border-radius:5px;
-    font-size:8px;
-    font-weight:900;
-}
-
-.plan-name-overlay{
-    position:absolute;
-    bottom:0;
-    left:0;
-    right:0;
-    padding:9px 3px 6px;
-    text-align:center;
-    color:white;
-    font-size:13px;
-    font-weight:700;
-    background:linear-gradient(
-        to top,
-        rgba(0,0,0,.85),
-        rgba(0,0,0,0)
-    );
-}
-
-
-/* =========================
-   PLAN INFORMATION
-========================= */
-
-.plan-info{
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-}
-
-.info-row{
-    min-height:38px;
-    padding:0 7px;
-    border-radius:6px;
-    background:#f5f4fa;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:4px;
-    font-size:10px;
-}
-
-.info-row strong{
-    color:var(--primary);
-    font-size:10px;
-    text-align:right;
-}
-
-
-/* =========================
-   BUY BUTTON
-========================= */
-
-.buy-button{
-    width:100%;
-    height:38px;
-    margin-top:8px;
-    border:none;
-    border-radius:7px;
-    background:var(--primary);
-    color:white;
-    font-size:12px;
-    font-weight:700;
-}
-
-.buy-button:active{
-    transform:scale(.98);
-}
-
-.buy-button:hover{
-    background:var(--primary-dark);
-}
-
-
-/* =========================
+/* =====================================================
    BOTTOM NAV
-========================= */
+===================================================== */
 
 .bottom-nav{
     position:fixed;
+
     bottom:0;
+
     left:50%;
+
     transform:translateX(-50%);
+
     width:100%;
-    max-width:450px;
-    height:64px;
-    background:rgba(255,255,255,.97);
-    backdrop-filter:blur(15px);
-    border-top:1px solid #e1e2e8;
+
+    max-width:480px;
+
+    height:68px;
+
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    background:
+        rgba(255,255,255,.97);
+
+    border-top:
+        1px solid #e1e5ed;
+
+    backdrop-filter:
+        blur(18px);
+
     z-index:500;
+
+    box-shadow:
+        0 -5px 20px rgba(20,35,80,.07);
 }
 
 .nav-item{
     position:relative;
-    border:none;
-    background:transparent;
+
     display:flex;
+
     flex-direction:column;
+
     align-items:center;
+
     justify-content:center;
-    gap:2px;
-    color:#999ba3;
-    font-size:9px;
+
+    gap:4px;
+
+    text-decoration:none;
+
+    color:#8992a3;
+
+    font-size:7px;
+
+    transition:.2s;
 }
 
 .nav-item svg{
-    width:19px;
-    height:19px;
-    fill:none;
-    stroke:currentColor;
-    stroke-width:1.6;
+    width:18px;
+    height:18px;
+}
+
+.nav-item:active{
+    transform:scale(.91);
 }
 
 .nav-item.active{
-    color:var(--primary);
-    font-weight:700;
+    color:var(--blue);
+
+    font-weight:800;
 }
 
 .nav-item.active::before{
     content:"";
+
     position:absolute;
+
     top:0;
-    left:10px;
-    right:10px;
-    height:3px;
-    background:var(--primary);
-    border-radius:0 0 7px 7px;
-}
 
-.notification-badge{
-    position:absolute;
-    top:6px;
-    right:17px;
-    width:17px;
-    height:17px;
-    border-radius:50%;
-    background:#dc2444;
-    color:white;
-    font-size:9px;
-    font-weight:800;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    width:28px;
+    height:2px;
+
+    border-radius:
+        0 0 5px 5px;
+
+    background:var(--orange);
+
+    box-shadow:
+        0 0 8px rgba(255,159,36,.35);
 }
 
 
-/* =========================
-   WELCOME NOTIFICATION
-========================= */
+/* =====================================================
+   FLOATING BUTTON
+===================================================== */
 
-.notification-overlay{
+.floating-spin-button{
     position:fixed;
-    inset:0;
-    background:rgba(10,17,53,.60);
-    backdrop-filter:blur(7px);
-    -webkit-backdrop-filter:blur(7px);
-    z-index:1000;
+
+    left:18px;
+    top:45%;
+
+    width:56px;
+    height:56px;
+
+    border-radius:50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--blue),
+            var(--blue-dark)
+        );
+
+    border:
+        2px solid
+        var(--orange);
+
+    box-shadow:
+        0 0 16px rgba(255,159,36,.28),
+        0 8px 28px rgba(20,35,100,.28);
+
     display:flex;
+
     align-items:center;
     justify-content:center;
-    padding:16px;
+
+    z-index:999999;
+
+    cursor:grab;
+
+    touch-action:none;
+
+    user-select:none;
+
+    -webkit-user-select:none;
+
+    -webkit-tap-highlight-color:transparent;
+
+    text-decoration:none;
+
+    isolation:isolate;
 }
 
-.notification-card{
-    width:100%;
-    max-width:350px;
-    background:white;
-    border-radius:14px;
-    padding:22px 13px 16px;
+.floating-spin-button.dragging{
+    cursor:grabbing;
+
+    box-shadow:
+        0 0 25px rgba(255,159,36,.5),
+        0 10px 32px rgba(0,0,0,.25);
+
+    transform:scale(1.04);
+}
+
+.floating-spin-button .floating-star{
     position:relative;
-    box-shadow:0 15px 40px rgba(0,0,0,.25);
-    animation:popup .25s ease-out;
+
+    z-index:2;
+
+    color:var(--orange);
+
+    font-size:23px;
+
+    line-height:1;
+
+    text-shadow:
+        0 0 10px rgba(255,159,36,.7);
+
+    pointer-events:none;
+
+    animation:
+        floatingStarSpin 2.2s linear infinite;
 }
 
-@keyframes popup{
-    from{
-        opacity:0;
-        transform:translateY(12px) scale(.97);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
-}
-
-.close-notification{
+.floating-spin-button .floating-dot{
     position:absolute;
-    top:-14px;
-    right:-2px;
-    width:32px;
-    height:32px;
+
+    width:5px;
+    height:5px;
+
     border-radius:50%;
-    border:2px solid white;
-    background:#e6373b;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+
+    background:white;
+
+    box-shadow:
+        0 0 8px var(--orange);
+
+    top:8px;
+    right:9px;
+
+    z-index:3;
+
+    pointer-events:none;
 }
 
-.close-notification svg{
-    width:16px;
-    height:16px;
-    fill:currentColor;
-}
+.floating-spin-button::before{
+    content:"";
 
-.notification-title{
-    text-align:center;
-    font-size:17px;
-    font-weight:800;
-    color:#202126;
-    margin-bottom:13px;
-}
+    position:absolute;
 
-.notification-table{
-    width:100%;
-    overflow:hidden;
-    border-radius:3px;
-    margin-bottom:15px;
-}
+    inset:4px;
 
-.notification-row{
-    min-height:39px;
-    padding:0 10px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-size:11px;
-}
-
-.notification-row:nth-child(odd){
-    background:#f5f5fa;
-}
-
-.notification-row:nth-child(even){
-    background:#a0a0da;
-    color:white;
-}
-
-.notification-row strong{
-    font-weight:700;
-}
-
-.award{
-    text-align:center;
-    margin-bottom:14px;
-}
-
-.award-title{
-    font-size:17px;
-    font-weight:800;
-    margin-bottom:5px;
-}
-
-.award-text{
-    font-size:11px;
-    font-weight:600;
-    line-height:1.4;
-}
-
-.channel-button{
-    width:100%;
-    height:40px;
-    border:none;
-    border-radius:22px;
-    background:linear-gradient(90deg,#171da5,#514bc5);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:7px;
-    font-size:12px;
-    font-weight:800;
-}
-
-.channel-button svg{
-    width:17px;
-    height:17px;
-    fill:currentColor;
-}
-
-
-/* =========================
-   LOADING
-========================= */
-
-.loading-button{
-    position:fixed;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    z-index:2000;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    gap:7px;
-    padding:9px 17px;
-    border-radius:20px;
-    background:rgba(20,28,100,.96);
-    color:white;
-    font-size:11px;
-    font-weight:600;
-    box-shadow:0 8px 25px rgba(0,0,0,.22);
-}
-
-.loading-button.show{
-    display:flex;
-}
-
-.spinner{
-    width:15px;
-    height:15px;
-    border:2px solid rgba(255,255,255,.35);
-    border-top-color:white;
     border-radius:50%;
-    animation:spin .7s linear infinite;
+
+    border:
+        1px dashed
+        rgba(255,159,36,.6);
+
+    pointer-events:none;
+
+    animation:
+        floatingRingSpin 3s linear infinite;
 }
 
-@keyframes spin{
+@keyframes floatingStarSpin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
     to{
         transform:rotate(360deg);
     }
+
+}
+
+@keyframes floatingRingSpin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(-360deg);
+    }
+
 }
 
 
-/* =========================
-   SMALL PHONES
-========================= */
+/* =====================================================
+   LOADING SCREEN
+===================================================== */
+
+.page-loader{
+    position:fixed;
+
+    inset:0;
+
+    background:
+        rgba(10,17,50,.70);
+
+    backdrop-filter:blur(12px);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    z-index:99999;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+}
+
+.page-loader.show{
+    opacity:1;
+
+    visibility:visible;
+
+    pointer-events:all;
+}
+
+.loader-card{
+    width:160px;
+
+    padding:22px 15px;
+
+    border-radius:18px;
+
+    background:white;
+
+    border:
+        1px solid
+        rgba(23,38,168,.10);
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.30);
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:13px;
+}
+
+.loader-logo{
+    width:45px;
+    height:45px;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--orange),
+            var(--blue)
+        );
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-weight:900;
+
+    font-size:17px;
+
+    box-shadow:
+        0 8px 20px rgba(23,38,168,.18);
+}
+
+.loader-ring{
+    width:28px;
+    height:28px;
+
+    border-radius:50%;
+
+    border:
+        2px solid
+        #e7eaf2;
+
+    border-top-color:
+        var(--orange);
+
+    border-right-color:
+        var(--blue);
+
+    animation:
+        spin .65s linear infinite;
+}
+
+.loader-text{
+    color:#687286;
+
+    font-size:8px;
+
+    font-weight:600;
+
+    letter-spacing:.4px;
+}
+
+.loader-bar{
+    width:100%;
+    height:3px;
+
+    overflow:hidden;
+
+    border-radius:20px;
+
+    background:#e8ebf2;
+}
+
+.loader-bar span{
+    display:block;
+
+    height:100%;
+
+    width:40%;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--orange),
+            var(--blue)
+        );
+
+    animation:
+        loadingBar 1.1s ease-in-out infinite;
+}
+
+@keyframes spin{
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+@keyframes loadingBar{
+
+    0%{
+        transform:translateX(-120%);
+    }
+
+    100%{
+        transform:translateX(280%);
+    }
+
+}
+
+
+/* =====================================================
+   LOADING FEEDBACK
+===================================================== */
+
+.loading-link.loading-now{
+    pointer-events:none;
+}
+
+.loading-now{
+    opacity:.7;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
 @media(max-width:360px){
 
-    .profile-card{
-        margin-left:8px;
-        margin-right:8px;
+    .product-img-box{
+        height:120px;
     }
 
-    .plan-content{
-        grid-template-columns:42% 58%;
+    .product-card{
+        padding:9px;
     }
 
-    .plan-image{
-        height:175px;
+    .hero{
+        height:190px;
     }
 
-    .info-row{
-        font-size:9px;
+    .hero h1{
+        font-size:21px;
     }
 
-    .info-row strong{
-        font-size:9px;
+    .floating-spin-button{
+        width:52px;
+        height:52px;
     }
 
-    .quick-icon{
-        width:37px;
-        height:37px;
-    }
 }
+
 </style>
 </head>
 
+
 <body>
 
-<div class="app">
 
-<!-- =========================
-     TOP BANNER
-========================= -->
+<!-- =====================================================
+     PAGE LOADER
+===================================================== -->
 
-<section class="top-banner">
+<div
+    class="page-loader"
+    id="pageLoader">
 
-    <div class="banner-overlay"></div>
+    <div class="loader-card">
 
-    <header class="header">
+        <div class="loader-logo">
+            J
+        </div>
 
-        <div class="brand">JOMA</div>
+        <div class="loader-ring"></div>
 
-        <div class="header-actions">
+        <div
+            class="loader-text"
+            id="loaderText">
 
-            <button class="header-btn"
-                    onclick="showLoading()"
-                    aria-label="Notifications">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm7-6v-5a7 7 0 0 0-5.5-6.84V3a1.5 1.5 0 0 0-3 0v1.16A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2z"/>
-                </svg>
-
-            </button>
-
-            <button class="header-btn"
-                    onclick="showLoading()"
-                    aria-label="Profile">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5C21 16.5 17 14 12 14z"/>
-                </svg>
-
-            </button>
+            Loading JOMA...
 
         </div>
 
-    </header>
-
-</section>
-
-
-<!-- =========================
-     PROFILE CARD
-========================= -->
-
-<section class="profile-card">
-
-    <div class="profile-top">
-
-        <div class="profile-logo">
-
-            <img src="images/joma-logo.jpg"
-                 alt="JOMA Logo"
-                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-            <div class="logo-fallback"
-                 style="display:none;">
-                JOMA
-            </div>
-
+        <div class="loader-bar">
+            <span></span>
         </div>
-
-        <div class="user-number">
-            233****1897
-        </div>
-
-    </div>
-
-
-    <div class="vip-progress">
-
-        <div class="vip-labels">
-
-            <div class="vip-badge vip-zero">
-                VIP 0
-            </div>
-
-            <div class="progress-number">
-                0/5
-            </div>
-
-            <div class="vip-badge vip-one">
-                VIP 1
-            </div>
-
-        </div>
-
-        <div class="progress-track">
-            <div class="progress-value"></div>
-        </div>
-
-    </div>
-
-
-    <div class="statistics">
-
-        <div class="stat-card">
-            <div class="stat-value">GHS 0</div>
-            <div class="stat-label">Balance</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-value">GHS 0</div>
-            <div class="stat-label">Deposit</div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-value">GHS 0</div>
-            <div class="stat-label">Total income</div>
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     QUICK ACTIONS
-========================= -->
-
-<section class="quick-actions">
-
-    <button class="quick-action"
-            onclick="showLoading()">
-
-        <div class="quick-icon deposit-icon">
-            <svg viewBox="0 0 24 24">
-                <rect x="3" y="5" width="18" height="14" rx="2"/>
-                <path d="M7 9h7M7 13h4"/>
-                <path d="M18 14v5M15.5 16.5H20.5"/>
-            </svg>
-        </div>
-
-        <span class="quick-label">Deposit</span>
-
-    </button>
-
-
-    <button class="quick-action"
-            onclick="showLoading()">
-
-        <div class="quick-icon withdraw-icon">
-            <svg viewBox="0 0 24 24">
-                <rect x="3" y="5" width="15" height="14" rx="2"/>
-                <path d="M7 9h7M7 13h5"/>
-                <path d="M17 15l4-4-4-4"/>
-                <path d="M21 11h-7"/>
-            </svg>
-        </div>
-
-        <span class="quick-label">Withdraw</span>
-
-    </button>
-
-
-    <button class="quick-action"
-            onclick="showLoading()">
-
-        <div class="quick-icon service-icon">
-            <svg viewBox="0 0 24 24">
-                <path d="M5 12a7 7 0 0 1 14 0"/>
-                <rect x="3" y="11" width="4" height="7" rx="2"/>
-                <rect x="17" y="11" width="4" height="7" rx="2"/>
-                <path d="M17 18c0 2-2 3-4 3h-1"/>
-            </svg>
-        </div>
-
-        <span class="quick-label">Service</span>
-
-    </button>
-
-
-    <button class="quick-action"
-            onclick="showLoading()">
-
-        <div class="quick-icon channel-icon">
-            <svg viewBox="0 0 24 24">
-                <path d="M21 4L3 11l7 2 2 7 3-5 4 3 2-14z"/>
-                <path d="M10 13l8-6"/>
-            </svg>
-        </div>
-
-        <span class="quick-label">Channel</span>
-
-    </button>
-
-</section>
-
-
-<!-- =========================
-     TABS
-========================= -->
-
-<section class="tabs">
-
-    <button class="tab active"
-            onclick="switchTab(this,'daily')">
-        Day income
-    </button>
-
-    <button class="tab"
-            onclick="switchTab(this,'reward')">
-        Reward Products
-    </button>
-
-</section>
-
-
-<!-- =========================
-     ALL PLANS
-========================= -->
-
-<main class="plans" id="plans">
-
-
-<!-- PLAN 1 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan1.jpg"
-                 alt="JOMA VIP 1">
-
-            <div class="plan-level">VIP 1</div>
-
-            <div class="plan-name-overlay">
-                VIP 1
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 70</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 8</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 1,440</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 2 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan2.jpg"
-                 alt="JOMA VIP 2">
-
-            <div class="plan-level">VIP 2</div>
-
-            <div class="plan-name-overlay">
-                VIP 2
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 120</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 25</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 4,500</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 3 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan3.jpg"
-                 alt="JOMA VIP 3">
-
-            <div class="plan-level">VIP 3</div>
-
-            <div class="plan-name-overlay">
-                VIP 3
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 250</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 45</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 8,100</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 4 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan4.jpg"
-                 alt="JOMA VIP 4">
-
-            <div class="plan-level">VIP 4</div>
-
-            <div class="plan-name-overlay">
-                VIP 4
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 300</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 55</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 9,900</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 5 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan5.jpg"
-                 alt="JOMA VIP 5">
-
-            <div class="plan-level">VIP 5</div>
-
-            <div class="plan-name-overlay">
-                VIP 5
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 450</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 85</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 15,300</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 6 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan6.jpg"
-                 alt="JOMA VIP 6">
-
-            <div class="plan-level">VIP 6</div>
-
-            <div class="plan-name-overlay">
-                VIP 6
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 600</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 100</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 18,000</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 7 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan7.jpg"
-                 alt="JOMA VIP 7">
-
-            <div class="plan-level">VIP 7</div>
-
-            <div class="plan-name-overlay">
-                VIP 7
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 850</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 188</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 33,840</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 8 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan8.jpg"
-                 alt="JOMA VIP 8">
-
-            <div class="plan-level">VIP 8</div>
-
-            <div class="plan-name-overlay">
-                VIP 8
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 1,000</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 300</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 54,000</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 9 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan9.jpg"
-                 alt="JOMA VIP 9">
-
-            <div class="plan-level">VIP 9</div>
-
-            <div class="plan-name-overlay">
-                VIP 9
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 1,600</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 450</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 81,000</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-
-<!-- PLAN 10 -->
-<article class="plan-card">
-
-    <div class="plan-content">
-
-        <div class="plan-image">
-            <img src="images/plan10.jpg"
-                 alt="JOMA VIP 10">
-
-            <div class="plan-level">VIP 10</div>
-
-            <div class="plan-name-overlay">
-                VIP 10
-            </div>
-        </div>
-
-        <div class="plan-info">
-
-            <div class="info-row">
-                <span>Price</span>
-                <strong>GHS 2,000</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Daily profit</span>
-                <strong>GHS 600</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Days</span>
-                <strong>180</strong>
-            </div>
-
-            <div class="info-row">
-                <span>Total profit</span>
-                <strong>GHS 108,000</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-    <button class="buy-button"
-            onclick="showLoading()">
-        Buy now
-    </button>
-
-</article>
-
-</main>
-
-
-<!-- =========================
-     BOTTOM NAVIGATION
-========================= -->
-
-<nav class="bottom-nav">
-
-    <button class="nav-item active"
-            onclick="showLoading()">
-
-        <svg viewBox="0 0 24 24">
-            <path d="M3 10.5L12 3l9 7.5"/>
-            <path d="M5 9.5V21h14V9.5"/>
-            <path d="M9 21v-6h6v6"/>
-        </svg>
-
-        <span>Home</span>
-
-    </button>
-
-
-    <button class="nav-item"
-            onclick="showLoading()">
-
-        <svg viewBox="0 0 24 24">
-            <path d="M5 3h14v18H5z"/>
-            <path d="M8 7h8M8 11h5M8 15h8"/>
-        </svg>
-
-        <span>Income</span>
-
-    </button>
-
-
-    <button class="nav-item"
-            onclick="showLoading()">
-
-        <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="6" r="3"/>
-            <circle cx="6" cy="18" r="3"/>
-            <circle cx="18" cy="18" r="3"/>
-            <path d="M10 8l-3 7M14 8l3 7"/>
-        </svg>
-
-        <span>Team</span>
-
-    </button>
-
-
-    <button class="nav-item"
-            onclick="showLoading()">
-
-        <svg viewBox="0 0 24 24">
-            <circle cx="18" cy="5" r="2"/>
-            <circle cx="6" cy="12" r="2"/>
-            <circle cx="18" cy="19" r="2"/>
-            <path d="M8 11l8-5M8 13l8 5"/>
-        </svg>
-
-        <span>Share</span>
-
-    </button>
-
-
-    <button class="nav-item"
-            onclick="showLoading()">
-
-        <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/>
-        </svg>
-
-        <span>My</span>
-
-        <span class="notification-badge">1</span>
-
-    </button>
-
-</nav>
-
-
-<!-- =========================
-     WELCOME NOTIFICATION
-========================= -->
-
-<div class="notification-overlay"
-     id="welcomeNotification">
-
-    <div class="notification-card">
-
-        <button class="close-notification"
-                onclick="closeNotification()"
-                aria-label="Close">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </svg>
-
-        </button>
-
-
-        <h2 class="notification-title">
-            🔰 Welcome to the JOMA 🔰
-        </h2>
-
-
-        <div class="notification-table">
-
-            <div class="notification-row">
-                <span>Mini deposit</span>
-                <strong>GHS 70</strong>
-            </div>
-
-            <div class="notification-row">
-                <span>Mini withdrawal</span>
-                <strong>GHS 20</strong>
-            </div>
-
-            <div class="notification-row">
-                <span>Withdrawal fee</span>
-                <strong>10%</strong>
-            </div>
-
-            <div class="notification-row">
-                <span>Withdrawal Time</span>
-                <strong>07:30am-16:30pm</strong>
-            </div>
-
-        </div>
-
-
-        <div class="award">
-
-            <div class="award-title">
-                🔰 Award 🔰
-            </div>
-
-            <p class="award-text">
-                Team deposit of GHS 3,000;
-                bonus of GHS 200
-            </p>
-
-        </div>
-
-
-        <button class="channel-button"
-                onclick="showLoading()">
-
-            <svg viewBox="0 0 24 24">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-            </svg>
-
-            <span>Join Channel</span>
-
-        </button>
 
     </div>
 
 </div>
 
 
-<!-- =========================
-     LOADING
-========================= -->
+<!-- =====================================================
+     FLOATING BUTTON
+===================================================== -->
 
-<div class="loading-button"
-     id="loadingButton">
+<a
+    href="{{ url_for('gift_code') }}"
+    class="floating-spin-button"
+    id="floatingSpinButton"
+    aria-label="Open Gift Code">
 
-    <span class="spinner"></span>
+    <span class="floating-star">★</span>
 
-    <span>Loading...</span>
+    <span class="floating-dot"></span>
+
+</a>
+
+
+<div class="phone-container">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="top-header">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            J
+        </div>
+
+        <div class="brand-text">
+
+            <strong>
+                JOMA
+            </strong>
+
+            <span>
+                FOOTBALL COLLECTION
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('support') }}"
+        class="header-button loading-link"
+        data-loading="Opening Support...">
+
+        <i data-lucide="bell"></i>
+
+    </a>
+
+</header>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <img
+        id="heroImage"
+        class="hero-image"
+        src="https://www.joma-sport.com/dw/image/v2/BFRV_PRD/on/demandware.static/-/Sites-joma-masterCatalog/default/dw35b6dec8/images/medium/POCW2502FG_1.jpg?sh=900&sm=fit&sw=900"
+        alt="JOMA football boots"
+        loading="eager"
+        onerror="this.style.display='none';"
+    >
+
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+
+            <span></span>
+
+            JOMA FOOTBALL
+
+        </div>
+
+
+        <h1>
+
+            Welcome,
+            <span>
+                {{ user.fullname }}
+            </span>
+
+        </h1>
+
+
+        <p>
+            Explore the latest JOMA football footwear
+            collection and choose your preferred pair.
+        </p>
+
+    </div>
+
+
+    <div class="hero-dots">
+
+        <span class="hero-dot active"></span>
+
+        <span class="hero-dot"></span>
+
+        <span class="hero-dot"></span>
+
+        <span class="hero-dot"></span>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     QUICK ACTIONS
+===================================================== -->
+
+<div class="top-actions">
+
+
+    <a
+        href="{{ url_for('deposit') }}"
+        class="action-btn loading-link"
+        data-loading="Opening Deposit...">
+
+        <div
+            class="action-icon"
+            style="color:#1726a8">
+
+            <i data-lucide="wallet"></i>
+
+        </div>
+
+        <div class="action-label">
+            Deposit
+        </div>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('withdraw') }}"
+        class="action-btn loading-link"
+        data-loading="Opening Withdraw...">
+
+        <div
+            class="action-icon"
+            style="color:#ed850d">
+
+            <i data-lucide="arrow-up-right"></i>
+
+        </div>
+
+        <div class="action-label">
+            Withdraw
+        </div>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('support') }}"
+        class="action-btn loading-link"
+        data-loading="Opening Support...">
+
+        <div
+            class="action-icon"
+            style="color:#2945d8">
+
+            <i data-lucide="headphones"></i>
+
+        </div>
+
+        <div class="action-label">
+            Support
+        </div>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('my_plan') }}"
+        class="action-btn loading-link"
+        data-loading="Opening My Collection...">
+
+        <div
+            class="action-icon"
+            style="color:#ff9f24">
+
+            <i data-lucide="footprints"></i>
+
+        </div>
+
+        <div class="action-label">
+            My Shoes
+        </div>
+
+    </a>
+
+</div>
+
+
+<!-- =====================================================
+     ACCOUNT
+===================================================== -->
+
+<section class="account">
+
+    <div class="account-header">
+
+        <h3>
+            Account Overview
+        </h3>
+
+        <span>
+            Available balances
+        </span>
+
+    </div>
+
+
+    <div class="balance-main">
+
+        GHS
+        {{ "%.2f"|format(account.deposit_account|float) }}
+
+        <small>
+            Deposit
+        </small>
+
+    </div>
+
+
+    <div class="balance-grid">
+
+
+        <div class="balance-box">
+
+            <label>
+                Withdraw
+            </label>
+
+            <strong>
+
+                GHS
+                {{ "%.2f"|format(account.withdraw_account|float) }}
+
+            </strong>
+
+        </div>
+
+
+        <div class="balance-box">
+
+            <label>
+                Income
+            </label>
+
+            <strong>
+
+                GHS
+                {{ "%.2f"|format(account.income_account|float) }}
+
+            </strong>
+
+        </div>
+
+
+        <div class="balance-box">
+
+            <label>
+                Referral
+            </label>
+
+            <strong>
+
+                GHS
+                {{ "%.2f"|format(account.referral_account|float) }}
+
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     JOMA FOOTBALL COLLECTION
+===================================================== -->
+
+<section class="section">
+
+
+    <div class="section-head">
+
+        <div>
+
+            <h2>
+                JOMA Football
+            </h2>
+
+            <p>
+                Explore football footwear
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('my_plan') }}"
+            class="loading-link"
+            data-loading="Opening My Shoes...">
+
+            My Shoes
+
+        </a>
+
+    </div>
+
+
+    <div class="product-grid">
+
+
+        <!-- =================================================
+             JOMA SHOE 1
+        ================================================= -->
+
+        <article class="product-card">
+
+            <div class="vip-tag">
+
+                JOMA 1
+
+                <span>
+                    STARTER
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://www.joma-sport.com/dw/image/v2/BFRV_PRD/on/demandware.static/-/Sites-joma-masterCatalog/default/dw35b6dec8/images/medium/POCW2502FG_1.jpg?sh=900&sm=fit&sw=900"
+                    alt="JOMA Powerful football boot"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Powerful
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 70
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('buy_plan', plan_id=1) }}"
+                class="buy-btn loading-link"
+                data-loading="Opening JOMA 1...">
+
+                View
+
+                <i data-lucide="arrow-right"></i>
+
+            </a>
+
+        </article>
+
+
+        <!-- =================================================
+             JOMA SHOE 2
+        ================================================= -->
+
+        <article class="product-card">
+
+            <div class="vip-tag">
+
+                JOMA 2
+
+                <span>
+                    BASIC
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://sportano.com/img/986c30c27a3d26a3ee16c136f92f4ff5/8/4/8447150992755_20-jpg/men-s-football-boots-joma-evolution-top-fg-white-black-0.jpg"
+                    alt="JOMA Evolution Top football boot"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Evolution
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 120
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('buy_plan', plan_id=2) }}"
+                class="buy-btn loading-link"
+                data-loading="Opening JOMA 2...">
+
+                View
+
+                <i data-lucide="arrow-right"></i>
+
+            </a>
+
+        </article>
+
+
+        <!-- =================================================
+             JOMA SHOE 3
+        ================================================= -->
+
+        <article class="product-card">
+
+            <div class="vip-tag">
+
+                JOMA 3
+
+                <span>
+                    GROWTH
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://www.joma-sport.com/dw/image/v2/BFRV_PRD/on/demandware.static/-/Sites-joma-masterCatalog/default/dw35b6dec8/images/medium/POCW2502FG_1.jpg?sh=900&sm=fit&sw=900"
+                    alt="JOMA Powerful football boot"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Powerful
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 250
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('buy_plan', plan_id=3) }}"
+                class="buy-btn loading-link"
+                data-loading="Opening JOMA 3...">
+
+                View
+
+                <i data-lucide="arrow-right"></i>
+
+            </a>
+
+        </article>
+
+
+        <!-- =================================================
+             JOMA SHOE 4
+        ================================================= -->
+
+        <article class="product-card">
+
+            <div class="vip-tag">
+
+                JOMA 4
+
+                <span>
+                    ADVANCED
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://sportano.com/img/986c30c27a3d26a3ee16c136f92f4ff5/8/4/8447150992755_20-jpg/men-s-football-boots-joma-evolution-top-fg-white-black-0.jpg"
+                    alt="JOMA Evolution football boot"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Evolution Top
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 450
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('buy_plan', plan_id=4) }}"
+                class="buy-btn loading-link"
+                data-loading="Opening JOMA 4...">
+
+                View
+
+                <i data-lucide="arrow-right"></i>
+
+            </a>
+
+        </article>
+
+
+        <!-- =================================================
+             JOMA SHOE 5
+        ================================================= -->
+
+        <article class="product-card locked">
+
+            <div class="vip-tag">
+
+                JOMA 5
+
+                <span>
+                    PREMIUM
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://www.joma-sport.com/dw/image/v2/BFRV_PRD/on/demandware.static/-/Sites-joma-masterCatalog/default/dw35b6dec8/images/medium/POCW2502FG_1.jpg?sh=900&sm=fit&sw=900"
+                    alt="JOMA Powerful football boot"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Powerful
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 600
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <div class="locked-button">
+
+                <i data-lucide="lock"></i>
+
+                Coming Soon
+
+            </div>
+
+        </article>
+
+
+        <!-- =================================================
+             JOMA SHOE 6
+        ================================================= -->
+
+        <article class="product-card locked">
+
+            <div class="vip-tag">
+
+                JOMA 6
+
+                <span>
+                    ELITE
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://sportano.com/img/986c30c27a3d26a3ee16c136f92f4ff5/8/4/8447150992755_20-jpg/men-s-football-boots-joma-evolution-top-fg-white-black-0.jpg"
+                    alt="JOMA Evolution football boot"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Evolution
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 850
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <div class="locked-button">
+
+                <i data-lucide="lock"></i>
+
+                Coming Soon
+
+            </div>
+
+        </article>
+
+
+        <!-- =================================================
+             JOMA SHOE 7
+        ================================================= -->
+
+        <article class="product-card locked">
+
+            <div class="vip-tag">
+
+                JOMA 7
+
+                <span>
+                    MASTER
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://www.joma-sport.com/dw/image/v2/BFRV_PRD/on/demandware.static/-/Sites-joma-masterCatalog/default/dw35b6dec8/images/medium/POCW2502FG_1.jpg?sh=900&sm=fit&sw=900"
+                    alt="JOMA Powerful football boot"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Powerful
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 1,000
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <div class="locked-button">
+
+                <i data-lucide="lock"></i>
+
+                Coming Soon
+
+            </div>
+
+        </article>
+
+
+        <!-- =================================================
+             JOMA SHOE 8
+        ================================================= -->
+
+        <article class="product-card locked">
+
+            <div class="vip-tag">
+
+                JOMA 8
+
+                <span>
+                    PRO
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://sportano.com/img/986c30c27a3d26a3ee16c136f92f4ff5/8/4/8447150992755_20-jpg/men-s-football-boots-joma-evolution-top-fg-white-black-0.jpg"
+                    alt="JOMA Evolution Top"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Evolution Top
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 1,600
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <div class="locked-button">
+
+                <i data-lucide="lock"></i>
+
+                Coming Soon
+
+            </div>
+
+        </article>
+
+
+        <!-- =================================================
+             JOMA SHOE 9
+        ================================================= -->
+
+        <article class="product-card locked">
+
+            <div class="vip-tag">
+
+                JOMA 9
+
+                <span>
+                    ULTRA
+                </span>
+
+            </div>
+
+
+            <div class="product-img-box">
+
+                <img
+                    src="https://www.joma-sport.com/dw/image/v2/BFRV_PRD/on/demandware.static/-/Sites-joma-masterCatalog/default/dw35b6dec8/images/medium/POCW2502FG_1.jpg?sh=900&sm=fit&sw=900"
+                    alt="JOMA football boot"
+                    loading="lazy"
+                    onerror="
+                        this.style.display='none';
+                        this.nextElementSibling.style.display='flex';
+                    "
+                >
+
+                <div class="image-fallback">
+
+                    <div class="fake-shoe"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Model:
+
+                <span>
+                    Powerful
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Category:
+
+                <span>
+                    Football
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                Surface:
+
+                <span>
+                    FG
+                </span>
+
+            </div>
+
+
+            <div class="price-tag">
+
+                GHS 2,000
+
+                <small>
+                    / PAIR
+                </small>
+
+            </div>
+
+
+            <div class="locked-button">
+
+                <i data-lucide="lock"></i>
+
+                Coming Soon
+
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     INFORMATION
+===================================================== -->
+
+<div class="info">
+
+    <div class="info-icon">
+
+        <i data-lucide="shield-check"></i>
+
+    </div>
+
+
+    <div>
+
+        <h4>
+            JOMA Collection Information
+        </h4>
+
+        <p>
+            Browse the football footwear collection
+            carefully and review each product before
+            continuing.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
+
+<nav class="bottom-nav">
+
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="nav-item active loading-link"
+        data-loading="Loading Home...">
+
+        <i data-lucide="house"></i>
+
+        <span>
+            Home
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('my_plan') }}"
+        class="nav-item loading-link"
+        data-loading="Loading My Shoes...">
+
+        <i data-lucide="footprints"></i>
+
+        <span>
+            My Shoes
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('team_members') }}"
+        class="nav-item loading-link"
+        data-loading="Loading Team...">
+
+        <i data-lucide="users"></i>
+
+        <span>
+            Team
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('team') }}"
+        class="nav-item loading-link"
+        data-loading="Opening Share...">
+
+        <i data-lucide="share-2"></i>
+
+        <span>
+            Share
+        </span>
+
+    </a>
+
+
+    <a
+        href="{{ url_for('profile') }}"
+        class="nav-item loading-link"
+        data-loading="Loading Profile...">
+
+        <i data-lucide="user-round"></i>
+
+        <span>
+            My
+        </span>
+
+    </a>
+
+</nav>
 
 </div>
 
 
 <script>
 
-/* CLOSE NOTIFICATION */
+/* =====================================================
+   JOMA HERO SLIDER
+===================================================== */
 
-function closeNotification(){
+const heroImages = [
 
+    "https://www.joma-sport.com/dw/image/v2/BFRV_PRD/on/demandware.static/-/Sites-joma-masterCatalog/default/dw35b6dec8/images/medium/POCW2502FG_1.jpg?sh=900&sm=fit&sw=900",
+
+    "https://sportano.com/img/986c30c27a3d26a3ee16c136f92f4ff5/8/4/8447150992755_20-jpg/men-s-football-boots-joma-evolution-top-fg-white-black-0.jpg",
+
+    "https://www.joma-sport.com/dw/image/v2/BFRV_PRD/on/demandware.static/-/Sites-joma-masterCatalog/default/dw35b6dec8/images/medium/POCW2502FG_1.jpg?sh=900&sm=fit&sw=900",
+
+    "https://sportano.com/img/986c30c27a3d26a3ee16c136f92f4ff5/8/4/8447150992755_20-jpg/men-s-football-boots-joma-evolution-top-fg-white-black-0.jpg"
+
+];
+
+let heroIndex = 0;
+
+const heroImage =
+    document.getElementById("heroImage");
+
+const heroDots =
+    document.querySelectorAll(".hero-dot");
+
+
+function changeHero(){
+
+    if(!heroImage){
+        return;
+    }
+
+    heroIndex++;
+
+    if(heroIndex >= heroImages.length){
+        heroIndex = 0;
+    }
+
+    heroImage.style.opacity = "0";
+
+
+    setTimeout(() => {
+
+        heroImage.src =
+            heroImages[heroIndex];
+
+        heroImage.style.opacity = ".78";
+
+    },300);
+
+
+    heroDots.forEach(
+        (dot,index) => {
+
+            dot.classList.toggle(
+                "active",
+                index === heroIndex
+            );
+
+        }
+    );
+
+}
+
+setInterval(changeHero,4500);
+
+
+/* =====================================================
+   GLOBAL LOADER
+===================================================== */
+
+const pageLoader =
+    document.getElementById("pageLoader");
+
+const loaderText =
+    document.getElementById("loaderText");
+
+let navigationStarted = false;
+
+
+function showLoader(message){
+
+    if(loaderText){
+
+        loaderText.textContent =
+            message ||
+            "Loading JOMA...";
+
+    }
+
+    pageLoader.classList.add("show");
+
+}
+
+
+function hideLoader(){
+
+    pageLoader.classList.remove("show");
+
+}
+
+
+/* =====================================================
+   NAVIGATION LINKS
+===================================================== */
+
+document.querySelectorAll(
+    ".loading-link"
+).forEach(link => {
+
+    link.addEventListener(
+        "click",
+        function(event){
+
+            if(navigationStarted){
+
+                event.preventDefault();
+
+                return;
+
+            }
+
+            const href =
+                this.getAttribute("href");
+
+
+            if(
+                !href ||
+                href === "#" ||
+                href.startsWith("javascript:")
+            ){
+
+                return;
+
+            }
+
+
+            event.preventDefault();
+
+            navigationStarted = true;
+
+            this.classList.add(
+                "loading-now"
+            );
+
+
+            const message =
+                this.dataset.loading ||
+                "Loading JOMA...";
+
+
+            showLoader(message);
+
+
+            setTimeout(() => {
+
+                window.location.href =
+                    href;
+
+            },420);
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   PAGE HISTORY
+===================================================== */
+
+window.addEventListener(
+    "pageshow",
+    function(){
+
+        navigationStarted = false;
+
+        hideLoader();
+
+    }
+);
+
+
+/* =====================================================
+   IMAGE FALLBACK
+===================================================== */
+
+document.querySelectorAll(
+    ".product-img-box img"
+).forEach(img => {
+
+    img.addEventListener(
+        "load",
+        function(){
+
+            this.style.opacity = "1";
+
+        }
+    );
+
+
+    img.addEventListener(
+        "error",
+        function(){
+
+            this.style.display =
+                "none";
+
+            const fallback =
+                this.nextElementSibling;
+
+
+            if(fallback){
+
+                fallback.style.display =
+                    "flex";
+
+            }
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   MOVABLE FLOATING BUTTON
+===================================================== */
+
+const floatingButton =
     document.getElementById(
-        "welcomeNotification"
-    ).style.display="none";
+        "floatingSpinButton"
+    );
+
+let dragging = false;
+
+let moved = false;
+
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+let startX = 0;
+let startY = 0;
+
+
+/* =====================================================
+   LOAD SAVED POSITION
+===================================================== */
+
+function loadFloatingPosition(){
+
+    try{
+
+        const savedPosition =
+            JSON.parse(
+                localStorage.getItem(
+                    "jomaFloatingButtonPosition"
+                )
+            );
+
+
+        if(
+            savedPosition &&
+            typeof savedPosition.left === "number" &&
+            typeof savedPosition.top === "number"
+        ){
+
+            const maxLeft =
+                window.innerWidth -
+                floatingButton.offsetWidth;
+
+            const maxTop =
+                window.innerHeight -
+                floatingButton.offsetHeight;
+
+
+            const left =
+                Math.max(
+                    0,
+                    Math.min(
+                        savedPosition.left,
+                        maxLeft
+                    )
+                );
+
+
+            const top =
+                Math.max(
+                    0,
+                    Math.min(
+                        savedPosition.top,
+                        maxTop
+                    )
+                );
+
+
+            floatingButton.style.left =
+                left + "px";
+
+            floatingButton.style.top =
+                top + "px";
+
+        }
+
+    }catch(error){
+
+        console.log(
+            "Floating button position unavailable."
+        );
+
+    }
+
+}
+
+loadFloatingPosition();
+
+
+/* =====================================================
+   START DRAG
+===================================================== */
+
+function startFloatingDrag(event){
+
+    const point =
+        event.touches
+            ? event.touches[0]
+            : event;
+
+
+    const rect =
+        floatingButton.getBoundingClientRect();
+
+
+    dragging = true;
+
+    moved = false;
+
+
+    startX =
+        point.clientX;
+
+    startY =
+        point.clientY;
+
+
+    dragOffsetX =
+        point.clientX -
+        rect.left;
+
+
+    dragOffsetY =
+        point.clientY -
+        rect.top;
+
+
+    floatingButton.style.cursor =
+        "grabbing";
+
+
+    if(event.cancelable){
+
+        event.preventDefault();
+
+    }
 
 }
 
 
-/* LOADING */
+/* =====================================================
+   MOVE
+===================================================== */
 
-function showLoading(){
+function moveFloatingButton(event){
 
-    const loading =
-        document.getElementById("loadingButton");
+    if(!dragging){
 
-    loading.classList.add("show");
+        return;
 
-    setTimeout(function(){
+    }
 
-        loading.classList.remove("show");
 
-    },1000);
+    const point =
+        event.touches
+            ? event.touches[0]
+            : event;
+
+
+    const distanceX =
+        Math.abs(
+            point.clientX -
+            startX
+        );
+
+
+    const distanceY =
+        Math.abs(
+            point.clientY -
+            startY
+        );
+
+
+    if(
+        distanceX > 6 ||
+        distanceY > 6
+    ){
+
+        moved = true;
+
+    }
+
+
+    if(!moved){
+
+        return;
+
+    }
+
+
+    let newLeft =
+        point.clientX -
+        dragOffsetX;
+
+
+    let newTop =
+        point.clientY -
+        dragOffsetY;
+
+
+    const buttonWidth =
+        floatingButton.offsetWidth;
+
+    const buttonHeight =
+        floatingButton.offsetHeight;
+
+
+    const maxLeft =
+        window.innerWidth -
+        buttonWidth;
+
+    const maxTop =
+        window.innerHeight -
+        buttonHeight;
+
+
+    newLeft =
+        Math.max(
+            0,
+            Math.min(
+                newLeft,
+                maxLeft
+            )
+        );
+
+
+    newTop =
+        Math.max(
+            0,
+            Math.min(
+                newTop,
+                maxTop
+            )
+        );
+
+
+    floatingButton.style.left =
+        newLeft + "px";
+
+    floatingButton.style.top =
+        newTop + "px";
+
+
+    if(event.cancelable){
+
+        event.preventDefault();
+
+    }
 
 }
 
 
-/* TAB SWITCH */
+/* =====================================================
+   END DRAG
+===================================================== */
 
-function switchTab(button,type){
+function stopFloatingDrag(){
 
-    document
-        .querySelectorAll(".tab")
-        .forEach(function(tab){
+    if(!dragging){
 
-            tab.classList.remove("active");
+        return;
 
-        });
+    }
 
-    button.classList.add("active");
 
-    console.log("Selected:",type);
+    dragging = false;
+
+
+    floatingButton.style.cursor =
+        "grab";
+
+
+    if(moved){
+
+        const rect =
+            floatingButton.getBoundingClientRect();
+
+
+        try{
+
+            localStorage.setItem(
+
+                "jomaFloatingButtonPosition",
+
+                JSON.stringify({
+
+                    left:rect.left,
+
+                    top:rect.top
+
+                })
+
+            );
+
+        }catch(error){
+
+            console.log(
+                "Unable to save button position."
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   CLICK HANDLER
+===================================================== */
+
+floatingButton.addEventListener(
+    "click",
+    function(event){
+
+        if(moved){
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            moved = false;
+
+            return;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   MOUSE EVENTS
+===================================================== */
+
+floatingButton.addEventListener(
+    "mousedown",
+    startFloatingDrag
+);
+
+document.addEventListener(
+    "mousemove",
+    moveFloatingButton
+);
+
+document.addEventListener(
+    "mouseup",
+    stopFloatingDrag
+);
+
+
+/* =====================================================
+   TOUCH EVENTS
+===================================================== */
+
+floatingButton.addEventListener(
+    "touchstart",
+    startFloatingDrag,
+    {
+        passive:false
+    }
+);
+
+document.addEventListener(
+    "touchmove",
+    moveFloatingButton,
+    {
+        passive:false
+    }
+);
+
+document.addEventListener(
+    "touchend",
+    stopFloatingDrag
+);
+
+
+/* =====================================================
+   KEEP BUTTON INSIDE SCREEN
+===================================================== */
+
+window.addEventListener(
+    "resize",
+    function(){
+
+        if(!floatingButton){
+
+            return;
+
+        }
+
+
+        const rect =
+            floatingButton.getBoundingClientRect();
+
+
+        const maxLeft =
+            window.innerWidth -
+            floatingButton.offsetWidth;
+
+
+        const maxTop =
+            window.innerHeight -
+            floatingButton.offsetHeight;
+
+
+        const newLeft =
+            Math.max(
+                0,
+                Math.min(
+                    rect.left,
+                    maxLeft
+                )
+            );
+
+
+        const newTop =
+            Math.max(
+                0,
+                Math.min(
+                    rect.top,
+                    maxTop
+                )
+            );
+
+
+        floatingButton.style.left =
+            newLeft + "px";
+
+
+        floatingButton.style.top =
+            newTop + "px";
+
+    }
+);
+
+
+/* =====================================================
+   LUCIDE ICONS
+===================================================== */
+
+if(
+    typeof lucide !== "undefined"
+){
+
+    lucide.createIcons();
 
 }
 
 </script>
 
 </body>
+
 </html>
