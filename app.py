@@ -108,6 +108,8 @@ PLANS = {
     7: {"name": "INFINIX 7", "investment": Decimal("8000.00"), "daily": Decimal("1600.00"), "duration": 180},
     8: {"name": "INFINIX 8", "investment": Decimal("10000.00"), "daily": Decimal("2000.00"), "duration": 180},
     9: {"name": "JOMA VIP 9", "investment": Decimal("20000.00"), "daily": Decimal("3600.00"), "duration": 180},
+    10: {"name": "JOMA VIP 9", "investment": Decimal("20000.00"), "daily": Decimal("3600.00"), "duration": 180},
+  
 }
 
 # ============================================================
