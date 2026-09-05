@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOMA</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0,
+                   maximum-scale=1.0, user-scalable=no">
+
+    <title>JOMA Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
     <style>
         * {
@@ -22,21 +25,33 @@
             --blue: #1726a8;
             --blue-dark: #101b82;
             --blue-light: #eef1ff;
+
             --orange: #ff9f24;
-            --orange-dark: #e98200;
+            --orange-dark: #ec8610;
+            --orange-light: #fff3df;
+
             --green: #27c77b;
-            --red: #ef4444;
-            --white: #ffffff;
-            --bg: #f4f6fa;
+            --red: #ef5350;
+
             --text: #172033;
-            --muted: #778096;
+            --muted: #788195;
+            --white: #ffffff;
+            --bg: #f2f4f8;
+            --card: #ffffff;
             --border: #e8ebf2;
+
+            --shadow: 0 8px 25px rgba(20, 31, 80, .08);
         }
 
         body {
             font-family: "Inter", sans-serif;
-            background: #dfe3eb;
+            background: var(--bg);
             color: var(--text);
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
         }
 
         a {
@@ -44,31 +59,29 @@
             color: inherit;
         }
 
-        button {
-            font-family: inherit;
-        }
-
-        .phone-container {
+        .app {
             width: 100%;
             max-width: 450px;
             min-height: 100vh;
             margin: auto;
-            background: var(--bg);
+            background: #f8f9fc;
             position: relative;
             overflow-x: hidden;
             padding-bottom: 82px;
         }
 
-        /* ================= HEADER / HERO ================= */
+        /* =========================
+           TOP BANNER
+        ========================== */
 
-        .hero {
+        .top-banner {
             height: 190px;
             position: relative;
             background:
                 linear-gradient(
                     135deg,
-                    rgba(23, 38, 168, .96),
-                    rgba(16, 27, 130, .84)
+                    rgba(23,38,168,.95),
+                    rgba(23,38,168,.76)
                 ),
                 url("{{ url_for('static', filename='images/joma-banner.jpg') }}")
                 center/cover no-repeat;
@@ -76,12 +89,29 @@
             border-radius: 0 0 28px 28px;
         }
 
-        .top-header {
-            height: 65px;
+        .top-banner::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    to bottom,
+                    transparent,
+                    rgba(10,18,80,.18)
+                );
+            pointer-events: none;
+        }
+
+        .header {
+            position: relative;
+            z-index: 2;
+
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 18px;
+
+            padding: 16px 18px;
         }
 
         .brand {
@@ -91,35 +121,25 @@
         }
 
         .brand-logo {
-            width: 39px;
-            height: 39px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,.15);
-        }
-
-        .brand-logo img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
+            border: 2px solid rgba(255,255,255,.85);
+            background: white;
         }
 
-        .brand-text strong {
-            display: block;
-            font-size: 19px;
+        .brand-text h1 {
+            font-size: 21px;
             font-weight: 800;
-            letter-spacing: .5px;
+            letter-spacing: .4px;
         }
 
         .brand-text span {
             display: block;
             font-size: 9px;
-            opacity: .8;
-            margin-top: 2px;
+            margin-top: 1px;
+            opacity: .85;
             letter-spacing: 1px;
         }
 
@@ -128,50 +148,35 @@
             gap: 8px;
         }
 
-        .round-btn {
-            width: 37px;
-            height: 37px;
-            border: 1px solid rgba(255,255,255,.25);
-            background: rgba(255,255,255,.13);
-            color: white;
+        .header-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
             border-radius: 50%;
+            background: rgba(255,255,255,.17);
+            color: white;
             display: flex;
-            align-items: center;
             justify-content: center;
-            backdrop-filter: blur(8px);
+            align-items: center;
+            cursor: pointer;
+            font-size: 17px;
         }
 
-        .hero-content {
-            padding: 10px 20px;
-        }
+        /* =========================
+           PROFILE CARD
+        ========================== */
 
-        .hero-content small {
-            opacity: .8;
-            font-size: 11px;
-        }
-
-        .hero-content h2 {
-            font-size: 23px;
-            margin-top: 4px;
-            font-weight: 800;
-        }
-
-        .hero-content p {
-            font-size: 11px;
-            opacity: .85;
-            margin-top: 5px;
-        }
-
-        /* ================= PROFILE ================= */
-
-        .profile-card {
-            margin: -42px 15px 0;
-            background: white;
-            border-radius: 20px;
+        .profile-wrap {
             position: relative;
             z-index: 5;
-            padding: 16px;
-            box-shadow: 0 8px 30px rgba(22,31,61,.09);
+            margin: -75px 14px 0;
+        }
+
+        .profile-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: var(--shadow);
         }
 
         .profile-top {
@@ -184,43 +189,39 @@
             width: 58px;
             height: 58px;
             border-radius: 50%;
-            border: 3px solid var(--orange);
-            padding: 2px;
-            background: white;
-            flex-shrink: 0;
-        }
-
-        .profile-photo img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
             object-fit: cover;
+            border: 3px solid var(--orange);
+            background: white;
         }
 
         .profile-info {
-            min-width: 0;
             flex: 1;
+            min-width: 0;
         }
 
-        .profile-info h3 {
-            font-size: 15px;
+        .profile-info h2 {
+            font-size: 16px;
             font-weight: 800;
+            margin-bottom: 4px;
         }
 
         .profile-info p {
-            font-size: 11px;
             color: var(--muted);
-            margin-top: 4px;
+            font-size: 11px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .vip {
-            background: #fff3df;
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: var(--orange-light);
             color: var(--orange-dark);
             font-size: 10px;
             font-weight: 800;
-            padding: 5px 9px;
-            border-radius: 20px;
-            white-space: nowrap;
         }
 
         .vip-progress {
@@ -236,10 +237,9 @@
         }
 
         .progress {
-            width: 100%;
             height: 7px;
             border-radius: 20px;
-            background: #edf0f6;
+            background: #edf0f5;
             overflow: hidden;
         }
 
@@ -247,100 +247,76 @@
             display: block;
             width: 25%;
             height: 100%;
-            background: linear-gradient(90deg, var(--orange), var(--blue));
-            border-radius: 20px;
+            border-radius: inherit;
+            background: linear-gradient(
+                90deg,
+                var(--orange),
+                var(--blue)
+            );
         }
 
-        /* ================= ACCOUNT ================= */
-
-        .account-box {
-            margin-top: 14px;
-            border-top: 1px solid var(--border);
-            padding-top: 14px;
-        }
-
-        .account-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .account-title h4 {
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .account-title span {
-            font-size: 9px;
-            color: var(--muted);
-        }
+        /* =========================
+           ACCOUNT SUMMARY
+        ========================== */
 
         .account-grid {
+            margin-top: 15px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 9px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
         }
 
         .account-item {
-            padding: 11px;
-            border-radius: 13px;
             background: #f8f9fc;
-            border: 1px solid #edf0f5;
-            display: flex;
-            align-items: center;
-            gap: 9px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 11px 7px;
+            text-align: center;
         }
 
         .account-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
+            width: 28px;
+            height: 28px;
+            margin: 0 auto 5px;
+            border-radius: 9px;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             background: var(--blue-light);
             color: var(--blue);
-            flex-shrink: 0;
+            font-size: 12px;
+            font-weight: 800;
         }
 
         .account-item:nth-child(2) .account-icon {
-            background: #fff3df;
+            background: var(--orange-light);
             color: var(--orange-dark);
         }
 
         .account-item:nth-child(3) .account-icon {
-            background: #eafbf3;
-            color: var(--green);
+            background: #e8fff4;
+            color: #159d5d;
         }
 
-        .account-item:nth-child(4) .account-icon {
-            background: #f1edff;
-            color: #7c3aed;
-        }
-
-        .account-text {
-            min-width: 0;
-        }
-
-        .account-text span {
-            display: block;
+        .account-label {
             font-size: 9px;
             color: var(--muted);
             margin-bottom: 3px;
         }
 
-        .account-text strong {
-            display: block;
+        .account-value {
             font-size: 13px;
             font-weight: 800;
-            white-space: nowrap;
+            color: var(--text);
         }
 
-        /* ================= QUICK ACTIONS ================= */
+        /* =========================
+           QUICK ACTIONS
+        ========================== */
 
         .section {
-            padding: 17px 15px 0;
+            padding: 0 14px;
+            margin-top: 18px;
         }
 
         .section-title {
@@ -351,94 +327,107 @@
         }
 
         .section-title h3 {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 800;
         }
 
         .section-title span {
-            color: var(--muted);
             font-size: 10px;
+            color: var(--muted);
         }
 
         .quick-actions {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 9px;
         }
 
         .quick-action {
             background: white;
-            border-radius: 14px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
             padding: 11px 5px;
             text-align: center;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 15px rgba(22,31,61,.035);
+            box-shadow: 0 4px 14px rgba(0,0,0,.03);
         }
 
         .quick-icon {
             width: 38px;
             height: 38px;
-            margin: auto;
+            margin: auto auto 7px;
             border-radius: 12px;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 800;
             background: var(--blue-light);
             color: var(--blue);
         }
 
         .quick-action:nth-child(2) .quick-icon {
-            background: #fff2dc;
+            background: var(--orange-light);
             color: var(--orange-dark);
         }
 
         .quick-action:nth-child(3) .quick-icon {
-            background: #e9fbf2;
-            color: var(--green);
+            background: #e8fff4;
+            color: #159d5d;
         }
 
         .quick-action:nth-child(4) .quick-icon {
-            background: #f1edff;
-            color: #7c3aed;
+            background: #f1eaff;
+            color: #7042d8;
         }
 
         .quick-action span {
             display: block;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 700;
-            margin-top: 7px;
         }
 
-        /* ================= TABS ================= */
+        /* =========================
+           TABS
+        ========================== */
 
         .tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: white;
+            display: flex;
+            background: #e9ecf4;
             border-radius: 13px;
             padding: 4px;
-            border: 1px solid var(--border);
-            margin-bottom: 13px;
+            margin-bottom: 14px;
         }
 
         .tab {
-            border: 0;
+            flex: 1;
+            border: none;
             background: transparent;
-            padding: 10px;
+            padding: 10px 5px;
             border-radius: 10px;
-            color: var(--muted);
+            font-family: inherit;
             font-size: 11px;
             font-weight: 700;
+            color: var(--muted);
             cursor: pointer;
         }
 
         .tab.active {
-            color: white;
-            background: var(--blue);
-            box-shadow: 0 4px 10px rgba(23,38,168,.18);
+            background: white;
+            color: var(--blue);
+            box-shadow: 0 3px 10px rgba(0,0,0,.06);
         }
 
-        /* ================= PLANS ================= */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* =========================
+           PRODUCT / SHOE CARDS
+        ========================== */
 
         .plans {
             display: flex;
@@ -447,20 +436,21 @@
         }
 
         .plan-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 18px;
+            display: flex;
+            min-height: 160px;
             overflow: hidden;
-            display: grid;
-            grid-template-columns: 43% 57%;
-            min-height: 165px;
-            box-shadow: 0 5px 20px rgba(22,31,61,.05);
+            background: white;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
         }
 
         .plan-image {
+            width: 43%;
+            min-height: 160px;
             position: relative;
-            background: #edf0f7;
-            min-height: 165px;
+            overflow: hidden;
+            background: #eef1f7;
         }
 
         .plan-image img {
@@ -470,197 +460,178 @@
             display: block;
         }
 
-        .plan-badge {
+        .vip-label {
             position: absolute;
             top: 9px;
-            left: 9px;
+            left: 8px;
             background: var(--orange);
             color: white;
-            font-size: 8px;
-            font-weight: 800;
-            padding: 5px 7px;
+            padding: 5px 8px;
             border-radius: 7px;
-            text-transform: uppercase;
+            font-size: 9px;
+            font-weight: 800;
+            box-shadow: 0 4px 9px rgba(0,0,0,.12);
+        }
+
+        .plan-number {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(16,27,130,.9);
+            color: white;
+            padding: 5px 8px;
+            border-radius: 7px;
+            font-size: 8px;
+            font-weight: 700;
         }
 
         .plan-info {
-            padding: 12px;
+            width: 57%;
+            padding: 12px 11px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            min-width: 0;
         }
 
         .plan-name {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
-            color: var(--blue);
-            line-height: 1.25;
+            margin-bottom: 7px;
         }
 
         .plan-price {
-            color: var(--orange-dark);
-            font-size: 17px;
+            color: var(--blue);
+            font-size: 16px;
             font-weight: 800;
-            margin-top: 3px;
+            margin-bottom: 8px;
         }
 
         .plan-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 5px;
-            margin-top: 8px;
+            gap: 6px;
+            margin-bottom: 10px;
         }
 
         .detail {
-            background: #f8f9fc;
+            background: #f7f8fb;
             border-radius: 8px;
             padding: 6px;
         }
 
-        .detail span {
+        .detail small {
             display: block;
             color: var(--muted);
-            font-size: 7px;
+            font-size: 8px;
+            margin-bottom: 2px;
         }
 
         .detail strong {
             display: block;
             font-size: 9px;
-            margin-top: 2px;
         }
 
         .buy-btn {
-            width: 100%;
-            border: 0;
-            background: var(--blue);
+            margin-top: auto;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(
+                135deg,
+                var(--blue),
+                var(--blue-dark)
+            );
             color: white;
-            padding: 9px;
-            border-radius: 9px;
+            padding: 9px 8px;
+            font-family: inherit;
             font-size: 10px;
             font-weight: 800;
-            margin-top: 8px;
             cursor: pointer;
+            text-align: center;
         }
 
-        .buy-btn:hover {
-            background: var(--blue-dark);
+        .buy-btn:active {
+            transform: scale(.98);
         }
 
-        .buy-btn.locked {
-            background: #dfe3eb;
-            color: #8a91a1;
-            cursor: not-allowed;
-        }
-
-        /* ================= INFORMATION ================= */
-
-        .info-card {
-            background: white;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            padding: 14px;
-            margin-top: 15px;
-        }
-
-        .info-card h3 {
-            font-size: 13px;
-            margin-bottom: 7px;
-        }
-
-        .info-card p {
-            color: var(--muted);
-            font-size: 10px;
-            line-height: 1.6;
-        }
-
-        /* ================= BOTTOM NAV ================= */
+        /* =========================
+           BOTTOM NAV
+        ========================== */
 
         .bottom-nav {
             position: fixed;
-            z-index: 30;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100%;
-            max-width: 450px;
-            height: 68px;
+            width: min(450px, 100%);
+            height: 67px;
             background: rgba(255,255,255,.97);
             border-top: 1px solid var(--border);
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            box-shadow: 0 -5px 20px rgba(0,0,0,.06);
+            z-index: 90;
             backdrop-filter: blur(12px);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             gap: 4px;
             color: #8b93a5;
-            font-size: 8px;
+            font-size: 9px;
             font-weight: 700;
+        }
+
+        .nav-item span:first-child {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
         }
 
         .nav-item.active {
             color: var(--blue);
         }
 
-        .nav-item i {
-            width: 19px;
-            height: 19px;
+        .nav-item.active span:first-child {
+            background: var(--blue-light);
         }
 
-        /* ================= FLOATING BUTTON ================= */
-
-        .floating-gift {
-            position: fixed;
-            right: calc(50% - 205px);
-            bottom: 85px;
-            z-index: 40;
-            width: 47px;
-            height: 47px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--orange), var(--orange-dark));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 20px rgba(233,130,0,.3);
-            cursor: grab;
-        }
-
-        /* ================= NOTIFICATION BOARD ================= */
+        /* =========================
+           NOTIFICATION BOARD
+        ========================== */
 
         .notification-overlay {
             position: fixed;
             inset: 0;
-            z-index: 100;
-            background: rgba(7,12,35,.65);
+            z-index: 200;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             padding: 20px;
-            backdrop-filter: blur(4px);
+            background: rgba(9,15,45,.58);
+            backdrop-filter: blur(5px);
         }
 
-        .notification-board {
+        .notification-box {
             width: 100%;
-            max-width: 390px;
+            max-width: 370px;
             background: white;
-            border-radius: 22px;
+            border-radius: 23px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,.2);
-            animation: popup .35s ease;
+            box-shadow: 0 25px 70px rgba(0,0,0,.25);
+            animation: popup .3s ease;
         }
 
         @keyframes popup {
             from {
                 opacity: 0;
-                transform: translateY(25px) scale(.96);
+                transform: translateY(20px) scale(.96);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -668,114 +639,120 @@
         }
 
         .notification-head {
-            background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--blue),
+                    var(--blue-dark)
+                );
+            padding: 20px;
             color: white;
-            padding: 19px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            text-align: center;
         }
 
         .notification-logo {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: white;
-            padding: 3px;
-            flex-shrink: 0;
-        }
-
-        .notification-logo img {
-            width: 100%;
-            height: 100%;
+            width: 57px;
+            height: 57px;
             border-radius: 50%;
             object-fit: cover;
+            border: 3px solid var(--orange);
+            margin-bottom: 9px;
         }
 
-        .notification-head h3 {
-            font-size: 16px;
+        .notification-head h2 {
+            font-size: 18px;
             font-weight: 800;
         }
 
         .notification-head p {
-            font-size: 9px;
-            opacity: .8;
-            margin-top: 3px;
-        }
-
-        .close-notification {
-            margin-left: auto;
-            width: 30px;
-            height: 30px;
-            border: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,.15);
-            color: white;
-            cursor: pointer;
+            margin-top: 4px;
+            font-size: 10px;
+            opacity: .82;
         }
 
         .notification-body {
             padding: 18px;
         }
 
-        .notice-line {
+        .notice-row {
             display: flex;
+            align-items: center;
             gap: 10px;
-            margin-bottom: 13px;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .notice-row:last-child {
+            border-bottom: none;
         }
 
         .notice-icon {
-            width: 30px;
-            height: 30px;
+            width: 31px;
+            height: 31px;
+            flex: 0 0 31px;
             border-radius: 9px;
-            background: #fff3df;
-            color: var(--orange-dark);
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            background: var(--orange-light);
+            color: var(--orange-dark);
+            font-size: 12px;
+            font-weight: 800;
         }
 
-        .notice-line strong {
-            font-size: 11px;
-            display: block;
-        }
-
-        .notice-line span {
-            font-size: 9px;
-            color: var(--muted);
-            display: block;
+        .notice-row p {
+            font-size: 10px;
+            color: #596174;
             line-height: 1.5;
-            margin-top: 2px;
+        }
+
+        .notice-row strong {
+            color: var(--text);
+        }
+
+        .notice-buttons {
+            padding-top: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .notice-btn {
+            border: none;
+            border-radius: 11px;
+            padding: 11px;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .notice-close {
+            background: #eef0f5;
+            color: #4f586b;
         }
 
         .notice-channel {
-            display: block;
-            text-align: center;
-            background: var(--blue);
+            background: var(--orange);
             color: white;
-            border-radius: 11px;
-            padding: 11px;
-            font-size: 10px;
-            font-weight: 800;
-            margin-top: 15px;
         }
 
-        /* ================= SUCCESS TOAST ================= */
+        /* =========================
+           SUCCESS TOAST
+        ========================== */
 
         .success-toast {
             position: fixed;
-            top: 18px;
+            z-index: 300;
+            top: 22px;
             left: 50%;
-            transform: translate(-50%, -120px);
+            transform: translate(-50%, -90px);
             width: calc(100% - 30px);
-            max-width: 420px;
+            max-width: 400px;
             background: white;
-            border-left: 5px solid var(--green);
-            border-radius: 13px;
-            padding: 12px 14px;
-            z-index: 200;
-            box-shadow: 0 10px 30px rgba(0,0,0,.14);
+            border-radius: 14px;
+            padding: 13px 15px;
+            box-shadow: 0 12px 35px rgba(0,0,0,.18);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -787,14 +764,15 @@
         }
 
         .success-icon {
-            width: 34px;
-            height: 34px;
+            width: 33px;
+            height: 33px;
             border-radius: 50%;
-            background: #e8faf2;
-            color: var(--green);
+            background: #e8fff4;
+            color: #16a15e;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            font-weight: 900;
         }
 
         .success-toast strong {
@@ -802,48 +780,44 @@
             font-size: 11px;
         }
 
-        .success-toast span {
+        .success-toast small {
             display: block;
+            margin-top: 2px;
             color: var(--muted);
             font-size: 9px;
-            margin-top: 2px;
         }
 
-        /* ================= LOADER ================= */
+        /* =========================
+           LOADER
+        ========================== */
 
         .loader-overlay {
             position: fixed;
             inset: 0;
-            z-index: 300;
-            background: rgba(255,255,255,.82);
+            z-index: 500;
             display: none;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,.7);
             backdrop-filter: blur(3px);
         }
 
         .loader-box {
             background: white;
-            padding: 18px 22px;
-            border-radius: 15px;
-            box-shadow: 0 10px 35px rgba(0,0,0,.12);
+            border-radius: 16px;
+            padding: 20px 25px;
+            box-shadow: 0 15px 45px rgba(0,0,0,.14);
             text-align: center;
         }
 
         .spinner {
-            width: 30px;
-            height: 30px;
-            margin: auto;
+            width: 31px;
+            height: 31px;
+            border-radius: 50%;
             border: 3px solid #e7eaf1;
             border-top-color: var(--blue);
-            border-radius: 50%;
-            animation: spin .8s linear infinite;
-        }
-
-        .loader-box p {
-            font-size: 10px;
-            color: var(--muted);
-            margin-top: 9px;
+            animation: spin .7s linear infinite;
+            margin: auto auto 9px;
         }
 
         @keyframes spin {
@@ -852,13 +826,57 @@
             }
         }
 
-        .hidden {
-            display: none !important;
+        .loader-box span {
+            font-size: 10px;
+            color: var(--muted);
+            font-weight: 700;
         }
 
-        @media (max-width: 450px) {
-            .floating-gift {
-                right: 15px;
+        /* =========================
+           EMPTY STATE
+        ========================== */
+
+        .empty {
+            padding: 35px 20px;
+            text-align: center;
+            background: white;
+            border-radius: 17px;
+            border: 1px solid var(--border);
+        }
+
+        .empty-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .empty h4 {
+            font-size: 13px;
+        }
+
+        .empty p {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (min-width: 451px) {
+            body {
+                padding: 15px 0;
+            }
+
+            .app {
+                border-radius: 25px;
+                box-shadow: 0 10px 50px rgba(0,0,0,.1);
+                min-height: calc(100vh - 30px);
+            }
+
+            .bottom-nav {
+                bottom: 15px;
+                border-radius: 0 0 25px 25px;
             }
         }
     </style>
@@ -866,173 +884,180 @@
 
 <body>
 
-<div class="phone-container">
+<div class="app">
 
-    <!-- HERO -->
-    <section class="hero">
+    <!-- =========================
+         TOP BANNER
+    ========================== -->
 
-        <div class="top-header">
+    <header class="top-banner">
+
+        <div class="header">
 
             <div class="brand">
-                <div class="brand-logo">
-                    <img
-                        src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
-                        alt="JOMA"
-                        onerror="this.style.display='none'; this.parentElement.innerHTML='<b style=&quot;color:#1726a8&quot;>J</b>';"
-                    >
-                </div>
+
+                <img
+                    class="brand-logo"
+                    src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
+                    alt="JOMA">
 
                 <div class="brand-text">
-                    <strong>JOMA</strong>
-                    <span>FOOTBALL COLLECTION</span>
+                    <h1>JOMA</h1>
+                    <span>SPORTS COLLECTION</span>
                 </div>
+
             </div>
 
             <div class="header-actions">
 
-                <a href="#" class="round-btn">
-                    <i data-lucide="bell"></i>
-                </a>
+                <button class="header-btn"
+                        type="button"
+                        onclick="showNotification()">
+                    🔔
+                </button>
 
-                <a href="{{ url_for('profile') }}" class="round-btn">
-                    <i data-lucide="user"></i>
+                <a href="{{ url_for('profile') }}"
+                   class="header-btn">
+                    👤
                 </a>
 
             </div>
 
         </div>
 
-        <div class="hero-content">
-            <small>WELCOME BACK</small>
-            <h2>Hello, {{ current_user.username }}</h2>
-            <p>Discover the latest JOMA football shoes and products.</p>
-        </div>
-
-    </section>
+    </header>
 
 
-    <!-- PROFILE -->
-    <section class="profile-card">
+    <!-- =========================
+         PROFILE
+    ========================== -->
 
-        <div class="profile-top">
+    <div class="profile-wrap">
 
-            <div class="profile-photo">
+        <div class="profile-card">
+
+            <div class="profile-top">
+
                 <img
+                    class="profile-photo"
                     src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
-                    alt="JOMA"
-                >
+                    alt="Profile">
+
+                <div class="profile-info">
+
+                    <h2>
+                        Hello,
+                        {{ user.username }}
+                    </h2>
+
+                    <p>
+                        {{ user.phone }}
+                    </p>
+
+                </div>
+
+                <div class="vip">
+                    VIP 0
+                </div>
+
             </div>
 
-            <div class="profile-info">
-                <h3>{{ current_user.username }}</h3>
-                <p>{{ current_user.phone }}</p>
+
+            <div class="vip-progress">
+
+                <div class="vip-row">
+                    <span>VIP 0</span>
+                    <span>VIP 1</span>
+                </div>
+
+                <div class="progress">
+                    <span></span>
+                </div>
+
             </div>
 
-            <div class="vip">VIP 0</div>
 
-        </div>
-
-
-        <div class="vip-progress">
-
-            <div class="vip-row">
-                <span>VIP 0</span>
-                <span>VIP 1</span>
-            </div>
-
-            <div class="progress">
-                <span></span>
-            </div>
-
-        </div>
-
-
-        <!-- ACCOUNT TABLE -->
-        <div class="account-box">
-
-            <div class="account-title">
-                <h4>Account Overview</h4>
-                <span>Available balances</span>
-            </div>
+            <!-- ACCOUNT SUMMARY -->
 
             <div class="account-grid">
 
                 <div class="account-item">
+
                     <div class="account-icon">
-                        <i data-lucide="wallet"></i>
+                        B
                     </div>
 
-                    <div class="account-text">
-                        <span>Deposit Account</span>
-                        <strong>
-                            GHS {{ "%.2f"|format(account.deposit_account|float) }}
-                        </strong>
+                    <div class="account-label">
+                        Balance
                     </div>
+
+                    <div class="account-value">
+                        GHS {{ "%.2f"|format(account.balance|default(0)) }}
+                    </div>
+
                 </div>
 
 
                 <div class="account-item">
+
                     <div class="account-icon">
-                        <i data-lucide="banknote"></i>
+                        D
                     </div>
 
-                    <div class="account-text">
-                        <span>Withdraw Account</span>
-                        <strong>
-                            GHS {{ "%.2f"|format(account.withdraw_account|float) }}
-                        </strong>
+                    <div class="account-label">
+                        Deposit
                     </div>
+
+                    <div class="account-value">
+                        GHS {{ "%.2f"|format(account.deposit_account|default(0)) }}
+                    </div>
+
                 </div>
 
 
                 <div class="account-item">
+
                     <div class="account-icon">
-                        <i data-lucide="trending-up"></i>
+                        I
                     </div>
 
-                    <div class="account-text">
-                        <span>Income Account</span>
-                        <strong>
-                            GHS {{ "%.2f"|format(account.income_account|float) }}
-                        </strong>
-                    </div>
-                </div>
-
-
-                <div class="account-item">
-                    <div class="account-icon">
-                        <i data-lucide="users"></i>
+                    <div class="account-label">
+                        Total Income
                     </div>
 
-                    <div class="account-text">
-                        <span>Referral Account</span>
-                        <strong>
-                            GHS {{ "%.2f"|format(account.referral_account|float) }}
-                        </strong>
+                    <div class="account-value">
+                        GHS {{ "%.2f"|format(account.income_account|default(0)) }}
                     </div>
+
                 </div>
 
             </div>
 
         </div>
 
-    </section>
+    </div>
 
 
-    <!-- QUICK ACTIONS -->
+    <!-- =========================
+         QUICK ACTIONS
+    ========================== -->
+
     <section class="section">
 
         <div class="section-title">
             <h3>Quick Actions</h3>
-            <span>Services</span>
+            <span>JOMA</span>
         </div>
+
 
         <div class="quick-actions">
 
-            <a href="{{ url_for('deposit') }}" class="quick-action">
+            <a href="{{ url_for('deposit') }}"
+               class="quick-action"
+               onclick="showLoading()">
 
                 <div class="quick-icon">
-                    <i data-lucide="plus-circle"></i>
+                    +
                 </div>
 
                 <span>Deposit</span>
@@ -1040,10 +1065,12 @@
             </a>
 
 
-            <a href="{{ url_for('withdraw') }}" class="quick-action">
+            <a href="{{ url_for('withdraw') }}"
+               class="quick-action"
+               onclick="showLoading()">
 
                 <div class="quick-icon">
-                    <i data-lucide="arrow-up-circle"></i>
+                    ↑
                 </div>
 
                 <span>Withdraw</span>
@@ -1051,10 +1078,11 @@
             </a>
 
 
-            <a href="{{ url_for('support') }}" class="quick-action">
+            <a href="{{ url_for('support') if 'support' in current_app.view_functions else '#' }}"
+               class="quick-action">
 
                 <div class="quick-icon">
-                    <i data-lucide="headphones"></i>
+                    ?
                 </div>
 
                 <span>Service</span>
@@ -1062,13 +1090,14 @@
             </a>
 
 
-            <a href="{{ url_for('my_plan') }}" class="quick-action">
+            <a href="#plans"
+               class="quick-action">
 
                 <div class="quick-icon">
-                    <i data-lucide="shopping-bag"></i>
+                    ⚽
                 </div>
 
-                <span>My Plan</span>
+                <span>Products</span>
 
             </a>
 
@@ -1077,8 +1106,11 @@
     </section>
 
 
-    <!-- PRODUCTS -->
-    <section class="section">
+    <!-- =========================
+         PRODUCTS
+    ========================== -->
+
+    <section class="section" id="plans">
 
         <div class="section-title">
             <h3>JOMA Football Shoes</h3>
@@ -1088,91 +1120,187 @@
 
         <div class="tabs">
 
-            <button class="tab active" onclick="switchTab(this)">
+            <button class="tab active"
+                    onclick="switchTab(this,'day-income')">
                 Day income
             </button>
 
-            <button class="tab" onclick="switchTab(this)">
+            <button class="tab"
+                    onclick="switchTab(this,'reward-products')">
                 Reward Products
             </button>
 
         </div>
 
 
-        <div class="plans">
+        <!-- DAY INCOME -->
+
+        <div id="day-income"
+             class="tab-content active">
+
+            <div class="plans">
+
+                <!-- PLAN 1 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan1.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 1
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 01
+                        </div>
+
+                    </div>
 
 
-            <!-- PLAN 1 -->
-            <div class="plan-card">
+                    <div class="plan-info">
 
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 1</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan1.jpg') }}"
-                        alt="JOMA Football Shoe 1"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-1.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 1 STARTER</div>
+                        <div class="plan-name">
+                            JOMA Football Shoe 01
+                        </div>
 
                         <div class="plan-price">
-                            GHS 100
+                            GHS 70
                         </div>
 
                         <div class="plan-details">
 
                             <div class="detail">
-                                <span>Daily income</span>
-                                <strong>GHS 20</strong>
+                                <small>Daily Income</small>
+                                <strong>GHS 8</strong>
                             </div>
 
                             <div class="detail">
-                                <span>Total income</span>
-                                <strong>GHS 3600</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
+                                <small>Duration</small>
                                 <strong>180 Days</strong>
                             </div>
 
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 1,440</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
                         </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=1) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
                     </div>
 
-                    <a
-                        href="{{ url_for('buy_plan', plan_id=1) }}"
-                        class="buy-btn"
-                    >
-                        Buy now
-                    </a>
+                </div>
+
+
+                <!-- PLAN 2 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan2.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 2
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 02
+                        </div>
+
+                    </div>
+
+
+                    <div class="plan-info">
+
+                        <div class="plan-name">
+                            JOMA Football Shoe 02
+                        </div>
+
+                        <div class="plan-price">
+                            GHS 120
+                        </div>
+
+                        <div class="plan-details">
+
+                            <div class="detail">
+                                <small>Daily Income</small>
+                                <strong>GHS 25</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Duration</small>
+                                <strong>180 Days</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 4,500</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
+                        </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=2) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
+                    </div>
 
                 </div>
 
-            </div>
+
+                <!-- PLAN 3 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan3.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 3
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 03
+                        </div>
+
+                    </div>
 
 
-            <!-- PLAN 2 -->
-            <div class="plan-card">
+                    <div class="plan-info">
 
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 2</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan2.jpg') }}"
-                        alt="JOMA Football Shoe 2"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-2.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 2 BASIC</div>
+                        <div class="plan-name">
+                            JOMA Football Shoe 03
+                        </div>
 
                         <div class="plan-price">
                             GHS 250
@@ -1181,52 +1309,199 @@
                         <div class="plan-details">
 
                             <div class="detail">
-                                <span>Daily income</span>
+                                <small>Daily Income</small>
                                 <strong>GHS 45</strong>
                             </div>
 
                             <div class="detail">
-                                <span>Total income</span>
+                                <small>Duration</small>
+                                <strong>180 Days</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Total Income</small>
                                 <strong>GHS 8,100</strong>
                             </div>
 
                             <div class="detail">
-                                <span>Validity</span>
-                                <strong>180 Days</strong>
+                                <small>Product</small>
+                                <strong>JOMA</strong>
                             </div>
 
                         </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=3) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
                     </div>
 
-                    <a
-                        href="{{ url_for('buy_plan', plan_id=2) }}"
-                        class="buy-btn"
-                    >
-                        Buy now
-                    </a>
+                </div>
+
+
+                <!-- PLAN 4 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan4.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 4
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 04
+                        </div>
+
+                    </div>
+
+
+                    <div class="plan-info">
+
+                        <div class="plan-name">
+                            JOMA Football Shoe 04
+                        </div>
+
+                        <div class="plan-price">
+                            GHS 300
+                        </div>
+
+                        <div class="plan-details">
+
+                            <div class="detail">
+                                <small>Daily Income</small>
+                                <strong>GHS 55</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Duration</small>
+                                <strong>180 Days</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 9,900</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
+                        </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=4) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
+                    </div>
 
                 </div>
 
-            </div>
+
+                <!-- PLAN 5 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan5.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 5
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 05
+                        </div>
+
+                    </div>
 
 
-            <!-- PLAN 3 -->
-            <div class="plan-card">
+                    <div class="plan-info">
 
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 3</span>
+                        <div class="plan-name">
+                            JOMA Football Shoe 05
+                        </div>
 
-                    <img
-                        src="{{ url_for('static', filename='images/plan3.jpg') }}"
-                        alt="JOMA Football Shoe 3"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-3.jpg') }}'"
-                    >
+                        <div class="plan-price">
+                            GHS 450
+                        </div>
+
+                        <div class="plan-details">
+
+                            <div class="detail">
+                                <small>Daily Income</small>
+                                <strong>GHS 85</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Duration</small>
+                                <strong>180 Days</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 15,300</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
+                        </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=5) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
+                    </div>
+
                 </div>
 
-                <div class="plan-info">
 
-                    <div>
-                        <div class="plan-name">JOMA 3 GROWTH</div>
+                <!-- PLAN 6 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan6.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 6
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 06
+                        </div>
+
+                    </div>
+
+
+                    <div class="plan-info">
+
+                        <div class="plan-name">
+                            JOMA Football Shoe 06
+                        </div>
 
                         <div class="plan-price">
                             GHS 600
@@ -1235,52 +1510,132 @@
                         <div class="plan-details">
 
                             <div class="detail">
-                                <span>Daily income</span>
-                                <strong>GHS 120</strong>
+                                <small>Daily Income</small>
+                                <strong>GHS 100</strong>
                             </div>
 
                             <div class="detail">
-                                <span>Total income</span>
-                                <strong>GHS 21,600</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
+                                <small>Duration</small>
                                 <strong>180 Days</strong>
                             </div>
 
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 18,000</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
                         </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=6) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
                     </div>
 
-                    <a
-                        href="{{ url_for('buy_plan', plan_id=3) }}"
-                        class="buy-btn"
-                    >
-                        Buy now
-                    </a>
+                </div>
+
+
+                <!-- PLAN 7 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan7.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 7
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 07
+                        </div>
+
+                    </div>
+
+
+                    <div class="plan-info">
+
+                        <div class="plan-name">
+                            JOMA Football Shoe 07
+                        </div>
+
+                        <div class="plan-price">
+                            GHS 850
+                        </div>
+
+                        <div class="plan-details">
+
+                            <div class="detail">
+                                <small>Daily Income</small>
+                                <strong>GHS 188</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Duration</small>
+                                <strong>180 Days</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 33,840</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
+                        </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=7) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
+                    </div>
 
                 </div>
 
-            </div>
+
+                <!-- PLAN 8 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan8.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 8
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 08
+                        </div>
+
+                    </div>
 
 
-            <!-- PLAN 4 -->
-            <div class="plan-card">
+                    <div class="plan-info">
 
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 4</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan4.jpg') }}"
-                        alt="JOMA Football Shoe 4"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-4.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 4 ADVANCED</div>
+                        <div class="plan-name">
+                            JOMA Football Shoe 08
+                        </div>
 
                         <div class="plan-price">
                             GHS 1000
@@ -1289,335 +1644,168 @@
                         <div class="plan-details">
 
                             <div class="detail">
-                                <span>Daily income</span>
-                                <strong>GHS 200</strong>
+                                <small>Daily Income</small>
+                                <strong>GHS 300</strong>
                             </div>
 
                             <div class="detail">
-                                <span>Total income</span>
-                                <strong>GHS 36,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
+                                <small>Duration</small>
                                 <strong>180 Days</strong>
                             </div>
 
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 54,000</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
                         </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=8) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
                     </div>
 
-                    <a
-                        href="{{ url_for('buy_plan', plan_id=4) }}"
-                        class="buy-btn"
-                    >
-                        Buy now
-                    </a>
-
                 </div>
 
-            </div>
+
+                <!-- PLAN 9 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan9.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 9
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 09
+                        </div>
+
+                    </div>
 
 
-            <!-- PLAN 5 -->
-            <div class="plan-card">
+                    <div class="plan-info">
 
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 5</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan5.jpg') }}"
-                        alt="JOMA Football Shoe 5"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-5.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 5 PREMIUM</div>
+                        <div class="plan-name">
+                            JOMA Football Shoe 09
+                        </div>
 
                         <div class="plan-price">
-                            GHS 2500
+                            GHS 1600
                         </div>
 
                         <div class="plan-details">
 
                             <div class="detail">
-                                <span>Daily income</span>
-                                <strong>GHS 500</strong>
+                                <small>Daily Income</small>
+                                <strong>GHS 450</strong>
                             </div>
 
                             <div class="detail">
-                                <span>Total income</span>
-                                <strong>GHS 90,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
+                                <small>Duration</small>
                                 <strong>180 Days</strong>
                             </div>
 
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 81,000</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
                         </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=9) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
                     </div>
 
-                    <button class="buy-btn locked" disabled>
-                        Coming Soon
-                    </button>
-
                 </div>
 
-            </div>
+
+                <!-- PLAN 10 -->
+
+                <div class="plan-card">
+
+                    <div class="plan-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/plan10.jpg') }}"
+                            alt="JOMA Football Shoe"
+                            onerror="this.style.display='none'">
+
+                        <div class="vip-label">
+                            VIP 10
+                        </div>
+
+                        <div class="plan-number">
+                            PLAN 10
+                        </div>
+
+                    </div>
 
 
-            <!-- PLAN 6 -->
-            <div class="plan-card">
+                    <div class="plan-info">
 
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 6</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan6.jpg') }}"
-                        alt="JOMA Football Shoe 6"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-6.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 6 ELITE</div>
+                        <div class="plan-name">
+                            JOMA Football Shoe 10
+                        </div>
 
                         <div class="plan-price">
-                            GHS 5000
+                            GHS 2000
                         </div>
 
                         <div class="plan-details">
 
                             <div class="detail">
-                                <span>Daily income</span>
-                                <strong>GHS 1000</strong>
+                                <small>Daily Income</small>
+                                <strong>GHS 600</strong>
                             </div>
 
                             <div class="detail">
-                                <span>Total income</span>
-                                <strong>GHS 180,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
+                                <small>Duration</small>
                                 <strong>180 Days</strong>
                             </div>
 
+                            <div class="detail">
+                                <small>Total Income</small>
+                                <strong>GHS 108,000</strong>
+                            </div>
+
+                            <div class="detail">
+                                <small>Product</small>
+                                <strong>JOMA</strong>
+                            </div>
+
                         </div>
+
+                        <a href="{{ url_for('buy_plan', plan_id=10) }}"
+                           class="buy-btn"
+                           onclick="planSelected(event)">
+                            Buy Now
+                        </a>
+
                     </div>
-
-                    <button class="buy-btn locked" disabled>
-                        Coming Soon
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- PLAN 7 -->
-            <div class="plan-card">
-
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 7</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan7.jpg') }}"
-                        alt="JOMA Football Shoe 7"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-7.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 7 MASTER</div>
-
-                        <div class="plan-price">
-                            GHS 8000
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <span>Daily income</span>
-                                <strong>GHS 1,600</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Total income</span>
-                                <strong>GHS 288000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
-                                <strong>180 Days</strong>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <button class="buy-btn locked" disabled>
-                        Coming Soon
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- PLAN 8 -->
-            <div class="plan-card">
-
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 8</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan8.jpg') }}"
-                        alt="JOMA Football Shoe 8"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-8.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 8 BUY NOW</div>
-
-                        <div class="plan-price">
-                            GHS 10000
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <span>Daily income</span>
-                                <strong>GHS 2000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Total income</span>
-                                <strong>GHS 360,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
-                                <strong>180 Days</strong>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <button class="buy-btn locked" disabled>
-                        Coming Soon
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- PLAN 9 -->
-            <div class="plan-card">
-
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 9</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan9.jpg') }}"
-                        alt="JOMA Football Shoe 9"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-9.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 9 BUY NOW</div>
-
-                        <div class="plan-price">
-                            GHS 20000
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <span>Daily income</span>
-                                <strong>GHS 3600</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Total income</span>
-                                <strong>GHS 648,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
-                                <strong>180 Days</strong>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <button class="buy-btn locked" disabled>
-                        Coming Soon
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- PLAN 10 -->
-            <div class="plan-card">
-
-                <div class="plan-image">
-                    <span class="plan-badge">VIP 10</span>
-
-                    <img
-                        src="{{ url_for('static', filename='images/plan10.jpg') }}"
-                        alt="JOMA Football Shoe 10"
-                        onerror="this.src='{{ url_for('static', filename='images/joma-10.jpg') }}'"
-                    >
-                </div>
-
-                <div class="plan-info">
-
-                    <div>
-                        <div class="plan-name">JOMA 10 ULTIMATE</div>
-
-                        <div class="plan-price">
-                            Coming Soon
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <span>Daily income</span>
-                                <strong>Coming Soon</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Total income</span>
-                                <strong>Coming Soon</strong>
-                            </div>
-
-                            <div class="detail">
-                                <span>Validity</span>
-                                <strong>Coming Soon</strong>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <button class="buy-btn locked" disabled>
-                        Coming Soon
-                    </button>
 
                 </div>
 
@@ -1626,173 +1814,188 @@
         </div>
 
 
-        <!-- INFORMATION -->
-        <div class="info-card">
+        <!-- REWARD PRODUCTS -->
 
-            <h3>JOMA Platform Information</h3>
+        <div id="reward-products"
+             class="tab-content">
 
-            <p>
-                Explore the JOMA football shoe collection and available
-                products. Product information and account details are
-                displayed in your dashboard.
-            </p>
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ⚽
+                </div>
+
+                <h4>JOMA Reward Products</h4>
+
+                <p>
+                    More JOMA products will appear here.
+                </p>
+
+            </div>
 
         </div>
 
     </section>
 
+
+    <!-- =========================
+         BOTTOM NAVIGATION
+    ========================== -->
+
+    <nav class="bottom-nav">
+
+        <a href="{{ url_for('dashboard') }}"
+           class="nav-item active">
+
+            <span>⌂</span>
+            <span>Home</span>
+
+        </a>
+
+
+        <a href="#plans"
+           class="nav-item">
+
+            <span>▣</span>
+            <span>Income</span>
+
+        </a>
+
+
+        <a href="#"
+           class="nav-item">
+
+            <span>♟</span>
+            <span>Team</span>
+
+        </a>
+
+
+        <a href="#"
+           class="nav-item">
+
+            <span>↗</span>
+            <span>Share</span>
+
+        </a>
+
+
+        <a href="{{ url_for('profile') }}"
+           class="nav-item">
+
+            <span>●</span>
+            <span>My</span>
+
+        </a>
+
+    </nav>
+
 </div>
 
 
-<!-- FLOATING GIFT BUTTON -->
+<!-- =========================
+     SUCCESS TOAST
+========================== -->
 
-<a
-    href="{{ url_for('gift_code') }}"
-    class="floating-gift"
-    id="floatingGift"
-    aria-label="Gift Code"
->
-    <i data-lucide="gift"></i>
-</a>
+<div class="success-toast"
+     id="successToast">
 
+    <div class="success-icon">
+        ✓
+    </div>
 
-<!-- BOTTOM NAV -->
+    <div>
+        <strong>Plan selected successfully</strong>
+        <small>Processing your selection...</small>
+    </div>
 
-<nav class="bottom-nav">
-
-    <a
-        href="{{ url_for('dashboard') }}"
-        class="nav-item active"
-    >
-        <i data-lucide="home"></i>
-        <span>Home</span>
-    </a>
-
-    <a
-        href="{{ url_for('my_plan') }}"
-        class="nav-item"
-    >
-        <i data-lucide="wallet-cards"></i>
-        <span>Income</span>
-    </a>
-
-    <a
-        href="{{ url_for('team_members') }}"
-        class="nav-item"
-    >
-        <i data-lucide="users"></i>
-        <span>Team</span>
-    </a>
-
-    <a
-        href="{{ url_for('team') }}"
-        class="nav-item"
-    >
-        <i data-lucide="share-2"></i>
-        <span>Share</span>
-    </a>
-
-    <a
-        href="{{ url_for('profile') }}"
-        class="nav-item"
-    >
-        <i data-lucide="user"></i>
-        <span>My</span>
-    </a>
-
-</nav>
+</div>
 
 
-<!-- NOTIFICATION BOARD -->
+<!-- =========================
+     NOTIFICATION BOARD
+========================== -->
 
-<div
-    class="notification-overlay"
-    id="notificationOverlay"
->
+<div class="notification-overlay"
+     id="notificationOverlay">
 
-    <div class="notification-board">
+    <div class="notification-box">
 
         <div class="notification-head">
 
-            <div class="notification-logo">
-                <img
-                    src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
-                    alt="JOMA"
-                >
-            </div>
+            <img
+                class="notification-logo"
+                src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
+                alt="JOMA">
 
-            <div>
-                <h3>Welcome to JOMA</h3>
-                <p>Important platform information</p>
-            </div>
+            <h2>Welcome to JOMA</h2>
 
-            <button
-                class="close-notification"
-                onclick="closeNotification()"
-                aria-label="Close"
-            >
-                <i data-lucide="x"></i>
-            </button>
+            <p>
+                Welcome to your JOMA dashboard
+            </p>
 
         </div>
 
 
         <div class="notification-body">
 
-            <div class="notice-line">
+            <div class="notice-row">
 
                 <div class="notice-icon">
-                    <i data-lucide="info"></i>
+                    ✓
                 </div>
 
-                <div>
-                    <strong>Welcome</strong>
-                    <span>
-                        Welcome to your JOMA dashboard. Explore the
-                        available football shoe products below.
-                    </span>
-                </div>
+                <p>
+                    Your JOMA account is ready to use.
+                </p>
 
             </div>
 
 
-            <div class="notice-line">
+            <div class="notice-row">
 
                 <div class="notice-icon">
-                    <i data-lucide="shield-check"></i>
+                    ⚽
                 </div>
 
-                <div>
-                    <strong>Account Information</strong>
-                    <span>
-                        Keep your account information secure and use
-                        the available services from your dashboard.
-                    </span>
-                </div>
+                <p>
+                    Explore the available
+                    <strong>JOMA football shoes</strong>
+                    and product plans.
+                </p>
 
             </div>
 
 
-            <div class="notice-line">
+            <div class="notice-row">
 
                 <div class="notice-icon">
-                    <i data-lucide="megaphone"></i>
+                    ★
                 </div>
 
-                <div>
-                    <strong>Stay Updated</strong>
-                    <span>
-                        Check the platform regularly for new products
-                        and announcements.
-                    </span>
-                </div>
+                <p>
+                    Check the dashboard regularly
+                    for new products and updates.
+                </p>
 
             </div>
 
 
-            <a href="#" class="notice-channel">
-                Join Channel
-            </a>
+            <div class="notice-buttons">
+
+                <button
+                    class="notice-btn notice-close"
+                    onclick="closeNotification()">
+                    Close
+                </button>
+
+                <button
+                    class="notice-btn notice-channel"
+                    onclick="joinChannel()">
+                    Join Channel
+                </button>
+
+            </div>
 
         </div>
 
@@ -1801,34 +2004,20 @@
 </div>
 
 
-<!-- SUCCESS TOAST -->
+<!-- =========================
+     LOADING OVERLAY
+========================== -->
 
-<div
-    class="success-toast"
-    id="successToast"
->
-
-    <div class="success-icon">
-        <i data-lucide="check"></i>
-    </div>
-
-    <div>
-        <strong>Plan selected successfully</strong>
-        <span>Your selection has been processed on this page.</span>
-    </div>
-
-</div>
-
-
-<!-- LOADER -->
-
-<div class="loader-overlay" id="loader">
+<div class="loader-overlay"
+     id="loader">
 
     <div class="loader-box">
 
         <div class="spinner"></div>
 
-        <p>Please wait...</p>
+        <span>
+            Please wait...
+        </span>
 
     </div>
 
@@ -1837,15 +2026,23 @@
 
 <script>
 
-    /* ================= LUCIDE ================= */
+    /* =========================
+       NOTIFICATION
+    ========================== */
 
-    lucide.createIcons();
+    function showNotification() {
+        const overlay =
+            document.getElementById("notificationOverlay");
 
+        if (overlay) {
+            overlay.style.display = "flex";
+        }
+    }
 
-    /* ================= NOTIFICATION ================= */
 
     function closeNotification() {
-        const overlay = document.getElementById("notificationOverlay");
+        const overlay =
+            document.getElementById("notificationOverlay");
 
         if (overlay) {
             overlay.style.display = "none";
@@ -1853,76 +2050,24 @@
     }
 
 
-    /* Show notification immediately */
+    /* =========================
+       JOIN CHANNEL
+    ========================== */
 
-    window.addEventListener("load", function () {
+    function joinChannel() {
 
-        const overlay =
-            document.getElementById("notificationOverlay");
+        /*
+         * Add your channel URL here when ready.
+         */
 
-        if (overlay) {
-            overlay.style.display = "flex";
-        }
-
-        lucide.createIcons();
-
-    });
-
-
-    /* ================= SUCCESS MESSAGE ================= */
-
-    function showSuccessMessage() {
-
-        const toast =
-            document.getElementById("successToast");
-
-        if (!toast) return;
-
-        toast.classList.add("show");
-
-        clearTimeout(window.successTimer);
-
-        window.successTimer = setTimeout(function () {
-
-            toast.classList.remove("show");
-
-        }, 3500);
+        closeNotification();
 
     }
 
 
-    /* ================= BUY BUTTONS ================= */
-
-    document.querySelectorAll(".buy-btn:not(.locked)")
-        .forEach(function (button) {
-
-            button.addEventListener("click", function () {
-
-                showSuccessMessage();
-
-            });
-
-        });
-
-
-    /* ================= TABS ================= */
-
-    function switchTab(button) {
-
-        document
-            .querySelectorAll(".tab")
-            .forEach(function (tab) {
-
-                tab.classList.remove("active");
-
-            });
-
-        button.classList.add("active");
-
-    }
-
-
-    /* ================= GLOBAL LOADER ================= */
+    /* =========================
+       LOADING
+    ========================== */
 
     function showLoading() {
 
@@ -1936,177 +2081,116 @@
     }
 
 
-    document.addEventListener("click", function (event) {
+    function hideLoading() {
 
-        const link =
-            event.target.closest("a");
+        const loader =
+            document.getElementById("loader");
 
-        if (!link) return;
-
-        const href =
-            link.getAttribute("href");
-
-        if (!href) return;
-
-        if (
-            href.startsWith("#") ||
-            href.startsWith("javascript:")
-        ) {
-            return;
+        if (loader) {
+            loader.style.display = "none";
         }
 
-        if (
-            link.classList.contains("floating-gift")
-        ) {
-            showLoading();
-            return;
+    }
+
+
+    /* =========================
+       SUCCESS MESSAGE
+    ========================== */
+
+    function showSuccess() {
+
+        const toast =
+            document.getElementById("successToast");
+
+        if (!toast) return;
+
+        toast.classList.add("show");
+
+        setTimeout(function () {
+
+            toast.classList.remove("show");
+
+        }, 3500);
+
+    }
+
+
+    /*
+     * UI feedback only.
+     * The existing Flask buy_plan route remains
+     * responsible for any server-side behavior.
+     */
+
+    function planSelected(event) {
+
+        showSuccess();
+
+    }
+
+
+    /* =========================
+       TABS
+    ========================== */
+
+    function switchTab(button, targetId) {
+
+        document
+            .querySelectorAll(".tab")
+            .forEach(function(tab) {
+                tab.classList.remove("active");
+            });
+
+        document
+            .querySelectorAll(".tab-content")
+            .forEach(function(content) {
+                content.classList.remove("active");
+            });
+
+        button.classList.add("active");
+
+        const target =
+            document.getElementById(targetId);
+
+        if (target) {
+            target.classList.add("active");
         }
 
-        /*
-         * Show the loader for normal page navigation.
-         */
-        showLoading();
-
-    });
+    }
 
 
-    /* ================= IMAGE FALLBACK ================= */
+    /* =========================
+       IMAGE FALLBACK
+    ========================== */
 
     document
-        .querySelectorAll("img")
-        .forEach(function (img) {
+        .querySelectorAll(".plan-image img")
+        .forEach(function(img) {
 
-            img.addEventListener("error", function () {
+            img.addEventListener("error", function() {
 
-                if (
-                    !this.dataset.fallback &&
-                    this.src.includes("plan")
-                ) {
-
-                    this.dataset.fallback = "true";
-
-                    this.src =
-                        "{{ url_for('static', filename='images/joma-football.jpg') }}";
-
-                }
+                this.style.display = "none";
 
             });
 
         });
 
 
-    /* ================= DRAGGABLE GIFT ================= */
+    /* =========================
+       PAGE LOAD
+    ========================== */
 
-    const gift =
-        document.getElementById("floatingGift");
+    window.addEventListener("load", function() {
 
-    let dragging = false;
-    let offsetX = 0;
-    let offsetY = 0;
+        hideLoading();
 
-
-    gift.addEventListener("pointerdown", function (e) {
-
-        dragging = true;
-
-        gift.setPointerCapture(e.pointerId);
-
-        const rect =
-            gift.getBoundingClientRect();
-
-        offsetX =
-            e.clientX - rect.left;
-
-        offsetY =
-            e.clientY - rect.top;
-
-        gift.style.cursor = "grabbing";
+        /*
+         * Notification board opens immediately.
+         */
+        setTimeout(function() {
+            showNotification();
+        }, 250);
 
     });
-
-
-    gift.addEventListener("pointermove", function (e) {
-
-        if (!dragging) return;
-
-        let x =
-            e.clientX - offsetX;
-
-        let y =
-            e.clientY - offsetY;
-
-        const width =
-            window.innerWidth;
-
-        const height =
-            window.innerHeight;
-
-        x =
-            Math.max(5, Math.min(x, width - 52));
-
-        y =
-            Math.max(5, Math.min(y, height - 52));
-
-        gift.style.left = x + "px";
-        gift.style.top = y + "px";
-        gift.style.right = "auto";
-        gift.style.bottom = "auto";
-
-    });
-
-
-    gift.addEventListener("pointerup", function () {
-
-        dragging = false;
-
-        gift.style.cursor = "grab";
-
-    });
-
-
-    gift.addEventListener("pointercancel", function () {
-
-        dragging = false;
-
-        gift.style.cursor = "grab";
-
-    });
-
-
-    /* ================= PREVENT DRAG CLICK ISSUE ================= */
-
-    let movedGift = false;
-
-    gift.addEventListener("pointermove", function () {
-
-        movedGift = true;
-
-    });
-
-
-    gift.addEventListener("click", function (e) {
-
-        if (movedGift) {
-
-            e.preventDefault();
-
-            movedGift = false;
-
-        }
-
-    });
-
-
-    /* ================= INITIALIZE ================= */
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            lucide.createIcons();
-
-        }
-    );
 
 </script>
 
