@@ -3,121 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0,
-                   maximum-scale=1.0, user-scalable=no">
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>JOMA Dashboard</title>
+    <title>JOMA</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
 
     <style>
+        :root {
+            --blue: #1428a0;
+            --blue-dark: #0d1a73;
+            --blue-light: #eef2ff;
+            --orange: #ff8a00;
+            --orange-light: #fff2df;
+            --green: #20b86a;
+            --red: #e94b4b;
+            --white: #ffffff;
+            --text: #172033;
+            --muted: #7b8498;
+            --border: #e9ecf3;
+            --bg: #f1f3f8;
+            --card: #ffffff;
+            --shadow: 0 10px 30px rgba(20, 40, 160, .08);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        :root {
-            --blue: #1726a8;
-            --blue-dark: #101b82;
-            --blue-light: #eef1ff;
-
-            --orange: #ff9f24;
-            --orange-dark: #ec8610;
-            --orange-light: #fff3df;
-
-            --green: #27c77b;
-            --red: #ef5350;
-
-            --text: #172033;
-            --muted: #788195;
-            --white: #ffffff;
-            --bg: #f2f4f8;
-            --card: #ffffff;
-            --border: #e8ebf2;
-
-            --shadow: 0 8px 25px rgba(20, 31, 80, .08);
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: "Inter", sans-serif;
+            min-height: 100vh;
             background: var(--bg);
+            font-family: "Inter", Arial, sans-serif;
             color: var(--text);
         }
 
         button,
-        a {
-            -webkit-tap-highlight-color: transparent;
+        a,
+        input {
+            font-family: inherit;
         }
 
         a {
-            text-decoration: none;
             color: inherit;
+            text-decoration: none;
         }
+
+        button {
+            border: 0;
+            cursor: pointer;
+        }
+
+        /* =========================
+           APP
+        ========================= */
 
         .app {
             width: 100%;
             max-width: 450px;
             min-height: 100vh;
-            margin: auto;
+            margin: 0 auto;
             background: #f8f9fc;
             position: relative;
             overflow-x: hidden;
-            padding-bottom: 82px;
+            padding-bottom: 85px;
         }
 
         /* =========================
            TOP BANNER
-        ========================== */
+        ========================= */
 
-        .top-banner {
-            height: 190px;
+        .hero {
+            height: 205px;
             position: relative;
+            overflow: hidden;
             background:
                 linear-gradient(
                     135deg,
-                    rgba(23,38,168,.95),
-                    rgba(23,38,168,.76)
+                    rgba(20, 40, 160, .94),
+                    rgba(13, 26, 115, .82)
                 ),
                 url("{{ url_for('static', filename='images/joma-banner.jpg') }}")
                 center/cover no-repeat;
-            color: white;
             border-radius: 0 0 28px 28px;
         }
 
-        .top-banner::after {
+        .hero::after {
             content: "";
             position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(
-                    to bottom,
-                    transparent,
-                    rgba(10,18,80,.18)
-                );
-            pointer-events: none;
+            width: 170px;
+            height: 170px;
+            right: -70px;
+            top: -65px;
+            background: rgba(255, 138, 0, .18);
+            border-radius: 50%;
         }
 
-        .header {
-            position: relative;
-            z-index: 2;
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            left: -55px;
+            bottom: -50px;
+            background: rgba(255, 255, 255, .08);
+            border-radius: 50%;
+        }
 
-            height: 70px;
+        /* =========================
+           HEADER
+        ========================= */
+
+        .topbar {
+            height: 68px;
+            padding: 14px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-
-            padding: 16px 18px;
+            position: relative;
+            z-index: 5;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 9px;
+            gap: 10px;
         }
 
         .brand-logo {
@@ -125,55 +144,97 @@
             height: 42px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid rgba(255,255,255,.85);
-            background: white;
+            border: 2px solid rgba(255, 255, 255, .85);
+            background: #fff;
         }
 
-        .brand-text h1 {
-            font-size: 21px;
+        .brand-text {
+            color: white;
+        }
+
+        .brand-name {
+            font-size: 20px;
             font-weight: 800;
-            letter-spacing: .4px;
+            letter-spacing: .5px;
+            line-height: 1;
         }
 
-        .brand-text span {
-            display: block;
+        .brand-sub {
+            margin-top: 4px;
             font-size: 9px;
-            margin-top: 1px;
-            opacity: .85;
-            letter-spacing: 1px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            opacity: .8;
         }
 
-        .header-actions {
+        .top-actions {
             display: flex;
             gap: 8px;
         }
 
-        .header-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
+        .circle-btn {
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: rgba(255,255,255,.17);
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.2);
             color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
+            display: grid;
+            place-items: center;
             font-size: 17px;
+            backdrop-filter: blur(8px);
+        }
+
+        /* =========================
+           HERO TEXT
+        ========================= */
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 7px 18px 0;
+            color: white;
+        }
+
+        .hero-small {
+            font-size: 11px;
+            font-weight: 600;
+            opacity: .82;
+            margin-bottom: 5px;
+        }
+
+        .hero-title {
+            font-size: 24px;
+            line-height: 1.15;
+            font-weight: 800;
+            max-width: 290px;
+        }
+
+        .hero-title span {
+            color: #ffad3d;
+        }
+
+        .hero-description {
+            margin-top: 7px;
+            font-size: 11px;
+            line-height: 1.5;
+            opacity: .82;
+            max-width: 285px;
         }
 
         /* =========================
            PROFILE CARD
-        ========================== */
+        ========================= */
 
         .profile-wrap {
+            padding: 0 14px;
+            margin-top: -38px;
             position: relative;
-            z-index: 5;
-            margin: -75px 14px 0;
+            z-index: 10;
         }
 
         .profile-card {
-            background: var(--white);
+            background: var(--card);
             border-radius: 20px;
             padding: 15px;
             box-shadow: var(--shadow);
@@ -185,13 +246,13 @@
             gap: 12px;
         }
 
-        .profile-photo {
-            width: 58px;
-            height: 58px;
+        .profile-avatar {
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--orange);
-            background: white;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,.12);
         }
 
         .profile-info {
@@ -199,141 +260,125 @@
             min-width: 0;
         }
 
-        .profile-info h2 {
-            font-size: 16px;
+        .hello {
+            font-size: 15px;
             font-weight: 800;
-            margin-bottom: 4px;
         }
 
-        .profile-info p {
-            color: var(--muted);
+        .phone {
             font-size: 11px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            color: var(--muted);
+            margin-top: 4px;
         }
 
-        .vip {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 9px;
-            border-radius: 20px;
+        .vip-badge {
             background: var(--orange-light);
-            color: var(--orange-dark);
-            font-size: 10px;
+            color: #df7300;
+            font-size: 9px;
             font-weight: 800;
+            padding: 6px 9px;
+            border-radius: 20px;
+            white-space: nowrap;
         }
 
         .vip-progress {
             margin-top: 14px;
         }
 
-        .vip-row {
+        .vip-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
+            color: var(--muted);
             margin-bottom: 6px;
         }
 
-        .progress {
-            height: 7px;
+        .progress-track {
+            height: 6px;
+            background: #edf0f6;
             border-radius: 20px;
-            background: #edf0f5;
             overflow: hidden;
         }
 
-        .progress span {
-            display: block;
-            width: 25%;
+        .progress-fill {
+            width: 8%;
             height: 100%;
+            background: linear-gradient(90deg, var(--orange), #ffb34d);
             border-radius: inherit;
-            background: linear-gradient(
-                90deg,
-                var(--orange),
-                var(--blue)
-            );
         }
 
         /* =========================
            ACCOUNT SUMMARY
-        ========================== */
+        ========================= */
 
         .account-grid {
-            margin-top: 15px;
+            margin-top: 14px;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1.25fr 1fr 1fr;
             gap: 8px;
         }
 
-        .account-item {
+        .account-box {
+            min-height: 78px;
+            border-radius: 14px;
+            padding: 11px 9px;
             background: #f8f9fc;
-            border: 1px solid var(--border);
-            border-radius: 13px;
-            padding: 11px 7px;
-            text-align: center;
+            border: 1px solid #edf0f5;
         }
 
-        .account-icon {
-            width: 28px;
-            height: 28px;
-            margin: 0 auto 5px;
-            border-radius: 9px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: var(--blue-light);
-            color: var(--blue);
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .account-item:nth-child(2) .account-icon {
-            background: var(--orange-light);
-            color: var(--orange-dark);
-        }
-
-        .account-item:nth-child(3) .account-icon {
-            background: #e8fff4;
-            color: #159d5d;
+        .account-box.main {
+            background: linear-gradient(135deg, #f0f3ff, #f8f9ff);
+            border-color: #e1e6ff;
         }
 
         .account-label {
             font-size: 9px;
+            font-weight: 600;
             color: var(--muted);
-            margin-bottom: 3px;
         }
 
         .account-value {
-            font-size: 13px;
+            margin-top: 7px;
+            font-size: 16px;
             font-weight: 800;
             color: var(--text);
+            word-break: break-word;
+        }
+
+        .account-box.main .account-value {
+            color: var(--blue);
+        }
+
+        .currency {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--muted);
         }
 
         /* =========================
            QUICK ACTIONS
-        ========================== */
+        ========================= */
 
         .section {
-            padding: 0 14px;
-            margin-top: 18px;
+            padding: 18px 14px 0;
         }
 
         .section-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 11px;
+            margin-bottom: 12px;
         }
 
-        .section-title h3 {
+        .section-title h2 {
             font-size: 16px;
             font-weight: 800;
         }
 
         .section-title span {
-            font-size: 10px;
             color: var(--muted);
+            font-size: 10px;
         }
 
         .quick-actions {
@@ -346,69 +391,77 @@
             background: white;
             border: 1px solid var(--border);
             border-radius: 15px;
-            padding: 11px 5px;
-            text-align: center;
-            box-shadow: 0 4px 14px rgba(0,0,0,.03);
+            min-height: 79px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 5px 18px rgba(0,0,0,.035);
+            transition: transform .2s ease;
+        }
+
+        .quick-action:active {
+            transform: scale(.96);
         }
 
         .quick-icon {
-            width: 38px;
-            height: 38px;
-            margin: auto auto 7px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
+            width: 34px;
+            height: 34px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            font-size: 15px;
             font-weight: 800;
+        }
+
+        .quick-icon.blue {
             background: var(--blue-light);
             color: var(--blue);
         }
 
-        .quick-action:nth-child(2) .quick-icon {
+        .quick-icon.orange {
             background: var(--orange-light);
-            color: var(--orange-dark);
+            color: var(--orange);
         }
 
-        .quick-action:nth-child(3) .quick-icon {
-            background: #e8fff4;
-            color: #159d5d;
+        .quick-icon.green {
+            background: #e9fbf2;
+            color: var(--green);
         }
 
-        .quick-action:nth-child(4) .quick-icon {
-            background: #f1eaff;
-            color: #7042d8;
+        .quick-icon.dark {
+            background: #eef0f4;
+            color: #3c4353;
         }
 
         .quick-action span {
-            display: block;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
+            color: #535c70;
         }
 
         /* =========================
            TABS
-        ========================== */
+        ========================= */
 
         .tabs {
             display: flex;
-            background: #e9ecf4;
-            border-radius: 13px;
+            gap: 6px;
+            background: #edf0f6;
             padding: 4px;
-            margin-bottom: 14px;
+            border-radius: 13px;
+            margin-top: 5px;
         }
 
         .tab {
             flex: 1;
-            border: none;
-            background: transparent;
-            padding: 10px 5px;
+            padding: 10px 6px;
             border-radius: 10px;
-            font-family: inherit;
-            font-size: 11px;
-            font-weight: 700;
+            background: transparent;
             color: var(--muted);
-            cursor: pointer;
+            font-size: 10px;
+            font-weight: 700;
         }
 
         .tab.active {
@@ -417,221 +470,270 @@
             box-shadow: 0 3px 10px rgba(0,0,0,.06);
         }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
         /* =========================
-           PRODUCT / SHOE CARDS
-        ========================== */
+           PLAN CARDS
+        ========================= */
 
-        .plans {
+        .plans-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
+            margin-top: 14px;
         }
 
         .plan-card {
             display: flex;
-            min-height: 160px;
+            min-height: 154px;
             overflow: hidden;
-            background: white;
             border-radius: 18px;
+            background: white;
             border: 1px solid var(--border);
-            box-shadow: var(--shadow);
+            box-shadow: 0 7px 22px rgba(20, 40, 160, .06);
         }
 
         .plan-image {
             width: 43%;
-            min-height: 160px;
+            min-width: 43%;
             position: relative;
             overflow: hidden;
-            background: #eef1f7;
+            background: #edf0f6;
         }
 
         .plan-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
             display: block;
+            object-fit: cover;
         }
 
-        .vip-label {
+        .plan-image::after {
+            content: "";
             position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(0,0,0,.3),
+                transparent 60%
+            );
+        }
+
+        .vip-tag {
+            position: absolute;
+            z-index: 2;
             top: 9px;
-            left: 8px;
+            left: 9px;
             background: var(--orange);
             color: white;
             padding: 5px 8px;
-            border-radius: 7px;
-            font-size: 9px;
+            border-radius: 8px;
+            font-size: 8px;
             font-weight: 800;
-            box-shadow: 0 4px 9px rgba(0,0,0,.12);
+            box-shadow: 0 3px 10px rgba(255,138,0,.3);
         }
 
         .plan-number {
             position: absolute;
-            bottom: 8px;
-            left: 8px;
-            background: rgba(16,27,130,.9);
+            z-index: 2;
+            bottom: 9px;
+            left: 9px;
             color: white;
-            padding: 5px 8px;
-            border-radius: 7px;
-            font-size: 8px;
-            font-weight: 700;
+            font-size: 10px;
+            font-weight: 800;
         }
 
         .plan-info {
             width: 57%;
-            padding: 12px 11px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
         }
 
-        .plan-name {
-            font-size: 14px;
-            font-weight: 800;
-            margin-bottom: 7px;
+        .plan-name-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 6px;
         }
 
-        .plan-price {
-            color: var(--blue);
-            font-size: 16px;
+        .plan-name {
+            font-size: 13px;
             font-weight: 800;
-            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .status {
+            font-size: 7px;
+            font-weight: 800;
+            padding: 4px 6px;
+            border-radius: 7px;
+            background: #eafaf2;
+            color: var(--green);
+            white-space: nowrap;
+        }
+
+        .shoe-label {
+            font-size: 8px;
+            color: var(--muted);
+            margin-top: 4px;
         }
 
         .plan-details {
+            margin-top: 9px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 6px;
-            margin-bottom: 10px;
         }
 
         .detail {
-            background: #f7f8fb;
-            border-radius: 8px;
-            padding: 6px;
+            background: #f8f9fc;
+            border-radius: 9px;
+            padding: 7px;
         }
 
         .detail small {
             display: block;
+            font-size: 7px;
             color: var(--muted);
-            font-size: 8px;
-            margin-bottom: 2px;
         }
 
         .detail strong {
             display: block;
-            font-size: 9px;
+            margin-top: 3px;
+            font-size: 10px;
+            color: var(--text);
+        }
+
+        .detail.profit strong {
+            color: var(--green);
+        }
+
+        .plan-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: auto;
+            padding-top: 9px;
+        }
+
+        .total {
+            font-size: 8px;
+            color: var(--muted);
+        }
+
+        .total strong {
+            display: block;
+            margin-top: 2px;
+            color: var(--blue);
+            font-size: 10px;
         }
 
         .buy-btn {
-            margin-top: auto;
-            border: none;
+            min-width: 75px;
+            padding: 9px 10px;
             border-radius: 10px;
-            background: linear-gradient(
-                135deg,
-                var(--blue),
-                var(--blue-dark)
-            );
+            background: linear-gradient(135deg, var(--orange), #ff9f24);
             color: white;
-            padding: 9px 8px;
-            font-family: inherit;
-            font-size: 10px;
-            font-weight: 800;
-            cursor: pointer;
             text-align: center;
+            font-size: 9px;
+            font-weight: 800;
+            box-shadow: 0 5px 12px rgba(255,138,0,.2);
         }
 
         .buy-btn:active {
-            transform: scale(.98);
+            transform: scale(.97);
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty {
+            padding: 30px 20px;
+            text-align: center;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 11px;
         }
 
         /* =========================
            BOTTOM NAV
-        ========================== */
+        ========================= */
 
         .bottom-nav {
             position: fixed;
+            z-index: 50;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: min(450px, 100%);
-            height: 67px;
-            background: rgba(255,255,255,.97);
-            border-top: 1px solid var(--border);
+            width: 100%;
+            max-width: 450px;
+            height: 68px;
+            padding: 7px 10px calc(7px + env(safe-area-inset-bottom));
+            background: rgba(255,255,255,.96);
+            border-top: 1px solid #e8ebf2;
+            backdrop-filter: blur(15px);
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            z-index: 90;
-            backdrop-filter: blur(12px);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             gap: 4px;
-            color: #8b93a5;
-            font-size: 9px;
+            color: #969dad;
+            font-size: 8px;
             font-weight: 700;
         }
 
-        .nav-item span:first-child {
-            width: 30px;
-            height: 30px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 14px;
+        .nav-icon {
+            font-size: 16px;
+            line-height: 1;
         }
 
         .nav-item.active {
             color: var(--blue);
         }
 
-        .nav-item.active span:first-child {
-            background: var(--blue-light);
+        .nav-item.active .nav-icon {
+            color: var(--orange);
         }
 
         /* =========================
            NOTIFICATION BOARD
-        ========================== */
+        ========================= */
 
         .notification-overlay {
             position: fixed;
+            z-index: 100;
             inset: 0;
-            z-index: 200;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 20px;
-            background: rgba(9,15,45,.58);
-            backdrop-filter: blur(5px);
+            justify-content: center;
+            padding: 18px;
+            background: rgba(10,18,50,.62);
+            backdrop-filter: blur(4px);
         }
 
         .notification-box {
             width: 100%;
-            max-width: 370px;
+            max-width: 380px;
             background: white;
-            border-radius: 23px;
+            border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 25px 70px rgba(0,0,0,.25);
-            animation: popup .3s ease;
+            animation: pop .35s ease;
         }
 
-        @keyframes popup {
+        @keyframes pop {
             from {
                 opacity: 0;
                 transform: translateY(20px) scale(.96);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -639,35 +741,53 @@
         }
 
         .notification-head {
-            background:
-                linear-gradient(
-                    135deg,
-                    var(--blue),
-                    var(--blue-dark)
-                );
-            padding: 20px;
+            padding: 18px;
             color: white;
-            text-align: center;
+            background: linear-gradient(
+                135deg,
+                var(--blue),
+                var(--blue-dark)
+            );
+            position: relative;
         }
 
-        .notification-logo {
-            width: 57px;
-            height: 57px;
+        .notification-head::after {
+            content: "";
+            position: absolute;
+            width: 110px;
+            height: 110px;
+            right: -45px;
+            top: -45px;
             border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--orange);
-            margin-bottom: 9px;
+            background: rgba(255,138,0,.2);
+        }
+
+        .notice-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(255,255,255,.14);
+            font-size: 21px;
+            margin-bottom: 11px;
+            position: relative;
+            z-index: 2;
         }
 
         .notification-head h2 {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 800;
+            position: relative;
+            z-index: 2;
         }
 
         .notification-head p {
-            margin-top: 4px;
+            margin-top: 5px;
             font-size: 10px;
-            opacity: .82;
+            opacity: .8;
+            position: relative;
+            z-index: 2;
         }
 
         .notification-body {
@@ -677,147 +797,147 @@
         .notice-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 11px;
             padding: 10px 0;
-            border-bottom: 1px solid #edf0f4;
+            border-bottom: 1px solid #edf0f5;
         }
 
         .notice-row:last-child {
-            border-bottom: none;
+            border-bottom: 0;
         }
 
-        .notice-icon {
-            width: 31px;
-            height: 31px;
-            flex: 0 0 31px;
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .notice-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
             background: var(--orange-light);
-            color: var(--orange-dark);
+            color: var(--orange);
             font-size: 12px;
             font-weight: 800;
-        }
-
-        .notice-row p {
-            font-size: 10px;
-            color: #596174;
-            line-height: 1.5;
+            flex-shrink: 0;
         }
 
         .notice-row strong {
-            color: var(--text);
-        }
-
-        .notice-buttons {
-            padding-top: 12px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .notice-btn {
-            border: none;
-            border-radius: 11px;
-            padding: 11px;
-            font-family: inherit;
-            font-size: 10px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .notice-close {
-            background: #eef0f5;
-            color: #4f586b;
-        }
-
-        .notice-channel {
-            background: var(--orange);
-            color: white;
-        }
-
-        /* =========================
-           SUCCESS TOAST
-        ========================== */
-
-        .success-toast {
-            position: fixed;
-            z-index: 300;
-            top: 22px;
-            left: 50%;
-            transform: translate(-50%, -90px);
-            width: calc(100% - 30px);
-            max-width: 400px;
-            background: white;
-            border-radius: 14px;
-            padding: 13px 15px;
-            box-shadow: 0 12px 35px rgba(0,0,0,.18);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: .35s ease;
-        }
-
-        .success-toast.show {
-            transform: translate(-50%, 0);
-        }
-
-        .success-icon {
-            width: 33px;
-            height: 33px;
-            border-radius: 50%;
-            background: #e8fff4;
-            color: #16a15e;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 900;
-        }
-
-        .success-toast strong {
             display: block;
-            font-size: 11px;
+            font-size: 10px;
         }
 
-        .success-toast small {
+        .notice-row span {
             display: block;
             margin-top: 2px;
             color: var(--muted);
             font-size: 9px;
+            line-height: 1.4;
+        }
+
+        .notice-close {
+            width: 100%;
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 12px;
+            background: var(--blue);
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .notice-close:active {
+            transform: scale(.98);
         }
 
         /* =========================
-           LOADER
-        ========================== */
+           SUCCESS TOAST
+        ========================= */
+
+        .success-toast {
+            position: fixed;
+            z-index: 120;
+            left: 50%;
+            bottom: 82px;
+            transform: translate(-50%, 20px);
+            width: calc(100% - 30px);
+            max-width: 420px;
+            padding: 13px 15px;
+            background: #17302a;
+            color: white;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 12px 35px rgba(0,0,0,.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: .3s ease;
+        }
+
+        .success-toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+
+        .success-check {
+            width: 29px;
+            height: 29px;
+            border-radius: 50%;
+            background: var(--green);
+            display: grid;
+            place-items: center;
+            font-size: 13px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .success-text strong {
+            display: block;
+            font-size: 10px;
+        }
+
+        .success-text span {
+            display: block;
+            margin-top: 2px;
+            font-size: 8px;
+            opacity: .7;
+        }
+
+        /* =========================
+           LOADING
+        ========================= */
 
         .loader-overlay {
             position: fixed;
+            z-index: 200;
             inset: 0;
-            z-index: 500;
             display: none;
-            justify-content: center;
             align-items: center;
-            background: rgba(255,255,255,.7);
-            backdrop-filter: blur(3px);
+            justify-content: center;
+            background: rgba(255,255,255,.82);
+            backdrop-filter: blur(4px);
+        }
+
+        .loader-overlay.show {
+            display: flex;
         }
 
         .loader-box {
-            background: white;
-            border-radius: 16px;
-            padding: 20px 25px;
-            box-shadow: 0 15px 45px rgba(0,0,0,.14);
+            width: 95px;
+            padding: 18px 12px;
             text-align: center;
+            border-radius: 17px;
+            background: white;
+            box-shadow: 0 15px 45px rgba(0,0,0,.15);
         }
 
         .spinner {
-            width: 31px;
-            height: 31px;
+            width: 30px;
+            height: 30px;
+            margin: 0 auto 9px;
+            border: 3px solid #e9ecf5;
+            border-top-color: var(--orange);
+            border-right-color: var(--blue);
             border-radius: 50%;
-            border: 3px solid #e7eaf1;
-            border-top-color: var(--blue);
             animation: spin .7s linear infinite;
-            margin: auto auto 9px;
         }
 
         @keyframes spin {
@@ -827,55 +947,27 @@
         }
 
         .loader-box span {
-            font-size: 10px;
-            color: var(--muted);
+            font-size: 9px;
             font-weight: 700;
-        }
-
-        /* =========================
-           EMPTY STATE
-        ========================== */
-
-        .empty {
-            padding: 35px 20px;
-            text-align: center;
-            background: white;
-            border-radius: 17px;
-            border: 1px solid var(--border);
-        }
-
-        .empty-icon {
-            font-size: 30px;
-            margin-bottom: 8px;
-        }
-
-        .empty h4 {
-            font-size: 13px;
-        }
-
-        .empty p {
             color: var(--muted);
-            font-size: 10px;
-            margin-top: 4px;
         }
 
         /* =========================
            RESPONSIVE
-        ========================== */
+        ========================= */
 
         @media (min-width: 451px) {
             body {
-                padding: 15px 0;
+                padding: 20px 0;
             }
 
             .app {
                 border-radius: 25px;
-                box-shadow: 0 10px 50px rgba(0,0,0,.1);
-                min-height: calc(100vh - 30px);
+                box-shadow: 0 20px 70px rgba(0,0,0,.12);
             }
 
             .bottom-nav {
-                bottom: 15px;
+                bottom: 20px;
                 border-radius: 0 0 25px 25px;
             }
         }
@@ -887,49 +979,57 @@
 <div class="app">
 
     <!-- =========================
-         TOP BANNER
+         HERO
     ========================== -->
+    <section class="hero">
 
-    <header class="top-banner">
-
-        <div class="header">
+        <header class="topbar">
 
             <div class="brand">
-
                 <img
                     class="brand-logo"
                     src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
                     alt="JOMA">
 
                 <div class="brand-text">
-                    <h1>JOMA</h1>
-                    <span>SPORTS COLLECTION</span>
+                    <div class="brand-name">JOMA</div>
+                    <div class="brand-sub">FOOTBALL COLLECTION</div>
                 </div>
-
             </div>
 
-            <div class="header-actions">
-
-                <button class="header-btn"
-                        type="button"
-                        onclick="showNotification()">
+            <div class="top-actions">
+                <button class="circle-btn" type="button" aria-label="Notifications">
                     🔔
                 </button>
 
-                <a href="{{ url_for('profile') }}"
-                   class="header-btn">
+                <a class="circle-btn"
+                   href="#"
+                   aria-label="Profile">
                     👤
                 </a>
-
             </div>
 
+        </header>
+
+        <div class="hero-content">
+            <div class="hero-small">WELCOME BACK</div>
+
+            <div class="hero-title">
+                Step into the<br>
+                <span>JOMA experience.</span>
+            </div>
+
+            <div class="hero-description">
+                Explore the latest JOMA football shoe collection
+                and manage your account from one place.
+            </div>
         </div>
 
-    </header>
+    </section>
 
 
     <!-- =========================
-         PROFILE
+         PROFILE / ACCOUNT
     ========================== -->
 
     <div class="profile-wrap">
@@ -939,24 +1039,23 @@
             <div class="profile-top">
 
                 <img
-                    class="profile-photo"
+                    class="profile-avatar"
                     src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
-                    alt="Profile">
+                    alt="JOMA">
 
                 <div class="profile-info">
 
-                    <h2>
-                        Hello,
-                        {{ user.username }}
-                    </h2>
+                    <div class="hello">
+                        Hello, {{ user.username }}
+                    </div>
 
-                    <p>
+                    <div class="phone">
                         {{ user.phone }}
-                    </p>
+                    </div>
 
                 </div>
 
-                <div class="vip">
+                <div class="vip-badge">
                     VIP 0
                 </div>
 
@@ -965,70 +1064,51 @@
 
             <div class="vip-progress">
 
-                <div class="vip-row">
+                <div class="vip-labels">
                     <span>VIP 0</span>
                     <span>VIP 1</span>
                 </div>
 
-                <div class="progress">
-                    <span></span>
+                <div class="progress-track">
+                    <div class="progress-fill"></div>
                 </div>
 
             </div>
 
 
-            <!-- ACCOUNT SUMMARY -->
+            <!-- ACCOUNT TABLE -->
 
             <div class="account-grid">
 
-                <div class="account-item">
-
-                    <div class="account-icon">
-                        B
-                    </div>
-
+                <div class="account-box main">
                     <div class="account-label">
-                        Balance
+                        Total Balance
                     </div>
 
                     <div class="account-value">
-                        GHS {{ "%.2f"|format(account.balance|default(0)) }}
+                        <span class="currency">GHS</span>
+                        {{ account.total_balance }}
                     </div>
-
                 </div>
 
-
-                <div class="account-item">
-
-                    <div class="account-icon">
-                        D
-                    </div>
-
+                <div class="account-box">
                     <div class="account-label">
                         Deposit
                     </div>
 
                     <div class="account-value">
-                        GHS {{ "%.2f"|format(account.deposit_account|default(0)) }}
+                        {{ account.deposit_account }}
                     </div>
-
                 </div>
 
-
-                <div class="account-item">
-
-                    <div class="account-icon">
-                        I
-                    </div>
-
+                <div class="account-box">
                     <div class="account-label">
-                        Total Income
+                        Income
                     </div>
 
                     <div class="account-value">
-                        GHS {{ "%.2f"|format(account.income_account|default(0)) }}
+                        {{ account.income_account }}
                     </div>
-
                 </div>
 
             </div>
@@ -1045,60 +1125,30 @@
     <section class="section">
 
         <div class="section-title">
-            <h3>Quick Actions</h3>
-            <span>JOMA</span>
+            <h2>Quick Actions</h2>
+            <span>Manage account</span>
         </div>
-
 
         <div class="quick-actions">
 
-            <a href="{{ url_for('deposit') }}"
-               class="quick-action"
-               onclick="showLoading()">
-
-                <div class="quick-icon">
-                    +
-                </div>
-
+            <a href="#" class="quick-action">
+                <div class="quick-icon blue">＋</div>
                 <span>Deposit</span>
-
             </a>
 
-
-            <a href="{{ url_for('withdraw') }}"
-               class="quick-action"
-               onclick="showLoading()">
-
-                <div class="quick-icon">
-                    ↑
-                </div>
-
+            <a href="#" class="quick-action">
+                <div class="quick-icon orange">↗</div>
                 <span>Withdraw</span>
-
             </a>
 
-
-            <a href="{{ url_for('support') if 'support' in current_app.view_functions else '#' }}"
-               class="quick-action">
-
-                <div class="quick-icon">
-                    ?
-                </div>
-
+            <a href="#" class="quick-action">
+                <div class="quick-icon green">?</div>
                 <span>Service</span>
-
             </a>
 
-
-            <a href="#plans"
-               class="quick-action">
-
-                <div class="quick-icon">
-                    ⚽
-                </div>
-
-                <span>Products</span>
-
+            <a href="#" class="quick-action">
+                <div class="quick-icon dark">✈</div>
+                <span>Channel</span>
             </a>
 
         </div>
@@ -1110,828 +1160,210 @@
          PRODUCTS
     ========================== -->
 
-    <section class="section" id="plans">
+    <section class="section">
 
         <div class="section-title">
-            <h3>JOMA Football Shoes</h3>
-            <span>10 Plans</span>
+            <h2>JOMA Collection</h2>
+            <span>10 Products</span>
         </div>
-
 
         <div class="tabs">
 
-            <button class="tab active"
-                    onclick="switchTab(this,'day-income')">
-                Day income
+            <button
+                type="button"
+                class="tab active"
+                onclick="switchTab(this)">
+                Day Income
             </button>
 
-            <button class="tab"
-                    onclick="switchTab(this,'reward-products')">
+            <button
+                type="button"
+                class="tab"
+                onclick="switchTab(this)">
                 Reward Products
             </button>
 
         </div>
 
 
-        <!-- DAY INCOME -->
+        <div class="plans-list">
 
-        <div id="day-income"
-             class="tab-content active">
+            {% if plans %}
 
-            <div class="plans">
+                {% for plan_id, plan in plans.items() %}
 
-                <!-- PLAN 1 -->
+                    <article class="plan-card">
 
-                <div class="plan-card">
+                        <!-- PRODUCT IMAGE -->
 
-                    <div class="plan-image">
+                        <div class="plan-image">
 
-                        <img
-                            src="{{ url_for('static', filename='images/plan1.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
+                            <img
+                                src="{{ url_for('static', filename='images/plan' ~ plan_id ~ '.jpg') }}"
+                                alt="JOMA football shoe"
+                                onerror="this.src='{{ url_for('static', filename='images/joma-logo.jpg') }}';">
 
-                        <div class="vip-label">
-                            VIP 1
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 01
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 01
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 70
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 8</strong>
+                            <div class="vip-tag">
+                                VIP {{ plan_id }}
                             </div>
 
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 1,440</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
+                            <div class="plan-number">
+                                JOMA • {{ plan_id }}
                             </div>
 
                         </div>
 
-                        <a href="{{ url_for('buy_plan', plan_id=1) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
 
-                    </div>
+                        <!-- PRODUCT INFORMATION -->
 
+                        <div class="plan-info">
+
+                            <div class="plan-name-row">
+
+                                <div>
+                                    <div class="plan-name">
+                                        {{ plan.name }}
+                                    </div>
+
+                                    <div class="shoe-label">
+                                        JOMA Football Shoes
+                                    </div>
+                                </div>
+
+                                <div class="status">
+                                    AVAILABLE
+                                </div>
+
+                            </div>
+
+
+                            <div class="plan-details">
+
+                                <div class="detail">
+                                    <small>Price</small>
+                                    <strong>
+                                        GHS {{ plan.investment }}
+                                    </strong>
+                                </div>
+
+                                <div class="detail profit">
+                                    <small>Daily Income</small>
+                                    <strong>
+                                        GHS {{ plan.daily }}
+                                    </strong>
+                                </div>
+
+                                <div class="detail">
+                                    <small>Validity</small>
+                                    <strong>
+                                        {{ plan.duration }} Days
+                                    </strong>
+                                </div>
+
+                                <div class="detail">
+                                    <small>Daily Rate</small>
+                                    <strong>
+                                        GHS {{ plan.daily }}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="plan-footer">
+
+                                <div class="total">
+                                    Total income
+                                    <strong>
+                                        GHS {{ plan.daily * plan.duration }}
+                                    </strong>
+                                </div>
+
+                                <!-- Existing Flask route -->
+                                <a
+                                    href="{{ url_for('buy_plan', plan_id=plan_id) }}"
+                                    class="buy-btn"
+                                    onclick="showPlanLoading();">
+                                    Buy Now
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+                    No JOMA products are currently available.
                 </div>
 
-
-                <!-- PLAN 2 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan2.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 2
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 02
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 02
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 120
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 25</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 4,500</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=2) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PLAN 3 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan3.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 3
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 03
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 03
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 250
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 45</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 8,100</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=3) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PLAN 4 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan4.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 4
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 04
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 04
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 300
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 55</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 9,900</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=4) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PLAN 5 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan5.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 5
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 05
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 05
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 450
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 85</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 15,300</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=5) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PLAN 6 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan6.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 6
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 06
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 06
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 600
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 100</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 18,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=6) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PLAN 7 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan7.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 7
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 07
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 07
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 850
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 188</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 33,840</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=7) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PLAN 8 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan8.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 8
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 08
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 08
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 1000
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 300</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 54,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=8) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PLAN 9 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan9.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 9
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 09
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 09
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 1600
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 450</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 81,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=9) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- PLAN 10 -->
-
-                <div class="plan-card">
-
-                    <div class="plan-image">
-
-                        <img
-                            src="{{ url_for('static', filename='images/plan10.jpg') }}"
-                            alt="JOMA Football Shoe"
-                            onerror="this.style.display='none'">
-
-                        <div class="vip-label">
-                            VIP 10
-                        </div>
-
-                        <div class="plan-number">
-                            PLAN 10
-                        </div>
-
-                    </div>
-
-
-                    <div class="plan-info">
-
-                        <div class="plan-name">
-                            JOMA Football Shoe 10
-                        </div>
-
-                        <div class="plan-price">
-                            GHS 2000
-                        </div>
-
-                        <div class="plan-details">
-
-                            <div class="detail">
-                                <small>Daily Income</small>
-                                <strong>GHS 600</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Duration</small>
-                                <strong>180 Days</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Total Income</small>
-                                <strong>GHS 108,000</strong>
-                            </div>
-
-                            <div class="detail">
-                                <small>Product</small>
-                                <strong>JOMA</strong>
-                            </div>
-
-                        </div>
-
-                        <a href="{{ url_for('buy_plan', plan_id=10) }}"
-                           class="buy-btn"
-                           onclick="planSelected(event)">
-                            Buy Now
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- REWARD PRODUCTS -->
-
-        <div id="reward-products"
-             class="tab-content">
-
-            <div class="empty">
-
-                <div class="empty-icon">
-                    ⚽
-                </div>
-
-                <h4>JOMA Reward Products</h4>
-
-                <p>
-                    More JOMA products will appear here.
-                </p>
-
-            </div>
+            {% endif %}
 
         </div>
 
     </section>
 
-
-    <!-- =========================
-         BOTTOM NAVIGATION
-    ========================== -->
-
-    <nav class="bottom-nav">
-
-        <a href="{{ url_for('dashboard') }}"
-           class="nav-item active">
-
-            <span>⌂</span>
-            <span>Home</span>
-
-        </a>
-
-
-        <a href="#plans"
-           class="nav-item">
-
-            <span>▣</span>
-            <span>Income</span>
-
-        </a>
-
-
-        <a href="#"
-           class="nav-item">
-
-            <span>♟</span>
-            <span>Team</span>
-
-        </a>
-
-
-        <a href="#"
-           class="nav-item">
-
-            <span>↗</span>
-            <span>Share</span>
-
-        </a>
-
-
-        <a href="{{ url_for('profile') }}"
-           class="nav-item">
-
-            <span>●</span>
-            <span>My</span>
-
-        </a>
-
-    </nav>
-
 </div>
 
 
 <!-- =========================
-     SUCCESS TOAST
-========================== -->
+     BOTTOM NAVIGATION
+========================= -->
 
-<div class="success-toast"
-     id="successToast">
+<nav class="bottom-nav">
 
-    <div class="success-icon">
-        ✓
-    </div>
+    <a href="#" class="nav-item active">
+        <div class="nav-icon">⌂</div>
+        <span>Home</span>
+    </a>
 
-    <div>
-        <strong>Plan selected successfully</strong>
-        <small>Processing your selection...</small>
-    </div>
+    <a href="#" class="nav-item">
+        <div class="nav-icon">◉</div>
+        <span>Income</span>
+    </a>
 
-</div>
+    <a href="#" class="nav-item">
+        <div class="nav-icon">♧</div>
+        <span>Team</span>
+    </a>
+
+    <a href="#" class="nav-item">
+        <div class="nav-icon">↗</div>
+        <span>Share</span>
+    </a>
+
+    <a href="#" class="nav-item">
+        <div class="nav-icon">●</div>
+        <span>My</span>
+    </a>
+
+</nav>
 
 
 <!-- =========================
-     NOTIFICATION BOARD
-========================== -->
+     WELCOME NOTIFICATION
+========================= -->
 
-<div class="notification-overlay"
-     id="notificationOverlay">
+<div
+    id="notificationOverlay"
+    class="notification-overlay">
 
     <div class="notification-box">
 
         <div class="notification-head">
 
-            <img
-                class="notification-logo"
-                src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
-                alt="JOMA">
+            <div class="notice-icon">
+                🔔
+            </div>
 
             <h2>Welcome to JOMA</h2>
 
             <p>
-                Welcome to your JOMA dashboard
+                Thanks for visiting the JOMA platform.
             </p>
 
         </div>
@@ -1941,61 +1373,54 @@
 
             <div class="notice-row">
 
-                <div class="notice-icon">
-                    ✓
-                </div>
+                <div class="notice-dot">✓</div>
 
-                <p>
-                    Your JOMA account is ready to use.
-                </p>
+                <div>
+                    <strong>JOMA Football Collection</strong>
+                    <span>
+                        Explore the available JOMA football shoe products.
+                    </span>
+                </div>
 
             </div>
 
 
             <div class="notice-row">
 
-                <div class="notice-icon">
-                    ⚽
-                </div>
+                <div class="notice-dot">★</div>
 
-                <p>
-                    Explore the available
-                    <strong>JOMA football shoes</strong>
-                    and product plans.
-                </p>
+                <div>
+                    <strong>Product Information</strong>
+                    <span>
+                        Check each product card for its price,
+                        daily income and validity period.
+                    </span>
+                </div>
 
             </div>
 
 
             <div class="notice-row">
 
-                <div class="notice-icon">
-                    ★
+                <div class="notice-dot">!</div>
+
+                <div>
+                    <strong>Account</strong>
+                    <span>
+                        Keep your account information organized
+                        and review your balances from the dashboard.
+                    </span>
                 </div>
 
-                <p>
-                    Check the dashboard regularly
-                    for new products and updates.
-                </p>
-
             </div>
 
 
-            <div class="notice-buttons">
-
-                <button
-                    class="notice-btn notice-close"
-                    onclick="closeNotification()">
-                    Close
-                </button>
-
-                <button
-                    class="notice-btn notice-channel"
-                    onclick="joinChannel()">
-                    Join Channel
-                </button>
-
-            </div>
+            <button
+                type="button"
+                class="notice-close"
+                onclick="closeNotification();">
+                Continue to Dashboard
+            </button>
 
         </div>
 
@@ -2005,19 +1430,34 @@
 
 
 <!-- =========================
-     LOADING OVERLAY
-========================== -->
+     SUCCESS TOAST
+========================= -->
 
-<div class="loader-overlay"
-     id="loader">
+<div id="successToast" class="success-toast">
+
+    <div class="success-check">
+        ✓
+    </div>
+
+    <div class="success-text">
+        <strong>Plan selected successfully</strong>
+        <span>Your selection has been processed.</span>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     LOADING
+========================= -->
+
+<div id="loaderOverlay" class="loader-overlay">
 
     <div class="loader-box">
 
         <div class="spinner"></div>
 
-        <span>
-            Please wait...
-        </span>
+        <span>Please wait...</span>
 
     </div>
 
@@ -2025,24 +1465,12 @@
 
 
 <script>
-
     /* =========================
        NOTIFICATION
     ========================== */
 
-    function showNotification() {
-        const overlay =
-            document.getElementById("notificationOverlay");
-
-        if (overlay) {
-            overlay.style.display = "flex";
-        }
-    }
-
-
     function closeNotification() {
-        const overlay =
-            document.getElementById("notificationOverlay");
+        const overlay = document.getElementById("notificationOverlay");
 
         if (overlay) {
             overlay.style.display = "none";
@@ -2051,80 +1479,34 @@
 
 
     /* =========================
-       JOIN CHANNEL
-    ========================== */
-
-    function joinChannel() {
-
-        /*
-         * Add your channel URL here when ready.
-         */
-
-        closeNotification();
-
-    }
-
-
-    /* =========================
        LOADING
     ========================== */
 
     function showLoading() {
-
-        const loader =
-            document.getElementById("loader");
+        const loader = document.getElementById("loaderOverlay");
 
         if (loader) {
-            loader.style.display = "flex";
+            loader.classList.add("show");
         }
-
     }
-
 
     function hideLoading() {
-
-        const loader =
-            document.getElementById("loader");
+        const loader = document.getElementById("loaderOverlay");
 
         if (loader) {
-            loader.style.display = "none";
+            loader.classList.remove("show");
         }
-
     }
 
 
-    /* =========================
-       SUCCESS MESSAGE
-    ========================== */
+    function showPlanLoading() {
+        showLoading();
 
-    function showSuccess() {
-
-        const toast =
-            document.getElementById("successToast");
-
-        if (!toast) return;
-
-        toast.classList.add("show");
-
-        setTimeout(function () {
-
-            toast.classList.remove("show");
-
-        }, 3500);
-
-    }
-
-
-    /*
-     * UI feedback only.
-     * The existing Flask buy_plan route remains
-     * responsible for any server-side behavior.
-     */
-
-    function planSelected(event) {
-
-        showSuccess();
-
+        /*
+         * This does not change the existing Flask purchase logic.
+         * The browser simply shows the loading screen while
+         * navigating to the existing buy_plan route.
+         */
     }
 
 
@@ -2132,7 +1514,7 @@
        TABS
     ========================== */
 
-    function switchTab(button, targetId) {
+    function switchTab(button) {
 
         document
             .querySelectorAll(".tab")
@@ -2140,59 +1522,84 @@
                 tab.classList.remove("active");
             });
 
-        document
-            .querySelectorAll(".tab-content")
-            .forEach(function(content) {
-                content.classList.remove("active");
-            });
-
         button.classList.add("active");
+    }
 
-        const target =
-            document.getElementById(targetId);
 
-        if (target) {
-            target.classList.add("active");
+    /* =========================
+       SUCCESS MESSAGE
+    ========================== */
+
+    function showSuccessMessage() {
+
+        const toast = document.getElementById("successToast");
+
+        if (!toast) {
+            return;
         }
 
+        toast.classList.add("show");
+
+        setTimeout(function() {
+            toast.classList.remove("show");
+        }, 3500);
     }
+
+
+    /* =========================
+       INITIAL PAGE LOAD
+    ========================== */
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        /*
+         * Notification board appears immediately
+         * when dashboard loads.
+         */
+
+        const notification =
+            document.getElementById("notificationOverlay");
+
+        if (notification) {
+            notification.style.display = "flex";
+        }
+
+    });
+
+
+    /* =========================
+       CLOSE NOTIFICATION
+       WITH ESC KEY
+    ========================== */
+
+    document.addEventListener("keydown", function(event) {
+
+        if (event.key === "Escape") {
+            closeNotification();
+        }
+
+    });
 
 
     /* =========================
        IMAGE FALLBACK
     ========================== */
 
-    document
-        .querySelectorAll(".plan-image img")
-        .forEach(function(img) {
+    document.querySelectorAll(".plan-image img").forEach(function(img) {
 
-            img.addEventListener("error", function() {
+        img.addEventListener("error", function() {
 
-                this.style.display = "none";
+            const fallback =
+                "{{ url_for('static', filename='images/joma-logo.jpg') }}";
 
-            });
+            if (this.src.indexOf("joma-logo.jpg") === -1) {
+                this.src = fallback;
+            }
 
         });
 
-
-    /* =========================
-       PAGE LOAD
-    ========================== */
-
-    window.addEventListener("load", function() {
-
-        hideLoading();
-
-        /*
-         * Notification board opens immediately.
-         */
-        setTimeout(function() {
-            showNotification();
-        }, 250);
-
     });
-
 </script>
 
 </body>
-</html>
+    </html>
