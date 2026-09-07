@@ -1,3097 +1,1391 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>INFINIX</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet"
->
-
-<script src="https://unpkg.com/lucide@latest"></script>
+{% extends "base.html" %}
+{% block content %}
 
 <style>
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", Arial, sans-serif;
+:root{
+    --joma-blue:#1026a8;
+    --joma-blue-dark:#071875;
+    --joma-orange:#ff9418;
+    --joma-orange-dark:#e87800;
+    --white:#ffffff;
+    --bg:#f4f6fb;
+    --text:#172033;
+    --muted:#718096;
+    --green:#20b978;
+    --border:#e8ebf2;
 }
 
-:root {
-    --bg: #050505;
-    --surface: #0b0b0b;
-    --surface2: #111111;
-    --surface3: #171717;
-
-    --text: #ffffff;
-    --muted: #858585;
-
-    --green: #00ff55;
-    --green2: #00d948;
-    --green-dark: #00a83a;
-
-    --border: rgba(255,255,255,.08);
+*{
+    box-sizing:border-box;
 }
 
-html {
-    scroll-behavior: smooth;
+body{
+    margin:0;
+    background:#dfe3ea;
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--text);
 }
 
-body {
-    margin: 0;
-    background: #000;
-    color: white;
-    min-height: 100vh;
-    padding-bottom: 78px;
+.app{
+    width:100%;
+    max-width:450px;
+    min-height:100vh;
+    margin:auto;
+    background:var(--bg);
+    position:relative;
+    overflow:hidden;
 }
 
-.phone-container {
-    width: 100%;
-    max-width: 480px;
-    min-height: 100vh;
-    margin: auto;
-    position: relative;
-    overflow: hidden;
+/* ================= TOP BANNER ================= */
 
+.top-banner{
+    height:190px;
+    position:relative;
+    overflow:hidden;
     background:
-        radial-gradient(
-            circle at 50% -10%,
-            rgba(0,255,85,.08),
-            transparent 30%
+        linear-gradient(
+            120deg,
+            rgba(16,38,168,.96),
+            rgba(16,38,168,.78)
         ),
-        #050505;
+        url("{{ url_for('static', filename='images/joma-banner.jpg') }}")
+        center/cover no-repeat;
 }
 
-
-/* =========================================
-   HEADER
-========================================= */
-
-.top-header {
-    height: 64px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 15px;
-
-    background: rgba(5,5,5,.96);
-
-    border-bottom: 1px solid var(--border);
-
-    backdrop-filter: blur(20px);
-
-    position: sticky;
-    top: 0;
-    z-index: 100;
+.top-banner::after{
+    content:"";
+    position:absolute;
+    inset:auto -30px -70px auto;
+    width:190px;
+    height:190px;
+    border-radius:50%;
+    background:rgba(255,148,24,.25);
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.header{
+    height:64px;
+    padding:13px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:relative;
+    z-index:3;
 }
 
-.brand-logo {
-    width: 38px;
-    height: 38px;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
 
-    border-radius: 10px;
+.brand-logo{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+    background:white;
+    border:3px solid var(--joma-orange);
+}
 
+.brand-name{
+    color:#fff;
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:.5px;
+}
+
+.brand-sub{
+    color:rgba(255,255,255,.78);
+    font-size:9px;
+    margin-top:2px;
+}
+
+.header-actions{
+    display:flex;
+    gap:8px;
+}
+
+.header-btn{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.15);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:17px;
+}
+
+/* ================= PROFILE ================= */
+
+.profile-card{
+    position:absolute;
+    left:14px;
+    right:14px;
+    top:82px;
+    z-index:5;
+    background:#fff;
+    border-radius:18px;
+    padding:15px;
+    box-shadow:0 10px 30px rgba(20,30,70,.18);
+}
+
+.profile-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile-logo{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid var(--joma-orange);
+    background:#fff;
+}
+
+.profile-info{
+    flex:1;
+    min-width:0;
+}
+
+.profile-info h2{
+    margin:0;
+    font-size:17px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.profile-info p{
+    margin:4px 0 8px;
+    font-size:12px;
+    color:var(--muted);
+}
+
+.vip-row{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:10px;
+    font-weight:700;
+}
+
+.vip{
+    padding:4px 8px;
+    border-radius:20px;
+    background:var(--joma-blue);
+    color:#fff;
+}
+
+.vip.next{
+    background:#fff1df;
+    color:var(--joma-orange-dark);
+}
+
+.progress{
+    flex:1;
+    height:6px;
+    border-radius:10px;
+    background:#edf0f5;
+    overflow:hidden;
+}
+
+.progress span{
+    display:block;
+    width:20%;
+    height:100%;
+    background:linear-gradient(
+        90deg,
+        var(--joma-blue),
+        var(--joma-orange)
+    );
+}
+
+/* ================= ACCOUNT ================= */
+
+.account-box{
+    margin:125px 14px 0;
+    background:#fff;
+    border-radius:18px;
+    padding:14px;
+    box-shadow:0 5px 20px rgba(30,40,70,.07);
+}
+
+.account-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.account-title strong{
+    font-size:15px;
+}
+
+.account-title span{
+    font-size:10px;
+    color:var(--muted);
+}
+
+.account-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+
+.account-item{
+    min-width:0;
+    padding:11px 7px;
+    background:#f7f8fc;
+    border-radius:12px;
+    text-align:center;
+}
+
+.account-item small{
+    display:block;
+    color:var(--muted);
+    font-size:9px;
+    margin-bottom:5px;
+}
+
+.account-item strong{
+    font-size:14px;
+    display:block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.account-item.main{
+    background:#eef1ff;
+}
+
+.account-item.orange{
+    background:#fff4e5;
+}
+
+.account-item.green{
+    background:#eafaf3;
+}
+
+/* ================= QUICK ACTIONS ================= */
+
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+    margin:13px 14px;
+}
+
+.quick-action{
+    text-decoration:none;
+    background:#fff;
+    border-radius:14px;
+    padding:11px 5px;
+    text-align:center;
+    color:var(--text);
+    box-shadow:0 4px 15px rgba(30,40,70,.05);
+}
+
+.quick-icon{
+    width:36px;
+    height:36px;
+    margin:auto auto 6px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:17px;
+    font-weight:bold;
+    background:var(--joma-blue);
+}
+
+.quick-action:nth-child(2) .quick-icon{
+    background:var(--joma-orange);
+}
+
+.quick-action:nth-child(3) .quick-icon{
+    background:#20a878;
+}
+
+.quick-action:nth-child(4) .quick-icon{
+    background:#7a55c7;
+}
+
+.quick-action span{
+    font-size:10px;
+    font-weight:700;
+}
+
+/* ================= TABS ================= */
+
+.tabs{
+    display:flex;
+    margin:10px 14px;
+    background:#e9edf5;
+    padding:4px;
+    border-radius:12px;
+}
+
+.tab{
+    flex:1;
+    border:0;
+    padding:10px 5px;
+    border-radius:9px;
+    background:transparent;
+    font-size:11px;
+    font-weight:800;
+    color:var(--muted);
+}
+
+.tab.active{
+    background:#fff;
+    color:var(--joma-blue);
+    box-shadow:0 3px 10px rgba(20,30,60,.08);
+}
+
+/* ================= PLAN SECTION ================= */
+
+.section-head{
+    padding:4px 14px 10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.section-head strong{
+    font-size:16px;
+}
+
+.section-head span{
+    font-size:10px;
+    color:var(--muted);
+}
+
+/* ================= PLAN CARD ================= */
+
+.plan-list{
+    padding:0 14px 90px;
+}
+
+.plan-card{
+    display:flex;
+    min-height:148px;
+    margin-bottom:12px;
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 5px 18px rgba(25,35,70,.07);
+    border:1px solid #edf0f5;
+}
+
+.plan-image{
+    width:43%;
+    position:relative;
+    overflow:hidden;
+    background:#edf0f5;
+}
+
+.plan-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.plan-vip{
+    position:absolute;
+    top:9px;
+    left:9px;
+    padding:5px 8px;
+    border-radius:20px;
+    background:var(--joma-orange);
+    color:#fff;
+    font-size:9px;
+    font-weight:900;
+}
+
+.plan-info{
+    width:57%;
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+}
+
+.plan-name{
+    font-size:14px;
+    font-weight:900;
+    color:var(--joma-blue);
+}
+
+.plan-price{
+    margin-top:3px;
+    font-size:18px;
+    font-weight:900;
+}
+
+.plan-details{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+    margin-top:8px;
+}
+
+.detail{
+    background:#f7f8fb;
+    border-radius:7px;
+    padding:5px;
+}
+
+.detail small{
+    display:block;
+    font-size:8px;
+    color:var(--muted);
+}
+
+.detail b{
+    display:block;
+    margin-top:2px;
+    font-size:10px;
+}
+
+.buy-btn{
+    width:100%;
+    margin-top:auto;
+    border:0;
+    border-radius:9px;
+    padding:9px;
+    background:linear-gradient(
+        90deg,
+        var(--joma-blue),
+        #1e3bc7
+    );
+    color:#fff;
+    font-size:11px;
+    font-weight:900;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.buy-btn:active{
+    transform:scale(.97);
+}
+
+.buy-btn.orange{
+    background:linear-gradient(
+        90deg,
+        var(--joma-orange-dark),
+        var(--joma-orange)
+    );
+}
+
+/* ================= BOTTOM NAV ================= */
+
+.bottom-nav{
+    position:fixed;
+    z-index:20;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:450px;
+    height:67px;
+    background:#fff;
+    border-top:1px solid var(--border);
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    box-shadow:0 -5px 20px rgba(20,30,60,.08);
+}
+
+.nav-item{
+    text-decoration:none;
+    color:#8a93a5;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    font-size:9px;
+    font-weight:700;
+}
+
+.nav-icon{
+    font-size:19px;
+}
+
+.nav-item.active{
+    color:var(--joma-blue);
+}
+
+.nav-item.active .nav-icon{
+    color:var(--joma-orange);
+}
+
+/* ================= NOTIFICATION BOARD ================= */
+
+.notification-overlay{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    background:rgba(8,16,45,.68);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+}
+
+.notification-board{
+    width:100%;
+    max-width:410px;
+    background:#fff;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+    animation:popup .35s ease;
+}
+
+@keyframes popup{
+    from{
+        opacity:0;
+        transform:translateY(25px) scale(.96);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+.notification-head{
+    padding:20px;
+    color:#fff;
     background:
         linear-gradient(
             135deg,
-            #00ff55,
-            #8affae
+            var(--joma-blue),
+            #1d3ed0
         );
-
-    color: #001b09;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-weight: 900;
-    font-size: 17px;
-
-    box-shadow:
-        0 0 22px rgba(0,255,85,.18);
-}
-
-.brand-text strong {
-    display: block;
-    font-size: 13px;
-    font-weight: 900;
-    letter-spacing: .5px;
-}
-
-.brand-text span {
-    display: block;
-    color: var(--muted);
-    font-size: 8px;
-    margin-top: 2px;
-}
-
-.header-button {
-    width: 38px;
-    height: 38px;
-
-    border-radius: 10px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: white;
-
-    background: #101010;
-
-    border: 1px solid var(--border);
-
-    text-decoration: none;
-
-    transition: .2s;
-}
-
-.header-button:active {
-    transform: scale(.92);
-}
-
-.header-button svg {
-    width: 18px;
-}
-
-
-/* =========================================
-   HERO
-========================================= */
-
-.hero {
-    height: 200px;
-    position: relative;
-    overflow: hidden;
-    background: #111;
-}
-
-.hero-image {
-    position: absolute;
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    opacity: .72;
-
-    transition:
-        opacity .4s ease,
-        transform 5s ease;
-
-    transform: scale(1.03);
-}
-
-.hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(0,0,0,.05),
-            rgba(0,0,0,.40),
-            rgba(5,5,5,1)
-        );
-
-    pointer-events: none;
-}
-
-.hero-content {
-    position: absolute;
-
-    z-index: 5;
-
-    left: 16px;
-    right: 16px;
-    bottom: 20px;
-}
-
-.eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-
-    padding: 5px 8px;
-
-    border-radius: 20px;
-
-    background: rgba(0,255,85,.09);
-
-    border: 1px solid rgba(0,255,85,.22);
-
-    color: var(--green);
-
-    font-size: 8px;
-    font-weight: 800;
-
-    margin-bottom: 8px;
-}
-
-.eyebrow span {
-    width: 5px;
-    height: 5px;
-
-    border-radius: 50%;
-
-    background: var(--green);
-
-    box-shadow:
-        0 0 8px var(--green);
-}
-
-.hero h1 {
-    font-size: 23px;
-    line-height: 1.1;
-    font-weight: 900;
-    margin-bottom: 5px;
-}
-
-.hero h1 span {
-    color: var(--green);
-}
-
-.hero p {
-    font-size: 9px;
-    color: #b5b5b5;
-    line-height: 1.5;
-    max-width: 290px;
-}
-
-.hero-dots {
-    position: absolute;
-
-    right: 16px;
-    bottom: 22px;
-
-    z-index: 10;
-
-    display: flex;
-    gap: 4px;
-}
-
-.hero-dot {
-    width: 5px;
-    height: 5px;
-
-    border-radius: 10px;
-
-    background: rgba(255,255,255,.35);
-
-    transition: .3s;
-}
-
-.hero-dot.active {
-    width: 17px;
-    background: var(--green);
-
-    box-shadow:
-        0 0 8px rgba(0,255,85,.5);
-}
-
-
-/* =========================================
-   QUICK ACTIONS
-========================================= */
-
-.top-actions {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
-    gap: 6px;
-
-    padding: 10px;
-
-    background: #090909;
-
-    border-bottom: 1px solid var(--border);
-}
-
-.action-btn {
-    text-decoration: none;
-
-    background:
-        linear-gradient(
-            180deg,
-            #181818,
-            #0e0e0e
-        );
-
-    border: 1px solid var(--border);
-
-    border-radius: 9px;
-
-    padding: 10px 4px;
-
-    text-align: center;
-
-    color: white;
-
-    transition: .2s;
-
-    position: relative;
-
-    overflow: hidden;
-}
-
-.action-btn::after {
-    content: "";
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 0;
-    height: 0;
-
-    background: rgba(0,255,85,.08);
-
-    border-radius: 50%;
-
-    transform: translate(-50%,-50%);
-
-    transition: .3s;
-}
-
-.action-btn:active::after {
-    width: 150px;
-    height: 150px;
-}
-
-.action-btn:active {
-    transform: scale(.96);
-}
-
-.action-icon {
-    width: 28px;
-    height: 28px;
-
-    margin: auto auto 4px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 8px;
-
-    background: rgba(255,255,255,.04);
-}
-
-.action-icon svg {
-    width: 15px;
-    height: 15px;
-}
-
-.action-label {
-    font-size: 8px;
-    color: #a0a0a0;
-}
-
-
-/* =========================================
-   ACCOUNT
-========================================= */
-
-.account {
-    margin: 14px 10px;
-
-    padding: 14px;
-
-    border-radius: 14px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #151515,
-            #0c0c0c
-        );
-
-    border: 1px solid var(--border);
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.20);
-}
-
-.account-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    margin-bottom: 10px;
-}
-
-.account-header h3 {
-    font-size: 12px;
-}
-
-.account-header span {
-    font-size: 8px;
-    color: var(--muted);
-}
-
-.balance-main {
-    font-size: 22px;
-    font-weight: 900;
-    color: white;
-    margin-bottom: 12px;
-}
-
-.balance-main small {
-    font-size: 8px;
-    color: var(--muted);
-    font-weight: 500;
-}
-
-.balance-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    border-top: 1px solid var(--border);
-
-    padding-top: 11px;
-}
-
-.balance-box {
-    padding: 0 7px;
-
-    border-right: 1px solid var(--border);
-}
-
-.balance-box:last-child {
-    border-right: none;
-}
-
-.balance-box label {
-    display: block;
-
-    color: var(--muted);
-
-    font-size: 7px;
-
-    margin-bottom: 4px;
-}
-
-.balance-box strong {
-    font-size: 9px;
-}
-
-
-/* =========================================
-   SECTION
-========================================= */
-
-.section {
-    padding: 0 10px;
-}
-
-.section-head {
-    display: flex;
-
-    align-items: end;
-    justify-content: space-between;
-
-    margin: 18px 2px 10px;
-}
-
-.section-head h2 {
-    font-size: 18px;
-    letter-spacing: -.4px;
-}
-
-.section-head p {
-    font-size: 8px;
-    color: var(--muted);
-    margin-top: 3px;
-}
-
-.section-head a {
-    color: var(--green);
-    text-decoration: none;
-    font-size: 8px;
-}
-
-
-/* =========================================
-   PRODUCT GRID
-========================================= */
-
-.product-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0,1fr));
-
-    gap: 2px;
-
-    background: #262626;
-
-    border: 1px solid #242424;
-}
-
-.product-card {
-    background: #090909;
-
-    padding: 11px;
-
-    min-width: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    position: relative;
-}
-
-.product-card::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: 0;
-    right: 0;
-
-    height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(0,255,85,.25),
-            transparent
-        );
-}
-
-.vip-tag {
-    width: 100%;
-
-    color: var(--green);
-
-    font-weight: 900;
-
-    font-size: 12px;
-
-    margin-bottom: 8px;
-
-    text-align: left;
-}
-
-.vip-tag span {
-    float: right;
-
-    color: #666;
-
-    font-size: 7px;
-
-    font-weight: 600;
-}
-
-
-/* =========================================
-   PRODUCT IMAGE
-========================================= */
-
-.product-img-box {
-    width: 100%;
-
-    height: 145px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    margin-bottom: 10px;
-
-    overflow: hidden;
-
-    border-radius: 9px;
-
-    background:
-        radial-gradient(
-            circle at 50% 35%,
-            #292929,
-            #090909 75%
-        );
-
-    border: 1px solid rgba(255,255,255,.06);
-
-    position: relative;
-}
-
-.product-img-box::after {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    background:
-        linear-gradient(
-            180deg,
-            transparent 55%,
-            rgba(0,0,0,.28)
-        );
-
-    pointer-events: none;
-}
-
-.product-img-box img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
-
-    padding: 5px;
-
-    opacity: 1;
-
-    transition:
-        transform .5s ease,
-        opacity .3s ease;
-}
-
-.product-card:hover
-.product-img-box img {
-    transform: scale(1.06);
-}
-
-
-/* =========================================
-   IMAGE FALLBACK
-========================================= */
-
-.image-fallback {
-    display: none;
-
-    width: 100%;
-    height: 100%;
-
-    align-items: center;
-    justify-content: center;
-
-    position: absolute;
-
-    inset: 0;
-}
-
-.fake-phone {
-    width: 62px;
-    height: 112px;
-
-    border-radius: 13px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #303030,
-            #080808
-        );
-
-    border: 2px solid #4a4a4a;
-
-    box-shadow:
-        0 15px 35px rgba(0,0,0,.6);
-
-    position: relative;
-}
-
-.fake-phone::before {
-    content: "";
-
-    position: absolute;
-
-    width: 30px;
-    height: 4px;
-
-    border-radius: 10px;
-
-    background: #050505;
-
-    top: 5px;
-    left: 50%;
-
-    transform: translateX(-50%);
-}
-
-.fake-phone::after {
-    content: "INFINIX";
-
-    position: absolute;
-
-    bottom: 20px;
-    left: 50%;
-
-    transform:
-        translateX(-50%)
-        rotate(90deg);
-
-    color: rgba(255,255,255,.45);
-
-    font-size: 6px;
-
-    font-weight: 800;
-}
-
-
-/* =========================================
-   INFO ROW
-========================================= */
-
-.info-row {
-    width: 100%;
-
-    font-size: 8px;
-
-    margin-bottom: 5px;
-
-    color: #777;
-
-    text-align: left;
-}
-
-.info-row span {
-    color: #d0d0d0;
-
-    font-weight: 600;
-
-    float: right;
-}
-
-.info-row .income {
-    color: var(--green);
-}
-
-
-/* =========================================
-   PRICE
-========================================= */
-
-.price-tag {
-    width: 100%;
-
-    color: var(--green);
-
-    font-weight: 900;
-
-    font-size: 14px;
-
-    margin: 7px 0 9px;
-
-    text-align: left;
-}
-
-.price-tag small {
-    font-size: 7px;
-
-    color: #666;
-
-    font-weight: 500;
-}
-
-
-/* =========================================
-   BUY BUTTON
-========================================= */
-
-.buy-btn {
-    width: 100%;
-
-    min-height: 32px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #00d948,
-            #00a83a
-        );
-
-    color: #001407;
-
-    border: none;
-
-    border-radius: 6px;
-
-    padding: 7px 0;
-
-    font-weight: 900;
-
-    font-size: 10px;
-
-    cursor: pointer;
-
-    text-align: center;
-
-    text-decoration: none;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 5px;
-
-    transition: .2s;
+    position:relative;
 }
 
-.buy-btn:active {
-    transform: scale(.95);
+.notification-head::after{
+    content:"";
+    position:absolute;
+    right:-35px;
+    top:-50px;
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:rgba(255,148,24,.25);
 }
-
-.buy-btn svg {
-    width: 13px;
-    height: 13px;
-}
-
 
-/* =========================================
-   LOCKED
-========================================= */
-
-.locked {
-    opacity: .65;
+.notification-logo{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid var(--joma-orange);
+    background:#fff;
 }
 
-.locked .product-img-box img {
-    filter: grayscale(.5);
+.notification-head h3{
+    margin:12px 0 3px;
+    font-size:21px;
 }
 
-.locked .vip-tag {
-    color: #777;
+.notification-head p{
+    margin:0;
+    font-size:11px;
+    color:rgba(255,255,255,.8);
 }
-
-.locked-button {
-    width: 100%;
-
-    min-height: 32px;
-
-    border: 1px solid #272727;
-
-    border-radius: 6px;
-
-    background: #151515;
 
-    color: #707070;
-
-    font-size: 9px;
-
-    font-weight: 700;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 5px;
+.notification-body{
+    padding:18px;
 }
 
-.locked-button svg {
-    width: 13px;
+.notice-row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #edf0f4;
+    font-size:11px;
 }
-
-
-/* =========================================
-   INFORMATION
-========================================= */
 
-.info {
-    margin: 15px 10px;
-
-    padding: 13px;
-
-    border-radius: 12px;
-
-    background: #0e1110;
-
-    border:
-        1px solid
-        rgba(0,255,85,.10);
-
-    display: flex;
-
-    gap: 9px;
+.notice-row:last-child{
+    border-bottom:0;
 }
 
-.info-icon {
-    min-width: 30px;
-    height: 30px;
-
-    border-radius: 8px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    color: var(--green);
-
-    background:
-        rgba(0,255,85,.08);
+.notice-row span{
+    color:var(--muted);
 }
 
-.info-icon svg {
-    width: 15px;
+.notice-row strong{
+    color:var(--joma-blue);
 }
 
-.info h4 {
-    font-size: 9px;
-    margin-bottom: 3px;
+.close-notice{
+    width:100%;
+    margin-top:12px;
+    padding:12px;
+    border:0;
+    border-radius:11px;
+    background:var(--joma-orange);
+    color:#fff;
+    font-weight:900;
+    cursor:pointer;
 }
 
-.info p {
-    font-size: 7px;
-    line-height: 1.5;
-    color: var(--muted);
+.channel-btn{
+    width:100%;
+    margin-top:8px;
+    padding:11px;
+    border-radius:11px;
+    border:1px solid var(--joma-blue);
+    background:#fff;
+    color:var(--joma-blue);
+    font-weight:800;
 }
-
 
-/* =========================================
-   BOTTOM NAV
-========================================= */
+/* ================= SUCCESS MESSAGE ================= */
 
-.bottom-nav {
-    position: fixed;
-
-    bottom: 0;
-
-    left: 50%;
-
-    transform:
-        translateX(-50%);
-
-    width: 100%;
-
-    max-width: 480px;
-
-    height: 68px;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(5,1fr);
-
-    background:
-        rgba(14,14,14,.97);
-
-    border-top:
-        1px solid #252525;
-
-    backdrop-filter:
-        blur(18px);
-
-    z-index: 500;
+.success-toast{
+    position:fixed;
+    z-index:150;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-100px);
+    width:calc(100% - 30px);
+    max-width:420px;
+    padding:13px 15px;
+    border-radius:13px;
+    background:#fff;
+    box-shadow:0 12px 35px rgba(0,0,0,.18);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    opacity:0;
+    transition:.35s ease;
 }
-
-.nav-item {
-    position: relative;
 
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 4px;
-
-    text-decoration: none;
-
-    color: #686868;
-
-    font-size: 7px;
-
-    transition: .2s;
+.success-toast.show{
+    transform:translateX(-50%) translateY(0);
+    opacity:1;
 }
 
-.nav-item svg {
-    width: 18px;
-    height: 18px;
+.success-icon{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#e5f9f0;
+    color:var(--green);
+    font-weight:900;
 }
 
-.nav-item:active {
-    transform: scale(.91);
+.success-text strong{
+    display:block;
+    font-size:12px;
 }
 
-.nav-item.active {
-    color: var(--green);
+.success-text span{
+    display:block;
+    margin-top:2px;
+    font-size:10px;
+    color:var(--muted);
 }
-
-.nav-item.active::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-
-    width: 28px;
-    height: 2px;
 
-    border-radius:
-        0 0 5px 5px;
+/* ================= LOADER ================= */
 
-    background: var(--green);
-
-    box-shadow:
-        0 0 10px
-        rgba(0,255,85,.5);
+.loading-screen{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    background:rgba(255,255,255,.88);
+    display:none;
+    align-items:center;
+    justify-content:center;
 }
-
-/* =====================================================
-   MOVABLE ROUND FLOATING BUTTON
-===================================================== */
-
-.floating-spin-button {
-    position: fixed;
-
-    left: 18px;
-    top: 45%;
-
-    width: 56px;
-    height: 56px;
-
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle at 35% 30%,
-            #202020,
-            #080808 72%
-        );
-
-    border: 2px solid rgba(0,255,85,.85);
-
-    box-shadow:
-        0 0 15px rgba(0,255,85,.35),
-        0 8px 28px rgba(0,0,0,.65);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    z-index: 999999;
-
-    cursor: grab;
-
-    /*
-       Important for Android dragging.
-       Prevents the browser from treating
-       the gesture as page scrolling.
-    */
-    touch-action: none;
 
-    user-select: none;
-    -webkit-user-select: none;
-
-    -webkit-tap-highlight-color: transparent;
-
-    text-decoration: none;
-
-    isolation: isolate;
+.loading-screen.show{
+    display:flex;
 }
 
-.floating-spin-button.dragging {
-    cursor: grabbing;
-
-    box-shadow:
-        0 0 24px rgba(0,255,85,.65),
-        0 10px 32px rgba(0,0,0,.75);
-
-    transform: scale(1.04);
+.loader-box{
+    text-align:center;
 }
-
-.floating-spin-button .floating-star {
-    position: relative;
-
-    z-index: 2;
-
-    color: var(--green);
-
-    font-size: 24px;
-
-    line-height: 1;
-
-    text-shadow:
-        0 0 10px rgba(0,255,85,.85);
-
-    pointer-events: none;
 
-    animation:
-        floatingStarSpin 2.2s linear infinite;
+.spinner{
+    width:42px;
+    height:42px;
+    margin:auto;
+    border:4px solid #e8ebf3;
+    border-top-color:var(--joma-orange);
+    border-right-color:var(--joma-blue);
+    border-radius:50%;
+    animation:spin .8s linear infinite;
 }
 
-.floating-spin-button .floating-dot {
-    position: absolute;
-
-    width: 5px;
-    height: 5px;
-
-    border-radius: 50%;
-
-    background: #fff;
-
-    box-shadow:
-        0 0 8px var(--green);
-
-    top: 8px;
-    right: 9px;
-
-    z-index: 3;
-
-    pointer-events: none;
+@keyframes spin{
+    to{transform:rotate(360deg)}
 }
-
-.floating-spin-button::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 4px;
-
-    border-radius: 50%;
-
-    border: 1px dashed
-        rgba(0,255,85,.45);
-
-    pointer-events: none;
 
-    animation:
-        floatingRingSpin 3s linear infinite;
+.loader-box p{
+    margin-top:10px;
+    font-size:11px;
+    font-weight:800;
+    color:var(--joma-blue);
 }
 
-@keyframes floatingStarSpin {
+/* ================= RESPONSIVE ================= */
 
-    from {
-        transform: rotate(0deg);
+@media(max-width:360px){
+    .account-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
-    to {
-        transform: rotate(360deg);
+    .plan-image{
+        width:40%;
     }
 
-}
-
-@keyframes floatingRingSpin {
-
-    from {
-        transform: rotate(0deg);
+    .plan-info{
+        width:60%;
     }
-
-    to {
-        transform: rotate(-360deg);
-    }
-
 }
-
-@media (max-width: 360px) {
-
-    .floating-spin-button {
-        width: 52px;
-        height: 52px;
-    }
-
-    }
-
-
-/* =========================================
-   LOADING SCREEN
-========================================= */
-
-.page-loader {
-    position: fixed;
-
-    inset: 0;
-
-    background:
-        rgba(0,0,0,.88);
-
-    backdrop-filter:
-        blur(12px);
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    flex-direction: column;
-
-    gap: 14px;
-
-    z-index: 99999;
-
-    opacity: 0;
-    visibility: hidden;
-
-    pointer-events: none;
-
-    transition:
-        opacity .25s ease,
-        visibility .25s ease;
-}
-
-.page-loader.show {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: all;
-}
-
-.loader-card {
-    width: 155px;
-
-    padding: 22px 15px;
-
-    border-radius: 18px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #171717,
-            #090909
-        );
-
-    border:
-        1px solid
-        rgba(0,255,85,.16);
-
-    box-shadow:
-        0 25px 80px
-        rgba(0,0,0,.7);
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 13px;
-}
-
-.loader-logo {
-    width: 44px;
-    height: 44px;
-
-    border-radius: 12px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--green),
-            #8affae
-        );
-
-    color: #001b09;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    font-weight: 900;
-
-    font-size: 18px;
-
-    box-shadow:
-        0 0 30px
-        rgba(0,255,85,.18);
-}
-
-.loader-ring {
-    width: 28px;
-    height: 28px;
-
-    border-radius: 50%;
-
-    border:
-        2px solid
-        rgba(255,255,255,.10);
-
-    border-top-color:
-        var(--green);
-
-    border-right-color:
-        rgba(0,255,85,.35);
-
-    animation:
-        spin .65s linear infinite;
-}
-
-.loader-text {
-    color: #a0a0a0;
-
-    font-size: 8px;
-
-    font-weight: 600;
-
-    letter-spacing: .5px;
-}
-
-.loader-bar {
-    width: 100%;
-    height: 3px;
-
-    overflow: hidden;
-
-    border-radius: 20px;
-
-    background:
-        #242424;
-}
-
-.loader-bar span {
-    display: block;
-
-    height: 100%;
-
-    width: 40%;
-
-    border-radius: 20px;
-
-    background:
-        var(--green);
-
-    animation:
-        loadingBar 1.1s ease-in-out infinite;
-}
-
-@keyframes spin {
-
-    to {
-        transform: rotate(360deg);
-    }
-
-}
-
-@keyframes loadingBar {
-
-    0% {
-        transform: translateX(-120%);
-    }
-
-    100% {
-        transform: translateX(280%);
-    }
-
-}
-
-
-/* =========================================
-   TOUCH FEEDBACK
-========================================= */
-
-.loading-link.loading-now {
-    pointer-events: none;
-}
-
-.loading-now {
-    opacity: .7;
-}
-
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
-@media(max-width:360px) {
-
-    .product-img-box {
-        height: 120px;
-    }
-
-    .product-card {
-        padding: 9px;
-    }
-
-    .hero {
-        height: 180px;
-    }
-
-    .hero h1 {
-        font-size: 21px;
-    }
-
-    .floating-spin-button {
-        width: 50px;
-        height: 50px;
-    }
-
-}
-
 </style>
 
-</head>
 
-<body>
+<div class="app">
 
+    <!-- ================= HEADER / BANNER ================= -->
 
-<!-- =========================================
-     LOADER
-========================================= -->
+    <section class="top-banner">
 
-<div
-    class="page-loader"
-    id="pageLoader">
+        <div class="header">
 
-    <div class="loader-card">
+            <div class="brand">
+                <img
+                    class="brand-logo"
+                    src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
+                    alt="JOMA"
+                >
 
-        <div class="loader-logo">
-            I
-        </div>
+                <div>
+                    <div class="brand-name">JOMA</div>
+                    <div class="brand-sub">FOOTBALL COLLECTION</div>
+                </div>
+            </div>
 
-        <div class="loader-ring"></div>
-
-        <div
-            class="loader-text"
-            id="loaderText">
-
-            Loading Infinix...
-
-        </div>
-
-        <div class="loader-bar">
-            <span></span>
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     MOVABLE + CLICKABLE ROUND BUTTON
-===================================================== -->
-
-<a
-    href="{{ url_for('gift_code') }}"
-    class="floating-spin-button"
-    id="floatingSpinButton"
-    aria-label="Open Gift Code"
->
-    <span class="floating-star">★</span>
-    <span class="floating-dot"></span>
-</a>
-
-
-<div class="phone-container">
-
-
-<!-- =========================================
-     HEADER
-========================================= -->
-
-<header class="top-header">
-
-    <div class="brand">
-
-        <div class="brand-logo">
-            I
-        </div>
-
-        <div class="brand-text">
-
-            <strong>
-                INFINIX
-            </strong>
-
-            <span>
-                SMARTPHONE SHOWCASE
-            </span>
+            <div class="header-actions">
+                <button class="header-btn">🔔</button>
+                <a
+                    href="{{ url_for('profile') }}"
+                    class="header-btn"
+                    style="text-decoration:none;"
+                >👤</a>
+            </div>
 
         </div>
 
-    </div>
+        <!-- PROFILE CARD -->
 
-    <a
-        href="{{ url_for('support') }}"
-        class="header-button loading-link"
-        data-loading="Opening Support...">
+        <div class="profile-card">
 
-        <i data-lucide="bell"></i>
+            <div class="profile-top">
 
-    </a>
+                <img
+                    class="profile-logo"
+                    src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
+                    alt="JOMA"
+                >
 
-</header>
+                <div class="profile-info">
 
+                    <h2>
+                        Hello, {{ user.fullname or user.username }}
+                    </h2>
 
-<!-- =========================================
-     HERO
-========================================= -->
+                    <p>
+                        {{ user.phone }}
+                    </p>
 
-<section class="hero">
+                    <div class="vip-row">
+                        <span class="vip">VIP 0</span>
 
-    <img
-        id="heroImage"
-        class="hero-image"
-        src="https://usbdriverspie.com/wp-content/uploads/2022/07/infinix-note-12-pro-usb-drivers.png"
-        alt="Infinix smartphone"
-        loading="eager"
-        onerror="this.style.display='none';"
-    >
+                        <div class="progress">
+                            <span></span>
+                        </div>
 
-    <div class="hero-content">
+                        <span class="vip next">VIP 1</span>
+                    </div>
 
-        <div class="eyebrow">
+                </div>
 
-            <span></span>
-
-            FEATURED DEVICE
-
-        </div>
-
-        <h1>
-
-            Welcome,
-            <span>
-                {{ user.fullname }}
-            </span>
-
-        </h1>
-
-        <p>
-            Explore Infinix devices and manage your purchases.
-        </p>
-
-    </div>
-
-    <div class="hero-dots">
-
-        <span class="hero-dot active"></span>
-        <span class="hero-dot"></span>
-        <span class="hero-dot"></span>
-        <span class="hero-dot"></span>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================
-     QUICK ACTIONS
-========================================= -->
-
-<div class="top-actions">
-
-    <a
-        href="{{ url_for('deposit') }}"
-        class="action-btn loading-link"
-        data-loading="Opening Deposit...">
-
-        <div
-            class="action-icon"
-            style="color:#00ff55">
-
-            <i data-lucide="wallet"></i>
+            </div>
 
         </div>
 
-        <div class="action-label">
-            Deposit
+    </section>
+
+
+    <!-- ================= ACCOUNT ================= -->
+
+    <section class="account-box">
+
+        <div class="account-title">
+            <strong>Account Overview</strong>
+            <span>JOMA ACCOUNT</span>
         </div>
 
-    </a>
+        <div class="account-grid">
 
+            <div class="account-item main">
+                <small>Balance</small>
+                <strong>
+                    GHS {{ "%.2f"|format(account.balance or 0) }}
+                </strong>
+            </div>
 
-    <a
-        href="{{ url_for('withdraw') }}"
-        class="action-btn loading-link"
-        data-loading="Opening Withdraw...">
+            <div class="account-item orange">
+                <small>Deposit</small>
+                <strong>
+                    GHS {{ "%.2f"|format(account.deposit_account or 0) }}
+                </strong>
+            </div>
 
-        <div
-            class="action-icon"
-            style="color:#ffb45b">
+            <div class="account-item green">
+                <small>Income</small>
+                <strong>
+                    GHS {{ "%.2f"|format(account.income_account or 0) }}
+                </strong>
+            </div>
 
-            <i data-lucide="arrow-up-right"></i>
+            <div class="account-item">
+                <small>Withdraw</small>
+                <strong>
+                    GHS {{ "%.2f"|format(account.withdraw_account or 0) }}
+                </strong>
+            </div>
 
-        </div>
+            <div class="account-item">
+                <small>Referral</small>
+                <strong>
+                    GHS {{ "%.2f"|format(account.referral_account or 0) }}
+                </strong>
+            </div>
 
-        <div class="action-label">
-            Withdraw
-        </div>
-
-    </a>
-
-
-    <a
-        href="{{ url_for('support') }}"
-        class="action-btn loading-link"
-        data-loading="Opening Support...">
-
-        <div
-            class="action-icon"
-            style="color:#67b5ff">
-
-            <i data-lucide="headphones"></i>
-
-        </div>
-
-        <div class="action-label">
-            Support
-        </div>
-
-    </a>
-
-
-    <a
-        href="{{ url_for('my_plan') }}"
-        class="action-btn loading-link"
-        data-loading="Opening Profile...">
-
-        <div
-            class="action-icon"
-            style="color:#d78cff">
-
-            <i data-lucide="chart-no-axes-combined"></i>
-
-        </div>
-
-        <div class="action-label">
-            My device
-        </div>
-
-    </a>
-
-</div>
-
-
-<!-- =========================================
-     ACCOUNT
-========================================= -->
-
-<section class="account">
-
-    <div class="account-header">
-
-        <h3>
-            Account Overview
-        </h3>
-
-        <span>
-            Available balances
-        </span>
-
-    </div>
-
-
-    <div class="balance-main">
-
-        GHS
-        {{ "%.2f"|format(account.deposit_account|float) }}
-
-        <small>
-            Deposit
-        </small>
-
-    </div>
-
-
-    <div class="balance-grid">
-
-        <div class="balance-box">
-
-            <label>
-                Withdraw
-            </label>
-
-            <strong>
-                GHS
-                {{ "%.2f"|format(account.withdraw_account|float) }}
-            </strong>
+            <div class="account-item">
+                <small>Total Income</small>
+                <strong>
+                    GHS {{ "%.2f"|format(account.income_account or 0) }}
+                </strong>
+            </div>
 
         </div>
 
-
-        <div class="balance-box">
-
-            <label>
-                Income
-            </label>
-
-            <strong>
-                GHS
-                {{ "%.2f"|format(account.income_account|float) }}
-            </strong>
-
-        </div>
+    </section>
 
 
-        <div class="balance-box">
+    <!-- ================= QUICK ACTIONS ================= -->
 
-            <label>
-                Referral
-            </label>
-
-            <strong>
-                GHS
-                {{ "%.2f"|format(account.referral_account|float) }}
-            </strong>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================
-     AVAILABLE DEVICES
-========================================= -->
-
-<section class="section">
-
-    <div class="section-head">
-
-        <div>
-
-            <h2>
-                Available Devices
-            </h2>
-
-            <p>
-                Select an Infinix model to view
-            </p>
-
-        </div>
-
+    <div class="quick-actions">
 
         <a
-            href="{{ url_for('my_plan') }}"
-            class="loading-link"
-            data-loading="Opening My Devices...">
+            href="{{ url_for('deposit') }}"
+            class="quick-action"
+            onclick="showLoading()"
+        >
+            <div class="quick-icon">＋</div>
+            <span>Deposit</span>
+        </a>
 
-            My Devices
+        <a
+            href="{{ url_for('withdraw') }}"
+            class="quick-action"
+            onclick="showLoading()"
+        >
+            <div class="quick-icon">↗</div>
+            <span>Withdraw</span>
+        </a>
 
+        <a href="#" class="quick-action">
+            <div class="quick-icon">?</div>
+            <span>Service</span>
+        </a>
+
+        <a href="#" class="quick-action">
+            <div class="quick-icon">✈</div>
+            <span>Channel</span>
         </a>
 
     </div>
 
 
-    <div class="product-grid">
-
-
-        <!-- DEVICE 1 -->
-
-        <article class="product-card">
-
-            <div class="vip-tag">
-                INFINIX 1
-                <span>STARTER</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://usbdriverspie.com/wp-content/uploads/2021/08/Infinix_Note_10.png"
-                    alt="Infinix Note 10"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span class="income">GHS 20</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 3600</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 100
-                <small>/ DEVICE</small>
-            </div>
-
-            <a
-                href="{{ url_for('buy_plan', plan_id=1) }}"
-                class="buy-btn loading-link"
-                data-loading="Opening Infinix 1...">
-
-                Buy now
-
-                <i data-lucide="arrow-right"></i>
-
-            </a>
-
-        </article>
-
-
-        <!-- DEVICE 2 -->
-
-        <article class="product-card">
-
-            <div class="vip-tag">
-                INFINIX 2
-                <span>BASIC</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://arina.mn/assets/img/product/images/202602/1749cc160ae0f646a185c8256393e2c0.png"
-                    alt="Infinix Hot 60 Pro"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span class="income">GHS 45</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 8,100</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 250
-                <small>/ DEVICE</small>
-            </div>
-
-            <a
-                href="{{ url_for('buy_plan', plan_id=2) }}"
-                class="buy-btn loading-link"
-                data-loading="Opening Infinix 2...">
-
-                Buy now
-
-                <i data-lucide="arrow-right"></i>
-
-            </a>
-
-        </article>
-
-
-        <!-- DEVICE 3 -->
-
-        <article class="product-card">
-
-            <div class="vip-tag">
-                INFINIX 3
-                <span>GROWTH</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://usbdriverspie.com/wp-content/uploads/2022/04/Infinix-Hot-12i.png"
-                    alt="Infinix Hot 12i"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span class="income">GHS 120</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 21,600</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 600
-                <small>/ DEVICE</small>
-            </div>
-
-            <a
-                href="{{ url_for('buy_plan', plan_id=3) }}"
-                class="buy-btn loading-link"
-                data-loading="Opening Infinix 3...">
-
-                Buy now
-
-                <i data-lucide="arrow-right"></i>
-
-            </a>
-
-        </article>
-
-
-        <!-- DEVICE 4 -->
-
-        <article class="product-card">
-
-            <div class="vip-tag">
-                INFINIX 4
-                <span>ADVANCED</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://usbdriverspie.com/wp-content/uploads/2020/07/infinix-S5-Pro.png"
-                    alt="Infinix S5 Pro"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span class="income">GHS 200</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 36,000</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 1000
-                <small>/ DEVICE</small>
-            </div>
-
-            <a
-                href="{{ url_for('buy_plan', plan_id=4) }}"
-                class="buy-btn loading-link"
-                data-loading="Opening Infinix 4...">
-
-                Buy now
-
-                <i data-lucide="arrow-right"></i>
-
-            </a>
-
-        </article>
-
-
-        <!-- DEVICE 5 -->
-
-        <article class="product-card locked">
-
-            <div class="vip-tag">
-                INFINIX 5
-                <span>PREMIUM</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://usbdriverspie.com/wp-content/uploads/2020/07/infinix-s2-pro.png"
-                    alt="Infinix S2 Pro"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span class="income">GHS 500</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 90,000</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 2500
-                <small>/ DEVICE</small>
-            </div>
-
-            <div class="locked-button">
-
-                <i data-lucide="lock"></i>
-
-                Coming Soon
-
-            </div>
-
-        </article>
-
-
-        <!-- DEVICE 6 -->
-
-        <article class="product-card locked">
-
-            <div class="vip-tag">
-                INFINIX 6
-                <span>ELITE</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://usbdriverspie.com/wp-content/uploads/2021/08/Infinix_Note_10.png"
-                    alt="Infinix Note device"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span class="income">GHS 1000</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 180,000</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 5000
-                <small>/ DEVICE</small>
-            </div>
-
-            <div class="locked-button">
-
-                <i data-lucide="lock"></i>
-
-                Coming Soon
-
-            </div>
-
-        </article>
-
-
-        <!-- DEVICE 7 -->
-
-        <article class="product-card locked">
-
-            <div class="vip-tag">
-                INFINIX 7
-                <span>MASTER</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://usbdriverspie.com/wp-content/uploads/2022/07/infinix-note-12-pro-usb-drivers.png"
-                    alt="Infinix Note 12 Pro"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span class="income">GHS 1,600</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 288000</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 8000
-                <small>/ DEVICE</small>
-            </div>
-
-            <div class="locked-button">
-
-                <i data-lucide="lock"></i>
-
-                Coming Soon
-
-            </div>
-
-        </article>
-
-
-        <!-- DEVICE 8 -->
-
-        <article class="product-card locked">
-
-            <div class="vip-tag">
-                INFINIX 8
-                <span>BUY NOW</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://arina.mn/assets/img/product/images/202602/1749cc160ae0f646a185c8256393e2c0.png"
-                    alt="Infinix Hot 60 Pro"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span>GHS 2000</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 360,000</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 10000
-                <small>/ DEVICE</small>
-            </div>
-
-            <div class="locked-button">
-
-                <i data-lucide="lock"></i>
-
-                Coming Soon
-
-            </div>
-
-        </article>
-
-
-        <!-- DEVICE 9 -->
-
-        <article class="product-card locked">
-
-            <div class="vip-tag">
-                INFINIX 9
-                <span>BUY NOW</span>
-            </div>
-
-            <div class="product-img-box">
-
-                <img
-                    src="https://usbdriverspie.com/wp-content/uploads/2020/07/infinix-S5-Pro.png"
-                    alt="Infinix S5 Pro"
-                    loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                >
-
-                <div class="image-fallback">
-                    <div class="fake-phone"></div>
-                </div>
-
-            </div>
-
-            <div class="info-row">
-                Daily income:
-                <span>GHS 3600</span>
-            </div>
-
-            <div class="info-row">
-                Total income:
-                <span>GHS 648,000</span>
-            </div>
-
-            <div class="info-row">
-                Validity:
-                <span>180 Days</span>
-            </div>
-
-            <div class="price-tag">
-                GHS 20000
-                <small>/ DEVICE</small>
-            </div>
-
-            <div class="locked-button">
-
-                <i data-lucide="lock"></i>
-
-                Coming Soon
-
-            </div>
-
-        </article>
+    <!-- ================= TABS ================= -->
+
+    <div class="tabs">
+
+        <button
+            class="tab active"
+            onclick="switchTab(this,'plans')"
+        >
+            Day Income
+        </button>
+
+        <button
+            class="tab"
+            onclick="switchTab(this,'products')"
+        >
+            Reward Products
+        </button>
 
     </div>
 
-</section>
 
+    <!-- ================= PLANS ================= -->
 
-<!-- =========================================
-     INFORMATION
-========================================= -->
+    <div id="plans">
 
-<div class="info">
+        <div class="section-head">
+            <strong>JOMA Football Shoes</strong>
+            <span>10 Products</span>
+        </div>
 
-    <div class="info-icon">
+        <div class="plan-list">
 
-        <i data-lucide="shield-check"></i>
+            {% for plan in plans[:10] %}
+
+            <div class="plan-card">
+
+                <div class="plan-image">
+
+                    <img
+                        src="{{ url_for('static', filename='images/plan' ~ loop.index ~ '.jpg') }}"
+                        alt="JOMA Football Shoe"
+                        onerror="this.src='{{ url_for('static', filename='images/joma-logo.jpg') }}'"
+                    >
+
+                    <span class="plan-vip">
+                        VIP {{ loop.index }}
+                    </span>
+
+                </div>
+
+                <div class="plan-info">
+
+                    <div class="plan-name">
+                        JOMA Football Shoe {{ loop.index }}
+                    </div>
+
+                    <div class="plan-price">
+                        GHS {{ "%.2f"|format(plan.price or 0) }}
+                    </div>
+
+                    <div class="plan-details">
+
+                        <div class="detail">
+                            <small>Daily Income</small>
+                            <b>
+                                GHS {{ "%.2f"|format(plan.daily or 0) }}
+                            </b>
+                        </div>
+
+                        <div class="detail">
+                            <small>Duration</small>
+                            <b>
+                                {{ plan.duration or 180 }} Days
+                            </b>
+                        </div>
+
+                        <div class="detail">
+                            <small>Total Income</small>
+                            <b>
+                                GHS {{
+                                    "%.2f"|format(
+                                        (plan.daily or 0) *
+                                        (plan.duration or 180)
+                                    )
+                                }}
+                            </b>
+                        </div>
+
+                        <div class="detail">
+                            <small>Product</small>
+                            <b>JOMA</b>
+                        </div>
+
+                    </div>
+
+                    <!-- BUY BUTTON -->
+
+                    <button
+                        type="button"
+                        class="buy-btn {% if loop.index % 2 == 0 %}orange{% endif %}"
+                        onclick="buyPlan('{{ loop.index }}','JOMA Football Shoe {{ loop.index }}')"
+                    >
+                        BUY NOW
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
 
     </div>
 
-    <div>
 
-        <h4>
-            Platform information
-        </h4>
+    <!-- ================= REWARD PRODUCTS ================= -->
 
-        <p>
-            Please review the device information
-            carefully before buying. Images are
-            used for device presentation.
-        </p>
+    <div id="products" style="display:none;">
+
+        <div class="section-head">
+            <strong>Reward Products</strong>
+            <span>JOMA</span>
+        </div>
+
+        <div class="plan-list">
+
+            {% for plan in plans[:10] %}
+
+            <div class="plan-card">
+
+                <div class="plan-image">
+                    <img
+                        src="{{ url_for('static', filename='images/plan' ~ loop.index ~ '.jpg') }}"
+                        alt="JOMA Shoe"
+                        onerror="this.src='{{ url_for('static', filename='images/joma-logo.jpg') }}'"
+                    >
+                </div>
+
+                <div class="plan-info">
+
+                    <div class="plan-name">
+                        JOMA Shoe {{ loop.index }}
+                    </div>
+
+                    <div class="plan-price">
+                        GHS {{ "%.2f"|format(plan.price or 0) }}
+                    </div>
+
+                    <div class="plan-details">
+
+                        <div class="detail">
+                            <small>Daily</small>
+                            <b>
+                                GHS {{ "%.2f"|format(plan.daily or 0) }}
+                            </b>
+                        </div>
+
+                        <div class="detail">
+                            <small>Days</small>
+                            <b>
+                                {{ plan.duration or 180 }}
+                            </b>
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="buy-btn"
+                        onclick="buyPlan('{{ loop.index }}','JOMA Shoe {{ loop.index }}')"
+                    >
+                        BUY NOW
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
 
     </div>
 
-</div>
+
+    <!-- ================= BOTTOM NAV ================= -->
+
+    <nav class="bottom-nav">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="nav-item active"
+        >
+            <span class="nav-icon">⌂</span>
+            <span>Home</span>
+        </a>
+
+        <a
+            href="{{ url_for('my_plan') }}"
+            class="nav-item"
+            onclick="showLoading()"
+        >
+            <span class="nav-icon">◈</span>
+            <span>Income</span>
+        </a>
+
+        <a href="#" class="nav-item">
+            <span class="nav-icon">♟</span>
+            <span>Team</span>
+        </a>
+
+        <a href="#" class="nav-item">
+            <span class="nav-icon">↗</span>
+            <span>Share</span>
+        </a>
+
+        <a
+            href="{{ url_for('profile') }}"
+            class="nav-item"
+        >
+            <span class="nav-icon">●</span>
+            <span>My</span>
+        </a>
+
+    </nav>
 
 
-<!-- =========================================
-     BOTTOM NAVIGATION
-========================================= -->
+    <!-- ================= NOTIFICATION BOARD ================= -->
 
-<nav class="bottom-nav">
+    <div
+        class="notification-overlay"
+        id="notificationBoard"
+    >
 
-    <a
-        href="{{ url_for('dashboard') }}"
-        class="nav-item active loading-link"
-        data-loading="Loading Home...">
+        <div class="notification-board">
 
-        <i data-lucide="house"></i>
+            <div class="notification-head">
 
-        <span>
-            Home
-        </span>
+                <img
+                    class="notification-logo"
+                    src="{{ url_for('static', filename='images/joma-logo.jpg') }}"
+                    alt="JOMA"
+                >
 
-    </a>
+                <h3>Welcome to JOMA</h3>
+
+                <p>
+                    Welcome to the JOMA Football Collection
+                </p>
+
+            </div>
+
+            <div class="notification-body">
+
+                <div class="notice-row">
+                    <span>Minimum Deposit</span>
+                    <strong>GHS 90</strong>
+                </div>
+
+                <div class="notice-row">
+                    <span>Minimum Withdraw</span>
+                    <strong>GHS 30</strong>
+                </div>
+
+                <div class="notice-row">
+                    <span>Withdrawal Fee</span>
+                    <strong>18%</strong>
+                </div>
+
+                <div class="notice-row">
+                    <span>Withdrawal Time</span>
+                    <strong>0–34 Minutes</strong>
+                </div>
+
+                <div class="notice-row">
+                    <span>Welcome Award</span>
+                    <strong>GHS 10</strong>
+                </div>
+
+                <button
+                    class="channel-btn"
+                    type="button"
+                    onclick="closeNotification()"
+                >
+                    JOIN CHANNEL
+                </button>
+
+                <button
+                    class="close-notice"
+                    type="button"
+                    onclick="closeNotification()"
+                >
+                    CONTINUE
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
 
 
-    <a
-        href="{{ url_for('my_plan') }}"
-        class="nav-item loading-link"
-        data-loading="Loading Income...">
+    <!-- ================= SUCCESS MESSAGE ================= -->
 
-        <i data-lucide="chart-no-axes-combined"></i>
+    <div
+        class="success-toast"
+        id="successToast"
+    >
 
-        <span>
-            My device
-        </span>
+        <div class="success-icon">✓</div>
 
-    </a>
+        <div class="success-text">
+            <strong id="successTitle">
+                Successfully bought plan
+            </strong>
 
+            <span id="successMessage">
+                Your JOMA plan has been selected successfully.
+            </span>
+        </div>
 
-    <a
-        href="{{ url_for('team_members') }}"
-        class="nav-item loading-link"
-        data-loading="Loading Team...">
-
-        <i data-lucide="users"></i>
-
-        <span>
-            Team
-        </span>
-
-    </a>
+    </div>
 
 
-    <a
-        href="{{ url_for('team') }}"
-        class="nav-item loading-link"
-        data-loading="Opening Share...">
+    <!-- ================= LOADING ================= -->
 
-        <i data-lucide="share-2"></i>
+    <div
+        class="loading-screen"
+        id="loadingScreen"
+    >
 
-        <span>
-            Share
-        </span>
+        <div class="loader-box">
 
-    </a>
+            <div class="spinner"></div>
 
+            <p>JOMA</p>
 
-    <a
-        href="{{ url_for('profile') }}"
-        class="nav-item loading-link"
-        data-loading="Loading Profile...">
+        </div>
 
-        <i data-lucide="user-round"></i>
-
-        <span>
-            My
-        </span>
-
-    </a>
-
-</nav>
+    </div>
 
 </div>
 
 
 <script>
 
-/* =========================================
-   HERO SLIDER
-========================================= */
+/* ================= NOTIFICATION ================= */
 
-const heroImages = [
+function closeNotification(){
+    const board =
+        document.getElementById("notificationBoard");
 
-    "https://usbdriverspie.com/wp-content/uploads/2022/07/infinix-note-12-pro-usb-drivers.png",
-
-    "https://arina.mn/assets/img/product/images/202602/1749cc160ae0f646a185c8256393e2c0.png",
-
-    "https://usbdriverspie.com/wp-content/uploads/2021/08/Infinix_Note_10.png",
-
-    "https://usbdriverspie.com/wp-content/uploads/2020/07/infinix-S5-Pro.png"
-
-];
-
-let heroIndex = 0;
-
-const heroImage =
-    document.getElementById("heroImage");
-
-const heroDots =
-    document.querySelectorAll(".hero-dot");
-
-
-function changeHero() {
-
-    if (!heroImage) {
-        return;
+    if(board){
+        board.style.display = "none";
     }
-
-    heroIndex++;
-
-    if (heroIndex >= heroImages.length) {
-        heroIndex = 0;
-    }
-
-    heroImage.style.opacity = "0";
-
-    setTimeout(() => {
-
-        heroImage.src =
-            heroImages[heroIndex];
-
-        heroImage.style.opacity = ".72";
-
-    }, 300);
-
-    heroDots.forEach(
-        (dot, index) => {
-
-            dot.classList.toggle(
-                "active",
-                index === heroIndex
-            );
-
-        }
-    );
-
-}
-
-setInterval(changeHero, 4500);
-
-
-/* =========================================
-   GLOBAL LOADER
-========================================= */
-
-const pageLoader =
-    document.getElementById("pageLoader");
-
-const loaderText =
-    document.getElementById("loaderText");
-
-let navigationStarted = false;
-
-
-function showLoader(message) {
-
-    if (loaderText) {
-
-        loaderText.textContent =
-            message ||
-            "Loading Infinix...";
-
-    }
-
-    pageLoader.classList.add("show");
-
 }
 
 
-function hideLoader() {
+/* ================= TABS ================= */
 
-    pageLoader.classList.remove("show");
+function switchTab(button, tab){
 
+    document
+        .querySelectorAll(".tab")
+        .forEach(function(item){
+            item.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    document.getElementById("plans").style.display =
+        tab === "plans" ? "block" : "none";
+
+    document.getElementById("products").style.display =
+        tab === "products" ? "block" : "none";
 }
 
 
-/* =========================================
-   NORMAL NAVIGATION LINKS
-========================================= */
+/* ================= BUY MESSAGE ================= */
 
-document.querySelectorAll(
-    ".loading-link"
-).forEach(link => {
+function buyPlan(planNumber, planName){
 
-    link.addEventListener(
-        "click",
-        function(event) {
+    const toast =
+        document.getElementById("successToast");
 
-            if (navigationStarted) {
+    const title =
+        document.getElementById("successTitle");
 
-                event.preventDefault();
+    const message =
+        document.getElementById("successMessage");
 
-                return;
+    title.textContent =
+        "Successfully bought plan";
 
-            }
+    message.textContent =
+        planName + " is selected successfully.";
 
-            const href =
-                this.getAttribute("href");
+    toast.classList.add("show");
 
-            if (
-                !href ||
-                href === "#" ||
-                href.startsWith("javascript:")
-            ) {
+    clearTimeout(window.jomaToastTimer);
 
-                return;
+    window.jomaToastTimer =
+        setTimeout(function(){
 
-            }
+            toast.classList.remove("show");
 
-            event.preventDefault();
+        },4000);
+}
 
-            navigationStarted = true;
 
-            this.classList.add(
-                "loading-now"
-            );
+/* ================= LOADING ================= */
 
-            const message =
-                this.dataset.loading ||
-                "Loading Infinix...";
+function showLoading(){
 
-            showLoader(message);
+    const loader =
+        document.getElementById("loadingScreen");
 
-            setTimeout(() => {
+    if(loader){
+        loader.classList.add("show");
+    }
+}
 
-                window.location.href =
-                    href;
 
-            }, 420);
+/* ================= HIDE LOADER ================= */
 
-        }
-    );
+window.addEventListener("pageshow",function(){
+
+    const loader =
+        document.getElementById("loadingScreen");
+
+    if(loader){
+        loader.classList.remove("show");
+    }
 
 });
 
 
-/* =========================================
-   PAGE HISTORY
-========================================= */
+/* ================= IMAGE FALLBACK ================= */
 
-window.addEventListener(
-    "pageshow",
-    function() {
+document
+    .querySelectorAll("img")
+    .forEach(function(img){
 
-        navigationStarted = false;
+        img.addEventListener("error",function(){
 
-        hideLoader();
+            if(
+                !this.dataset.fallback &&
+                !this.src.includes("joma-logo.jpg")
+            ){
 
-    }
-);
+                this.dataset.fallback = "1";
 
-
-/* =========================================
-   BUY BUTTON FEEDBACK
-========================================= */
-
-document.querySelectorAll(
-    ".buy-btn"
-).forEach(button => {
-
-    button.addEventListener(
-        "click",
-        function() {
-
-            this.style.transform =
-                "scale(.96)";
-
-            setTimeout(() => {
-
-                this.style.transform =
-                    "";
-
-            }, 150);
-
-        }
-    );
-
-});
-
-
-/* =========================================
-   IMAGE CHECK
-========================================= */
-
-document.querySelectorAll(
-    ".product-img-box img"
-).forEach(img => {
-
-    img.addEventListener(
-        "load",
-        function() {
-
-            this.style.opacity = "1";
-
-        }
-    );
-
-    img.addEventListener(
-        "error",
-        function() {
-
-            this.style.display =
-                "none";
-
-            const fallback =
-                this.nextElementSibling;
-
-            if (fallback) {
-
-                fallback.style.display =
-                    "flex";
-
+                this.src =
+                    "{{ url_for('static', filename='images/joma-logo.jpg') }}";
             }
 
-        }
-    );
+        });
 
-});
-
-
-/* =====================================================
-   MOVABLE + CLICKABLE ROUND BUTTON
-===================================================== */
-
-const floatingButton =
-    document.getElementById(
-        "floatingSpinButton"
-    );
-
-let dragging = false;
-
-let moved = false;
-
-let dragOffsetX = 0;
-let dragOffsetY = 0;
-
-let startX = 0;
-let startY = 0;
-
-
-/* =========================================
-   LOAD SAVED POSITION
-========================================= */
-
-function loadFloatingPosition() {
-
-    try {
-
-        const savedPosition =
-            JSON.parse(
-                localStorage.getItem(
-                    "infinixFloatingButtonPosition"
-                )
-            );
-
-        if (
-            savedPosition &&
-            typeof savedPosition.left === "number" &&
-            typeof savedPosition.top === "number"
-        ) {
-
-            const maxLeft =
-                window.innerWidth -
-                floatingButton.offsetWidth;
-
-            const maxTop =
-                window.innerHeight -
-                floatingButton.offsetHeight;
-
-            const left =
-                Math.max(
-                    0,
-                    Math.min(
-                        savedPosition.left,
-                        maxLeft
-                    )
-                );
-
-            const top =
-                Math.max(
-                    0,
-                    Math.min(
-                        savedPosition.top,
-                        maxTop
-                    )
-                );
-
-            floatingButton.style.left =
-                left + "px";
-
-            floatingButton.style.top =
-                top + "px";
-
-        }
-
-    } catch (error) {
-
-        console.log(
-            "Floating button position unavailable."
-        );
-
-    }
-
-}
-
-loadFloatingPosition();
-
-
-/* =========================================
-   START DRAG
-========================================= */
-
-function startFloatingDrag(event) {
-
-    const point =
-        event.touches
-            ? event.touches[0]
-            : event;
-
-    const rect =
-        floatingButton.getBoundingClientRect();
-
-    dragging = true;
-
-    moved = false;
-
-    startX = point.clientX;
-    startY = point.clientY;
-
-    dragOffsetX =
-        point.clientX -
-        rect.left;
-
-    dragOffsetY =
-        point.clientY -
-        rect.top;
-
-    floatingButton.style.cursor =
-        "grabbing";
-
-    if (event.cancelable) {
-        event.preventDefault();
-    }
-
-}
-
-
-/* =========================================
-   MOVE
-========================================= */
-
-function moveFloatingButton(event) {
-
-    if (!dragging) {
-        return;
-    }
-
-    const point =
-        event.touches
-            ? event.touches[0]
-            : event;
-
-
-    const distanceX =
-        Math.abs(
-            point.clientX - startX
-        );
-
-    const distanceY =
-        Math.abs(
-            point.clientY - startY
-        );
-
-
-    /*
-       Only consider it a drag after
-       the finger/mouse moves 6 pixels.
-    */
-
-    if (
-        distanceX > 6 ||
-        distanceY > 6
-    ) {
-
-        moved = true;
-
-    }
-
-
-    if (!moved) {
-        return;
-    }
-
-
-    let newLeft =
-        point.clientX -
-        dragOffsetX;
-
-    let newTop =
-        point.clientY -
-        dragOffsetY;
-
-
-    const buttonWidth =
-        floatingButton.offsetWidth;
-
-    const buttonHeight =
-        floatingButton.offsetHeight;
-
-
-    const maxLeft =
-        window.innerWidth -
-        buttonWidth;
-
-    const maxTop =
-        window.innerHeight -
-        buttonHeight;
-
-
-    newLeft =
-        Math.max(
-            0,
-            Math.min(
-                newLeft,
-                maxLeft
-            )
-        );
-
-
-    newTop =
-        Math.max(
-            0,
-            Math.min(
-                newTop,
-                maxTop
-            )
-        );
-
-
-    floatingButton.style.left =
-        newLeft + "px";
-
-    floatingButton.style.top =
-        newTop + "px";
-
-
-    if (event.cancelable) {
-        event.preventDefault();
-    }
-
-}
-
-
-/* =========================================
-   END DRAG
-========================================= */
-
-function stopFloatingDrag() {
-
-    if (!dragging) {
-        return;
-    }
-
-
-    dragging = false;
-
-    floatingButton.style.cursor =
-        "grab";
-
-
-    /*
-       Save the new position only
-       when the button was actually moved.
-    */
-
-    if (moved) {
-
-        const rect =
-            floatingButton.getBoundingClientRect();
-
-        try {
-
-            localStorage.setItem(
-                "infinixFloatingButtonPosition",
-
-                JSON.stringify({
-
-                    left: rect.left,
-
-                    top: rect.top
-
-                })
-            );
-
-        } catch (error) {
-
-            console.log(
-                "Unable to save button position."
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =========================================
-   CLICK HANDLER
-========================================= */
-
-floatingButton.addEventListener(
-    "click",
-    function(event) {
-
-        /*
-           If the user dragged the button,
-           cancel the click.
-
-           If they simply tapped it,
-           allow the normal href to open.
-        */
-
-        if (moved) {
-
-            event.preventDefault();
-
-            event.stopPropagation();
-
-            moved = false;
-
-            return;
-
-        }
-
-    }
-);
-
-
-/* =========================================
-   MOUSE
-========================================= */
-
-floatingButton.addEventListener(
-    "mousedown",
-    startFloatingDrag
-);
-
-document.addEventListener(
-    "mousemove",
-    moveFloatingButton
-);
-
-document.addEventListener(
-    "mouseup",
-    stopFloatingDrag
-);
-
-
-/* =========================================
-   TOUCH / ANDROID
-========================================= */
-
-floatingButton.addEventListener(
-    "touchstart",
-    startFloatingDrag,
-    {
-        passive: false
-    }
-);
-
-document.addEventListener(
-    "touchmove",
-    moveFloatingButton,
-    {
-        passive: false
-    }
-);
-
-document.addEventListener(
-    "touchend",
-    stopFloatingDrag
-);
-
-
-/* =========================================
-   KEEP BUTTON INSIDE SCREEN
-========================================= */
-
-window.addEventListener(
-    "resize",
-    function() {
-
-        if (!floatingButton) {
-            return;
-        }
-
-        const rect =
-            floatingButton.getBoundingClientRect();
-
-        const maxLeft =
-            window.innerWidth -
-            floatingButton.offsetWidth;
-
-        const maxTop =
-            window.innerHeight -
-            floatingButton.offsetHeight;
-
-        const newLeft =
-            Math.max(
-                0,
-                Math.min(
-                    rect.left,
-                    maxLeft
-                )
-            );
-
-        const newTop =
-            Math.max(
-                0,
-                Math.min(
-                    rect.top,
-                    maxTop
-                )
-            );
-
-        floatingButton.style.left =
-            newLeft + "px";
-
-        floatingButton.style.top =
-            newTop + "px";
-
-    }
-);
-
-
-/* =========================================
-   LUCIDE ICONS
-========================================= */
-
-if (
-    typeof lucide !== "undefined"
-) {
-
-    lucide.createIcons();
-
-}
+    });
 
 </script>
 
-</body>
-
-    </html>
+{% endblock %}
