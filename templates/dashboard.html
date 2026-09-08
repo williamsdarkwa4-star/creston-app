@@ -12,9 +12,7 @@
     <title>JOMA</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
@@ -37,7 +35,7 @@
 
         body {
             font-family: "Inter", sans-serif;
-            background: #e7ebf2;
+            background: #e7ebf1;
             color: #222;
         }
 
@@ -46,11 +44,9 @@
             color: inherit;
         }
 
-        button,
-        a {
+        button {
             font-family: inherit;
         }
-
 
         /* =====================================================
            APP
@@ -61,75 +57,61 @@
             max-width: 450px;
             min-height: 100vh;
             margin: auto;
-
-            background: #f3f4f8;
-
+            background: #f4f5f8;
             position: relative;
-
             overflow-x: hidden;
-
-            padding-bottom: 95px;
+            padding-bottom: 94px;
         }
 
-
         /* =====================================================
-           BANNER
+           TOP BANNER
         ===================================================== */
 
         .banner {
             height: 205px;
-
             position: relative;
 
             background:
                 linear-gradient(
-                    rgba(8, 31, 112, .76),
-                    rgba(22, 39, 163, .91)
+                    rgba(8, 35, 116, .70),
+                    rgba(23, 38, 168, .90)
                 ),
                 url("{{ url_for('static', filename='images/joma-banner.jpg') }}")
-                center / cover no-repeat;
+                center/cover no-repeat;
 
-            border-radius:
-                0 0 26px 26px;
-
-            overflow: hidden;
+            border-radius: 0 0 26px 26px;
         }
 
         .banner::after {
             content: "";
-
             position: absolute;
-
             left: 0;
             right: 0;
-            bottom: 0;
-
+            bottom: -1px;
             height: 60px;
 
             background:
                 linear-gradient(
                     transparent,
-                    rgba(243,244,248,.98)
+                    rgba(244,245,248,.96)
                 );
         }
-
 
         /* =====================================================
            TOP BAR
         ===================================================== */
 
         .topbar {
-            height: 68px;
+            position: relative;
+            z-index: 5;
 
-            padding:
-                13px 17px;
+            height: 68px;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
 
-            position: relative;
-            z-index: 5;
+            padding: 13px 17px;
 
             color: white;
         }
@@ -139,8 +121,9 @@
             align-items: center;
             gap: 9px;
 
-            font-size: 22px;
+            font-size: 23px;
             font-weight: 800;
+            letter-spacing: .4px;
         }
 
         .brand-mark {
@@ -151,17 +134,16 @@
 
             background: white;
 
-            border:
-                3px solid #ff9f24;
-
-            color: #1726a8;
-
             display: flex;
             align-items: center;
             justify-content: center;
 
+            color: #1726a8;
+
             font-size: 10px;
             font-weight: 900;
+
+            border: 3px solid #ff9f24;
 
             box-shadow:
                 0 5px 14px rgba(0,0,0,.25);
@@ -173,14 +155,13 @@
         }
 
         .top-btn {
-            width: 40px;
-            height: 40px;
+            width: 41px;
+            height: 41px;
 
             border: 0;
             border-radius: 50%;
 
-            background:
-                rgba(255,255,255,.18);
+            background: rgba(255,255,255,.18);
 
             color: white;
 
@@ -188,48 +169,47 @@
 
             cursor: pointer;
 
-            backdrop-filter:
-                blur(8px);
+            backdrop-filter: blur(8px);
+
+            transition: .2s;
         }
 
+        .top-btn:active {
+            transform: scale(.92);
+        }
 
         /* =====================================================
-           ACCOUNT CARD
+           PROFILE CARD
         ===================================================== */
 
-        .account-card {
+        .profile-card {
             position: relative;
-            z-index: 10;
+            z-index: 8;
 
-            margin:
-                -2px 14px 0;
+            margin: -4px 14px 0;
 
             background: white;
 
-            border-radius: 22px;
+            border-radius: 23px;
 
-            padding:
-                16px 17px 18px;
+            padding: 16px 18px 18px;
 
             box-shadow:
                 0 5px 18px rgba(0,0,0,.09);
         }
 
-
-        /* USER HEADER */
-
-        .user-head {
+        .profile-head {
             display: flex;
             align-items: center;
 
             gap: 13px;
 
-            margin-bottom: 14px;
+            margin-bottom: 13px;
         }
 
-        .user-logo {
-            width: 72px;
-            height: 72px;
+        .profile-logo {
+            width: 74px;
+            height: 74px;
 
             flex-shrink: 0;
 
@@ -237,22 +217,19 @@
 
             object-fit: cover;
 
-            background: white;
-
-            border:
-                4px solid white;
+            border: 4px solid white;
 
             box-shadow:
                 0 0 0 2px #1726a8,
-                0 5px 13px rgba(0,0,0,.18);
+                0 5px 14px rgba(0,0,0,.17);
         }
 
-        .user-details {
+        .profile-info {
             min-width: 0;
             flex: 1;
         }
 
-        .user-details h2 {
+        .profile-info h2 {
             font-size: 20px;
             font-weight: 800;
 
@@ -263,63 +240,60 @@
             text-overflow: ellipsis;
         }
 
-        .user-phone {
+        .phone {
             margin-top: 5px;
 
-            color: #777;
-
             font-size: 13px;
+
+            color: #777;
         }
 
-
-        /* VIP */
+        /* =====================================================
+           VIP
+        ===================================================== */
 
         .vip-row {
             display: flex;
-
             align-items: center;
             justify-content: space-between;
 
+            margin: 5px 0 7px;
+
             font-size: 12px;
             font-weight: 700;
-
-            margin:
-                4px 2px 7px;
         }
 
-        .vip-zero {
+        .vip-left {
             color: #777;
         }
 
-        .vip-number {
+        .vip-current {
             color: #444;
         }
 
-        .vip-one {
+        .vip-right {
             color: #1726a8;
         }
 
-        .vip-progress {
+        .progress {
             width: 100%;
             height: 9px;
 
-            background: #e8e8e8;
-
             border-radius: 20px;
+
+            background: #e9e9e9;
 
             overflow: hidden;
 
-            margin-bottom: 16px;
+            margin-bottom: 17px;
         }
 
-        .vip-progress span {
+        .progress span {
             display: block;
 
             width: 0%;
 
             height: 100%;
-
-            border-radius: inherit;
 
             background:
                 linear-gradient(
@@ -327,83 +301,78 @@
                     #ff9f24,
                     #1726a8
                 );
+
+            border-radius: inherit;
         }
 
-
         /* =====================================================
-           ACCOUNT GRID
+           ACCOUNT SUMMARY
         ===================================================== */
 
-        .account-grid {
+        .stats {
             display: grid;
 
             grid-template-columns:
-                repeat(2, 1fr);
+                repeat(3, 1fr);
 
             gap: 9px;
         }
 
-        .account-item {
-            min-height: 86px;
+        .stat {
+            min-height: 99px;
 
-            padding: 10px;
-
-            border-radius: 15px;
+            padding: 9px 5px;
 
             background:
                 linear-gradient(
                     145deg,
-                    #f4f6ff,
+                    #f3f5ff,
                     #edf1fb
                 );
 
-            border:
-                1px solid #e4e8f5;
+            border: 1px solid #e4e8f4;
+
+            border-radius: 17px;
 
             display: flex;
-
             flex-direction: column;
 
-            justify-content: center;
-
             align-items: center;
+            justify-content: center;
 
             text-align: center;
         }
 
-        .account-item strong {
+        .stat strong {
             color: #1726a8;
 
-            font-size: 18px;
+            font-size: 19px;
 
             font-weight: 800;
 
             word-break: break-word;
         }
 
-        .account-item span {
-            margin-top: 6px;
+        .stat span {
+            margin-top: 8px;
 
-            color: #444;
+            color: #333;
 
-            font-size: 12px;
+            font-size: 13px;
         }
-
 
         /* =====================================================
            QUICK ACTIONS
         ===================================================== */
 
         .quick-box {
-            margin:
-                17px 14px;
+            margin: 17px 14px;
 
-            padding:
-                17px 7px;
+            padding: 18px 7px;
 
             background: white;
 
-            border-radius: 19px;
+            border-radius: 20px;
 
             display: grid;
 
@@ -423,19 +392,20 @@
 
             gap: 8px;
 
+            color: #292929;
+
             font-size: 12px;
 
             font-weight: 700;
         }
 
         .quick-icon {
-            width: 53px;
-            height: 53px;
+            width: 54px;
+            height: 54px;
 
             border-radius: 50%;
 
             display: flex;
-
             align-items: center;
             justify-content: center;
 
@@ -444,14 +414,14 @@
             font-size: 22px;
 
             box-shadow:
-                0 5px 12px rgba(0,0,0,.13);
+                0 5px 12px rgba(0,0,0,.12);
         }
 
         .green {
             background:
                 linear-gradient(
                     145deg,
-                    #3bd188,
+                    #37ca83,
                     #20ae68
                 );
         }
@@ -460,8 +430,8 @@
             background:
                 linear-gradient(
                     145deg,
-                    #ffb73d,
-                    #ff9515
+                    #ffb53e,
+                    #ff9617
                 );
         }
 
@@ -469,8 +439,8 @@
             background:
                 linear-gradient(
                     145deg,
-                    #438cf3,
-                    #2868db
+                    #3c84ef,
+                    #2766db
                 );
         }
 
@@ -478,26 +448,23 @@
             background:
                 linear-gradient(
                     145deg,
-                    #8959ef,
-                    #713fd8
+                    #8958ef,
+                    #7140d9
                 );
         }
-
 
         /* =====================================================
            TABS
         ===================================================== */
 
         .tabs {
-            margin:
-                0 14px 17px;
+            margin: 0 14px 17px;
 
             padding: 5px;
 
             background: white;
 
-            border:
-                1px solid #1726a8;
+            border: 1px solid #1726a8;
 
             border-radius: 16px;
 
@@ -505,16 +472,19 @@
 
             grid-template-columns:
                 1fr 1fr;
+
+            box-shadow:
+                0 2px 8px rgba(23,38,168,.08);
         }
 
         .tab {
-            min-height: 55px;
-
             border: 0;
 
-            border-radius: 11px;
-
             background: transparent;
+
+            min-height: 57px;
+
+            border-radius: 11px;
 
             color: #1726a8;
 
@@ -523,6 +493,8 @@
             font-weight: 600;
 
             cursor: pointer;
+
+            transition: .2s;
         }
 
         .tab.active {
@@ -534,22 +506,15 @@
                 0 4px 9px rgba(23,38,168,.22);
         }
 
-
         /* =====================================================
-           PLAN SECTION
+           PRODUCTS
         ===================================================== */
 
-        .plans {
-            padding:
-                0 14px;
+        .products {
+            padding: 0 14px;
         }
 
-
-        /* =====================================================
-           PLAN CARD
-        ===================================================== */
-
-        .plan-card {
+        .product-card {
             background: white;
 
             border-radius: 18px;
@@ -560,11 +525,9 @@
 
             box-shadow:
                 0 4px 13px rgba(0,0,0,.07);
-
-            overflow: hidden;
         }
 
-        .plan-main {
+        .product-main {
             display: grid;
 
             grid-template-columns:
@@ -573,13 +536,14 @@
             gap: 10px;
         }
 
+        /* =====================================================
+           PRODUCT IMAGE
+        ===================================================== */
 
-        /* IMAGE */
-
-        .plan-image {
+        .product-image {
             position: relative;
 
-            min-height: 240px;
+            min-height: 250px;
 
             border-radius: 10px;
 
@@ -588,28 +552,24 @@
             background: #eef0f5;
         }
 
-        .plan-image img {
+        .product-image img {
             width: 100%;
             height: 100%;
 
-            min-height: 240px;
+            min-height: 250px;
 
             object-fit: cover;
 
             display: block;
         }
 
-
-        /* VIP */
-
         .vip-badge {
             position: absolute;
 
-            left: 7px;
             top: 7px;
+            left: 7px;
 
-            padding:
-                5px 9px;
+            padding: 5px 9px;
 
             border-radius: 20px;
 
@@ -627,13 +587,10 @@
             font-weight: 800;
 
             box-shadow:
-                0 3px 7px rgba(0,0,0,.23);
+                0 3px 7px rgba(0,0,0,.22);
         }
 
-
-        /* PLAN NAME */
-
-        .plan-name {
+        .shoe-name {
             position: absolute;
 
             left: 0;
@@ -641,27 +598,28 @@
             bottom: 0;
 
             padding:
-                18px 7px 9px;
+                25px 7px 9px;
 
             color: white;
 
-            text-align: center;
-
-            font-size: 13px;
+            font-size: 12px;
 
             font-weight: 700;
+
+            text-align: center;
 
             background:
                 linear-gradient(
                     transparent,
-                    rgba(0,0,0,.84)
+                    rgba(0,0,0,.85)
                 );
         }
 
+        /* =====================================================
+           DETAILS
+        ===================================================== */
 
-        /* DETAILS */
-
-        .plan-details {
+        .details {
             display: flex;
 
             flex-direction: column;
@@ -669,16 +627,14 @@
             gap: 8px;
         }
 
-        .detail-row {
+        .detail {
             flex: 1;
 
-            min-height: 48px;
+            min-height: 47px;
 
-            padding:
-                8px 11px;
+            padding: 8px 10px;
 
-            background:
-                #f7f6fb;
+            background: #f7f6fb;
 
             border-radius: 9px;
 
@@ -693,11 +649,11 @@
             font-size: 12px;
         }
 
-        .detail-row span {
+        .detail span {
             color: #333;
         }
 
-        .detail-row strong {
+        .detail strong {
             color: #1726a8;
 
             font-size: 13px;
@@ -705,25 +661,31 @@
             white-space: nowrap;
         }
 
+        /* =====================================================
+           BUY BUTTON
+        ===================================================== */
 
-        /* PLAN BUTTON */
+        .product-button {
+            display: flex;
 
-        .plan-button {
+            align-items: center;
+            justify-content: center;
+
             width: 100%;
 
-            height: 51px;
+            height: 52px;
 
             margin-top: 10px;
 
             border: 0;
 
-            border-radius: 10px;
+            border-radius: 11px;
 
             background:
                 linear-gradient(
                     90deg,
                     #1726a8,
-                    #2b3fd0
+                    #293dd2
                 );
 
             color: white;
@@ -733,74 +695,118 @@
             font-weight: 700;
 
             cursor: pointer;
+
+            transition: .2s;
+
+            box-shadow:
+                0 5px 12px rgba(23,38,168,.18);
         }
 
-        .plan-button:active {
+        .product-button:active {
             transform: scale(.98);
         }
 
-
         /* =====================================================
-           EMPTY STATE
+           OFFERS
         ===================================================== */
 
-        .empty {
-            padding: 40px 20px;
+        .hidden {
+            display: none !important;
+        }
+
+        .offers-box {
+            margin: 0 14px;
+
+            padding: 38px 20px;
 
             background: white;
 
-            border-radius: 18px;
+            border-radius: 19px;
 
             text-align: center;
 
+            box-shadow:
+                0 4px 13px rgba(0,0,0,.06);
+        }
+
+        .offers-icon {
+            width: 70px;
+            height: 70px;
+
+            margin: 0 auto 14px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #ffad31,
+                    #1726a8
+                );
+        }
+
+        .offers-box h3 {
+            color: #222;
+
+            font-size: 19px;
+
+            margin-bottom: 8px;
+        }
+
+        .offers-box p {
             color: #777;
+
+            font-size: 13px;
+
+            line-height: 1.6;
         }
-
-        .empty-icon {
-            font-size: 42px;
-
-            margin-bottom: 10px;
-        }
-
 
         /* =====================================================
-           BOTTOM NAVIGATION
+           BOTTOM NAV
         ===================================================== */
 
         .bottom-nav {
             position: fixed;
 
-            left: 50%;
-            bottom: 0;
+            z-index: 50;
 
-            transform:
-                translateX(-50%);
+            bottom: 0;
+            left: 50%;
+
+            transform: translateX(-50%);
 
             width: 100%;
             max-width: 450px;
 
             height: 82px;
 
-            z-index: 80;
-
             background:
-                rgba(255,255,255,.97);
+                rgba(255,255,255,.98);
 
             border-top:
                 1px solid #ddd;
-
-            box-shadow:
-                0 -4px 15px rgba(0,0,0,.07);
 
             display: grid;
 
             grid-template-columns:
                 repeat(5, 1fr);
+
+            padding-bottom:
+                env(safe-area-inset-bottom);
+
+            box-shadow:
+                0 -4px 15px rgba(0,0,0,.07);
         }
 
         .nav-item {
-            position: relative;
-
             display: flex;
 
             flex-direction: column;
@@ -812,9 +818,11 @@
 
             color: #999;
 
-            font-size: 10px;
+            font-size: 11px;
 
             font-weight: 600;
+
+            position: relative;
         }
 
         .nav-icon {
@@ -832,40 +840,39 @@
 
             top: 0;
 
-            width: 105px;
-            height: 4px;
+            width: 85px;
 
-            background: #1726a8;
+            height: 4px;
 
             border-radius:
                 0 0 8px 8px;
+
+            background: #1726a8;
         }
 
-        .nav-badge {
+        .notification-dot {
             position: absolute;
 
             top: 8px;
-            right: 19px;
+            right: 20px;
 
-            width: 20px;
-            height: 20px;
+            width: 21px;
+            height: 21px;
+
+            border-radius: 50%;
 
             display: flex;
-
             align-items: center;
             justify-content: center;
 
-            background: #dc2446;
+            background: #df2446;
 
             color: white;
-
-            border-radius: 50%;
 
             font-size: 10px;
 
             font-weight: 800;
         }
-
 
         /* =====================================================
            WELCOME POPUP
@@ -874,9 +881,15 @@
         .overlay {
             position: fixed;
 
+            z-index: 100;
+
             inset: 0;
 
-            z-index: 150;
+            background:
+                rgba(0,0,0,.60);
+
+            backdrop-filter:
+                blur(5px);
 
             display: flex;
 
@@ -884,12 +897,6 @@
             justify-content: center;
 
             padding: 20px;
-
-            background:
-                rgba(0,0,0,.58);
-
-            backdrop-filter:
-                blur(5px);
         }
 
         .welcome {
@@ -903,10 +910,9 @@
 
             background: white;
 
-            border-radius: 21px;
+            border-radius: 22px;
 
-            padding:
-                24px 17px 20px;
+            padding: 24px 17px 20px;
 
             position: relative;
 
@@ -920,8 +926,8 @@
             right: -2px;
             top: -2px;
 
-            width: 50px;
-            height: 50px;
+            width: 51px;
+            height: 51px;
 
             border-radius: 50%;
 
@@ -931,13 +937,18 @@
 
             color: white;
 
-            font-size: 28px;
+            font-size: 29px;
 
             cursor: pointer;
+
+            box-shadow:
+                0 4px 12px rgba(0,0,0,.2);
         }
 
         .welcome h2 {
             text-align: center;
+
+            color: #222;
 
             font-size: 21px;
 
@@ -949,15 +960,13 @@
         }
 
         .notice-list {
-            border-top:
-                1px solid #ddd;
+            border-top: 1px solid #ddd;
         }
 
         .notice-row {
             min-height: 53px;
 
-            padding:
-                9px 12px;
+            padding: 10px 12px;
 
             display: flex;
 
@@ -970,9 +979,9 @@
         }
 
         .notice-row:nth-child(even) {
-            background: #a5a2da;
+            background: #a6a3da;
 
-            color: #15155c;
+            color: #17175c;
         }
 
         .notice-row strong {
@@ -981,28 +990,33 @@
             white-space: nowrap;
         }
 
+        .notice-row:nth-child(even) strong {
+            color: #20205c;
+        }
+
         .award {
             text-align: center;
 
-            margin:
-                21px 0 17px;
+            margin: 22px 0 17px;
         }
 
         .award h3 {
-            font-size: 20px;
+            color: #222;
 
-            margin-bottom: 9px;
+            font-size: 19px;
+
+            margin-bottom: 10px;
         }
 
         .award p {
-            color: #555;
-
             font-size: 13px;
 
-            line-height: 1.5;
+            line-height: 1.6;
+
+            color: #444;
         }
 
-        .channel-button {
+        .channel-btn {
             width: 100%;
 
             height: 55px;
@@ -1011,6 +1025,12 @@
 
             border-radius: 30px;
 
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
             background:
                 linear-gradient(
                     90deg,
@@ -1018,15 +1038,11 @@
                     #4a42d2
                 );
 
-            color: white;
-
-            font-size: 16px;
-
-            font-weight: 800;
-
             cursor: pointer;
-        }
 
+            box-shadow:
+                0 7px 14px rgba(23,38,168,.25);
+        }
 
         /* =====================================================
            TOAST
@@ -1035,27 +1051,27 @@
         .toast {
             position: fixed;
 
-            z-index: 250;
+            z-index: 150;
 
             left: 50%;
+
             bottom: 98px;
+
+            transform:
+                translate(-50%, 20px);
 
             width:
                 calc(100% - 40px);
 
             max-width: 390px;
 
-            padding:
-                14px 17px;
+            padding: 14px 18px;
 
-            transform:
-                translate(-50%, 20px);
+            border-radius: 13px;
 
             background: #1726a8;
 
             color: white;
-
-            border-radius: 13px;
 
             text-align: center;
 
@@ -1068,6 +1084,9 @@
             pointer-events: none;
 
             transition: .3s;
+
+            box-shadow:
+                0 8px 20px rgba(0,0,0,.2);
         }
 
         .toast.show {
@@ -1077,17 +1096,19 @@
                 translate(-50%, 0);
         }
 
-
         /* =====================================================
            LOADER
         ===================================================== */
 
-        .loader {
+        .loader-screen {
             position: fixed;
+
+            z-index: 200;
 
             inset: 0;
 
-            z-index: 300;
+            background:
+                rgba(255,255,255,.94);
 
             display: none;
 
@@ -1097,9 +1118,6 @@
             flex-direction: column;
 
             gap: 12px;
-
-            background:
-                rgba(255,255,255,.94);
         }
 
         .spinner {
@@ -1108,8 +1126,11 @@
 
             border: 4px solid #ddd;
 
-            border-top-color: #1726a8;
-            border-right-color: #ff9f24;
+            border-top-color:
+                #1726a8;
+
+            border-right-color:
+                #ff9f24;
 
             border-radius: 50%;
 
@@ -1117,27 +1138,20 @@
                 spin .8s linear infinite;
         }
 
-        .loader strong {
+        .loader-screen strong {
             color: #1726a8;
 
             font-size: 15px;
         }
 
         @keyframes spin {
+
             to {
-                transform: rotate(360deg);
+                transform:
+                    rotate(360deg);
             }
+
         }
-
-
-        /* =====================================================
-           HIDDEN
-        ===================================================== */
-
-        .hidden {
-            display: none !important;
-        }
-
 
         /* =====================================================
            SMALL DEVICES
@@ -1145,33 +1159,46 @@
 
         @media (max-width: 360px) {
 
-            .account-grid {
-                gap: 7px;
+            .profile-card {
+                margin-left: 10px;
+                margin-right: 10px;
             }
 
-            .account-item strong {
-                font-size: 16px;
+            .quick-box {
+                margin-left: 10px;
+                margin-right: 10px;
             }
 
-            .quick-icon {
-                width: 47px;
-                height: 47px;
+            .tabs {
+                margin-left: 10px;
+                margin-right: 10px;
             }
 
-            .detail-row {
+            .products {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .product-main {
+                grid-template-columns:
+                    42% 58%;
+            }
+
+            .detail {
                 padding: 8px;
 
                 font-size: 11px;
             }
 
-            .detail-row strong {
-                font-size: 12px;
+            .detail strong {
+                font-size: 11px;
             }
 
-            .plan-main {
-                grid-template-columns:
-                    42% 58%;
+            .quick-icon {
+                width: 48px;
+                height: 48px;
             }
+
         }
 
     </style>
@@ -1180,11 +1207,12 @@
 
 <body>
 
+
 <div class="app">
 
 
     <!-- =====================================================
-         BANNER
+         JOMA HEADER
     ====================================================== -->
 
     <section class="banner">
@@ -1207,8 +1235,8 @@
             <div class="top-actions">
 
                 <button
-                    type="button"
                     class="top-btn"
+                    type="button"
                     onclick="showToast('Notifications')">
 
                     🔔
@@ -1238,46 +1266,51 @@
 
 
     <!-- =====================================================
-         ACCOUNT
+         ACCOUNT PROFILE
     ====================================================== -->
 
-    <section class="account-card">
+    <section class="profile-card">
 
-        <div class="user-head">
+        <div class="profile-head">
 
             <img
-                class="user-logo"
-                src="{{ url_for(
-                    'static',
-                    filename='images/joma-logo.jpg'
-                ) }}"
-                alt="JOMA"
-            >
+                class="profile-logo"
+                src="{{ url_for('static',
+                    filename='images/joma-logo.jpg') }}"
+                alt="JOMA">
 
 
-            <div class="user-details">
+            <div class="profile-info">
 
                 <h2>
 
-                    {% if user and user.fullname %}
+                    {% if user is defined and user.fullname %}
+
                         {{ user.fullname }}
 
-                    {% elif user and user.username %}
+                    {% elif user is defined and user.username %}
+
                         {{ user.username }}
 
                     {% else %}
+
                         JOMA User
+
                     {% endif %}
 
                 </h2>
 
 
-                <div class="user-phone">
+                <div class="phone">
 
-                    {% if user and user.phone %}
+                    {% if user is defined and user.phone %}
+
                         {{ user.phone }}
+
                     {% else %}
+
                         Account
+
                     {% endif %}
 
                 </div>
@@ -1287,41 +1320,62 @@
         </div>
 
 
-        <!-- VIP -->
-
         <div class="vip-row">
 
-            <span class="vip-zero">
+            <span class="vip-left">
                 VIP 0
             </span>
 
-            <span class="vip-number">
+            <span class="vip-current">
                 0/5
             </span>
 
-            <span class="vip-one">
+            <span class="vip-right">
                 VIP 1
             </span>
 
         </div>
 
 
-        <div class="vip-progress">
+        <div class="progress">
+
             <span></span>
+
         </div>
 
 
-        <!-- REAL ACCOUNT VALUES FROM app.py -->
+        <!-- ACCOUNT SUMMARY -->
 
-        <div class="account-grid">
+        <div class="stats">
 
 
-            <div class="account-item">
+            <div class="stat">
 
                 <strong>
-                    GHS {{ "%.2f"|format(
-                        account.deposit_account|default(0)|float
+
+                    GHS
+                    {{ "%.2f"|format(
+                        account.deposit_account|default(0)
                     ) }}
+
+                </strong>
+
+                <span>
+                    Balance
+                </span>
+
+            </div>
+
+
+            <div class="stat">
+
+                <strong>
+
+                    GHS
+                    {{ "%.2f"|format(
+                        account.deposit_account|default(0)
+                    ) }}
+
                 </strong>
 
                 <span>
@@ -1331,49 +1385,23 @@
             </div>
 
 
-            <div class="account-item">
+            <div class="stat">
 
                 <strong>
-                    GHS {{ "%.2f"|format(
-                        account.withdraw_account|default(0)|float
+
+                    GHS
+                    {{ "%.2f"|format(
+                        account.income_account|default(0)
                     ) }}
+
                 </strong>
 
                 <span>
-                    Withdraw
+                    Total income
                 </span>
 
             </div>
 
-
-            <div class="account-item">
-
-                <strong>
-                    GHS {{ "%.2f"|format(
-                        account.income_account|default(0)|float
-                    ) }}
-                </strong>
-
-                <span>
-                    Income
-                </span>
-
-            </div>
-
-
-            <div class="account-item">
-
-                <strong>
-                    GHS {{ "%.2f"|format(
-                        account.referral_account|default(0)|float
-                    ) }}
-                </strong>
-
-                <span>
-                    Referral
-                </span>
-
-            </div>
 
         </div>
 
@@ -1389,8 +1417,9 @@
 
 
         <a
-            href="{{ url_for('deposit') }}"
-            class="quick-action">
+            href="#"
+            class="quick-action"
+            onclick="showToast('Deposit'); return false;">
 
             <div class="quick-icon green">
                 ＋
@@ -1434,18 +1463,20 @@
 
 
         <a
-            href="{{ url_for('team') }}"
-            class="quick-action">
+            href="#"
+            class="quick-action"
+            onclick="showToast('Channel'); return false;">
 
             <div class="quick-icon purple">
                 ➤
             </div>
 
             <span>
-                Team
+                Channel
             </span>
 
         </a>
+
 
     </section>
 
@@ -1457,11 +1488,12 @@
 
     <div class="tabs">
 
+
         <button
             id="dayTab"
             class="tab active"
             type="button"
-            onclick="switchTab('plans')">
+            onclick="switchTab('day')">
 
             Day income
 
@@ -1469,26 +1501,28 @@
 
 
         <button
-            id="rewardTab"
+            id="offersTab"
             class="tab"
             type="button"
-            onclick="switchTab('rewards')">
+            onclick="switchTab('offers')">
 
-            Reward Products
+            Offers
 
         </button>
+
 
     </div>
 
 
 
     <!-- =====================================================
-         PLANS FROM app.py
+         PLANS
+         Loaded directly from app.py PLANS
     ====================================================== -->
 
     <section
-        id="plansSection"
-        class="plans">
+        id="dayProducts"
+        class="products">
 
 
         {% if plans %}
@@ -1497,42 +1531,123 @@
             {% for plan_id, plan in plans.items() %}
 
 
-            <article class="plan-card">
+                <article class="product-card">
 
 
-                <div class="plan-main">
+                    <div class="product-main">
 
 
-                    <!-- PRODUCT IMAGE -->
+                        <!-- PRODUCT IMAGE -->
 
-                    <div class="plan-image">
+                        <div class="product-image">
 
 
-                        <img
-                            src="{{ url_for(
-                                'static',
-                                filename='images/plan' ~ plan_id ~ '.jpg'
-                            ) }}"
-                            alt="JOMA football shoe {{ plan_id }}"
-                            onerror="
-                                this.src='{{ url_for(
+                            <img
+                                src="{{ url_for(
                                     'static',
-                                    filename='images/joma-logo.jpg'
-                                ) }}';
-                            "
-                        >
+                                    filename='images/plan' ~ plan_id ~ '.jpg'
+                                ) }}"
+                                alt="JOMA Football Shoe {{ plan_id }}"
+                                onerror="
+                                    this.onerror=null;
+                                    this.src='{{ url_for(
+                                        'static',
+                                        filename='images/joma-logo.jpg'
+                                    ) }}';
+                                ">
 
 
-                        <div class="vip-badge">
+                            <div class="vip-badge">
 
-                            VIP {{ plan_id }}
+                                VIP {{ plan_id }}
+
+                            </div>
+
+
+                            <div class="shoe-name">
+
+                                JOMA Football Shoe {{ plan_id }}
+
+                            </div>
+
 
                         </div>
 
 
-                        <div class="plan-name">
 
-                            JOMA Football Shoe {{ plan_id }}
+                        <!-- PLAN DETAILS -->
+
+                        <div class="details">
+
+
+                            <div class="detail">
+
+                                <span>
+                                    Price
+                                </span>
+
+                                <strong>
+
+                                    GHS
+                                    {{ "%.2f"|format(
+                                        plan.investment
+                                    ) }}
+
+                                </strong>
+
+                            </div>
+
+
+                            <div class="detail">
+
+                                <span>
+                                    Daily profit
+                                </span>
+
+                                <strong>
+
+                                    GHS
+                                    {{ "%.2f"|format(
+                                        plan.daily
+                                    ) }}
+
+                                </strong>
+
+                            </div>
+
+
+                            <div class="detail">
+
+                                <span>
+                                    Days
+                                </span>
+
+                                <strong>
+
+                                    {{ plan.duration }}
+
+                                </strong>
+
+                            </div>
+
+
+                            <div class="detail">
+
+                                <span>
+                                    Total profit
+                                </span>
+
+                                <strong>
+
+                                    GHS
+                                    {{ "%.2f"|format(
+                                        plan.daily * plan.duration
+                                    ) }}
+
+                                </strong>
+
+                            </div>
+
 
                         </div>
 
@@ -1540,96 +1655,21 @@
 
 
 
-                    <!-- REAL VALUES FROM PLANS -->
+                    <!-- BUY NOW -->
 
-                    <div class="plan-details">
+                    <a
+                        href="{{ url_for(
+                            'buy_plan',
+                            plan_id=plan_id
+                        ) }}"
+                        class="product-button">
 
+                        Buy now
 
-                        <div class="detail-row">
-
-                            <span>
-                                Price
-                            </span>
-
-                            <strong>
-                                GHS {{ "%.2f"|format(
-                                    plan.investment|float
-                                ) }}
-                            </strong>
-
-                        </div>
+                    </a>
 
 
-                        <div class="detail-row">
-
-                            <span>
-                                Daily income
-                            </span>
-
-                            <strong>
-                                GHS {{ "%.2f"|format(
-                                    plan.daily|float
-                                ) }}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="detail-row">
-
-                            <span>
-                                Days
-                            </span>
-
-                            <strong>
-                                {{ plan.duration }}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="detail-row">
-
-                            <span>
-                                Total
-                            </span>
-
-                            <strong>
-
-                                GHS {{
-                                    "%.2f"|format(
-                                        (plan.daily * plan.duration)|float
-                                    )
-                                }}
-
-                            </strong>
-
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- EXISTING FLASK ROUTE -->
-
-                <a
-                    href="{{ url_for(
-                        'buy_plan',
-                        plan_id=plan_id
-                    ) }}"
-                    class="plan-button">
-
-                    <span>
-                        View Plan
-                    </span>
-
-                </a>
-
-
-            </article>
+                </article>
 
 
             {% endfor %}
@@ -1638,9 +1678,9 @@
         {% else %}
 
 
-            <div class="empty">
+            <div class="offers-box">
 
-                <div class="empty-icon">
+                <div class="offers-icon">
                     ⚽
                 </div>
 
@@ -1648,8 +1688,9 @@
                     No plans available
                 </h3>
 
-                <p style="margin-top:8px;">
-                    Plans will appear here when available.
+                <p>
+                    There are currently no products
+                    available.
                 </p>
 
             </div>
@@ -1657,33 +1698,35 @@
 
         {% endif %}
 
+
     </section>
 
 
 
     <!-- =====================================================
-         REWARD PRODUCTS
+         OFFERS
     ====================================================== -->
 
     <section
-        id="rewardSection"
-        class="plans hidden">
+        id="offersProducts"
+        class="offers-box hidden">
 
-        <div class="empty">
 
-            <div class="empty-icon">
-                🎁
-            </div>
-
-            <h3>
-                Reward Products
-            </h3>
-
-            <p style="margin-top:8px;">
-                Reward products will appear here when available.
-            </p>
-
+        <div class="offers-icon">
+            🎁
         </div>
+
+
+        <h3>
+            Offers
+        </h3>
+
+
+        <p>
+            Available JOMA offers will appear
+            here when they are created.
+        </p>
+
 
     </section>
 
@@ -1716,7 +1759,7 @@
         <!-- INCOME -->
 
         <a
-            href="{{ url_for('transaction_history') }}"
+            href="{{ url_for('my_plan') }}"
             class="nav-item">
 
             <div class="nav-icon">
@@ -1752,10 +1795,13 @@
         <a
             href="#"
             class="nav-item"
-            onclick="shareJoma(); return false;">
+            onclick="
+                showToast('Share');
+                return false;
+            ">
 
             <div class="nav-icon">
-                ⤴
+                ⌯
             </div>
 
             <span>
@@ -1779,9 +1825,15 @@
                 My
             </span>
 
+            <div class="notification-dot">
+                1
+            </div>
+
         </a>
 
+
     </nav>
+
 
 </div>
 
@@ -1789,7 +1841,7 @@
 
 <!-- =========================================================
      WELCOME POPUP
-========================================================= -->
+========================================================== -->
 
 <div
     class="overlay"
@@ -1800,8 +1852,8 @@
 
 
         <button
-            type="button"
             class="close-popup"
+            type="button"
             onclick="closeNotification()">
 
             ×
@@ -1826,11 +1878,37 @@
             <div class="notice-row">
 
                 <span>
-                    Football products
+                    Available plans
                 </span>
 
                 <strong>
                     {{ plans|length }}
+                </strong>
+
+            </div>
+
+
+            <div class="notice-row">
+
+                <span>
+                    Product collection
+                </span>
+
+                <strong>
+                    Football Shoes
+                </strong>
+
+            </div>
+
+
+            <div class="notice-row">
+
+                <span>
+                    Product duration
+                </span>
+
+                <strong>
+                    180 days
                 </strong>
 
             </div>
@@ -1849,51 +1927,30 @@
             </div>
 
 
-            <div class="notice-row">
-
-                <span>
-                    Available plans
-                </span>
-
-                <strong>
-                    {{ plans|length }}
-                </strong>
-
-            </div>
-
-
-            <div class="notice-row">
-
-                <span>
-                    Brand
-                </span>
-
-                <strong>
-                    JOMA
-                </strong>
-
-            </div>
-
         </div>
 
 
         <div class="award">
 
+
             <h3>
-                🏆 JOMA PRODUCTS 🏆
+                🏆 JOMA OFFERS 🏆
             </h3>
 
+
             <p>
-                Explore the JOMA football-shoe
-                products available on your dashboard.
+                Explore the available JOMA
+                football-shoe products and
+                offers from your dashboard.
             </p>
+
 
         </div>
 
 
         <button
+            class="channel-btn"
             type="button"
-            class="channel-button"
             onclick="
                 closeNotification();
                 showToast('Welcome to JOMA');
@@ -1903,6 +1960,7 @@
 
         </button>
 
+
     </div>
 
 </div>
@@ -1911,7 +1969,7 @@
 
 <!-- =========================================================
      TOAST
-========================================================= -->
+========================================================== -->
 
 <div
     class="toast"
@@ -1922,24 +1980,26 @@
 
 <!-- =========================================================
      LOADER
-========================================================= -->
+========================================================== -->
 
 <div
-    class="loader"
+    class="loader-screen"
     id="loader">
 
+
     <div class="spinner"></div>
+
 
     <strong>
         JOMA
     </strong>
+
 
 </div>
 
 
 
 <script>
-
 
     /* =====================================================
        POPUP
@@ -1953,10 +2013,12 @@
             );
 
         if (popup) {
-            popup.style.display = "none";
-        }
-    }
 
+            popup.style.display = "none";
+
+        }
+
+    }
 
 
     /* =====================================================
@@ -1982,9 +2044,8 @@
         toast.textContent =
             message;
 
-        toast.classList.add(
-            "show"
-        );
+        toast.classList.add("show");
+
 
         toastTimer =
             setTimeout(
@@ -1997,8 +2058,8 @@
                 },
                 3000
             );
-    }
 
+    }
 
 
     /* =====================================================
@@ -2007,14 +2068,14 @@
 
     function switchTab(tab) {
 
-        const plans =
+        const dayProducts =
             document.getElementById(
-                "plansSection"
+                "dayProducts"
             );
 
-        const rewards =
+        const offersProducts =
             document.getElementById(
-                "rewardSection"
+                "offersProducts"
             );
 
         const dayTab =
@@ -2022,19 +2083,19 @@
                 "dayTab"
             );
 
-        const rewardTab =
+        const offersTab =
             document.getElementById(
-                "rewardTab"
+                "offersTab"
             );
 
 
-        if (tab === "plans") {
+        if (tab === "day") {
 
-            plans.classList.remove(
+            dayProducts.classList.remove(
                 "hidden"
             );
 
-            rewards.classList.add(
+            offersProducts.classList.add(
                 "hidden"
             );
 
@@ -2042,17 +2103,17 @@
                 "active"
             );
 
-            rewardTab.classList.remove(
+            offersTab.classList.remove(
                 "active"
             );
 
         } else {
 
-            plans.classList.add(
+            dayProducts.classList.add(
                 "hidden"
             );
 
-            rewards.classList.remove(
+            offersProducts.classList.remove(
                 "hidden"
             );
 
@@ -2060,80 +2121,13 @@
                 "active"
             );
 
-            rewardTab.classList.add(
+            offersTab.classList.add(
                 "active"
             );
+
         }
+
     }
-
-
-
-    /* =====================================================
-       SHARE
-    ===================================================== */
-
-    function shareJoma() {
-
-        if (
-            navigator.share
-        ) {
-
-            navigator.share({
-
-                title: "JOMA",
-
-                text:
-                    "JOMA football products",
-
-                url:
-                    window.location.href
-
-            }).catch(
-                function () {}
-            );
-
-        } else {
-
-            showToast(
-                "Share is not available on this device"
-            );
-        }
-    }
-
-
-
-    /* =====================================================
-       IMAGE FALLBACK
-    ===================================================== */
-
-    document
-        .querySelectorAll("img")
-        .forEach(
-            function (image) {
-
-                image.addEventListener(
-                    "error",
-                    function () {
-
-                        if (
-                            this.dataset.failed
-                        ) {
-                            return;
-                        }
-
-                        this.dataset.failed =
-                            "true";
-
-                        this.src =
-                            "{{ url_for(
-                                'static',
-                                filename='images/joma-logo.jpg'
-                            ) }}";
-                    }
-                );
-            }
-        );
-
 
 
     /* =====================================================
@@ -2154,17 +2148,60 @@
         loader.style.display =
             "flex";
 
-        setTimeout(
-            function () {
-
-                loader.style.display =
-                    "none";
-
-            },
-            1000
-        );
     }
 
+
+    /* =====================================================
+       IMAGE FALLBACK
+    ===================================================== */
+
+    document
+        .querySelectorAll("img")
+        .forEach(function (img) {
+
+            img.addEventListener(
+                "error",
+                function () {
+
+                    if (
+                        this.dataset.failed
+                    ) {
+                        return;
+                    }
+
+                    this.dataset.failed =
+                        "true";
+
+                    this.src =
+                        "{{ url_for(
+                            'static',
+                            filename='images/joma-logo.jpg'
+                        ) }}";
+
+                }
+            );
+
+        });
+
+
+    /* =====================================================
+       BUY BUTTON LOADING
+    ===================================================== */
+
+    document
+        .querySelectorAll(".product-button")
+        .forEach(function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    showLoading();
+
+                }
+            );
+
+        });
 
 
     /* =====================================================
@@ -2184,6 +2221,7 @@
 
                 popup.style.display =
                     "flex";
+
             }
 
         }
@@ -2191,5 +2229,6 @@
 
 </script>
 
+
 </body>
-    </html>
+</html>
