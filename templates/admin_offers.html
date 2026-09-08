@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOMA • Offers</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #172033;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            margin: auto;
+            background: #fff;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1726a8, #101b82);
+            color: white;
+            padding: 25px 18px;
+            border-radius: 0 0 25px 25px;
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #ff9f24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 21px;
+            margin-top: 18px;
+        }
+
+        .header p {
+            opacity: .8;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 18px;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 15px;
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .primary {
+            background: #1726a8;
+            color: white;
+        }
+
+        .orange {
+            background: #ff9f24;
+            color: white;
+        }
+
+        .secondary {
+            background: #eef1f8;
+            color: #1726a8;
+        }
+
+        .offer {
+            border: 1px solid #e8ebf2;
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 14px;
+            background: white;
+            box-shadow: 0 5px 18px rgba(20,35,80,.06);
+        }
+
+        .offer-head {
+            display: flex;
+            gap: 13px;
+            align-items: center;
+        }
+
+        .offer-image {
+            width: 82px;
+            height: 82px;
+            border-radius: 15px;
+            object-fit: cover;
+            background: #f0f3f8;
+        }
+
+        .offer-info {
+            flex: 1;
+        }
+
+        .offer-info h3 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+
+        .price {
+            color: #1726a8;
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .active {
+            background: #e7fff3;
+            color: #14945b;
+        }
+
+        .inactive {
+            background: #fff0f0;
+            color: #d64545;
+        }
+
+        .details {
+            margin-top: 13px;
+            padding-top: 12px;
+            border-top: 1px solid #edf0f5;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .detail {
+            background: #f7f9fc;
+            border-radius: 10px;
+            padding: 9px;
+            text-align: center;
+        }
+
+        .detail small {
+            display: block;
+            color: #8992a3;
+            font-size: 10px;
+        }
+
+        .detail strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 13px;
+        }
+
+        .description {
+            color: #697386;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 12px;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+            margin-top: 13px;
+        }
+
+        .actions .btn {
+            font-size: 11px;
+            padding: 10px 5px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8a93a5;
+        }
+
+        .empty-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 600px) {
+            body {
+                padding: 20px;
+            }
+
+            .app {
+                border-radius: 25px;
+                overflow: hidden;
+                box-shadow: 0 10px 40px rgba(0,0,0,.08);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+        <div class="header-row">
+            <div class="logo">J</div>
+
+            <a href="{{ url_for('admin_dashboard') }}"
+               class="btn secondary">
+                Dashboard
+            </a>
+        </div>
+
+        <h1>Offers Management</h1>
+        <p>Create and manage JOMA offers</p>
+    </header>
+
+    <main class="content">
+
+        <div class="top-actions">
+            <a href="{{ url_for('admin_create_offer') }}"
+               class="btn orange">
+                + Create Offer
+            </a>
+
+            <a href="{{ url_for('admin_logout') }}"
+               class="btn secondary">
+                Logout
+            </a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div style="
+                        padding:12px;
+                        border-radius:12px;
+                        margin-bottom:12px;
+                        background:#f0f4ff;
+                        color:#1726a8;
+                        font-size:13px;
+                        font-weight:600;
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if offers %}
+
+            {% for offer in offers %}
+
+            <article class="offer">
+
+                <div class="offer-head">
+
+                    {% if offer.image_url %}
+                        <img
+                            src="{{ offer.image_url }}"
+                            class="offer-image"
+                            alt="{{ offer.name }}"
+                        >
+                    {% else %}
+                        <div class="offer-image"
+                             style="
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-size:30px;
+                             ">
+                            👟
+                        </div>
+                    {% endif %}
+
+                    <div class="offer-info">
+                        <h3>{{ offer.name }}</h3>
+
+                        <div class="price">
+                            GHS {{ "%.2f"|format(offer.price|float) }}
+                        </div>
+
+                        {% if offer.active %}
+                            <span class="status active">ACTIVE</span>
+                        {% else %}
+                            <span class="status inactive">HIDDEN</span>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="details">
+
+                    <div class="detail">
+                        <small>Daily</small>
+                        <strong>
+                            GHS {{ "%.2f"|format(offer.daily_amount|float) }}
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <small>Duration</small>
+                        <strong>
+                            {{ offer.duration }} days
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <small>ID</small>
+                        <strong>#{{ offer.id }}</strong>
+                    </div>
+
+                </div>
+
+                {% if offer.description %}
+                    <p class="description">
+                        {{ offer.description }}
+                    </p>
+                {% endif %}
+
+                <div class="actions">
+
+                    <a
+                        href="{{ url_for('admin_edit_offer',
+                                         offer_id=offer.id) }}"
+                        class="btn primary">
+                        Edit
+                    </a>
+
+                    <a
+                        href="{{ url_for('admin_toggle_offer',
+                                         offer_id=offer.id) }}"
+                        class="btn secondary">
+                        {% if offer.active %}
+                            Hide
+                        {% else %}
+                            Show
+                        {% endif %}
+                    </a>
+
+                    <a
+                        href="{{ url_for('admin_delete_offer',
+                                         offer_id=offer.id) }}"
+                        class="btn"
+                        style="background:#fff0f0;color:#d64545;"
+                        onclick="return confirm('Delete this offer?');">
+                        Delete
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                <div class="empty-icon">👟</div>
+                <h3>No Offers Yet</h3>
+                <p>Create your first JOMA offer.</p>
+
+                <br>
+
+                <a href="{{ url_for('admin_create_offer') }}"
+                   class="btn orange">
+                    Create Offer
+                </a>
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+</body>
+</html>
