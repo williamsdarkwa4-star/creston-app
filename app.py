@@ -2610,7 +2610,164 @@ def admin_gift_code_claims(gift_id: int):
     )
     return render_template("admin_gift_claims.html", gift=gift, claims=claims)
 
+@app.route("/admin/offers")
+def admin_offers():
+    if not admin_required():
+        return redirect(url_for("admin_login"))
 
+    offers = query_all("""
+        SELECT *
+        FROM admin_offer
+        ORDER BY id DESC
+    """)
+
+    return render_template(
+        "admin_offers.html",
+        offers=offers
+    )
+
+
+@app.route("/admin/offers/create", methods=["GET", "POST"])
+def admin_create_offer():
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        price = request.form.get("price", "0").strip()
+        daily_amount = request.form.get("daily_amount", "0").strip()
+        duration = request.form.get("duration", "0").strip()
+        image_url = request.form.get("image_url", "").strip()
+        description = request.form.get("description", "").strip()
+
+        if not name:
+            flash("Offer name is required.", "error")
+            return redirect(url_for("admin_create_offer"))
+
+        try:
+            price = Decimal(price)
+            daily_amount = Decimal(daily_amount)
+            duration = int(duration)
+        except (InvalidOperation, ValueError):
+            flash("Please enter valid offer details.", "error")
+            return redirect(url_for("admin_create_offer"))
+
+        execute("""
+            INSERT INTO admin_offer
+            (name, price, daily_amount, duration, image_url, description, active)
+            VALUES (%s, %s, %s, %s, %s, %s, TRUE)
+        """, (
+            name,
+            price,
+            daily_amount,
+            duration,
+            image_url,
+            description
+        ))
+
+        flash("Offer created successfully.", "success")
+        return redirect(url_for("admin_offers"))
+
+    return render_template("admin_offer_form.html", offer=None)
+
+
+@app.route("/admin/offers/edit/<int:offer_id>", methods=["GET", "POST"])
+def admin_edit_offer(offer_id):
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    offer = query_one(
+        "SELECT * FROM admin_offer WHERE id=%s",
+        (offer_id,)
+    )
+
+    if not offer:
+        flash("Offer not found.", "error")
+        return redirect(url_for("admin_offers"))
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        price = request.form.get("price", "0").strip()
+        daily_amount = request.form.get("daily_amount", "0").strip()
+        duration = request.form.get("duration", "0").strip()
+        image_url = request.form.get("image_url", "").strip()
+        description = request.form.get("description", "").strip()
+
+        try:
+            price = Decimal(price)
+            daily_amount = Decimal(daily_amount)
+            duration = int(duration)
+        except (InvalidOperation, ValueError):
+            flash("Invalid offer details.", "error")
+            return redirect(
+                url_for("admin_edit_offer", offer_id=offer_id)
+            )
+
+        execute("""
+            UPDATE admin_offer
+            SET name=%s,
+                price=%s,
+                daily_amount=%s,
+                duration=%s,
+                image_url=%s,
+                description=%s,
+                updated_at=CURRENT_TIMESTAMP
+            WHERE id=%s
+        """, (
+            name,
+            price,
+            daily_amount,
+            duration,
+            image_url,
+            description,
+            offer_id
+        ))
+
+        flash("Offer updated successfully.", "success")
+        return redirect(url_for("admin_offers"))
+
+    return render_template(
+        "admin_offer_form.html",
+        offer=offer
+    )
+
+
+@app.route("/admin/offers/toggle/<int:offer_id>", methods=["POST"])
+def admin_toggle_offer(offer_id):
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    offer = query_one(
+        "SELECT id, active FROM admin_offer WHERE id=%s",
+        (offer_id,)
+    )
+
+    if not offer:
+        flash("Offer not found.", "error")
+        return redirect(url_for("admin_offers"))
+
+    execute("""
+        UPDATE admin_offer
+        SET active = NOT active,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id=%s
+    """, (offer_id,))
+
+    return redirect(url_for("admin_offers"))
+
+
+@app.route("/admin/offers/delete/<int:offer_id>", methods=["POST"])
+def admin_delete_offer(offer_id):
+    if not admin_required():
+        return redirect(url_for("admin_login"))
+
+    execute(
+        "DELETE FROM admin_offer WHERE id=%s",
+        (offer_id,)
+    )
+
+    flash("Offer deleted.", "success")
+    return redirect(url_for("admin_offers"))
 # ============================================================
 # Error handlers
 # ============================================================
