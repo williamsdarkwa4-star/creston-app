@@ -1,33 +1,9 @@
-#!/usr/bin/env python3
-"""
-JOMA - Safe Flask application
-
-This replacement keeps the JOMA user/admin structure while treating offers as
-catalogue items. "Buy Now" is UI-only and does not move money, create a paid
-investment, process deposits/withdrawals, or promise returns.
-
-Designed for:
-- Flask + PostgreSQL on Render
-- Dynamic admin_offer catalogue
-- User registration/login/logout
-- Admin login/dashboard
-- Admin offer CRUD
-- Dashboard display of active offers
-- No Flask-Login/current_user dependency
-"""
-
-from __future__ import annotations
-
-import logging
-import os
-import secrets
-from contextlib import contextmanager
-from datetime import datetime, timedelta, timezone
+from flask import Flask, render_template, redirect, url_for, request, session, flash
+import os, secrets, logging
+from datetime import timedelta
 from decimal import Decimal, InvalidOperation
-from typing import Any, Dict, Optional
-
-from flask import Flask, flash, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash, generate_password_hash
+from functools import wraps
+from werkzeug.security import generate_password_hash, check_password_hash
 
 try:
     import psycopg2
@@ -36,377 +12,243 @@ except ImportError:
     psycopg2 = None
     RealDictCursor = None
 
-
-# ============================================================
-# CONFIG
-# ============================================================
-
-app = Flask(__name__)
-
-app.config["SECRET_KEY"] = os.environ.get(
-    "SECRET_KEY",
-    "change-this-secret-key-in-production",
+app = Flask(__name__, template_folder="templates", static_folder="static")
+app.secret_key = os.getenv("SECRET_KEY") or secrets.token_hex(32)
+app.config.update(
+    MAX_CONTENT_LENGTH=5 * 1024 * 1024,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
 )
-app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
-app.config["SESSION_COOKIE_HTTPONLY"] = True
-app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-app.config["SESSION_COOKIE_SECURE"] = (
-    os.environ.get("SESSION_COOKIE_SECURE", "False").lower()
-    in {"1", "true", "yes"}
-)
-app.permanent_session_lifetime = timedelta(
-    days=int(os.environ.get("SESSION_PERMANENT_DAYS", "7"))
-)
+app.permanent_session_lifetime = timedelta(days=7)
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
-ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "Williams")
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "Williams12")
+DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "Williams")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "Williams12")
+PORT = int(os.getenv("PORT", "5000"))
+WELCOME_BONUS = Decimal("10.00")
+MIN_DEPOSIT = Decimal("90.00")
+MIN_WITHDRAWAL = Decimal("30.00")
+WITHDRAWAL_FEE_PERCENT = Decimal("18.00")
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s %(message)s",
-)
-logger = logging.getLogger("joma.app")
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("joma")
 
 
-# ============================================================
-# DATABASE
-# ============================================================
-
-def require_database() -> None:
+def conn():
     if not DATABASE_URL:
-        raise RuntimeError(
-            "DATABASE_URL is not configured. Add your Render PostgreSQL "
-            "DATABASE_URL environment variable."
-        )
+        raise RuntimeError("DATABASE_URL is not configured.")
     if psycopg2 is None:
-        raise RuntimeError(
-            "psycopg2-binary is not installed. Add psycopg2-binary "
-            "to requirements.txt."
-        )
+        raise RuntimeError("psycopg2-binary is required.")
+    return psycopg2.connect(DATABASE_URL, sslmode="require")
 
 
-@contextmanager
-def db_cursor(commit: bool = False, dict_cursor: bool = True):
-    require_database()
-    conn = psycopg2.connect(DATABASE_URL)
+def one(sql, params=()):
+    c = conn()
     try:
-        cursor_factory = RealDictCursor if dict_cursor else None
-        cur = conn.cursor(cursor_factory=cursor_factory)
-        try:
-            yield cur
-            if commit:
-                conn.commit()
-        except Exception:
-            conn.rollback()
-            raise
-        finally:
-            cur.close()
+        with c.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(sql, params)
+            return cur.fetchone()
     finally:
-        conn.close()
+        c.close()
 
 
-def execute(sql: str, params: tuple = ()) -> None:
-    with db_cursor(commit=True) as cur:
-        cur.execute(sql, params)
+def all_rows(sql, params=()):
+    c = conn()
+    try:
+        with c.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(sql, params)
+            return cur.fetchall()
+    finally:
+        c.close()
 
 
-def query_one(sql: str, params: tuple = ()) -> Optional[Dict[str, Any]]:
-    with db_cursor() as cur:
-        cur.execute(sql, params)
-        row = cur.fetchone()
-        return dict(row) if row else None
+def run(sql, params=(), returning=False):
+    c = conn()
+    try:
+        with c.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(sql, params)
+            result = cur.fetchone() if returning else None
+        c.commit()
+        return result
+    except Exception:
+        c.rollback()
+        raise
+    finally:
+        c.close()
 
 
-def query_all(sql: str, params: tuple = ()) -> list[Dict[str, Any]]:
-    with db_cursor() as cur:
-        cur.execute(sql, params)
-        return [dict(row) for row in cur.fetchall()]
+def money(value):
+    try:
+        return Decimal(str(value or 0)).quantize(Decimal("0.01"))
+    except (InvalidOperation, ValueError, TypeError):
+        return Decimal("0.00")
 
 
-# ============================================================
-# DATABASE INITIALIZATION
-# ============================================================
+def current_user():
+    uid = session.get("user_id")
+    if not uid:
+        return None
+    try:
+        return one("SELECT * FROM users WHERE id=%s", (uid,))
+    except Exception:
+        return None
 
-def init_db() -> None:
-    """
-    Creates only the tables needed by this safe JOMA application.
 
-    Existing unrelated tables are not deleted or modified.
-    """
-    require_database()
+def login_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if not session.get("user_id"):
+            flash("Please log in first.", "error")
+            return redirect(url_for("login"))
+        return view(*args, **kwargs)
+    return wrapped
 
+
+def admin_required(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if not session.get("admin_logged_in"):
+            return redirect(url_for("admin_login"))
+        return view(*args, **kwargs)
+    return wrapped
+
+
+def init_db():
+    c = conn()
     statements = [
-        """
-        CREATE TABLE IF NOT EXISTS users (
+        """CREATE TABLE IF NOT EXISTS users(
             id SERIAL PRIMARY KEY,
-            username VARCHAR(80) NOT NULL,
-            fullname VARCHAR(150) DEFAULT '',
-            phone VARCHAR(40) NOT NULL UNIQUE,
+            username VARCHAR(80) UNIQUE NOT NULL,
+            fullname VARCHAR(150) NOT NULL DEFAULT '',
+            phone VARCHAR(40) UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
-            referral_code VARCHAR(40) NOT NULL UNIQUE,
-            referred_by VARCHAR(40),
+            referral_code VARCHAR(80) UNIQUE NOT NULL,
+            referred_by VARCHAR(80),
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )
-        """,
-        """
-        CREATE TABLE IF NOT EXISTS accounts (
+        )""",
+        """CREATE TABLE IF NOT EXISTS accounts(
             id SERIAL PRIMARY KEY,
-            user_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+            user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
             deposit_account NUMERIC(14,2) NOT NULL DEFAULT 0,
             income_account NUMERIC(14,2) NOT NULL DEFAULT 0,
             referral_account NUMERIC(14,2) NOT NULL DEFAULT 0,
             withdraw_account NUMERIC(14,2) NOT NULL DEFAULT 0,
-            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )
-        """,
-        """
-        CREATE TABLE IF NOT EXISTS admin_offer (
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )""",
+        """CREATE TABLE IF NOT EXISTS admin_offer(
             id SERIAL PRIMARY KEY,
             name VARCHAR(150) NOT NULL,
             price NUMERIC(14,2) NOT NULL DEFAULT 0,
             daily_amount NUMERIC(14,2) NOT NULL DEFAULT 0,
             duration INTEGER NOT NULL DEFAULT 0,
-            image_url TEXT DEFAULT '',
-            description TEXT DEFAULT '',
+            image_url TEXT NOT NULL DEFAULT '',
+            description TEXT NOT NULL DEFAULT '',
             active BOOLEAN NOT NULL DEFAULT TRUE,
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        )
-        """,
-        """
-        CREATE INDEX IF NOT EXISTS idx_admin_offer_active
-        ON admin_offer(active)
-        """,
-        """
-        CREATE INDEX IF NOT EXISTS idx_admin_offer_created
-        ON admin_offer(created_at DESC)
-        """,
+        )""",
+        """CREATE TABLE IF NOT EXISTS demo_transactions(
+            id SERIAL PRIMARY KEY,
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            kind VARCHAR(30) NOT NULL,
+            amount NUMERIC(14,2) NOT NULL DEFAULT 0,
+            status VARCHAR(30) NOT NULL DEFAULT 'simulated',
+            note TEXT NOT NULL DEFAULT '',
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )""",
     ]
-
-    with db_cursor(commit=True) as cur:
-        for sql in statements:
-            cur.execute(sql)
-
-    logger.info("JOMA database initialization completed.")
-
-
-# ============================================================
-# HELPERS
-# ============================================================
-
-def utcnow() -> datetime:
-    return datetime.now(timezone.utc)
-
-
-def money(value: Any) -> Decimal:
     try:
-        return Decimal(str(value or "0")).quantize(Decimal("0.01"))
-    except (InvalidOperation, ValueError, TypeError):
-        return Decimal("0.00")
+        with c.cursor() as cur:
+            for statement in statements:
+                cur.execute(statement)
+        c.commit()
+    finally:
+        c.close()
 
 
-def parse_amount(value: Any) -> Optional[Decimal]:
-    try:
-        amount = Decimal(str(value).strip())
-        if amount < 0:
-            return None
-        return amount.quantize(Decimal("0.01"))
-    except (InvalidOperation, ValueError, TypeError, AttributeError):
-        return None
+@app.before_request
+def database_startup():
+    if not app.config.get("DB_READY"):
+        try:
+            init_db()
+            app.config["DB_READY"] = True
+        except Exception:
+            log.exception("Database initialisation failed")
 
 
-def generate_referral_code() -> str:
-    while True:
-        code = "JOMA" + secrets.token_hex(4).upper()
-        if not query_one(
-            "SELECT id FROM users WHERE referral_code=%s",
-            (code,),
-        ):
-            return code
-
-
-def current_user() -> Optional[Dict[str, Any]]:
-    user_id = session.get("user_id")
-    if not user_id:
-        return None
-
-    return query_one(
-        """
-        SELECT id, username, fullname, phone, referral_code,
-               referred_by, created_at
-        FROM users
-        WHERE id=%s
-        """,
-        (user_id,),
-    )
-
-
-def current_account(user_id: int) -> Dict[str, Any]:
-    account = query_one(
-        """
-        SELECT id, user_id, deposit_account, income_account,
-               referral_account, withdraw_account
-        FROM accounts
-        WHERE user_id=%s
-        """,
-        (user_id,),
-    )
-
-    if account:
-        return account
-
-    execute(
-        """
-        INSERT INTO accounts
-            (user_id, deposit_account, income_account,
-             referral_account, withdraw_account)
-        VALUES (%s, 0, 0, 0, 0)
-        ON CONFLICT (user_id) DO NOTHING
-        """,
-        (user_id,),
-    )
-
-    return query_one(
-        """
-        SELECT id, user_id, deposit_account, income_account,
-               referral_account, withdraw_account
-        FROM accounts
-        WHERE user_id=%s
-        """,
-        (user_id,),
-    ) or {
-        "user_id": user_id,
-        "deposit_account": Decimal("0.00"),
-        "income_account": Decimal("0.00"),
-        "referral_account": Decimal("0.00"),
-        "withdraw_account": Decimal("0.00"),
+@app.context_processor
+def inject_context():
+    return {
+        "logged_user": current_user(),
+        "is_admin": bool(session.get("admin_logged_in")),
+        "welcome_bonus": WELCOME_BONUS,
+        "min_deposit": MIN_DEPOSIT,
+        "min_withdrawal": MIN_WITHDRAWAL,
+        "withdrawal_fee_percent": WITHDRAWAL_FEE_PERCENT,
     }
 
 
-def admin_required() -> bool:
-    return bool(session.get("admin_logged_in"))
+@app.route("/health")
+def health():
+    try:
+        one("SELECT 1")
+        return {"status": "ok", "database": "connected"}
+    except Exception as exc:
+        return {"status": "error", "database": "unavailable", "message": str(exc)}, 503
 
-
-def admin_guard():
-    if not admin_required():
-        return redirect(url_for("admin_login"))
-    return None
-
-
-# ============================================================
-# BASIC ROUTES
-# ============================================================
 
 @app.route("/")
 def index():
-    user = current_user()
-    if user:
+    if session.get("admin_logged_in"):
+        return redirect(url_for("admin_dashboard"))
+    if session.get("user_id"):
         return redirect(url_for("dashboard"))
     return redirect(url_for("login"))
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    ref = request.args.get("ref", "").strip() or request.form.get("referral_code", "").strip()
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
         fullname = request.form.get("fullname", "").strip()
+        username = request.form.get("username", "").strip()
         phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "")
-        confirm_password = request.form.get("confirm_password", "")
-        referral_code = request.form.get("referral_code", "").strip().upper()
+        confirm = request.form.get("confirm_password", password)
 
-        if not username or not phone or not password:
+        if not fullname or not username or not phone or not password:
             flash("Please complete all required fields.", "error")
-            return render_template(
-                "register.html",
-                invite_code=referral_code,
-            )
-
+            return render_template("register.html", invite_code=ref)
         if len(password) < 6:
             flash("Password must contain at least 6 characters.", "error")
-            return render_template(
-                "register.html",
-                invite_code=referral_code,
-            )
-
-        if password != confirm_password:
+            return render_template("register.html", invite_code=ref)
+        if password != confirm:
             flash("Passwords do not match.", "error")
-            return render_template(
-                "register.html",
-                invite_code=referral_code,
-            )
-
-        if query_one("SELECT id FROM users WHERE phone=%s", (phone,)):
-            flash("That phone number is already registered.", "error")
-            return render_template(
-                "register.html",
-                invite_code=referral_code,
-            )
-
-        if query_one(
-            "SELECT id FROM users WHERE LOWER(username)=LOWER(%s)",
-            (username,),
-        ):
-            flash("That username is already in use.", "error")
-            return render_template(
-                "register.html",
-                invite_code=referral_code,
-            )
-
-        referred_by = None
-        if referral_code:
-            owner = query_one(
-                "SELECT referral_code FROM users WHERE referral_code=%s",
-                (referral_code,),
-            )
-            if owner:
-                referred_by = owner["referral_code"]
-
-        new_referral_code = generate_referral_code()
+            return render_template("register.html", invite_code=ref)
 
         try:
-            with db_cursor(commit=True) as cur:
-                cur.execute(
-                    """
-                    INSERT INTO users
-                        (username, fullname, phone, password_hash,
-                         referral_code, referred_by)
-                    VALUES (%s,%s,%s,%s,%s,%s)
-                    RETURNING id
-                    """,
-                    (
-                        username,
-                        fullname,
-                        phone,
-                        generate_password_hash(password),
-                        new_referral_code,
-                        referred_by,
-                    ),
-                )
-                user_row = cur.fetchone()
-                user_id = user_row["id"]
+            if one("SELECT id FROM users WHERE username=%s OR phone=%s", (username, phone)):
+                flash("Username or phone number already exists.", "error")
+                return render_template("register.html", invite_code=ref)
 
-                cur.execute(
-                    """
-                    INSERT INTO accounts
-                        (user_id, deposit_account, income_account,
-                         referral_account, withdraw_account)
-                    VALUES (%s,0,0,0,0)
-                    ON CONFLICT (user_id) DO NOTHING
-                    """,
-                    (user_id,),
-                )
+            if ref and not one("SELECT id FROM users WHERE referral_code=%s", (ref,)):
+                ref = ""
 
-            flash("Registration successful. Please log in.", "success")
+            code = "JOMA-" + secrets.token_hex(6).upper()
+            new_user = run(
+                """INSERT INTO users(username,fullname,phone,password_hash,referral_code,referred_by)
+                   VALUES(%s,%s,%s,%s,%s,%s) RETURNING id""",
+                (username, fullname, phone, generate_password_hash(password), code, ref or None),
+                returning=True,
+            )
+            run("INSERT INTO accounts(user_id, withdraw_account) VALUES(%s,%s)", (new_user["id"], WELCOME_BONUS))
+            flash("Account created successfully. Your welcome bonus is GHS 10.00. Please log in.", "success")
             return redirect(url_for("login"))
-
         except Exception:
-            logger.exception("Registration failed.")
-            flash("Unable to register at this time.", "error")
+            log.exception("register")
+            flash("Registration failed. Check your database settings.", "error")
 
-    invite_code = request.args.get("ref", "").strip().upper()
-    return render_template("register.html", invite_code=invite_code)
+    return render_template("register.html", invite_code=ref)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -414,28 +256,17 @@ def login():
     if request.method == "POST":
         phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "")
-
-        if not phone or not password:
-            flash("Please enter your phone number and password.", "error")
-            return render_template("login.html")
-
-        user = query_one(
-            """
-            SELECT id, username, password_hash
-            FROM users
-            WHERE phone=%s
-            """,
-            (phone,),
-        )
-
-        if user and check_password_hash(user["password_hash"], password):
-            session.clear()
-            session.permanent = True
-            session["user_id"] = user["id"]
-            return redirect(url_for("dashboard"))
-
-        flash("Invalid phone number or password.", "error")
-
+        try:
+            u = one("SELECT * FROM users WHERE phone=%s", (phone,))
+            if u and check_password_hash(u["password_hash"], password):
+                session.clear()
+                session.permanent = True
+                session["user_id"] = u["id"]
+                return redirect(url_for("dashboard"))
+            flash("Invalid phone number or password.", "error")
+        except Exception:
+            log.exception("login")
+            flash("Login is temporarily unavailable.", "error")
     return render_template("login.html")
 
 
@@ -445,254 +276,186 @@ def logout():
     return redirect(url_for("login"))
 
 
-# ============================================================
-# USER DASHBOARD
-# ============================================================
-
 @app.route("/dashboard")
+@login_required
 def dashboard():
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-
-    account = current_account(user["id"])
-
-    offers = query_all(
-        """
-        SELECT id, name, price, daily_amount, duration,
-               image_url, description, active, created_at
-        FROM admin_offer
-        WHERE active=TRUE
-        ORDER BY id DESC
-        """
-    )
-
-    return render_template(
-        "dashboard.html",
-        user=user,
-        account=account,
-        offers=offers,
-    )
+    u = current_user()
+    try:
+        account = one("SELECT * FROM accounts WHERE user_id=%s", (u["id"],))
+        if not account:
+            run("INSERT INTO accounts(user_id,withdraw_account) VALUES(%s,%s)", (u["id"], WELCOME_BONUS))
+            account = one("SELECT * FROM accounts WHERE user_id=%s", (u["id"],))
+        offers = all_rows("SELECT * FROM admin_offer WHERE active=TRUE ORDER BY id")
+        return render_template("dashboard.html", user=u, account=account, offers=offers)
+    except Exception:
+        log.exception("dashboard")
+        flash("Dashboard could not load.", "error")
+        return render_template(
+            "dashboard.html",
+            user=u,
+            account={"deposit_account": 0, "income_account": 0, "referral_account": 0, "withdraw_account": WELCOME_BONUS},
+            offers=[],
+        )
 
 
-# ============================================================
-# SAFE "BUY NOW" UI ACTION
-# ============================================================
-
-@app.route("/buy_offer/<int:offer_id>")
-def buy_offer(offer_id: int):
-    """
-    UI-only action.
-
-    It does NOT:
-    - charge an account
-    - deduct a balance
-    - create an investment
-    - create a financial contract
-    - promise daily income
-    """
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-
-    offer = query_one(
-        """
-        SELECT id, name, price, daily_amount, duration,
-               image_url, description
-        FROM admin_offer
-        WHERE id=%s AND active=TRUE
-        """,
-        (offer_id,),
-    )
-
-    if not offer:
-        flash("Offer is no longer available.", "error")
+@app.route("/offers")
+@login_required
+def offers():
+    try:
+        return render_template("offers.html", offers=all_rows("SELECT * FROM admin_offer WHERE active=TRUE ORDER BY id"))
+    except Exception:
+        flash("Offers are unavailable.", "error")
         return redirect(url_for("dashboard"))
 
-    return render_template(
-        "offer_selected.html",
-        user=user,
-        offer=offer,
-    )
+
+@app.route("/buy_offer/<int:offer_id>", methods=["GET", "POST"])
+@login_required
+def buy_offer(offer_id):
+    try:
+        offer = one("SELECT * FROM admin_offer WHERE id=%s AND active=TRUE", (offer_id,))
+        if not offer:
+            flash("Offer not found.", "error")
+            return redirect(url_for("offers"))
+        # UI-only selection. No real payment, investment, or money transfer occurs.
+        return render_template("offer_selected.html", offer=offer)
+    except Exception:
+        log.exception("offer")
+        flash("Unable to open offer.", "error")
+        return redirect(url_for("offers"))
 
 
-# ============================================================
-# PROFILE
-# ============================================================
-
-@app.route("/profile", methods=["GET", "POST"])
-def profile():
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-
+@app.route("/deposit", methods=["GET", "POST"])
+@login_required
+def deposit():
+    u = current_user()
     if request.method == "POST":
-        fullname = request.form.get("fullname", "").strip()
-        username = request.form.get("username", "").strip()
+        amount = money(request.form.get("amount"))
+        if amount < MIN_DEPOSIT:
+            flash(f"The minimum simulated deposit is GHS {MIN_DEPOSIT:.2f}.", "error")
+        else:
+            try:
+                run(
+                    "INSERT INTO demo_transactions(user_id,kind,amount,status,note) VALUES(%s,%s,%s,%s,%s)",
+                    (u["id"], "deposit", amount, "simulated", "No real funds were transferred."),
+                )
+                flash(f"Deposit simulation recorded: GHS {amount:.2f}. No real payment was processed.", "success")
+                return redirect(url_for("transaction_history"))
+            except Exception:
+                log.exception("deposit")
+                flash("Deposit simulation could not be recorded.", "error")
+    return render_template("deposit.html", min_deposit=MIN_DEPOSIT)
 
-        if not username:
-            flash("Username cannot be empty.", "error")
-            return redirect(url_for("profile"))
 
-        duplicate = query_one(
-            """
-            SELECT id FROM users
-            WHERE LOWER(username)=LOWER(%s) AND id<>%s
-            """,
-            (username, user["id"]),
-        )
+@app.route("/withdraw", methods=["GET", "POST"])
+@login_required
+def withdraw():
+    u = current_user()
+    if request.method == "POST":
+        amount = money(request.form.get("amount"))
+        method = request.form.get("method", "").strip()
+        account_number = request.form.get("account_number", "").strip()
+        if amount < MIN_WITHDRAWAL:
+            flash(f"The minimum simulated withdrawal is GHS {MIN_WITHDRAWAL:.2f}.", "error")
+        elif not method or not account_number:
+            flash("Enter a withdrawal method and account reference for the simulation.", "error")
+        else:
+            fee = (amount * WITHDRAWAL_FEE_PERCENT / Decimal("100")).quantize(Decimal("0.01"))
+            net = amount - fee
+            try:
+                run(
+                    "INSERT INTO demo_transactions(user_id,kind,amount,status,note) VALUES(%s,%s,%s,%s,%s)",
+                    (u["id"], "withdrawal", amount, "simulated", f"Simulation only. Fee shown: GHS {fee:.2f}; simulated net: GHS {net:.2f}. No money was sent."),
+                )
+                flash("Withdrawal simulation recorded. No real money was transferred.", "success")
+                return redirect(url_for("transaction_history"))
+            except Exception:
+                log.exception("withdraw")
+                flash("Withdrawal simulation could not be recorded.", "error")
+    return render_template("withdraw.html", min_withdrawal=MIN_WITHDRAWAL, fee_percent=WITHDRAWAL_FEE_PERCENT)
 
-        if duplicate:
-            flash("That username is already in use.", "error")
-            return redirect(url_for("profile"))
 
-        execute(
-            """
-            UPDATE users
-            SET username=%s, fullname=%s
-            WHERE id=%s
-            """,
-            (username, fullname, user["id"]),
-        )
-
-        flash("Profile updated successfully.", "success")
-        return redirect(url_for("profile"))
-
-    user = current_user()
-    return render_template("profile.html", user=user)
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template("profile.html", user=current_user())
 
 
 @app.route("/change-password", methods=["GET", "POST"])
+@login_required
 def change_password():
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-
+    u = current_user()
     if request.method == "POST":
-        current_password = request.form.get("current_password", "")
-        new_password = request.form.get("new_password", "")
-        confirm_password = request.form.get("confirm_password", "")
-
-        row = query_one(
-            "SELECT password_hash FROM users WHERE id=%s",
-            (user["id"],),
-        )
-
-        if not row or not check_password_hash(
-            row["password_hash"],
-            current_password,
-        ):
+        old = request.form.get("current_password", "")
+        new = request.form.get("new_password", "")
+        confirm = request.form.get("confirm_password", "")
+        if not check_password_hash(u["password_hash"], old):
             flash("Current password is incorrect.", "error")
-            return redirect(url_for("change_password"))
-
-        if len(new_password) < 6:
+        elif len(new) < 6:
             flash("New password must contain at least 6 characters.", "error")
-            return redirect(url_for("change_password"))
-
-        if new_password != confirm_password:
+        elif new != confirm:
             flash("New passwords do not match.", "error")
-            return redirect(url_for("change_password"))
-
-        execute(
-            """
-            UPDATE users
-            SET password_hash=%s
-            WHERE id=%s
-            """,
-            (generate_password_hash(new_password), user["id"]),
-        )
-
-        flash("Password changed successfully.", "success")
-        return redirect(url_for("profile"))
-
+        else:
+            try:
+                run("UPDATE users SET password_hash=%s WHERE id=%s", (generate_password_hash(new), u["id"]))
+                flash("Password updated successfully.", "success")
+                return redirect(url_for("profile"))
+            except Exception:
+                log.exception("password")
+                flash("Password update failed.", "error")
     return render_template("change_password.html")
 
 
-# ============================================================
-# REFERRAL / TEAM INFORMATION
-# ============================================================
-
 @app.route("/team")
-def team():
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-
-    members = query_all(
-        """
-        SELECT id, username, fullname, created_at
-        FROM users
-        WHERE referred_by=%s
-        ORDER BY id DESC
-        """,
-        (user["referral_code"],),
-    )
-
-    referral_link = (
-        request.url_root.rstrip("/")
-        + url_for("register")
-        + "?ref="
-        + user["referral_code"]
-    )
-
-    account = current_account(user["id"])
-
-    return render_template(
-        "team.html",
-        user=user,
-        members=members,
-        referral_link=referral_link,
-        account=account,
-    )
-
-
-# ============================================================
-# SUPPORT
-# ============================================================
-
-@app.route("/service/support")
-@app.route("/support")
-def support():
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-    return render_template("support.html", user=user)
-
-
 @app.route("/service/support/team")
-def support_team():
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-    return render_template("support_team.html", user=user)
+@login_required
+def team():
+    return render_template("team.html", user=current_user())
 
 
-# ============================================================
-# ADMIN AUTH
-# ============================================================
+@app.route("/support")
+@app.route("/service/support")
+@login_required
+def support():
+    return render_template("support.html", user=current_user())
+
+
+@app.route("/my_plan")
+@login_required
+def my_plan():
+    return render_template("my_plan.html", plans=[])
+
+
+@app.route("/transaction_history")
+@login_required
+def transaction_history():
+    try:
+        transactions = all_rows(
+            "SELECT * FROM demo_transactions WHERE user_id=%s ORDER BY id DESC LIMIT 100",
+            (current_user()["id"],),
+        )
+    except Exception:
+        transactions = []
+        flash("Transaction history is temporarily unavailable.", "error")
+    return render_template("transaction_history.html", transactions=transactions)
+
 
 @app.route("/admin")
+def admin_index():
+    return redirect(url_for("admin_dashboard" if session.get("admin_logged_in") else "admin_login"))
+
+
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
-    if admin_required():
-        return redirect(url_for("admin_dashboard"))
-
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
-
-        if (
-            secrets.compare_digest(username, ADMIN_USERNAME)
-            and secrets.compare_digest(password, ADMIN_PASSWORD)
-        ):
+        if secrets.compare_digest(username, ADMIN_USERNAME) and secrets.compare_digest(password, ADMIN_PASSWORD):
             session.clear()
             session.permanent = True
             session["admin_logged_in"] = True
-            session["admin_username"] = username
+            session["admin_username"] = ADMIN_USERNAME
             return redirect(url_for("admin_dashboard"))
-
         flash("Invalid administrator credentials.", "error")
-
     return render_template("admin_login.html")
 
 
@@ -702,483 +465,173 @@ def admin_logout():
     return redirect(url_for("admin_login"))
 
 
-# ============================================================
-# ADMIN DASHBOARD
-# ============================================================
-
 @app.route("/admin/dashboard")
+@app.route("/admin_dashboard")
+@admin_required
 def admin_dashboard():
-    guard = admin_guard()
-    if guard:
-        return guard
-
-    total_users = query_one(
-        "SELECT COUNT(*) AS count FROM users"
-    )["count"]
-
-    total_offers = query_one(
-        "SELECT COUNT(*) AS count FROM admin_offer"
-    )["count"]
-
-    active_offers = query_one(
-        "SELECT COUNT(*) AS count FROM admin_offer WHERE active=TRUE"
-    )["count"]
-
-    return render_template(
-        "admin_dashboard.html",
-        total_users=total_users,
-        total_offers=total_offers,
-        active_offers=active_offers,
-    )
-
-
-# ============================================================
-# ADMIN USERS
-# ============================================================
-
-@app.route("/admin_users")
-@app.route("/admin/users")
-def admin_users():
-    guard = admin_guard()
-    if guard:
-        return guard
-
-    users = query_all(
-        """
-        SELECT u.id, u.username, u.fullname, u.phone,
-               u.referral_code, u.referred_by, u.created_at,
-               a.deposit_account, a.income_account,
-               a.referral_account, a.withdraw_account
-        FROM users u
-        LEFT JOIN accounts a ON a.user_id=u.id
-        ORDER BY u.id DESC
-        """
-    )
-
-    return render_template("admin_users.html", users=users)
-
-
-@app.route("/admin/user/<int:user_id>", methods=["GET", "POST"])
-def admin_manage_user(user_id: int):
-    guard = admin_guard()
-    if guard:
-        return guard
-
-    user = query_one(
-        """
-        SELECT id, username, fullname, phone,
-               referral_code, referred_by, created_at
-        FROM users
-        WHERE id=%s
-        """,
-        (user_id,),
-    )
-
-    if not user:
-        return "User not found", 404
-
-    if request.method == "POST":
-        action = request.form.get("action", "").strip()
-
-        if action == "update_profile":
-            fullname = request.form.get("fullname", "").strip()
-            username = request.form.get("username", "").strip()
-
-            if not username:
-                flash("Username is required.", "error")
-            else:
-                duplicate = query_one(
-                    """
-                    SELECT id FROM users
-                    WHERE LOWER(username)=LOWER(%s) AND id<>%s
-                    """,
-                    (username, user_id),
-                )
-
-                if duplicate:
-                    flash("Username already exists.", "error")
-                else:
-                    execute(
-                        """
-                        UPDATE users
-                        SET username=%s, fullname=%s
-                        WHERE id=%s
-                        """,
-                        (username, fullname, user_id),
-                    )
-                    flash("User profile updated.", "success")
-
-        elif action == "reset_password":
-            new_password = request.form.get("new_password", "")
-            if len(new_password) < 6:
-                flash("Password must contain at least 6 characters.", "error")
-            else:
-                execute(
-                    """
-                    UPDATE users
-                    SET password_hash=%s
-                    WHERE id=%s
-                    """,
-                    (generate_password_hash(new_password), user_id),
-                )
-                flash("Password reset successfully.", "success")
-
-        else:
-            flash("Unknown administrator action.", "error")
-
-        return redirect(
-            url_for("admin_manage_user", user_id=user_id)
+    try:
+        users_count = one("SELECT COUNT(*) AS count FROM users")["count"]
+        offers_count = one("SELECT COUNT(*) AS count FROM admin_offer")["count"]
+        active_offers_count = one("SELECT COUNT(*) AS count FROM admin_offer WHERE active=TRUE")["count"]
+        demo_count = one("SELECT COUNT(*) AS count FROM demo_transactions")["count"]
+        recent = all_rows("SELECT id,username,fullname,phone,referral_code,created_at FROM users ORDER BY id DESC LIMIT 20")
+        return render_template(
+            "admin_dashboard.html",
+            users_count=users_count,
+            offers_count=offers_count,
+            active_offers_count=active_offers_count,
+            demo_transactions_count=demo_count,
+            recent_users=recent,
         )
-
-    account = current_account(user_id)
-
-    return render_template(
-        "admin_manage_user.html",
-        user=user,
-        account=account,
-    )
+    except Exception:
+        log.exception("admin dashboard")
+        flash("Admin dashboard could not load.", "error")
+        return render_template("admin_dashboard.html", users_count=0, offers_count=0, active_offers_count=0, demo_transactions_count=0, recent_users=[])
 
 
-# ============================================================
-# ADMIN OFFER CATALOGUE
-# ============================================================
+@app.route("/admin/users")
+@app.route("/admin_users")
+@admin_required
+def admin_users():
+    try:
+        users = all_rows(
+            """SELECT u.*,a.deposit_account,a.income_account,a.referral_account,a.withdraw_account
+               FROM users u LEFT JOIN accounts a ON a.user_id=u.id ORDER BY u.id DESC"""
+        )
+        return render_template("admin_users.html", users=users)
+    except Exception:
+        flash("Users could not be loaded.", "error")
+        return redirect(url_for("admin_dashboard"))
+
+
+@app.route("/admin/user/<int:user_id>")
+@admin_required
+def admin_user(user_id):
+    try:
+        u = one(
+            """SELECT u.*,a.deposit_account,a.income_account,a.referral_account,a.withdraw_account
+               FROM users u LEFT JOIN accounts a ON a.user_id=u.id WHERE u.id=%s""",
+            (user_id,),
+        )
+        if not u:
+            flash("User not found.", "error")
+            return redirect(url_for("admin_users"))
+        transactions = all_rows("SELECT * FROM demo_transactions WHERE user_id=%s ORDER BY id DESC LIMIT 50", (user_id,))
+        return render_template("admin_user.html", user=u, transactions=transactions)
+    except Exception:
+        flash("User could not be loaded.", "error")
+        return redirect(url_for("admin_users"))
+
 
 @app.route("/admin/offers")
+@admin_required
 def admin_offers():
-    guard = admin_guard()
-    if guard:
-        return guard
-
-    offers = query_all(
-        """
-        SELECT id, name, price, daily_amount, duration,
-               image_url, description, active,
-               created_at, updated_at
-        FROM admin_offer
-        ORDER BY id DESC
-        """
-    )
-
-    return render_template(
-        "admin_offers.html",
-        offers=offers,
-    )
+    try:
+        return render_template("admin_offers.html", offers=all_rows("SELECT * FROM admin_offer ORDER BY id"))
+    except Exception:
+        flash("Offers could not be loaded.", "error")
+        return redirect(url_for("admin_dashboard"))
 
 
 @app.route("/admin/offers/create", methods=["GET", "POST"])
+@admin_required
 def admin_create_offer():
-    guard = admin_guard()
-    if guard:
-        return guard
-
     if request.method == "POST":
         name = request.form.get("name", "").strip()
-        price = parse_amount(request.form.get("price", "0"))
-        daily_amount = parse_amount(
-            request.form.get("daily_amount", "0")
-        )
-        duration_raw = request.form.get("duration", "0").strip()
-        image_url = request.form.get("image_url", "").strip()
+        price = money(request.form.get("price"))
+        daily = money(request.form.get("daily_amount"))
+        image = request.form.get("image_url", "").strip()
         description = request.form.get("description", "").strip()
-        active = request.form.get("active") in {
-            "1", "true", "on", "yes"
-        }
-
         try:
-            duration = int(duration_raw or "0")
-        except ValueError:
-            duration = -1
-
-        if not name:
-            flash("Offer name is required.", "error")
-            return render_template("admin_offer_form.html", offer=None)
-
-        if price is None or daily_amount is None:
-            flash("Price values must be valid numbers.", "error")
-            return render_template("admin_offer_form.html", offer=None)
-
-        if duration < 0:
-            flash("Duration cannot be negative.", "error")
-            return render_template("admin_offer_form.html", offer=None)
-
-        execute(
-            """
-            INSERT INTO admin_offer
-                (name, price, daily_amount, duration,
-                 image_url, description, active)
-            VALUES (%s,%s,%s,%s,%s,%s,%s)
-            """,
-            (
-                name,
-                price,
-                daily_amount,
-                duration,
-                image_url,
-                description,
-                active,
-            ),
-        )
-
-        flash("Offer created successfully.", "success")
-        return redirect(url_for("admin_offers"))
-
+            duration = int(request.form.get("duration", "0"))
+            if not name or price < 0 or daily < 0 or duration < 0:
+                raise ValueError
+            run(
+                """INSERT INTO admin_offer(name,price,daily_amount,duration,image_url,description,active)
+                   VALUES(%s,%s,%s,%s,%s,%s,TRUE)""",
+                (name, price, daily, duration, image, description),
+            )
+            flash("Offer created successfully.", "success")
+            return redirect(url_for("admin_offers"))
+        except Exception:
+            log.exception("create offer")
+            flash("Offer could not be created.", "error")
     return render_template("admin_offer_form.html", offer=None)
 
 
 @app.route("/admin/offers/edit/<int:offer_id>", methods=["GET", "POST"])
-def admin_edit_offer(offer_id: int):
-    guard = admin_guard()
-    if guard:
-        return guard
-
-    offer = query_one(
-        """
-        SELECT id, name, price, daily_amount, duration,
-               image_url, description, active
-        FROM admin_offer
-        WHERE id=%s
-        """,
-        (offer_id,),
-    )
-
-    if not offer:
-        return "Offer not found", 404
-
-    if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        price = parse_amount(request.form.get("price", "0"))
-        daily_amount = parse_amount(
-            request.form.get("daily_amount", "0")
-        )
-        duration_raw = request.form.get("duration", "0").strip()
-        image_url = request.form.get("image_url", "").strip()
-        description = request.form.get("description", "").strip()
-        active = request.form.get("active") in {
-            "1", "true", "on", "yes"
-        }
-
-        try:
-            duration = int(duration_raw or "0")
-        except ValueError:
-            duration = -1
-
-        if not name:
-            flash("Offer name is required.", "error")
-            return render_template(
-                "admin_offer_form.html",
-                offer=offer,
-            )
-
-        if price is None or daily_amount is None:
-            flash("Price values must be valid numbers.", "error")
-            return render_template(
-                "admin_offer_form.html",
-                offer=offer,
-            )
-
-        if duration < 0:
-            flash("Duration cannot be negative.", "error")
-            return render_template(
-                "admin_offer_form.html",
-                offer=offer,
-            )
-
-        execute(
-            """
-            UPDATE admin_offer
-            SET name=%s,
-                price=%s,
-                daily_amount=%s,
-                duration=%s,
-                image_url=%s,
-                description=%s,
-                active=%s,
-                updated_at=CURRENT_TIMESTAMP
-            WHERE id=%s
-            """,
-            (
-                name,
-                price,
-                daily_amount,
-                duration,
-                image_url,
-                description,
-                active,
-                offer_id,
-            ),
-        )
-
-        flash("Offer updated successfully.", "success")
-        return redirect(url_for("admin_offers"))
-
-    return render_template(
-        "admin_offer_form.html",
-        offer=offer,
-    )
-
-
-@app.route("/admin/offers/toggle/<int:offer_id>", methods=["POST"])
-def admin_toggle_offer(offer_id: int):
-    guard = admin_guard()
-    if guard:
-        return guard
-
-    offer = query_one(
-        "SELECT id, active FROM admin_offer WHERE id=%s",
-        (offer_id,),
-    )
-
+@admin_required
+def admin_edit_offer(offer_id):
+    try:
+        offer = one("SELECT * FROM admin_offer WHERE id=%s", (offer_id,))
+    except Exception:
+        offer = None
     if not offer:
         flash("Offer not found.", "error")
         return redirect(url_for("admin_offers"))
 
-    execute(
-        """
-        UPDATE admin_offer
-        SET active=NOT active,
-            updated_at=CURRENT_TIMESTAMP
-        WHERE id=%s
-        """,
-        (offer_id,),
-    )
+    if request.method == "POST":
+        try:
+            name = request.form.get("name", "").strip()
+            price = money(request.form.get("price"))
+            daily = money(request.form.get("daily_amount"))
+            duration = int(request.form.get("duration", "0"))
+            image = request.form.get("image_url", "").strip()
+            description = request.form.get("description", "").strip()
+            if not name or price < 0 or daily < 0 or duration < 0:
+                raise ValueError
+            run(
+                """UPDATE admin_offer SET name=%s,price=%s,daily_amount=%s,duration=%s,
+                   image_url=%s,description=%s,updated_at=CURRENT_TIMESTAMP WHERE id=%s""",
+                (name, price, daily, duration, image, description, offer_id),
+            )
+            flash("Offer updated successfully.", "success")
+            return redirect(url_for("admin_offers"))
+        except Exception:
+            log.exception("edit offer")
+            flash("Offer could not be updated.", "error")
+    return render_template("admin_offer_form.html", offer=offer)
 
-    flash("Offer status updated.", "success")
+
+@app.route("/admin/offers/toggle/<int:offer_id>", methods=["POST"])
+@admin_required
+def admin_toggle_offer(offer_id):
+    try:
+        run("UPDATE admin_offer SET active=NOT active,updated_at=CURRENT_TIMESTAMP WHERE id=%s", (offer_id,))
+        flash("Offer status updated.", "success")
+    except Exception:
+        log.exception("toggle offer")
+        flash("Offer status could not be changed.", "error")
     return redirect(url_for("admin_offers"))
 
 
 @app.route("/admin/offers/delete/<int:offer_id>", methods=["POST"])
-def admin_delete_offer(offer_id: int):
-    guard = admin_guard()
-    if guard:
-        return guard
-
-    offer = query_one(
-        "SELECT id, name FROM admin_offer WHERE id=%s",
-        (offer_id,),
-    )
-
-    if not offer:
-        flash("Offer not found.", "error")
-        return redirect(url_for("admin_offers"))
-
-    execute(
-        "DELETE FROM admin_offer WHERE id=%s",
-        (offer_id,),
-    )
-
-    flash(f"{offer['name']} deleted successfully.", "success")
+@admin_required
+def admin_delete_offer(offer_id):
+    try:
+        run("DELETE FROM admin_offer WHERE id=%s", (offer_id,))
+        flash("Offer deleted.", "success")
+    except Exception:
+        log.exception("delete offer")
+        flash("Offer could not be deleted.", "error")
     return redirect(url_for("admin_offers"))
 
 
-# ============================================================
-# OPTIONAL COMPATIBILITY ROUTES
-# ============================================================
-
-@app.route("/offers")
-def offers():
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-
-    active_offers = query_all(
-        """
-        SELECT id, name, price, daily_amount, duration,
-               image_url, description
-        FROM admin_offer
-        WHERE active=TRUE
-        ORDER BY id DESC
-        """
-    )
-
-    return render_template(
-        "offers.html",
-        user=user,
-        offers=active_offers,
-    )
-
-
-@app.route("/my_plan")
-def my_plan():
-    """
-    Compatibility page only.
-
-    The safe replacement does not create or activate financial plans.
-    """
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-
-    return render_template(
-        "my_plan.html",
-        user=user,
-        plans=[],
-    )
-
-
-@app.route("/transaction_history")
-def transaction_history():
-    """
-    Compatibility page only.
-
-    This safe replacement does not create financial transactions.
-    """
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-
-    return render_template(
-        "transaction_history.html",
-        transactions=[],
-    )
-
-
-# ============================================================
-# ERROR HANDLERS
-# ============================================================
-
 @app.errorhandler(413)
-def request_too_large(error):
-    return "Uploaded file is too large.", 413
+def too_large(error):
+    return render_template("error.html", code=413, message="The submitted request is too large."), 413
 
 
 @app.errorhandler(404)
 def not_found(error):
-    return render_template("404.html"), 404
+    return render_template("error.html", code=404, message="The page was not found."), 404
 
 
 @app.errorhandler(500)
-def internal_error(error):
-    logger.exception("Unhandled application error.")
-    return render_template("500.html"), 500
-
-
-# ============================================================
-# STARTUP
-# ============================================================
-
-@app.before_request
-def initialize_database_once():
-    """
-    Initialize tables on the first request.
-
-    This avoids making deployment fail merely because the database is
-    temporarily unavailable during process startup.
-    """
-    if getattr(app, "_joma_db_initialized", False):
-        return
-
-    try:
-        init_db()
-        app._joma_db_initialized = True
-    except Exception:
-        logger.exception("Database initialization failed.")
-        # Let the individual request surface the database configuration
-        # problem rather than crashing the Gunicorn worker at import time.
+def internal(error):
+    log.exception("Unhandled error")
+    return render_template("error.html", code=500, message="An internal server error occurred."), 500
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", "5000"))
-    debug = os.environ.get("FLASK_DEBUG", "False").lower() in {
-        "1", "true", "yes"
-    }
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    app.run(host="0.0.0.0", port=PORT)
