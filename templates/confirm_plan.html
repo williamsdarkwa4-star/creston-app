@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Confirm product- JOMA</title>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+    background:#0EA5E9;
+    color:#808080;
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+
+    padding-bottom:80px;
+}
+
+
+/* =========================
+   PHONE
+========================= */
+
+.phone{
+    width:100%;
+    max-width:440px;
+    min-height:100vh;
+
+    background:#0EA5E9;
+
+    position:relative;
+
+    padding-bottom:80px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+    width:100%;
+
+    background:#0EA5E9;
+
+    color:white;
+
+    padding:18px 20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    position:relative;
+
+    border-bottom:1px solid #1f1f1f;
+}
+
+.header h1{
+
+    font-size:18px;
+
+    font-weight:800;
+
+    letter-spacing:.3px;
+}
+
+.back-btn{
+
+    position:absolute;
+
+    left:18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:#ffffff;
+
+    text-decoration:none;
+
+    font-size:18px;
+
+    width:36px;
+    height:36px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:10px;
+
+    background:#111111;
+}
+
+.back-btn:active{
+    background:#1b1b1b;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+    padding:16px;
+}
+
+
+/* =========================
+   MAIN CARD
+========================= */
+
+.card{
+
+    background:#0b0b0b;
+
+    border-radius:20px;
+
+    padding:20px;
+
+    border:1px solid #242424;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.5);
+}
+
+
+/* =========================
+   PLAN ICON
+========================= */
+
+.plan-icon{
+
+    width:60px;
+    height:60px;
+
+    margin:2px auto 13px;
+
+    border-radius:17px;
+
+    background:#06142b;
+
+    color:#4388ed;
+
+    border:1px solid #12335e;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-size:24px;
+
+    box-shadow:
+        0 5px 18px rgba(67,136,237,.08);
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.title{
+
+    text-align:center;
+
+    margin-bottom:20px;
+}
+
+.title h2{
+
+    color:#ffffff;
+
+    font-size:21px;
+
+    font-weight:800;
+}
+
+.title p{
+
+    color:#888888;
+
+    font-size:12px;
+
+    margin-top:5px;
+
+    line-height:1.5;
+}
+
+
+/* =========================
+   PLAN INFORMATION
+========================= */
+
+.info{
+
+    background:#111111;
+
+    border:1px solid #242424;
+
+    border-radius:15px;
+
+    padding:14px;
+}
+
+
+/* =========================
+   ROW
+========================= */
+
+.row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:12px 0;
+
+    border-bottom:1px solid #242424;
+
+    font-size:13px;
+}
+
+.row:first-child{
+    padding-top:2px;
+}
+
+.row:last-child{
+
+    border-bottom:none;
+
+    padding-bottom:2px;
+}
+
+.row span{
+    color:#888888;
+}
+
+.row strong{
+
+    color:#ffffff;
+
+    text-align:right;
+
+    word-break:break-word;
+}
+
+
+/* =========================
+   PRICE
+========================= */
+
+.price{
+
+    color:#4388ed !important;
+
+    font-size:15px;
+}
+
+
+/* =========================
+   BALANCE
+========================= */
+
+.balance-value{
+
+    color:#27c77b !important;
+}
+
+
+/* =========================
+   ABOUT PLAN
+========================= */
+
+.plan-about{
+
+    margin-top:15px;
+
+    background:#111111;
+
+    border:1px solid #242424;
+
+    border-radius:15px;
+
+    padding:14px;
+}
+
+.plan-about-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:#ffffff;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    margin-bottom:7px;
+}
+
+.plan-about-title i{
+
+    color:#ff9f24;
+
+    font-size:14px;
+}
+
+.plan-about p{
+
+    color:#999999;
+
+    font-size:12px;
+
+    line-height:1.65;
+}
+
+
+/* =========================
+   PLAN HIGHLIGHTS
+========================= */
+
+.plan-highlights{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:8px;
+
+    margin-top:10px;
+}
+
+.highlight{
+
+    background:#0b0b0b;
+
+    border:1px solid #242424;
+
+    border-radius:10px;
+
+    padding:9px;
+
+}
+
+.highlight small{
+
+    display:block;
+
+    color:#777777;
+
+    font-size:9px;
+
+    margin-bottom:3px;
+}
+
+.highlight strong{
+
+    color:#ffffff;
+
+    font-size:11px;
+}
+
+
+/* =========================
+   WARNING
+========================= */
+
+.warning{
+
+    margin-top:15px;
+
+    background:#111111;
+
+    border:1px solid #333333;
+
+    border-left:4px solid #ff9f24;
+
+    color:#aaaaaa;
+
+    padding:13px;
+
+    border-radius:12px;
+
+    font-size:12px;
+
+    line-height:1.55;
+}
+
+.warning-title{
+
+    color:#ffffff;
+
+    font-weight:800;
+
+    margin-bottom:4px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+}
+
+.warning-title i{
+
+    color:#ff9f24;
+}
+
+
+/* =========================
+   ACTION ROW
+========================= */
+
+.action-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:18px;
+}
+
+
+/* =========================
+   BUTTON BASE
+========================= */
+
+.cancel-btn,
+.confirm-btn{
+
+    width:100%;
+
+    height:46px;
+
+    border-radius:13px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    transition:
+        transform .15s ease,
+        opacity .15s ease;
+}
+
+
+/* =========================
+   CANCEL LEFT
+========================= */
+
+.cancel-btn{
+
+    flex:1;
+
+    background:#111111;
+
+    color:#aaaaaa;
+
+    border:1px solid #333333;
+}
+
+.cancel-btn i{
+    color:#777777;
+}
+
+
+/* =========================
+   SELECT RIGHT
+========================= */
+
+.confirm-btn{
+
+    flex:1;
+
+    border:none;
+
+    background:#2339b3;
+
+    color:#ffffff;
+
+    box-shadow:
+        0 5px 15px rgba(35,57,179,.25);
+}
+
+.confirm-btn i{
+    color:#ffffff;
+}
+
+
+/* =========================
+   BUTTON ACTIVE
+========================= */
+
+.cancel-btn:active,
+.confirm-btn:active{
+
+    transform:scale(.97);
+
+    opacity:.85;
+}
+
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+.bottom-nav{
+
+    position:fixed;
+
+    bottom:0;
+
+    left:0;
+    right:0;
+
+    height:67px;
+
+    background:#080808;
+
+    border-top:1px solid #242424;
+
+    display:flex;
+
+    justify-content:center;
+
+    z-index:9999;
+
+    box-shadow:
+        0 -4px 15px rgba(0,0,0,.5);
+}
+
+.bottom-nav-inner{
+
+    width:100%;
+
+    max-width:440px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    align-items:center;
+}
+
+.bottom-nav a{
+
+    height:100%;
+
+    position:relative;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:4px;
+
+    text-decoration:none;
+
+    color:#666666;
+
+    font-size:9px;
+
+    font-weight:500;
+}
+
+.bottom-nav i{
+    font-size:18px;
+}
+
+.bottom-nav a.active{
+
+    color:#4388ed;
+
+    font-weight:800;
+}
+
+.bottom-nav a.active::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:0;
+
+    left:25%;
+    right:25%;
+
+    height:3px;
+
+    background:#4388ed;
+
+    border-radius:
+        4px 4px 0 0;
+}
+
+
+/* =========================
+   SMALL SCREEN
+========================= */
+
+@media(max-width:360px){
+
+    .content{
+        padding:12px;
+    }
+
+    .card{
+
+        padding:17px;
+
+        border-radius:18px;
+    }
+
+    .title h2{
+        font-size:19px;
+    }
+
+    .row{
+        font-size:12px;
+    }
+
+    .cancel-btn,
+    .confirm-btn{
+
+        height:44px;
+
+        font-size:12px;
+    }
+
+    .bottom-nav{
+        height:64px;
+    }
+
+    .bottom-nav i{
+        font-size:16px;
+    }
+
+}
+
+
+/* =========================
+   VERY SMALL SCREEN
+========================= */
+
+@media(max-width:320px){
+
+    .card{
+        padding:14px;
+    }
+
+    .action-row{
+        gap:7px;
+    }
+
+    .cancel-btn,
+    .confirm-btn{
+        font-size:11px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="phone">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header class="header">
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="back-btn"
+        >
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+        </a>
+
+
+        <h1>
+            Confirm Plan
+        </h1>
+
+    </header>
+
+
+    <!-- =========================
+         CONTENT
+    ========================= -->
+
+    <main class="content">
+
+
+        <div class="card">
+
+
+            <!-- =========================
+                 PLAN ICON
+            ========================= -->
+
+            <div class="plan-icon">
+
+                <i class="fa-solid fa-box"></i>
+
+            </div>
+
+
+            <!-- =========================
+                 TITLE
+            ========================= -->
+
+            <div class="title">
+
+                <h2>
+                    Confirm Selection
+                </h2>
+
+                <p>
+                    Review your JOMA plan details before continuing.
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 PLAN INFORMATION
+            ========================= -->
+
+            <div class="info">
+
+
+                <div class="row">
+
+                    <span>
+                        Plan
+                    </span>
+
+                    <strong>
+                        {{ plan.plan_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="row">
+
+                    <span>
+                        Plan Amount
+                    </span>
+
+                    <strong class="price">
+
+                        GHS
+                        {{ "%.2f"|format(plan.investment_amount) }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="row">
+
+                    <span>
+                        Available Balance
+                    </span>
+
+                    <strong class="balance-value">
+
+                        GHS
+                        {{ "%.2f"|format(account.deposit_account) }}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="row">
+
+                    <span>
+                        Duration
+                    </span>
+
+                    <strong>
+                        {{ plan.duration }} days
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =========================
+                 ABOUT THIS PLAN
+            ========================= -->
+
+            <div class="plan-about">
+
+                <div class="plan-about-title">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    <span>
+                        About This Plan
+                    </span>
+
+                </div>
+
+                <p>
+                    This JOMA plan is one of the products available
+                    on the platform. Review the plan information
+                    carefully before making your selection.
+                    The plan name, amount and duration shown above
+                    are provided from the selected plan.
+                </p>
+
+
+                <div class="plan-highlights">
+
+                    <div class="highlight">
+
+                        <small>
+                            PLAN
+                        </small>
+
+                        <strong>
+                            {{ plan.plan_name }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="highlight">
+
+                        <small>
+                            DURATION
+                        </small>
+
+                        <strong>
+                            {{ plan.duration }} Days
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 WARNING
+            ========================= -->
+
+            <div class="warning">
+
+                <div class="warning-title">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    <span>
+                        Please Review
+                    </span>
+
+                </div>
+
+                Please review the plan name, amount,
+                available balance and duration before
+                continuing with your selection.
+
+            </div>
+
+
+            <!-- =========================
+                 ACTION BUTTONS
+            ========================= -->
+
+            <div class="action-row">
+
+
+                <!-- CANCEL -->
+
+                <a
+                    class="cancel-btn"
+                    href="{{ url_for('dashboard') }}"
+                >
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                    Cancel
+
+                </a>
+
+
+                <!-- UI-ONLY CONFIRM -->
+
+                <button
+                    type="button"
+                    class="confirm-btn"
+                    onclick="selectPlan()"
+                >
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                    Confirm
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<!-- =========================
+     FIXED BOTTOM NAVIGATION
+========================= -->
+
+<nav class="bottom-nav">
+
+    <div class="bottom-nav-inner">
+
+
+        <!-- HOME -->
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="active"
+        >
+
+            <i class="fa-solid fa-house"></i>
+
+            <span>
+                Home
+            </span>
+
+        </a>
+
+
+        <!-- INCOME -->
+
+        <a
+            href="{{ url_for('my_plan') }}"
+        >
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>
+                Income
+            </span>
+
+        </a>
+
+
+        <!-- TEAM -->
+
+        <a
+            href="{{ url_for('team') }}"
+        >
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>
+                Team
+            </span>
+
+        </a>
+
+
+        <!-- SHARE -->
+
+        <a
+            href="{{ url_for('team') }}"
+        >
+
+            <i class="fa-solid fa-share-nodes"></i>
+
+            <span>
+                Share
+            </span>
+
+        </a>
+
+
+        <!-- MY -->
+
+        <a
+            href="{{ url_for('profile') }}"
+        >
+
+            <i class="fa-solid fa-user"></i>
+
+            <span>
+                My
+            </span>
+
+        </a>
+
+
+    </div>
+
+</nav>
+
+
+<script>
+
+function selectPlan(){
+
+    const button = document.querySelector(".confirm-btn");
+
+    button.innerHTML =
+        '<i class="fa-solid fa-check"></i> Selected';
+
+    button.style.opacity = "0.85";
+
+    button.disabled = true;
+
+}
+
+</script>
+
+
+</body>
+
+</html>
