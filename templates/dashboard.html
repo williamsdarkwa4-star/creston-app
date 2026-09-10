@@ -189,12 +189,24 @@
     .detail b{display:block;font-size:9px;margin-top:2px}
 
     .select-btn{
-      width:100%;border:0;border-radius:8px;margin-top:8px;
-      padding:8px;background:var(--blue);color:#fff;
-      font-size:9px;font-weight:800;cursor:pointer;
-    }
-    .select-btn:active{transform:scale(.98)}
+  display:block;
+  width:100%;
+  border:0;
+  border-radius:8px;
+  margin-top:8px;
+  padding:8px;
+  background:var(--blue);
+  color:#fff;
+  font-size:9px;
+  font-weight:800;
+  text-align:center;
+  text-decoration:none;
+  cursor:pointer;
+}
 
+.select-btn:active{
+  transform:scale(.98);
+}
     .empty{
       background:#fff;border-radius:16px;padding:25px 15px;text-align:center;
       color:var(--muted);font-size:11px;
@@ -381,11 +393,10 @@
                 </div>
               </div>
 
-              <!-- UI-only selector: no financial transaction is performed here. -->
-              <button class="select-btn" type="button"
-                      onclick="selectProduct('{{ plan.name|e }}')">
-                BUY NOW
-              </button>
+              <a class="select-btn"
+   href="{{ url_for('buy_plan', plan_id=plan_id) }}">
+  BUY NOW
+</a>
             </div>
           </article>
         {% endfor %}
