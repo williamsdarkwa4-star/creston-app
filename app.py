@@ -5,7 +5,7 @@ app.py - Complete application (single-file)
 Features:
 - All routes included (user, admin, team, deposits, withdrawals, plans).
 - Database initialization included.
-- New users get MIN_WITHDRAWAL (GHS 30.00) in withdraw_account at registration.
+- Existing registration/account behaviour is preserved; withdrawal minimum is controlled by MIN_WITHDRAWAL.
 - Gift-code rewards are credited directly to withdraw_account and recorded as successful transactions.
 - Withdrawals are allowed only when the user has at least one active plan.
 - Defensive handling for DB fetchone() results and legacy plaintext passwords.
@@ -35,7 +35,11 @@ from flask import (
     session,
     url_for,
 )
-from pydantic import BaseSettings, Field
+try:
+    from pydantic_settings import BaseSettings
+    from pydantic import Field
+except ImportError:  # Pydantic v1 compatibility
+    from pydantic import BaseSettings, Field
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # Optional import of psycopg2; raise helpful error if not available when DB used.
@@ -420,6 +424,26 @@ def init_db():
             """
         )
 
+        # Admin-created offers
+        # This table is required by the existing /admin/offers routes and
+        # lets active offers be loaded by the dashboard without hard-coding them.
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS admin_offer (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(150) NOT NULL,
+                price NUMERIC(14,2) NOT NULL DEFAULT 0,
+                daily_amount NUMERIC(14,2) NOT NULL DEFAULT 0,
+                duration INTEGER NOT NULL DEFAULT 0,
+                image_url TEXT DEFAULT '',
+                description TEXT DEFAULT '',
+                active BOOLEAN NOT NULL DEFAULT TRUE,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+
         # Backfill missing referral codes
         cur.execute("SELECT id FROM users WHERE referral_code IS NULL OR referral_code=''")
         rows = cur.fetchall() or []
@@ -690,7 +714,22 @@ def dashboard():
     if not user:
         return redirect(url_for("login"))
     account = account_for_display(current_account(user["id"]))
-    return render_template("dashboard.html", user=user, account=account, plans=PLANS)
+    try:
+        offers = query_all(
+            "SELECT * FROM admin_offer WHERE active=TRUE ORDER BY id DESC"
+        )
+    except Exception:
+        # Keep the dashboard available even if an older database has not yet
+        # created the admin_offer table; init_db will create it on startup.
+        logger.exception("DASHBOARD OFFERS QUERY ERROR")
+        offers = []
+    return render_template(
+        "dashboard.html",
+        user=user,
+        account=account,
+        plans=PLANS,
+        offers=offers,
+    )
 
 
 # ---------------------------
