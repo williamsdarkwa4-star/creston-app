@@ -361,12 +361,19 @@
       <button class="tab" id="offersTab" type="button" onclick="showSection('offers')">OFFERS</button>
     </div>
 
-    <section id="plansSection">
+        <section id="plansSection">
       {% if plans %}
         {% for plan_id, plan in plans.items() %}
           <article class="plan-card">
             <div class="product-image">
-              <div class="image-fallback">⚽</div>
+              {% if plan.image_url %}
+                <img src="{{ plan.image_url }}" alt="{{ plan.name }}">
+              {% else %}
+                <img src="{{ url_for('static', filename='images/vip' ~ plan_id ~ '.jpg') }}" 
+                     alt="VIP {{ plan_id }}"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="image-fallback" style="display:none;">⚽</div>
+              {% endif %}
               <div class="level">VIP {{ plan_id }}</div>
             </div>
 
