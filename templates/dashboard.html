@@ -414,57 +414,117 @@
     </section>
 
     <section id="offersSection" style="display:none">
-      {% if offers %}
-        {% for offer in offers %}
-          <article class="offer-card">
-            <div class="product-image">
-              {% if offer.image_url %}
-                <img src="{{ offer.image_url }}" alt="{{ offer.name }}">
-              {% else %}
-                <div class="image-fallback">🎁</div>
-              {% endif %}
-              <div class="level">OFFER</div>
+
+  {% if offers %}
+
+    {% for offer in offers %}
+
+      <article class="offer-card">
+
+        <!-- OFFER IMAGE -->
+        <div class="product-image">
+
+          {% if offer.image_url %}
+            <img
+              src="{{ offer.image_url }}"
+              alt="{{ offer.name }}"
+            >
+          {% else %}
+            <div class="image-fallback">
+              🎁
             </div>
+          {% endif %}
 
-            <div class="product-info">
-              <h3>{{ offer.name }}</h3>
-              <p>{{ offer.description or 'JOMA special offer.' }}</p>
+          <div class="level">
+            OFFER
+          </div>
 
-              <div class="details">
-                <div class="detail">
-                  <small>PRICE</small>
-                  <b>GHS {{ "%.2f"|format(offer.price|float) }}</b>
-                </div>
-                <div class="detail">
-                  <small>DAILY</small>
-                  <b>GHS {{ "%.2f"|format(offer.daily_amount|float) }}</b>
-                </div>
-                <div class="detail">
-                  <small>DURATION</small>
-                  <b>{{ offer.duration }} days</b>
-                </div>
-                <div class="detail">
-                  <small>STATUS</small>
-                  <b>Active</b>
-                </div>
-              </div>
-
-              <!-- UI-only selector: no financial transaction is performed here. -->
-              <button class="select-btn" type="button"
-                      onclick="selectProduct('{{ offer.name|e }}')">
-                BUY NOW
-              </button>
-            </div>
-          </article>
-        {% endfor %}
-      {% else %}
-        <div class="empty">
-          <div class="big">🎁</div>
-          <strong>Offers</strong>
-          <p style="margin-top:5px">Available JOMA offers will appear here when they are created by the admin.</p>
         </div>
-      {% endif %}
-    </section>
+
+
+        <!-- OFFER INFORMATION -->
+        <div class="product-info">
+
+          <h3>
+            {{ offer.name }}
+          </h3>
+
+          <p>
+            {{ offer.description or 'JOMA special offer.' }}
+          </p>
+
+
+          <div class="details">
+
+            <div class="detail">
+              <small>PRICE</small>
+              <b>
+                GHS {{ "%.2f"|format(offer.price|float) }}
+              </b>
+            </div>
+
+
+            <div class="detail">
+              <small>DAILY</small>
+              <b>
+                GHS {{ "%.2f"|format(offer.daily_amount|float) }}
+              </b>
+            </div>
+
+
+            <div class="detail">
+              <small>DURATION</small>
+              <b>
+                {{ offer.duration }} days
+              </b>
+            </div>
+
+
+            <div class="detail">
+              <small>STATUS</small>
+              <b>
+                Active
+              </b>
+            </div>
+
+          </div>
+
+
+          <!-- BUY NOW -->
+          <a
+            class="select-btn"
+            href="{{ url_for('confirm_offer', offer_id=offer.id) }}"
+          >
+            BUY NOW
+          </a>
+
+        </div>
+
+      </article>
+
+    {% endfor %}
+
+  {% else %}
+
+    <div class="empty">
+
+      <div class="big">
+        🎁
+      </div>
+
+      <strong>
+        No Offers Available
+      </strong>
+
+      <p style="margin-top:5px">
+        New JOMA offers will appear here when they are created.
+      </p>
+
+    </div>
+
+  {% endif %}
+
+</section>
 
   </main>
 
