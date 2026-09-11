@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Insufficient Balance</title>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+
+    background:#000000;
+
+    display:flex;
+
+    justify-content:center;
+
+    min-height:100vh;
+
+    color:#ffffff;
+
+    padding-bottom:70px;
+}
+
+
+/* =========================
+   PHONE
+========================= */
+
+.phone{
+
+    width:100%;
+
+    max-width:440px;
+
+    min-height:100vh;
+
+    background:#000000;
+
+    position:relative;
+
+    padding-bottom:85px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header{
+
+    background:#000000;
+
+    padding:28px 20px 25px;
+
+    text-align:center;
+
+    border-bottom:1px solid #1f1f1f;
+}
+
+
+/* =========================
+   HEADER ICON
+========================= */
+
+.header-icon{
+
+    width:68px;
+    height:68px;
+
+    margin:0 auto 12px;
+
+    border-radius:50%;
+
+    background:#071d10;
+
+    color:#22c55e;
+
+    border:1px solid #123d23;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    box-shadow:
+        0 5px 18px rgba(34,197,94,.08);
+}
+
+.header-icon svg{
+
+    width:32px;
+
+    height:32px;
+}
+
+
+/* =========================
+   HEADER TEXT
+========================= */
+
+.page-header h1{
+
+    font-size:21px;
+
+    color:#ffffff;
+
+    margin-bottom:5px;
+
+    font-weight:800;
+}
+
+.page-header p{
+
+    font-size:12px;
+
+    color:#888888;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+
+    padding:16px;
+
+    margin-top:-1px;
+}
+
+
+/* =========================
+   WARNING CARD
+========================= */
+
+.warning-card{
+
+    background:#0b0b0b;
+
+    border:1px solid #242424;
+
+    border-left:4px solid #ef4444;
+
+    border-radius:14px;
+
+    padding:18px;
+
+    box-shadow:
+        0 7px 20px rgba(0,0,0,.4);
+}
+
+
+/* =========================
+   WARNING TITLE
+========================= */
+
+.warning-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    color:#ffffff;
+
+    font-size:15px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+}
+
+.warning-title svg{
+
+    width:19px;
+
+    height:19px;
+
+    color:#ef4444;
+}
+
+
+/* =========================
+   WARNING TEXT
+========================= */
+
+.warning-text{
+
+    color:#888888;
+
+    font-size:12px;
+
+    line-height:1.6;
+}
+
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.section-title{
+
+    margin:18px 0 8px;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    color:#ffffff;
+}
+
+
+/* =========================
+   BALANCE CARD
+========================= */
+
+.balance-card{
+
+    background:#0b0b0b;
+
+    border:1px solid #242424;
+
+    border-radius:13px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 5px 16px rgba(0,0,0,.35);
+}
+
+
+/* =========================
+   BALANCE ROW
+========================= */
+
+.balance-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:15px 14px;
+
+    border-bottom:1px solid #242424;
+
+    font-size:13px;
+}
+
+.balance-row:last-child{
+
+    border-bottom:none;
+}
+
+
+/* =========================
+   BALANCE LABEL
+========================= */
+
+.balance-label{
+
+    color:#888888;
+}
+
+
+/* =========================
+   BALANCE VALUE
+========================= */
+
+.balance-value{
+
+    font-weight:800;
+
+    color:#22c55e;
+
+    text-align:right;
+}
+
+
+/* =========================
+   PLAN VALUE
+========================= */
+
+.balance-value.plan{
+
+    color:#ffffff;
+}
+
+
+/* =========================
+   NOTICE
+========================= */
+
+.notice{
+
+    margin-top:12px;
+
+    background:#071d10;
+
+    border:1px solid #123d23;
+
+    border-radius:12px;
+
+    padding:14px;
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:10px;
+}
+
+.notice svg{
+
+    width:18px;
+
+    height:18px;
+
+    color:#22c55e;
+
+    flex-shrink:0;
+
+    margin-top:1px;
+}
+
+.notice p{
+
+    color:#aaaaaa;
+
+    font-size:12px;
+
+    line-height:1.55;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.actions{
+
+    margin-top:18px;
+}
+
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
+
+.primary-btn{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    padding:14px;
+
+    background:#16a34a;
+
+    color:#ffffff;
+
+    border-radius:12px;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    box-shadow:
+        0 5px 15px rgba(22,163,74,.25);
+
+    transition:
+        transform .15s ease,
+        opacity .15s ease;
+}
+
+.primary-btn svg{
+
+    width:18px;
+
+    height:18px;
+}
+
+.primary-btn:active{
+
+    transform:scale(.98);
+
+    opacity:.85;
+}
+
+
+/* =========================
+   SECONDARY BUTTON
+========================= */
+
+.secondary-btn{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    margin-top:9px;
+
+    padding:13px;
+
+    background:#111111;
+
+    border:1px solid #333333;
+
+    color:#aaaaaa;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    transition:
+        transform .15s ease,
+        background .15s ease;
+}
+
+.secondary-btn:active{
+
+    transform:scale(.98);
+
+    background:#181818;
+}
+
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+.bottom-nav{
+
+    position:fixed;
+
+    bottom:0;
+
+    left:0;
+    right:0;
+
+    width:100%;
+
+    max-width:440px;
+
+    height:65px;
+
+    margin:auto;
+
+    background:#080808;
+
+    border-top:1px solid #242424;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,1fr);
+
+    z-index:1000;
+
+    box-shadow:
+        0 -4px 15px rgba(0,0,0,.5);
+}
+
+
+/* =========================
+   NAV LINKS
+========================= */
+
+.bottom-nav a{
+
+    position:relative;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:3px;
+
+    text-decoration:none;
+
+    color:#666666;
+
+    font-size:9px;
+
+    font-weight:500;
+}
+
+
+/* =========================
+   NAV ICONS
+========================= */
+
+.bottom-nav svg{
+
+    width:20px;
+
+    height:20px;
+}
+
+
+/* =========================
+   ACTIVE NAV
+========================= */
+
+.bottom-nav a.active{
+
+    color:#22c55e;
+
+    font-weight:800;
+}
+
+.bottom-nav a.active::after{
+
+    content:"";
+
+    position:absolute;
+
+    bottom:0;
+
+    left:25%;
+
+    right:25%;
+
+    height:3px;
+
+    background:#22c55e;
+
+    border-radius:
+        4px 4px 0 0;
+}
+
+
+/* =========================
+   SMALL DEVICES
+========================= */
+
+@media(max-width:360px){
+
+    .page-header{
+
+        padding:23px 15px;
+    }
+
+    .content{
+
+        padding:13px;
+    }
+
+    .warning-card{
+
+        padding:16px;
+    }
+
+    .balance-row{
+
+        padding:13px 12px;
+    }
+
+    .primary-btn{
+
+        padding:13px;
+    }
+
+}
+
+
+/* =========================
+   VERY SMALL DEVICES
+========================= */
+
+@media(max-width:320px){
+
+    .page-header h1{
+
+        font-size:19px;
+    }
+
+    .header-icon{
+
+        width:62px;
+        height:62px;
+    }
+
+    .header-icon svg{
+
+        width:29px;
+        height:29px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="phone">
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <div class="page-header">
+
+
+        <div class="header-icon">
+
+            <i data-lucide="wallet-cards"></i>
+
+        </div>
+
+
+        <h1>
+            Insufficient Balance
+        </h1>
+
+
+        <p>
+            Your available balance is not enough
+        </p>
+
+
+    </div>
+
+
+    <!-- =========================
+         CONTENT
+    ========================= -->
+
+    <div class="content">
+
+
+        <!-- =========================
+             WARNING
+        ========================= -->
+
+        <div class="warning-card">
+
+
+            <div class="warning-title">
+
+                <i data-lucide="triangle-alert"></i>
+
+                Balance Required
+
+            </div>
+
+
+            <div class="warning-text">
+
+                Your current deposit balance is not enough
+                to purchase this plan. Please add funds to
+                your deposit account and try again.
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             BALANCE INFORMATION
+        ========================= -->
+
+        <div class="section-title">
+
+            Balance Information
+
+        </div>
+
+
+        <div class="balance-card">
+
+
+            <!-- CURRENT BALANCE -->
+
+            <div class="balance-row">
+
+                <span class="balance-label">
+
+                    Current Balance
+
+                </span>
+
+
+                <span class="balance-value">
+
+                    GHS
+                    {{ "%.2f"|format(account.deposit_account or 0) }}
+
+                </span>
+
+            </div>
+
+
+            <!-- PLAN AMOUNT -->
+
+            <div class="balance-row">
+
+                <span class="balance-label">
+
+                    Plan Amount
+
+                </span>
+
+
+                <span class="balance-value plan">
+
+                    GHS
+                    {{ "%.2f"|format(plan.investment_amount) }}
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             NOTICE
+        ========================= -->
+
+        <div class="notice">
+
+
+            <i data-lucide="info"></i>
+
+
+            <p>
+
+                Please deposit enough funds to cover the
+                plan amount before trying to purchase it.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- =========================
+             ACTIONS
+        ========================= -->
+
+        <div class="actions">
+
+
+            <!-- DEPOSIT -->
+
+            <a
+                href="{{ url_for('deposit') }}"
+                class="primary-btn"
+            >
+
+                <i data-lucide="plus-circle"></i>
+
+                Deposit Funds
+
+            </a>
+
+
+            <!-- DASHBOARD -->
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="secondary-btn"
+            >
+
+                <i data-lucide="arrow-left"></i>
+
+                Back to Dashboard
+
+            </a>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     BOTTOM NAVIGATION
+========================= -->
+
+<div class="bottom-nav">
+
+
+    <!-- HOME -->
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="active"
+    >
+
+        <i data-lucide="home"></i>
+
+        <span>
+            Home
+        </span>
+
+    </a>
+
+
+    <!-- INCOME -->
+
+    <a
+        href="{{ url_for('my_plan') }}"
+    >
+
+        <i data-lucide="trending-up"></i>
+
+        <span>
+            Income
+        </span>
+
+    </a>
+
+
+    <!-- TEAM -->
+
+    <a
+        href="{{ url_for('team') }}"
+    >
+
+        <i data-lucide="users"></i>
+
+        <span>
+            Team
+        </span>
+
+    </a>
+
+
+    <!-- SHARE -->
+
+    <a
+        href="{{ url_for('team') }}"
+    >
+
+        <i data-lucide="share-2"></i>
+
+        <span>
+            Share
+        </span>
+
+    </a>
+
+
+    <!-- MY -->
+
+    <a
+        href="{{ url_for('profile') }}"
+    >
+
+        <i data-lucide="user"></i>
+
+        <span>
+            My
+        </span>
+
+    </a>
+
+
+</div>
+
+
+<script>
+
+lucide.createIcons();
+
+</script>
+
+
+</body>
+
+</html>
