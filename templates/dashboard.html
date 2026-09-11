@@ -365,17 +365,15 @@
       {% if plans %}
         {% for plan_id, plan in plans.items() %}
           <article class="plan-card">
-            <div class="product-image">
-              {% if plan.image_url %}
-                <img src="{{ plan.image_url }}" alt="{{ plan.name }}">
-              {% else %}
-                <img src="{{ url_for('static', filename='images/vip' ~ plan_id ~ '.jpg') }}" 
-                     alt="VIP {{ plan_id }}"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="image-fallback" style="display:none;">⚽</div>
-              {% endif %}
-              <div class="level">VIP {{ plan_id }}</div>
-            </div>
+           <div class="product-image">
+  {% if plan.image_url %}
+    <img src="{{ url_for('static', filename=plan.image_url) }}" alt="{{ plan.name }}" 
+         style="width:100%;height:100%;object-fit:cover;">
+  {% else %}
+    <div class="image-fallback">⚽</div>
+  {% endif %}
+  <div class="level">VIP {{ plan_id }}</div>
+</div> 
 
             <div class="product-info">
               <h3>{{ plan.name }}</h3>
