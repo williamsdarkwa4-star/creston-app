@@ -103,7 +103,7 @@ CLAIM_INTERVAL_HOURS = 24
 REFERRAL_PERCENTS: List[Decimal] = [Decimal("0.20"), Decimal("0.03"), Decimal("0.01")]
 
 PLANS = {
-    1: {"name": " JOMA VIP 1", "investment": Decimal("100.00"), "daily": Decimal("20.00"), "duration": 180,"image_url:static/images/Screenshot_20260826_034656_Google.jpg},
+    1: {"name": " JOMA VIP 1", "investment": Decimal("100.00"), "daily": Decimal("20.00"), "duration": 180,"image_url:"static/images/Screenshot_20260826_034656_Google.jpg"},
     2: {"name": "JOMA VIP 2", "investment": Decimal("250.00"), "daily": Decimal("45.00"), "duration": 180},
     3: {"name": "JOMA VIP 3", "investment": Decimal("600.00"), "daily": Decimal("120.00"), "duration": 180},
     4: {"name": "JOMA VIP 4", "investment": Decimal("1000.00"), "daily": Decimal("120.00"), "duration": 180},
