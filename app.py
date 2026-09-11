@@ -759,7 +759,37 @@ def buy_plan(plan_id: int):
             "duration": plan["duration"],
         },
     )
+# ---------------------------
+# View/Confirm Offer
+# ---------------------------
+@app.route("/confirm_offer/<int:offer_id>")
+def confirm_offer(offer_id: int):
+    user = current_user()
 
+    if not user:
+        return redirect(url_for("login"))
+
+    offer = query_one(
+        """
+        SELECT *
+        FROM admin_offer
+        WHERE id=%s AND active=TRUE
+        """,
+        (offer_id,)
+    )
+
+    if not offer:
+        flash("Offer not found or no longer available.", "error")
+        return redirect(url_for("dashboard"))
+
+    account = account_for_display(current_account(user["id"]))
+
+    return render_template(
+        "confirm_offer.html",
+        user=user,
+        account=account,
+        offer=offer
+    )
 
 @app.route("/confirm_buy_plan/<int:plan_id>", methods=["POST"])
 def confirm_buy_plan(plan_id: int):
