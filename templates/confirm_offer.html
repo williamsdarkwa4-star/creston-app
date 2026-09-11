@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Confirm Offer - JOMA</title>
 
@@ -12,122 +11,30 @@
 
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            width: 100%;
-            min-height: 100%;
         }
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #dfe2ea;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 25px 12px;
+            background: #eef0f5;
+            color: #17202a;
+            min-height: 100vh;
         }
 
-        /* =========================
-           PHONE FRAME
-        ========================= */
-
-        .phone {
-            width: 390px;
-            height: 820px;
-            max-width: 100%;
-            background: #111;
-            border-radius: 42px;
-            padding: 10px;
-            position: relative;
-            box-shadow:
-                0 25px 60px rgba(0,0,0,0.28),
-                0 5px 15px rgba(0,0,0,0.15);
-        }
-
-        /* Side buttons */
-        .phone::before {
-            content: "";
-            position: absolute;
-            left: -4px;
-            top: 145px;
-            width: 4px;
-            height: 75px;
-            background: #151515;
-            border-radius: 5px 0 0 5px;
-            box-shadow:
-                0 90px 0 #151515,
-                0 135px 0 #151515;
-        }
-
-        .phone::after {
-            content: "";
-            position: absolute;
-            right: -4px;
-            top: 180px;
-            width: 4px;
-            height: 100px;
-            background: #151515;
-            border-radius: 0 5px 5px 0;
-        }
-
-        /* Phone screen */
-        .phone-screen {
-            width: 100%;
-            height: 100%;
-            background: #f1f2f7;
-            border-radius: 34px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Top camera / speaker */
-        .notch {
-            position: absolute;
-            z-index: 9999;
-            top: 7px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 125px;
-            height: 27px;
-            background: #111;
-            border-radius: 0 0 18px 18px;
-        }
-
-        .camera {
-            position: absolute;
-            right: 15px;
-            top: 8px;
-            width: 9px;
-            height: 9px;
-            background: #222;
-            border: 2px solid #333;
-            border-radius: 50%;
-        }
-
-        /* Scrollable app */
         .app {
             width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: none;
+            max-width: 450px;
+            margin: auto;
+            min-height: 100vh;
+            background: #f7f8fb;
+            padding-bottom: 82px;
         }
 
-        .app::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        .header {
-            height: 64px;
+        /* HEADER */
+        .top-header {
+            height: 68px;
             background: linear-gradient(
                 135deg,
                 #1726a8,
@@ -136,399 +43,397 @@
             color: white;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 18px 17px 5px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            padding: 0 18px;
+            gap: 13px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.15);
         }
 
         .back-btn {
-            width: 34px;
-            height: 34px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.14);
+            background: rgba(255,255,255,.14);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 17px;
         }
 
         .header-title {
-            font-size: 16px;
+            flex: 1;
+        }
+
+        .header-title h1 {
+            font-size: 19px;
             font-weight: 800;
         }
 
-        .header-logo {
-            width: 34px;
-            height: 34px;
+        .header-title span {
+            font-size: 11px;
+            opacity: .82;
+        }
+
+        .joma-mark {
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            background: #ff9f24;
+            background: white;
+            color: #1726a8;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-weight: 900;
-            font-size: 10px;
+            font-size: 11px;
         }
 
-        /* =========================
-           CONTENT
-        ========================= */
-
+        /* CONTENT */
         .content {
-            padding: 13px;
-            padding-bottom: 82px;
+            padding: 15px;
         }
 
-        /* =========================
-           OFFER CARD
-        ========================= */
+        .page-intro {
+            margin-bottom: 14px;
+        }
 
+        .page-intro h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1726a8;
+            margin-bottom: 5px;
+        }
+
+        .page-intro p {
+            font-size: 12px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        /* OFFER CARD */
         .offer-card {
             background: white;
-            border-radius: 15px;
+            border-radius: 17px;
             overflow: hidden;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-            margin-bottom: 12px;
+            box-shadow: 0 5px 18px rgba(0,0,0,.08);
+            border: 1px solid #e8e9ef;
+            margin-bottom: 14px;
+        }
+
+        .offer-top {
+            position: relative;
+            min-height: 175px;
+            background: #1726a8;
+            overflow: hidden;
         }
 
         .offer-image {
             width: 100%;
-            height: 155px;
+            height: 175px;
             object-fit: cover;
             display: block;
-            background: #e7e7e7;
         }
 
         .offer-image-placeholder {
-            width: 100%;
-            height: 155px;
-            background: linear-gradient(
-                135deg,
-                #1726a8,
-                #2339b3
-            );
+            height: 175px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 42px;
+            font-size: 48px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #1726a8,
+                    #2339b3
+                );
         }
 
-        .offer-info {
-            padding: 14px;
+        .offer-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to top,
+                rgba(0,0,0,.68),
+                rgba(0,0,0,.05)
+            );
+            display: flex;
+            align-items: flex-end;
+            padding: 15px;
         }
 
         .offer-name {
-            font-size: 18px;
-            font-weight: 800;
-            color: #1726a8;
-            margin-bottom: 3px;
-        }
-
-        .offer-label {
-            color: #888;
-            font-size: 10px;
-            margin-bottom: 12px;
-        }
-
-        /* =========================
-           DETAILS
-        ========================= */
-
-        .details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .detail-box {
-            background: #f6f7fb;
-            border-radius: 9px;
-            padding: 9px;
-        }
-
-        .detail-box small {
-            display: block;
-            color: #777;
-            font-size: 9px;
-            margin-bottom: 4px;
-        }
-
-        .detail-box strong {
-            display: block;
-            color: #1726a8;
-            font-size: 13px;
-        }
-
-        .detail-box.highlight strong {
-            color: #ff7900;
-        }
-
-        /* =========================
-           SECTION CARD
-        ========================= */
-
-        .section-card {
-            background: white;
-            border-radius: 14px;
-            padding: 13px;
-            margin-bottom: 12px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 14px;
-            font-weight: 800;
-            color: #1726a8;
-            margin-bottom: 8px;
-        }
-
-        .section-title i {
-            color: #ff9f24;
-        }
-
-        .description {
-            color: #666;
-            font-size: 11px;
-            line-height: 1.6;
-        }
-
-        .highlights {
-            margin-top: 9px;
-        }
-
-        .highlight-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #eeeeee;
-            font-size: 11px;
-        }
-
-        .highlight-row:last-child {
-            border-bottom: none;
-        }
-
-        .highlight-row span {
-            color: #777;
-        }
-
-        .highlight-row strong {
-            color: #1726a8;
-            max-width: 55%;
-            text-align: right;
-        }
-
-        /* =========================
-           BALANCE
-        ========================= */
-
-        .balance-card {
-            background: linear-gradient(
-                135deg,
-                #1726a8,
-                #101b82
-            );
             color: white;
-            border-radius: 14px;
-            padding: 13px;
-            margin-bottom: 12px;
-            box-shadow: 0 5px 15px rgba(23,38,168,0.18);
-        }
-
-        .balance-title {
-            font-size: 10px;
-            opacity: 0.8;
-            margin-bottom: 3px;
-        }
-
-        .balance-value {
             font-size: 20px;
             font-weight: 800;
         }
 
-        .balance-note {
-            margin-top: 4px;
-            font-size: 9px;
-            opacity: 0.75;
+        .offer-label {
+            display: inline-block;
+            margin-bottom: 7px;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #ff9f24;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
         }
 
-        /* =========================
-           BUTTONS
-        ========================= */
+        /* DETAILS */
+        .details {
+            padding: 15px;
+        }
 
-        .confirm-area {
-            margin-top: 10px;
+        .details-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #1726a8;
+            margin-bottom: 10px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 0;
+            border-bottom: 1px solid #eeeeee;
+            gap: 12px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-left {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #707070;
+            font-size: 12px;
+        }
+
+        .detail-left i {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: #eef0ff;
+            color: #1726a8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            font-weight: 800;
+            color: #222;
+            text-align: right;
+        }
+
+        .price {
+            color: #ff8c00;
+            font-size: 15px;
+        }
+
+        /* ABOUT */
+        .about-box {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,.06);
+        }
+
+        .about-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1726a8;
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 9px;
+        }
+
+        .about-title i {
+            color: #ff9f24;
+        }
+
+        .about-text {
+            color: #686868;
+            font-size: 12px;
+            line-height: 1.65;
+        }
+
+        /* NOTICE */
+        .notice {
+            background: #fff7e9;
+            border: 1px solid #ffd28b;
+            border-radius: 13px;
+            padding: 12px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .notice i {
+            color: #ff9f24;
+            font-size: 16px;
+            margin-top: 1px;
+        }
+
+        .notice-text {
+            color: #6d552f;
+            font-size: 11px;
+            line-height: 1.55;
+        }
+
+        .notice-text strong {
+            color: #d97700;
+        }
+
+        /* BUTTONS */
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .cancel-btn,
+        .confirm-btn {
+            flex: 1;
+            min-height: 48px;
+            border-radius: 12px;
+            border: none;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .cancel-btn {
+            background: #e9ebf2;
+            color: #555;
         }
 
         .confirm-btn {
-            width: 100%;
-            height: 45px;
-            border: none;
-            border-radius: 11px;
             background: linear-gradient(
                 135deg,
                 #1726a8,
                 #2339b3
             );
             color: white;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(23,38,168,0.18);
+            box-shadow: 0 5px 13px rgba(23,38,168,.22);
         }
 
-        .confirm-btn:active {
-            transform: scale(0.98);
+        .confirm-btn.selected {
+            background: #27c77b;
         }
 
-        .confirm-btn i {
-            margin-right: 5px;
+        .confirm-btn:disabled {
+            opacity: .85;
+            cursor: default;
         }
 
-        .cancel-btn {
-            display: block;
-            width: 100%;
-            text-align: center;
-            margin-top: 8px;
-            padding: 10px;
-            border-radius: 10px;
-            background: #e7e7e7;
-            color: #555;
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        /* =========================
-           SUCCESS
-        ========================= */
-
-        .success-message {
+        /* STATUS */
+        .status-message {
             display: none;
-            margin-top: 9px;
-            padding: 10px;
-            background: #e8fff3;
-            color: #14834d;
-            border: 1px solid #b8efd2;
-            border-radius: 9px;
-            text-align: center;
-            font-size: 11px;
+            padding: 12px;
+            border-radius: 11px;
+            margin-top: 12px;
+            font-size: 12px;
             font-weight: 700;
+            text-align: center;
         }
 
-        /* =========================
-           BOTTOM NAV
-        ========================= */
+        .status-message.success {
+            display: block;
+            background: #e9fff4;
+            color: #15945c;
+            border: 1px solid #b9efd5;
+        }
 
+        .status-message.error {
+            display: block;
+            background: #fff0f0;
+            color: #c0392b;
+            border: 1px solid #f0c1c1;
+        }
+
+        /* BOTTOM NAV */
         .bottom-nav {
-            position: absolute;
+            position: fixed;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
-            height: 61px;
+            max-width: 450px;
+            height: 68px;
             background: white;
             border-top: 1px solid #e5e5e5;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            z-index: 500;
-            box-shadow: 0 -3px 12px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 100;
+            box-shadow: 0 -4px 15px rgba(0,0,0,.07);
         }
 
         .nav-item {
             text-decoration: none;
-            color: #888;
+            color: #8a8a8a;
+            font-size: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
-            font-size: 8px;
+            gap: 5px;
+            min-width: 58px;
         }
 
         .nav-item i {
-            font-size: 15px;
+            font-size: 18px;
         }
 
         .nav-item.active {
             color: #1726a8;
-            font-weight: 700;
+            font-weight: 800;
         }
 
-        .nav-item.active i {
-            color: #ff9f24;
+        .nav-center {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                #1726a8,
+                #2339b3
+            );
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -22px;
+            border: 4px solid #f7f8fb;
+            box-shadow: 0 5px 15px rgba(23,38,168,.25);
         }
 
-        /* =========================
-           SMALL PHONES
-        ========================= */
-
-        @media (max-height: 700px) {
-
-            .phone {
-                height: 670px;
-                border-radius: 34px;
+        @media (max-width: 360px) {
+            .content {
+                padding: 12px;
             }
 
-            .phone-screen {
-                border-radius: 27px;
-            }
-
+            .offer-top,
             .offer-image,
             .offer-image-placeholder {
-                height: 125px;
+                height: 155px;
             }
 
-            .content {
-                padding-bottom: 75px;
-            }
-        }
-
-        /* =========================
-           REAL PHONE SCREEN MODE
-        ========================= */
-
-        @media (max-width: 430px) {
-
-            body {
-                padding: 0;
-                background: #f1f2f7;
-                align-items: stretch;
-            }
-
-            .phone {
-                width: 100%;
-                max-width: 430px;
-                height: 100vh;
-                min-height: 600px;
-                padding: 0;
-                border-radius: 0;
-                box-shadow: none;
-                background: #f1f2f7;
-            }
-
-            .phone::before,
-            .phone::after {
-                display: none;
-            }
-
-            .phone-screen {
-                border-radius: 0;
-            }
-
-            .notch {
-                top: 0;
+            .offer-name {
+                font-size: 18px;
             }
         }
     </style>
@@ -536,249 +441,145 @@
 
 <body>
 
+<div class="app">
 
-                <div class="header-left">
+    <!-- HEADER -->
+    <header class="top-header">
 
-                    <a href="{{ url_for('dashboard') }}"
-                       class="back-btn">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </a>
+        <a href="{{ url_for('dashboard') }}" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
 
-                    <div class="header-title">
-                        Confirm Offer
+        <div class="header-title">
+            <h1>Confirm Offer</h1>
+            <span>J-O-M-A • Offers</span>
+        </div>
+
+        <div class="joma-mark">
+            JOMA
+        </div>
+
+    </header>
+
+
+    <!-- CONTENT -->
+    <main class="content">
+
+        <div class="page-intro">
+            <h2>Confirm Offer Selection</h2>
+            <p>
+                Review the offer information below before confirming
+                your selection.
+            </p>
+        </div>
+
+
+        <!-- OFFER CARD -->
+        <div class="offer-card">
+
+            <div class="offer-top">
+
+                {% if offer.image_url %}
+                    <img
+                        src="{{ offer.image_url }}"
+                        alt="{{ offer.name }}"
+                        class="offer-image"
+                    >
+                {% else %}
+                    <div class="offer-image-placeholder">
+                        <i class="fa-solid fa-tag"></i>
                     </div>
+                {% endif %}
 
-                </div>
+                <div class="offer-overlay">
 
-                <div class="header-logo">
-                    JOMA
-                </div>
-
-            </div>
-
-
-            <!-- CONTENT -->
-            <div class="content">
-
-                <!-- OFFER CARD -->
-                <div class="offer-card">
-
-                    {% if offer.image_url %}
-
-                        <img
-                            src="{{ offer.image_url }}"
-                            class="offer-image"
-                            alt="{{ offer.name }}"
-                        >
-
-                    {% else %}
-
-                        <div class="offer-image-placeholder">
-                            <i class="fa-solid fa-futbol"></i>
-                        </div>
-
-                    {% endif %}
-
-
-                    <div class="offer-info">
+                    <div>
+                        <span class="offer-label">
+                            JOMA OFFER
+                        </span>
 
                         <div class="offer-name">
                             {{ offer.name }}
                         </div>
+                    </div>
 
-                        <div class="offer-label">
-                            JOMA Offer
-                        </div>
+                </div>
 
-
-                        <div class="details">
-
-                            <div class="detail-box highlight">
-
-                                <small>
-                                    Offer Price
-                                </small>
-
-                                <strong>
-                                    GHS {{ "%.2f"|format(offer.price|float) }}
-                                </strong>
-
-                            </div>
+            </div>
 
 
-                            <div class="detail-box">
+            <div class="details">
 
-                                <small>
-                                    Daily Amount
-                                </small>
+                <div class="details-title">
+                    Offer Details
+                </div>
 
-                                <strong>
-                                    GHS {{ "%.2f"|format(offer.daily_amount|float) }}
-                                </strong>
+                <div class="detail-row">
 
-                            </div>
+                    <div class="detail-left">
+                        <i class="fa-solid fa-tag"></i>
+                        <span>Offer</span>
+                    </div>
 
-
-                            <div class="detail-box">
-
-                                <small>
-                                    Duration
-                                </small>
-
-                                <strong>
-                                    {{ offer.duration }} Days
-                                </strong>
-
-                            </div>
-
-
-                            <div class="detail-box">
-
-                                <small>
-                                    Status
-                                </small>
-
-                                <strong>
-                                    Available
-                                </strong>
-
-                            </div>
-
-                        </div>
-
+                    <div class="detail-value">
+                        {{ offer.name }}
                     </div>
 
                 </div>
 
 
-                <!-- ABOUT OFFER -->
-                <div class="section-card">
+                <div class="detail-row">
 
-                    <div class="section-title">
-
-                        <i class="fa-solid fa-circle-info"></i>
-
-                        About This Offer
-
+                    <div class="detail-left">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <span>Offer Price</span>
                     </div>
 
-
-                    <div class="description">
-
-                        {% if offer.description %}
-
-                            {{ offer.description }}
-
-                        {% else %}
-
-                            This JOMA offer is one of the products
-                            available on the platform. Review the
-                            information carefully before selecting
-                            the offer. The name, price and duration
-                            shown above belong to the selected offer.
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <div class="highlights">
-
-                        <div class="highlight-row">
-
-                            <span>
-                                Offer
-                            </span>
-
-                            <strong>
-                                {{ offer.name }}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="highlight-row">
-
-                            <span>
-                                Price
-                            </span>
-
-                            <strong>
-                                GHS {{ "%.2f"|format(offer.price|float) }}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="highlight-row">
-
-                            <span>
-                                Duration
-                            </span>
-
-                            <strong>
-                                {{ offer.duration }} Days
-                            </strong>
-
-                        </div>
-
+                    <div class="detail-value price">
+                        GHS {{ "%.2f"|format(offer.price|float) }}
                     </div>
 
                 </div>
 
 
-                <!-- ACCOUNT BALANCE -->
-                <div class="balance-card">
+                <div class="detail-row">
 
-                    <div class="balance-title">
-                        Account Balance
+                    <div class="detail-left">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span>Available Balance</span>
                     </div>
 
-                    <div class="balance-value">
+                    <div class="detail-value">
                         GHS {{ "%.2f"|format(account.deposit_account|float) }}
                     </div>
 
-                    <div class="balance-note">
-                        Review the offer details before selecting.
+                </div>
+
+
+                <div class="detail-row">
+
+                    <div class="detail-left">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Daily Amount</span>
+                    </div>
+
+                    <div class="detail-value">
+                        GHS {{ "%.2f"|format(offer.daily_amount|float) }}
                     </div>
 
                 </div>
 
 
-                <!-- CONFIRM -->
-                <div class="confirm-area">
+                <div class="detail-row">
 
-                    <button
-                        type="button"
-                        class="confirm-btn"
-                        onclick="selectOffer()"
-                    >
-
-                        <i class="fa-solid fa-circle-check"></i>
-
-                        Confirm Offer
-
-                    </button>
-
-
-                    <div
-                        id="successMessage"
-                        class="success-message"
-                    >
-
-                        <i class="fa-solid fa-check"></i>
-
-                        Offer selected successfully.
-
+                    <div class="detail-left">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>Duration</span>
                     </div>
 
-
-                    <a
-                        href="{{ url_for('dashboard') }}"
-                        class="cancel-btn"
-                    >
-                        Cancel
-                    </a>
+                    <div class="detail-value">
+                        {{ offer.duration }} Days
+                    </div>
 
                 </div>
 
@@ -787,124 +588,150 @@
         </div>
 
 
-        <!-- BOTTOM NAV -->
-        <div class="bottom-nav">
+        <!-- ABOUT OFFER -->
+        <div class="about-box">
 
-            <a
-                href="{{ url_for('dashboard') }}"
-                class="nav-item active"
-            >
+            <div class="about-title">
+                <i class="fa-solid fa-circle-info"></i>
+                About This Offer
+            </div>
 
-                <i class="fa-solid fa-house"></i>
-
-                <span>
-                    Home
-                </span>
-
-            </a>
-
-
-            <a
-                href="{{ url_for('my_plan') }}"
-                class="nav-item"
-            >
-
-                <i class="fa-solid fa-chart-line"></i>
-
-                <span>
-                    Income
-                </span>
-
-            </a>
-
-
-            <a
-                href="{{ url_for('team') }}"
-                class="nav-item"
-            >
-
-                <i class="fa-solid fa-users"></i>
-
-                <span>
-                    Team
-                </span>
-
-            </a>
-
-
-            <a
-                href="{{ url_for('support') }}"
-                class="nav-item"
-            >
-
-                <i class="fa-solid fa-headset"></i>
-
-                <span>
-                    Service
-                </span>
-
-            </a>
-
-
-            <a
-                href="{{ url_for('profile') }}"
-                class="nav-item"
-            >
-
-                <i class="fa-solid fa-user"></i>
-
-                <span>
-                    My
-                </span>
-
-            </a>
+            <div class="about-text">
+                {% if offer.description %}
+                    {{ offer.description }}
+                {% else %}
+                    This JOMA offer contains the details shown above.
+                    Please review the offer name, price, daily amount
+                    and duration before confirming your selection.
+                {% endif %}
+            </div>
 
         </div>
 
-    </div>
+
+        <!-- NOTICE -->
+        <div class="notice">
+
+            <i class="fa-solid fa-triangle-exclamation"></i>
+
+            <div class="notice-text">
+                <strong>Please review carefully.</strong><br>
+                Make sure the offer information displayed on this page
+                is correct before continuing.
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <div class="actions">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="cancel-btn"
+            >
+                <i class="fa-solid fa-xmark"></i>
+                Cancel
+            </a>
+
+
+            <button
+                type="button"
+                class="confirm-btn"
+                id="confirmOfferBtn"
+                onclick="selectOffer()"
+            >
+                <i class="fa-solid fa-circle-check"></i>
+                Confirm
+            </button>
+
+        </div>
+
+
+        <div
+            id="statusMessage"
+            class="status-message"
+        ></div>
+
+    </main>
 
 </div>
 
 
-<script>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
 
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="nav-item active"
+    >
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+    </a>
+
+
+    <a
+        href="{{ url_for('my_plan') }}"
+        class="nav-item"
+    >
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Income</span>
+    </a>
+
+
+    <a
+        href="{{ url_for('team') }}"
+        class="nav-item"
+    >
+        <div class="nav-center">
+            <i class="fa-solid fa-gift"></i>
+        </div>
+        <span>Team</span>
+    </a>
+
+
+    <a
+        href="{{ url_for('support') }}"
+        class="nav-item"
+    >
+        <i class="fa-solid fa-headset"></i>
+        <span>Support</span>
+    </a>
+
+
+    <a
+        href="{{ url_for('profile') }}"
+        class="nav-item"
+    >
+        <i class="fa-solid fa-user"></i>
+        <span>My</span>
+    </a>
+
+</nav>
+
+
+<script>
     function selectOffer() {
 
-        const button =
-            document.querySelector(".confirm-btn");
-
-        const message =
-            document.getElementById("successMessage");
-
-
-        if (button.disabled) {
-            return;
-        }
-
-
-        button.disabled = true;
-
+        const button = document.getElementById("confirmOfferBtn");
+        const status = document.getElementById("statusMessage");
 
         button.innerHTML =
-            '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            '<i class="fa-solid fa-check"></i> Selected';
 
+        button.classList.add("selected");
+        button.disabled = true;
 
-        setTimeout(function () {
+        status.className = "status-message success";
+        status.innerHTML =
+            '<i class="fa-solid fa-circle-check"></i> ' +
+            'Offer selected successfully.';
 
-            button.innerHTML =
-                '<i class="fa-solid fa-check"></i> Selected';
-
-
-            button.style.background =
-                "linear-gradient(135deg, #27c77b, #19a965)";
-
-
-            message.style.display = "block";
-
-        }, 700);
-
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth"
+        });
     }
-
 </script>
 
 </body>
