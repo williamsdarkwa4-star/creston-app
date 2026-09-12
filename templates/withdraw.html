@@ -1,444 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creston - Cashout</title>
-    <style>
-        /* Mobile-first viewport resetting rules */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Withdraw - JOMA SPORT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#f1f2f7;position:relative;padding-bottom:90px;overflow:hidden}
 
-        body {
-            background-color: #333333; /* Dark uniform aesthetic matching your deposit view */
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+/* HEADER JOMA */
+.profile-header{padding:14px 14px 18px;background:#f1f2f7}
+.brand-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.brand{font-size:20px;font-weight:900;color:#1726a8;letter-spacing:1px}
+.header-title{color:#85899a;font-size:10px;letter-spacing:.8px;text-transform:uppercase;margin-top:2px;font-weight:700}
+.notif{width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #e9e9ef;display:flex;align-items:center;justify-content:center;color:#202330}
 
-        /* Top Header Action Strip Component Layout Row */
-        .header-action-strip {
-            background-color: #1a1a1a;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #262626;
-        }
+/* HERO JOMA */
+.withdraw-hero{position:relative;min-height:120px;border-radius:18px;overflow:hidden;border:1px solid #d9dcff;background:linear-gradient(135deg,#1726a8,#2a3cd1);box-shadow:0 8px 20px rgba(23,38,168,.25)}
+.hero-glow{position:absolute;width:160px;height:160px;right:-40px;top:-50px;border-radius:50%;background:rgba(255,255,255,.1)}
+.hero-content{position:relative;z-index:2;padding:18px 18px}
+.small-title{color:rgba(255,255,255,.7);font-size:9px;font-weight:800;letter-spacing:1px;margin-bottom:6px}
+.hero-content h1{font-size:20px;color:#fff;font-weight:900}
+.hero-content p{color:rgba(255,255,255,.8);font-size:11px;line-height:1.4;margin-top:4px;max-width:260px}
 
-        .nav-back-group {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+/* BALANCE */
+.balance-section{padding:0 14px;margin-top:-14px;position:relative;z-index:5}
+.balance-card{background:#fff;border:1px solid #eef0f5;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(25,34,90,.09);display:flex;justify-content:space-between;align-items:center}
+.balance-label{color:#85899a;font-size:9px;font-weight:700}
+.balance-amount{font-size:22px;font-weight:900;color:#202330;margin-top:4px}
+.balance-icon{width:42px;height:42px;border-radius:12px;background:#eef0ff;color:#1726a8;display:flex;align-items:center;justify-content:center}
 
-        .log-history-btn {
-            color: #ccff00; /* Yellow highlight token matching your branding style rules */
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-decoration: none;
-            letter-spacing: 0.5px;
-        }
+.content{padding:14px}
+.flash{padding:11px;border-radius:11px;margin-bottom:12px;font-size:11px;font-weight:700;line-height:1.4}
+.flash.success{background:#e8f9ef;border:1px solid #c6f6d5;color:#16a34a}
+.flash.error,.flash.danger{background:#fff0f0;border:1px solid #ffd0d0;color:#d33}
+.flash.warning{background:#fff7ed;border:1px solid #ffdfc0;color:#9a6a2a}
 
-        /* Balance Portfolio Insight Box Widget */
-        .balance-hero-widget {
-            background-color: #242424;
-            border-radius: 20px;
-            padding: 24px;
-            margin: 20px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #3d3d3d;
-        }
+.notice{background:#fff;border-left:3px solid #1726a8;border-radius:12px;padding:12px;margin-bottom:12px;box-shadow:0 4px 12px rgba(25,34,90,.05);border-top:1px solid #eef0f5;border-right:1px solid #eef0f5;border-bottom:1px solid #eef0f5}
+.notice-title{display:flex;align-items:center;gap:7px;color:#202330;font-size:11px;font-weight:900;margin-bottom:6px}
+.notice-title i{color:#1726a8}
+.notice p{color:#666;font-size:10px;line-height:1.6}
+.notice strong{color:#1726a8}
 
-        .balance-meta-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+.card{background:#fff;border:1px solid #eef0f5;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 6px 18px rgba(25,34,90,.06)}
+.card-title{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12px;font-weight:900;color:#202330}
+.card-title i{color:#1726a8}
 
-        .balance-stack-label {
-            font-size: 0.75rem;
-            color: #888888;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+.account{display:block;background:#f7f8fb;border:1px solid #e9e9ef;padding:12px;border-radius:12px;margin-bottom:8px;cursor:pointer}
+.account:has(input:checked){border-color:#1726a8;background:#eef0ff}
+.account-row{display:flex;gap:10px;align-items:flex-start}
+.account input{width:18px;height:18px;margin-top:2px;accent-color:#1726a8}
+.account strong{color:#202330;font-size:12px}
+.account-info{color:#85899a;margin-top:3px;font-size:10px}
 
-        .balance-stack-value {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
+.input-label{display:block;color:#202330;font-size:9px;font-weight:800;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;margin-top:12px}
+.input-wrapper{display:flex;align-items:center;background:#f7f8fb;border:1px solid #e9e9ef;border-radius:12px;padding:0 12px;margin-bottom:12px}
+.input-wrapper:focus-within{border-color:#1726a8;background:#fff;box-shadow:0 0 0 3px rgba(23,38,168,.08)}
+.currency{color:#1726a8;font-size:15px;font-weight:900;margin-right:8px}
+.input-icon{color:#1726a8;margin-right:8px;font-size:14px}
+.input-wrapper input{width:100%;border:0;outline:0;background:transparent;padding:12px 0;color:#202330;font-size:13px;font-weight:600}
+.input-wrapper input::placeholder{color:#9aa0b6}
 
-        .wallet-graphic-icon {
-            font-size: 1.8rem;
-            opacity: 0.2;
-        }
+.quick-title{color:#85899a;font-size:9px;font-weight:800;margin-bottom:7px}
+.quick-amounts{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.quick-btn{border:1px solid #e9e9ef;background:#f7f8fb;color:#1726a8;padding:10px 4px;border-radius:10px;font-size:10px;font-weight:800;cursor:pointer}
+.quick-btn:active{transform:scale(.96);background:#1726a8;color:#fff}
 
-        /* Section Headings Form Labels Style Track */
-        .group-section-lbl {
-            font-size: 0.78rem;
-            color: #888888;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            padding: 0 16px;
-            margin-bottom: 12px;
-        }
+.fee-box{background:#f7f8fb;border:1px solid #eef0f5;border-radius:12px;padding:11px;margin-bottom:12px}
+.fee-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;color:#85899a;font-size:10px}
+.fee-row strong{color:#202330}
+.fee-row.total{border-top:1px solid #e9e9ef;margin-top:3px;padding-top:10px}
+.fee-row.total strong{color:#1726a8;font-size:13px}
 
-        /* Container Stack for Forms Layout Grid Control Blocks */
-        .custom-entry-block {
-            background-color: #424242;
-            border: 1px solid #4f4f4f;
-            border-radius: 16px;
-            padding: 16px 20px;
-            margin: 0 16px 20px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-        }
+.submit-btn{width:100%;border:0;background:#1726a8;color:#fff;padding:13px;border-radius:12px;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 6px 16px rgba(23,38,168,.25)}
+.submit-btn:active{transform:scale(.98)}
+.submit-btn:disabled{opacity:.6}
 
-        .custom-input-icon {
-            font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
-        }
+.bind-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;margin-top:8px;background:#fff;color:#202330;border:1px solid #e9e9ef;border-radius:11px;text-decoration:none;font-size:11px;font-weight:800}
+.bind-btn i{color:#1726a8}
 
-        .custom-field-control {
-            border: none;
-            background: transparent;
-            width: 100%;
-            font-size: 1.1rem;
-            color: #ffffff;
-            font-weight: 700;
-            outline: none;
-        }
+.info-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0f1f6}
+.info-item:last-child{border:0;padding-bottom:0}
+.info-item:first-child{padding-top:0}
+.info-icon{width:28px;height:28px;flex-shrink:0;border-radius:9px;background:#eef0ff;display:flex;align-items:center;justify-content:center;color:#1726a8}
+.info-text{color:#85899a;font-size:10px;line-height:1.5}
+.info-text strong{color:#202330}
 
-        .custom-field-control::placeholder {
-            color: #777777;
-        }
+.empty{text-align:center;padding:10px 0 2px;color:#85899a;font-size:11px}
 
-        /* Floating live computation data fee badge indicator layout */
-        .fee-indicator-badge {
-            font-size: 0.78rem;
-            color: #ffcc00;
-            font-weight: bold;
-            white-space: nowrap;
-        }
+.loading{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:5000;backdrop-filter:blur(3px)}
+.loading-box{width:110px;padding:18px;background:#fff;border-radius:14px;text-align:center}
+.loader{width:30px;height:30px;border:3px solid #eef0f5;border-top-color:#1726a8;border-radius:50%;animation:spin .8s linear infinite;margin:auto}
+.loading-text{color:#85899a;font-size:10px;margin-top:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-        /* Native overlay dropdown configurations sheet layout */
-        .select-native-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        /* Compliance Guidelines Framework Information Box Component */
-        .guidelines-card {
-            background-color: #2b2b2b;
-            border-radius: 20px;
-            padding: 20px;
-            margin: 0 16px 30px 16px;
-            border: 1px solid #3d3d3d;
-        }
-
-        .guidelines-header-lbl {
-            color: #ccff00;
-            font-size: 0.85rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .guideline-ol-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .guideline-li-node {
-            font-size: 0.82rem;
-            color: #aaaaaa;
-            line-height: 1.45;
-        }
-
-        /* Master execution submittal push action button layout box trigger */
-        .initiate-button-control {
-            background-color: #a3be00; /* Rich olive active yellow button fill color matching your design layout */
-            color: #ffffff;
-            border: none;
-            width: calc(100% - 32px);
-            margin: auto auto 24px auto;
-            padding: 18px;
-            border-radius: 18px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            cursor: pointer;
-            text-transform: uppercase;
-            text-align: center;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            display: block;
-        }
-
-        .initiate-button-control:active {
-            background-color: #7a8e00;
-        }
-
-        /* System notification error flash elements node */
-        .flash-alert-banner {
-            background-color: #ff3333;
-            color: white;
-            padding: 12px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        /* Quick withdrawal amount buttons */
-.quick-amount-area {
-    display: flex;
-    gap: 10px;
-    padding: 0 16px;
-    margin-top: -10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.quick-amount-btn {
-    flex: 1;
-    min-width: 70px;
-    padding: 12px;
-    background: #424242;
-    color: white;
-    border: 1px solid #555555;
-    border-radius: 14px;
-    font-size: 15px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.quick-amount-btn:hover {
-    background: #a3be00;
-}
-
-
-/* Withdrawal password professional box */
-.password-field-box {
-    background-color: #424242;
-    border: 1px solid #4f4f4f;
-    border-radius: 16px;
-    padding: 16px 20px;
-    margin: 0 16px 20px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-
-.password-field-box input {
-    border: none;
-    background: transparent;
-    width: 100%;
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 700;
-    outline: none;
-}
-
-
-.password-field-box input::placeholder {
-    color: #777;
-}
-    </style>
+/* YOUR EXACT JOMA NAV */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:390px;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;align-items:flex-end;padding:5px 0 6px;z-index:1000;box-shadow:0 -2px 12px rgba(0,0,0,0.06)}
+.nav-item{flex:1;text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
+.nav-item i{font-size:19px}
+.nav-item.active{color:#1726a8;font-weight:800}
+.nav-center{position:relative;top:-14px;flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none}
+.nav-center-circle{width:48px;height:48px;background:#1726a8;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(23,38,168,0.4);border:3px solid #fff}
+.nav-center-circle i{color:#fff;font-size:20px}
+.nav-center-text{font-size:10px;color:#9aa0b6;margin-top:3px;font-weight:600}
+</style>
 </head>
 <body>
+<div class="phone">
 
-    <form action="/withdraw" method="POST">
-        <!-- Top window direction context status strip -->
-        <div class="header-action-strip">
-            <a href="/dashboard" class="nav-back-group">
-                <span>‹</span> Request Payout
-            </a>
-            <a href="/history" class="log-history-btn">LOG</a>
-        </div>
-
-        <!-- System internal warnings banner handler layout container -->
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for msg in messages %} <div class="flash-alert-banner">⚠️ {{ msg }}</div> {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <!-- Active financial portfolio income ledger metrics card element layout dashboard -->
-        <div class="balance-hero-widget">
-            <div class="balance-meta-stack">
-                <span class="balance-stack-label">Withdrawable Income Wallet</span>
-                <span class="balance-stack-value">GHS {{ income_balance }}</span>
-            </div>
-            <div class="wallet-graphic-icon">💰</div>
-        </div>
-
-        <!-- Section 1 Input block user network router configurations grid selection box -->
-        <div class="group-section-lbl">Select Network Provider</div>
-        <div class="custom-entry-block">
-            <span class="custom-input-icon">🛡️</span>
-            <span id="networkDisplayLabel" style="font-size: 1.1rem; font-weight: 700;">Choose Network</span>
-            <span style="font-size: 0.8rem; color: #888888; margin-left: auto;">▼</span>
-            
-            <select name="network_provider" id="networkDropdownSelect" class="select-native-overlay" onchange="updateNetworkDisplay(this.value)" required>
-                <option value="">Choose Network</option>
-                <option value="MTN MoMo">MTN MoMo</option>
-                <option value="Telecel Cash">Telecel Cash</option>
-            </select>
-        </div>
-
-        <!-- Section 2 Input block: Destination payment phone data number tracking row -->
-        <div class="group-section-lbl">Recipient Mobile Wallet Number</div>
-        <div class="custom-entry-block">
-            <span class="custom-input-icon">📱</span>
-            <input type="tel" name="recipient_phone" class="custom-field-control" placeholder="e.g. 0257425844" required pattern="[0-9]{10}">
-        </div>
-
-        <!-- Section 3 Input block: Monetary calculation data parameters field layout row -->
-
-<div class="group-section-lbl">
-Cashout Amount (GHS)
+<div class="profile-header">
+  <div class="brand-row">
+    <div><div class="brand">JOMA</div><div class="header-title">Withdrawal Center</div></div>
+    <div class="notif"><i class="fa-solid fa-bell"></i></div>
+  </div>
+  <div class="withdraw-hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="small-title">SECURE WITHDRAWAL</div>
+      <h1>Withdraw Funds</h1>
+      <p>Select your withdrawal account and enter the amount you want to withdraw.</p>
+    </div>
+  </div>
 </div>
 
+<div class="balance-section">
+  <div class="balance-card">
+    <div><div class="balance-label">AVAILABLE WITHDRAWAL BALANCE</div><div class="balance-amount">GHS {{ "%.2f"|format(account.withdraw_account|float) }}</div></div>
+    <div class="balance-icon"><i class="fa-solid fa-wallet"></i></div>
+  </div>
+</div>
 
-<div class="custom-entry-block">
+<div class="content">
 
-<span class="custom-input-icon">🪙</span>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+{% endwith %}
 
-<input 
-type="number"
-name="withdraw_amount"
-id="withdrawAmountInput"
-class="custom-field-control"
-placeholder="Min. 30"
-min="30"
-oninput="calculateHandlingCharges(this.value)"
-required>
+<div class="notice">
+  <div class="notice-title"><i class="fa-solid fa-circle-exclamation"></i> Withdrawal Notice</div>
+  <p>Minimum withdrawal: <strong>GHS 30.00</strong><br>Withdrawal fee: <strong>18%</strong><br>Please verify your withdrawal account before submitting your request.</p>
+</div>
 
+<div class="card">
+  <div class="card-title"><i class="fa-solid fa-building-columns"></i><span>Withdrawal Account</span></div>
+  {% if accounts %}
+    {% for withdrawal_account in accounts %}
+    <label class="account">
+      <div class="account-row">
+        <input type="radio" name="account_id" value="{{ withdrawal_account.id }}" form="withdrawForm" {% if loop.first %}checked{% endif %} required>
+        <div><strong>{{ withdrawal_account.network }}</strong><div class="account-info">Account Name: {{ withdrawal_account.account_name }}</div><div class="account-info">Number: {{ withdrawal_account.phone }}</div></div>
+      </div>
+    </label>
+    {% endfor %}
+  {% else %}
+    <div class="empty"><p>No withdrawal account has been added yet.</p><a href="{{ url_for('bind_account') }}" class="bind-btn loading-link"><i class="fa-solid fa-plus"></i> Bind Withdrawal Account</a></div>
+  {% endif %}
+</div>
 
-<span class="fee-indicator-badge" id="feeCalculationBox">
-Est. Fee: GHS 0.00
-</span>
+{% if accounts %}
+<div class="card">
+  <div class="card-title"><i class="fa-solid fa-money-bill-trend-up"></i><span>Withdrawal Request</span></div>
+  <form method="POST" action="{{ url_for('request_withdrawal') }}" id="withdrawForm" onsubmit="return validateWithdrawal()">
+    <label class="input-label">Withdrawal Amount</label>
+    <div class="input-wrapper"><span class="currency">₵</span><input type="number" id="withdrawAmount" name="amount" min="30" step="0.01" max="{{ account.withdraw_account or 0 }}" placeholder="Enter amount" required></div>
+    <div class="quick-title">QUICK AMOUNT</div>
+    <div class="quick-amounts">
+      <button type="button" class="quick-btn" onclick="setAmount(30)">GHS 30</button>
+      <button type="button" class="quick-btn" onclick="setAmount(45)">GHS 45</button>
+      <button type="button" class="quick-btn" onclick="setAmount(100)">GHS 100</button>
+      <button type="button" class="quick-btn" onclick="setAmount(200)">GHS 200</button>
+      <button type="button" class="quick-btn" onclick="setAmount(300)">GHS 300</button>
+      <button type="button" class="quick-btn" onclick="setAmount(400)">GHS 400</button>
+    </div>
+    <div class="fee-box">
+      <div class="fee-row"><span>Withdrawal Amount</span><strong id="displayAmount">GHS 0.00</strong></div>
+      <div class="fee-row"><span>Withdrawal Fee (18%)</span><strong id="displayFee">GHS 0.00</strong></div>
+      <div class="fee-row total"><span>You Receive</span><strong id="displayReceive">GHS 0.00</strong></div>
+    </div>
+    <label class="input-label">Withdrawal Password</label>
+    <div class="input-wrapper"><i class="fa-solid fa-lock input-icon"></i><input type="password" name="password" placeholder="Enter withdrawal password" minlength="6" required></div>
+    <button type="submit" class="submit-btn" id="submitButton">Submit Withdrawal</button>
+  </form>
+  <a href="{{ url_for('bind_account') }}" class="bind-btn loading-link"><i class="fa-solid fa-gear"></i> Manage Withdrawal Account</a>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-title"><i class="fa-solid fa-circle-info"></i><span>Withdrawal Information</span></div>
+  <div class="info-item"><div class="info-icon"><i class="fa-solid fa-clock"></i></div><div class="info-text">Your withdrawal request is submitted for review after you complete the withdrawal process.</div></div>
+  <div class="info-item"><div class="info-icon"><i class="fa-solid fa-shield-halved"></i></div><div class="info-text">Make sure the selected withdrawal account belongs to you and that your withdrawal password is correct.</div></div>
+  <div class="info-item"><div class="info-icon"><i class="fa-solid fa-calculator"></i></div><div class="info-text">The <strong>18% withdrawal fee</strong> is calculated automatically before submission.</div></div>
+</div>
 
 </div>
 
+<div class="loading" id="loading"><div class="loading-box"><div class="loader"></div><div class="loading-text">Loading...</div></div></div>
 
-<div class="quick-amount-area">
-
-<button type="button" class="quick-amount-btn" onclick="setAmount(30)">
-GHS 30
-</button>
-
-
-<button type="button" class="quick-amount-btn" onclick="setAmount(50)">
-GHS 50
-</button>
-
-
-<button type="button" class="quick-amount-btn" onclick="setAmount(100)">
-GHS 100
-</button>
-
-
-<button type="button" class="quick-amount-btn" onclick="setAmount(200)">
-GHS 200
-</button>
-
-</div>
-  <!-- Withdrawal Password -->
-
-<div class="group-section-lbl">
-Withdrawal Password
-</div>
-
-
-<div class="password-field-box">
-
-<span class="custom-input-icon">
-🔒
-</span>
-
-
-<input
-type="password"
-name="withdraw_password"
-placeholder="Enter withdrawal password"
-required>
+<nav class="bottom-nav">
+  <a href="/dashboard" class="nav-item loading-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="/my_plan" class="nav-item loading-link"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
+  <a href="/team_members" class="nav-center loading-link"><div class="nav-center-circle"><i class="fa-solid fa-gift"></i></div><span class="nav-center-text">Team</span></a>
+  <a href="/team" class="nav-item loading-link"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
+  <a href="/profile" class="nav-item loading-link"><i class="fa-solid fa-user"></i><span>My</span></a>
+</nav>
 
 </div>
 <script>
-
-function setAmount(amount){
-
-    document.getElementById("withdrawAmountInput").value = amount;
-
-    calculateHandlingCharges(amount);
-
+const amountInput=document.getElementById("withdrawAmount");
+const displayAmount=document.getElementById("displayAmount");
+const displayFee=document.getElementById("displayFee");
+const displayReceive=document.getElementById("displayReceive");
+function calculateWithdrawal(){
+  if(!amountInput) return;
+  const amount=parseFloat(amountInput.value)||0;
+  const fee=amount*0.18;
+  const receive=amount-fee;
+  displayAmount.textContent="GHS "+amount.toFixed(2);
+  displayFee.textContent="GHS "+fee.toFixed(2);
+  displayReceive.textContent="GHS "+receive.toFixed(2);
 }
-
-
-function calculateHandlingCharges(amount){
-
-    let feeBox = document.getElementById("feeCalculationBox");
-
-
-    if(amount){
-
-        let fee = amount * 0.19;
-
-        feeBox.innerHTML =
-        "Est. Fee: GHS " + fee.toFixed(2);
-
-    }
-
-    else{
-
-        feeBox.innerHTML =
-        "Est. Fee: GHS 0.00";
-
-    }
-
+if(amountInput) amountInput.addEventListener("input",calculateWithdrawal);
+function setAmount(a){if(!amountInput) return;amountInput.value=a.toFixed(2);calculateWithdrawal();}
+calculateWithdrawal();
+function validateWithdrawal(){
+  if(!amountInput) return false;
+  const amount=parseFloat(amountInput.value)||0;
+  const maxBalance=parseFloat(amountInput.getAttribute("max"))||0;
+  const selectedAccount=document.querySelector('input[name="account_id"]:checked');
+  const password=document.querySelector('input[name="password"]');
+  if(!selectedAccount){alert("Please select a withdrawal account.");return false;}
+  if(amount<30){alert("Minimum withdrawal amount is GHS 30.00.");return false;}
+  if(amount>maxBalance){alert("Withdrawal amount cannot be greater than your available balance.");return false;}
+  if(!password||!password.value.trim()){alert("Please enter your withdrawal password.");return false;}
+  const button=document.getElementById("submitButton");
+  if(button){button.disabled=true;button.innerHTML="Processing...";}
+  showLoading("Processing...");return true;
 }
-
-
-
-function updateNetworkDisplay(value){
-
-    document.getElementById("networkDisplayLabel").innerHTML =
-    value || "Choose Network";
-
-}
-
+const loading=document.getElementById("loading");
+function showLoading(t){if(!loading) return;const lt=loading.querySelector(".loading-text");if(lt&&t) lt.textContent=t;loading.style.display="flex";}
+document.querySelectorAll(".loading-link").forEach(link=>{
+  link.addEventListener("click",function(e){
+    if(e.ctrlKey||e.metaKey||e.shiftKey||e.button!==0) return;
+    const dest=this.href;if(!dest) return;e.preventDefault();showLoading("Loading...");
+    setTimeout(()=>{window.location.href=dest},300);
+  });
+});
 </script>
-<button type="submit" class="initiate-button-control">
-SUBMIT WITHDRAWAL
-</button>
+</body>
+</html>
