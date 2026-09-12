@@ -7,7 +7,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-  body{background:#f0f2f5; font-family:'Segoe UI',sans-serif; padding-bottom:90px}
+  body{background:#f0f2f5; font-family:'Segoe UI',sans-serif; padding-bottom:100px}
   .app-wrapper{max-width:420px;margin:0 auto;min-height:100vh;background:#f0f2f5;position:relative}
   .top-bar{background: linear-gradient(135deg, #1726a8 0%, #2a3fc0 100%); color:#fff; padding:20px; border-radius:0 0 24px 24px}
   .balance-card{background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); border-radius:16px; padding:15px; margin-top:15px}
@@ -30,14 +30,20 @@
   .claim-button.offer-btn{background:#ff7a00}
   .claim-button:disabled{background:#eee;color:#999}
   .empty-box{background:#fff;border-radius:20px;padding:40px 20px;text-align:center;margin-top:20px}
-  .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;padding:8px 0 10px;z-index:1000;max-width:420px;margin:0 auto;box-shadow:0 -4px 20px rgba(0,0,0,0.06);border-radius:18px 18px 0 0}
-  .nav-item{text-align:center;text-decoration:none;color:#9aa0b6;font-size:9px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
-  .nav-item i{font-size:18px}
-  .nav-item.active{color:#1726a8}
   .tab-container{display:flex;padding:4px;background:#fff;border:1px solid #e4e5eb;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.05);margin-bottom:12px}
   .tab{flex:1;border:0;outline:none;padding:10px;background:transparent;color:#555b68;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer}
   .tab.active{background:#1726a8;color:#fff}
   .hidden{display:none!important}
+  /* BOTTOM NAV LIKE YOUR SCREENSHOT */
+  .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;align-items:flex-end;padding:6px 0 8px;z-index:1000;max-width:420px;margin:0 auto;box-shadow:0 -4px 20px rgba(0,0,0,0.06)}
+  .nav-item{text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;padding:4px 0}
+  .nav-item i{font-size:20px}
+  .nav-item.active{color:#1726a8}
+  .nav-center{position:relative;top:-18px}
+  .nav-center-circle{width:56px;height:56px;background:#1726a8;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(23,38,168,0.35);border:4px solid #fff}
+  .nav-center-circle i{color:#fff;font-size:22px}
+  .nav-center span{margin-top:4px;color:#9aa0b6}
+  .nav-center.active span{color:#1726a8}
 </style>
 </head>
 <body>
@@ -45,7 +51,7 @@
 <div class="top-bar">
   <div class="d-flex justify-content-between align-items-center">
     <h5 class="m-0"><i class="fa-solid fa-layer-group me-2"></i>My Investments</h5>
-    <span class="badge bg-white text-primary rounded-pill">JOMA</span>
+    <span class="badge bg-white text-primary rounded-pill px-3">JOMA</span>
   </div>
   <div class="balance-card">
     <div class="row text-center">
@@ -57,90 +63,91 @@
 
 <div class="container mt-3">
   <div class="tab-container">
-    <button class="tab active" data-tab="plans">Plans ({{ user_plans|length if user_plans else 0 }})</button>
-    <button class="tab" data-tab="offers">Offers ({{ user_offers|length if user_offers else 0 }})</button>
+    <button class="tab active" data-tab="plans">Plans ({{ user_plans|length }})</button>
+    <button class="tab" data-tab="offers">Offers ({{ user_offers|length }})</button>
   </div>
 
-  <!-- PLANS TAB -->
+  <!-- PLANS -->
   <div id="plans-content">
   {% if user_plans %}
-    {% for user_plan in user_plans %}
+    {% for p in user_plans %}
     <div class="invest-card">
       <div class="d-flex gap-2">
         <div class="info-rows">
-          <div class="info-row"><span class="label">Price</span><span class="value">GHS {{ "%.2f"|format(user_plan.investment_amount|float if user_plan.investment_amount else user_plan.investment|float) }}</span></div>
-          <div class="info-row"><span class="label">Daily profit</span><span class="value">GHS {{ "%.2f"|format(user_plan.daily_income|float if user_plan.daily_income else user_plan.daily|float) }}</span></div>
-          <div class="info-row"><span class="label">Days</span><span class="value">{{ user_plan.duration }}</span></div>
-          <div class="info-row"><span class="label">Total profit</span><span class="value">GHS {{ "%.2f"|format((user_plan.daily_income|float if user_plan.daily_income else user_plan.daily|float) * (user_plan.duration|int)) }}</span></div>
+          <div class="info-row"><span class="label">Price</span><span class="value">GHS {{ "%.2f"|format(p.investment_amount|float) }}</span></div>
+          <div class="info-row"><span class="label">Daily profit</span><span class="value">GHS {{ "%.2f"|format(p.daily_income|float) }}</span></div>
+          <div class="info-row"><span class="label">Days</span><span class="value">{{ p.duration }}</span></div>
+          <div class="info-row"><span class="label">Total profit</span><span class="value">GHS {{ "%.2f"|format(p.daily_income|float * p.duration|int) }}</span></div>
         </div>
         <div class="product-graphic">
-          <div class="status-free">{{ 'FREE' if user_plan.can_claim else 'ACTIVE' }}</div>
+          <div class="status-free">{{ 'FREE' if p.can_claim else 'ACTIVE' }}</div>
           <div style="font-weight:900;margin-top:10px">JOMA</div>
-          <div style="font-size:7px;color:#555">SPORT</div>
-          <div class="vip-badge">{{ user_plan.plan_name }}</div>
+          <div style="font-size:7px">SPORT</div>
+          <div class="vip-badge">{{ p.plan_name }}</div>
         </div>
       </div>
       <div class="countdown-bar">
         <span class="countdown-label">Settlement countdown</span>
-        <span class="countdown-timer {% if user_plan.can_claim %}ready{% endif %}" id="countdown-plan-{{ user_plan.id }}" data-next="{{ user_plan.next_income_at.isoformat() if user_plan.next_income_at else '' }}" data-can="{{ '1' if user_plan.can_claim else '0' }}">{% if user_plan.can_claim %}00:00:00{% else %}--:--:--{% endif %}</span>
+        <span class="countdown-timer {% if p.can_claim %}ready{% endif %}" id="countdown-plan-{{ p.id }}" data-next="{{ p.next_income_at.isoformat() if p.next_income_at else '' }}" data-can="{{ '1' if p.can_claim else '0' }}">{{ "00:00:00" if p.can_claim else "--:--:--" }}</span>
       </div>
       <form method="POST" action="{{ url_for('my_plan') }}">
-        <input type="hidden" name="user_plan_id" value="{{ user_plan.id }}"><input type="hidden" name="type" value="plan">
-        <button type="submit" id="btn-plan-{{ user_plan.id }}" class="claim-button" {% if not user_plan.can_claim %}disabled{% endif %}>{% if user_plan.can_claim %}Claim Income{% else %}Income Not Ready{% endif %}</button>
+        <input type="hidden" name="user_plan_id" value="{{ p.id }}"><input type="hidden" name="type" value="plan">
+        <button class="claim-button" id="btn-plan-{{ p.id }}" {% if not p.can_claim %}disabled{% endif %}>{{ "Claim Income" if p.can_claim else "Income Not Ready" }}</button>
       </form>
     </div>
     {% endfor %}
   {% else %}
-    <div class="empty-box"><i class="fa-solid fa-box-open fa-2x text-muted mb-2"></i><h6>No Plans</h6><p class="text-muted" style="font-size:11px">You have no active plans</p><a href="/dashboard" class="btn btn-primary btn-sm rounded-pill">Buy Plan</a></div>
+    <div class="empty-box"><p>No Plans</p><a href="/dashboard" class="btn btn-primary btn-sm rounded-pill">Buy Plan</a></div>
   {% endif %}
   </div>
 
-  <!-- OFFERS TAB -->
+  <!-- OFFERS - SEPARATED -->
   <div id="offers-content" class="hidden">
   {% if user_offers %}
-    {% for offer in user_offers %}
+    {% for o in user_offers %}
     <div class="invest-card">
       <div class="d-flex gap-2">
         <div class="info-rows">
-          <div class="info-row"><span class="label">Price</span><span class="value">GHS {{ "%.2f"|format(offer.investment_amount|float if offer.investment_amount else offer.investment|float) }}</span></div>
-          <div class="info-row"><span class="label">Daily profit</span><span class="value">GHS {{ "%.2f"|format(offer.daily_income|float if offer.daily_income else offer.daily|float) }}</span></div>
-          <div class="info-row"><span class="label">Days</span><span class="value">{{ offer.duration }}</span></div>
-          <div class="info-row"><span class="label">Total profit</span><span class="value">GHS {{ "%.2f"|format((offer.daily_income|float if offer.daily_income else offer.daily|float) * (offer.duration|int)) }}</span></div>
+          <div class="info-row"><span class="label">Price</span><span class="value">GHS {{ "%.2f"|format(o.investment_amount|float) }}</span></div>
+          <div class="info-row"><span class="label">Daily profit</span><span class="value">GHS {{ "%.2f"|format(o.daily_income|float) }}</span></div>
+          <div class="info-row"><span class="label">Days</span><span class="value">{{ o.duration }}</span></div>
+          <div class="info-row"><span class="label">Total profit</span><span class="value">GHS {{ "%.2f"|format(o.daily_income|float * o.duration|int) }}</span></div>
         </div>
         <div class="product-graphic offer">
           <div class="status-free" style="background:#ff7a00">OFFER</div>
           <div style="font-weight:900;margin-top:10px">JOMA</div>
-          <div style="font-size:7px;color:#555">OFFER</div>
-          <div class="vip-badge offer">{{ offer.plan_name }}</div>
+          <div style="font-size:7px">OFFER</div>
+          <div class="vip-badge offer">{{ o.plan_name }}</div>
         </div>
       </div>
       <div class="countdown-bar offer-bg">
         <span class="countdown-label">Settlement countdown</span>
-        <span class="countdown-timer {% if offer.can_claim %}ready{% endif %}" id="countdown-offer-{{ offer.id }}" data-next="{{ offer.next_income_at.isoformat() if offer.next_income_at else '' }}" data-can="{{ '1' if offer.can_claim else '0' }}">{% if offer.can_claim %}00:00:00{% else %}--:--:--{% endif %}</span>
+        <span class="countdown-timer {% if o.can_claim %}ready{% endif %}" id="countdown-offer-{{ o.id }}" data-next="{{ o.next_income_at.isoformat() if o.next_income_at else '' }}" data-can="{{ '1' if o.can_claim else '0' }}">{{ "00:00:00" if o.can_claim else "--:--:--" }}</span>
       </div>
       <form method="POST" action="{{ url_for('my_plan') }}">
-        <input type="hidden" name="user_plan_id" value="{{ offer.id }}"><input type="hidden" name="type" value="offer">
-        <button type="submit" id="btn-offer-{{ offer.id }}" class="claim-button offer-btn" {% if not offer.can_claim %}disabled{% endif %}>{% if offer.can_claim %}Claim Income{% else %}Income Not Ready{% endif %}</button>
+        <input type="hidden" name="user_plan_id" value="{{ o.id }}"><input type="hidden" name="type" value="offer">
+        <button class="claim-button offer-btn" id="btn-offer-{{ o.id }}" {% if not o.can_claim %}disabled{% endif %}>{{ "Claim Income" if o.can_claim else "Income Not Ready" }}</button>
       </form>
     </div>
     {% endfor %}
   {% else %}
-    <div class="empty-box"><i class="fa-solid fa-gift fa-2x text-muted mb-2"></i><h6>No Offers</h6><p class="text-muted" style="font-size:11px">You have no active offers</p><a href="/dashboard" class="btn btn-sm rounded-pill" style="background:#ff7a00;color:#fff">Buy Offer</a></div>
+    <div class="empty-box"><i class="fa-solid fa-gift fa-2x mb-2 text-muted"></i><h6>No Offers</h6><p class="text-muted" style="font-size:11px">You have no active offers</p><a href="/dashboard" class="btn btn-sm rounded-pill" style="background:#ff7a00;color:#fff">Buy Offer</a></div>
   {% endif %}
   </div>
 </div>
 
+<!-- BOTTOM NAV LIKE YOUR IMAGE -->
 <nav class="bottom-nav">
   <a href="/dashboard" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
   <a href="/my_plan" class="nav-item active"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
-  <a href="/team" class="nav-item"><i class="fa-solid fa-users"></i><span>Team</span></a>
+  <a href="/team" class="nav-item nav-center active"><div class="nav-center-circle"><i class="fa-solid fa-gift"></i></div><span>Team</span></a>
   <a href="/invite" class="nav-item"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
   <a href="/profile" class="nav-item"><i class="fa-solid fa-user"></i><span>My</span></a>
 </nav>
+
 </div>
 
 <script>
-// Tab switch
 document.querySelectorAll(".tab").forEach(t=>{
   t.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
@@ -154,48 +161,19 @@ document.querySelectorAll(".tab").forEach(t=>{
     }
   });
 });
-
-// Countdown logic for ALL cards
 function pad(n){return String(n).padStart(2,"0")}
-function format(ms){
-  if(ms<=0) return "00:00:00";
-  let s=Math.floor(ms/1000);
-  let h=Math.floor(s/3600); s%=3600;
-  let m=Math.floor(s/60); s%=60;
-  return pad(h)+":"+pad(m)+":"+pad(s);
-}
-function updateTimers(){
+function fmt(ms){if(ms<=0)return"00:00:00";let s=Math.floor(ms/1000),h=Math.floor(s/3600);s%=3600;let m=Math.floor(s/60);s%=60;return pad(h)+":"+pad(m)+":"+pad(s)}
+function upd(){
   document.querySelectorAll(".countdown-timer").forEach(el=>{
-    let can = el.dataset.can === '1';
-    let nextStr = el.dataset.next;
-    let id = el.id.replace("countdown-","");
-    let btn = document.getElementById("btn-"+id);
-    if(can){
-      el.textContent="00:00:00";
-      el.classList.add("ready");
-      if(btn){btn.disabled=false; btn.textContent="Claim Income";}
-      return;
-    }
-    if(!nextStr){
-      el.textContent="--:--:--";
-      return;
-    }
-    let next = new Date(nextStr).getTime();
-    let diff = next - Date.now();
-    if(diff<=0){
-      el.textContent="00:00:00";
-      el.classList.add("ready");
-      if(btn){btn.disabled=false; btn.textContent="Claim Income";}
-    }else{
-      el.textContent=format(diff);
-      el.classList.remove("ready");
-      if(btn){btn.disabled=true; btn.textContent="Income Not Ready";}
-    }
+    let can=el.dataset.can==='1',nextStr=el.dataset.next,id=el.id.replace("countdown-",""),btn=document.getElementById("btn-"+id);
+    if(can){el.textContent="00:00:00";el.classList.add("ready");if(btn){btn.disabled=false;btn.textContent="Claim Income";}return;}
+    if(!nextStr){el.textContent="--:--:--";return;}
+    let diff=new Date(nextStr).getTime()-Date.now();
+    if(diff<=0){el.textContent="00:00:00";el.classList.add("ready");if(btn){btn.disabled=false;btn.textContent="Claim Income";}}
+    else{el.textContent=fmt(diff);el.classList.remove("ready");if(btn){btn.disabled=true;btn.textContent="Income Not Ready";}}
   });
 }
-updateTimers();
-setInterval(updateTimers,1000);
+upd();setInterval(upd,1000);
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+          </html>
