@@ -7,130 +7,129 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-  body{background:#f0f2f5; font-family: 'Segoe UI', sans-serif; padding-bottom:90px}
+  body{background:#f0f2f5; font-family:'Segoe UI',sans-serif; padding-bottom:90px}
+  .app-wrapper{max-width:420px;margin:0 auto;min-height:100vh;background:#f0f2f5;position:relative}
   .top-bar{background: linear-gradient(135deg, #1726a8 0%, #2a3fc0 100%); color:#fff; padding:20px; border-radius:0 0 24px 24px}
   .balance-card{background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); border-radius:16px; padding:15px; margin-top:15px}
-  .invest-card{background:#fff; border-radius:18px; padding:16px; margin-bottom:14px; box-shadow:0 4px 12px rgba(0,0,0,0.05); border-left:6px solid #1726a8; position:relative; overflow:hidden}
-  .invest-card.type-offer{border-left-color:#ff9800}
-  .invest-card.type-plan{border-left-color:#1726a8}
-  .tag{font-size:10px; font-weight:700; padding:4px 10px; border-radius:20px; letter-spacing:0.5px}
-  .tag-plan{background:#eef0ff; color:#1726a8}
-  .tag-offer{background:#fff3e0; color:#ef6c00}
-  .tag-active{background:#e8f5e9; color:#2e7d32}
-  .amount{font-size:18px; font-weight:700}
-  .empty-box{background:#fff; border-radius:20px; padding:40px 20px; text-align:center; margin-top:30px}
-  /* Bottom Nav like Dashboard */
-  .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;padding:8px 0 12px;z-index:1000;max-width:420px;margin:0 auto;box-shadow:0 -4px 20px rgba(0,0,0,0.06);border-radius:20px 20px 0 0}
-  .nav-item{text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+  .invest-card{background:#fff; border-radius:18px; padding:14px; margin-bottom:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); border:1px solid #ececf1}
+  .info-rows{flex:1; display:flex; flex-direction:column; gap:5px}
+  .info-row{min-height:36px; padding:7px 10px; display:flex; align-items:center; justify-content:space-between; background:#f7f7fb; border-radius:8px}
+  .label{color:#777b86; font-size:9px; font-weight:600}
+  .value{color:#26306f; font-size:11px; font-weight:800}
+  .product-graphic{width:105px;min-width:105px;min-height:165px;display:flex;flex-direction:column;justify-content:space-between;align-items:center;border-radius:10px;background:linear-gradient(145deg,#e8eaff,#c2c9ff);border:1px solid #b8c0ff;overflow:hidden}
+  .product-graphic.offer{background:linear-gradient(145deg,#fff4e8,#ffd5ad);border-color:#ffd1aa}
+  .vip-badge{width:100%;padding:7px 0;background:#111;color:#fff;text-align:center;font-size:10px;font-weight:800}
+  .vip-badge.offer{background:linear-gradient(180deg,#ff7a00,#e96800)}
+  .status-free{width:100%;padding:5px 0;background:#32c982;color:#fff;text-align:center;font-size:8px;font-weight:700}
+  .countdown-bar{width:100%;margin-top:8px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;background:#eef0ff;border-radius:8px;border:1px solid #d0d6ff}
+  .countdown-bar.offer-bg{background:#fff1e5;border-color:#ffe1ca}
+  .countdown-label{color:#6b6e9a;font-size:8px;font-weight:600}
+  .countdown-timer{color:#101d85;font-size:11px;font-weight:900;letter-spacing:0.5px}
+  .countdown-timer.ready{color:#15965d}
+  .claim-button{width:100%;height:34px;border:none;border-radius:8px;background:#1726a8;color:#fff;font-size:10px;font-weight:800;margin-top:8px}
+  .claim-button.offer-btn{background:#ff7a00}
+  .claim-button:disabled{background:#eee;color:#999}
+  .empty-box{background:#fff;border-radius:20px;padding:40px 20px;text-align:center;margin-top:20px}
+  .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;padding:8px 0 10px;z-index:1000;max-width:420px;margin:0 auto;box-shadow:0 -4px 20px rgba(0,0,0,0.06);border-radius:18px 18px 0 0}
+  .nav-item{text-align:center;text-decoration:none;color:#9aa0b6;font-size:9px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
   .nav-item i{font-size:18px}
   .nav-item.active{color:#1726a8}
-  .nav-item.active i{background:#eef0ff;width:36px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:10px}
-  .app-wrapper{max-width:420px;margin:0 auto;position:relative;min-height:100vh;background:#f0f2f5}
+  .tab-container{display:flex;padding:4px;background:#fff;border:1px solid #e4e5eb;border-radius:14px;box-shadow:0 3px 12px rgba(0,0,0,.05);margin-bottom:12px}
+  .tab{flex:1;border:0;outline:none;padding:10px;background:transparent;color:#555b68;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer}
+  .tab.active{background:#1726a8;color:#fff}
+  .hidden{display:none!important}
 </style>
 </head>
 <body>
-
 <div class="app-wrapper">
 <div class="top-bar">
   <div class="d-flex justify-content-between align-items-center">
     <h5 class="m-0"><i class="fa-solid fa-layer-group me-2"></i>My Investments</h5>
-    <span class="badge bg-white text-primary rounded-pill px-3">JOMA</span>
+    <span class="badge bg-white text-primary rounded-pill">JOMA</span>
   </div>
-
   <div class="balance-card">
     <div class="row text-center">
-      <div class="col-6 border-end border-white border-opacity-25">
-        <small class="opacity-75 d-block">Total Invested</small>
-        <span class="amount">GHS {{ "%.2f"|format(total_invested|float) if total_invested else '0.00' }}</span>
-      </div>
-      <div class="col-6">
-        <small class="opacity-75 d-block">Daily Income</small>
-        <span class="amount">GHS {{ "%.2f"|format(total_daily|float) if total_daily else '0.00' }}/day</span>
-      </div>
+      <div class="col-6 border-end border-white border-opacity-25"><small class="opacity-75 d-block" style="font-size:11px">Total Invested</small><span style="font-size:18px;font-weight:700">GHS {{ "%.2f"|format(total_invested|float) if total_invested else '0.00' }}</span></div>
+      <div class="col-6"><small class="opacity-75 d-block" style="font-size:11px">Daily Income</small><span style="font-size:18px;font-weight:700">GHS {{ "%.2f"|format(total_daily|float) if total_daily else '0.00' }}/day</span></div>
     </div>
   </div>
 </div>
 
 <div class="container mt-3">
+  <div class="tab-container">
+    <button class="tab active" data-tab="plans">Plans ({{ user_plans|length if user_plans else 0 }})</button>
+    <button class="tab" data-tab="offers">Offers ({{ user_offers|length if user_offers else 0 }})</button>
+  </div>
 
-  <!-- Tabs -->
-  <ul class="nav nav-pills bg-white rounded-pill p-1 mb-3 shadow-sm" id="myTab">
-    <li class="nav-item flex-fill"><button class="nav-link active w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#all">All ({{ investments|length if investments else 0 }})</button></li>
-    <li class="nav-item flex-fill"><button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#plans">Plans</button></li>
-    <li class="nav-item flex-fill"><button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#offers">Offers</button></li>
-  </ul>
-
-  <div class="tab-content">
-    <!-- ALL -->
-    <div class="tab-pane fade show active" id="all">
-      {% if investments and investments|length > 0 %}
-        {% for item in investments %}
-        <div class="invest-card type-{{ item.type|lower }}">
-          <div class="d-flex justify-content-between">
-            <div>
-              <span class="tag {{ 'tag-offer' if item.type == 'OFFER' else 'tag-plan' }}"><i class="fa-solid {{ 'fa-gift' if item.type == 'OFFER' else 'fa-rocket' }} me-1"></i>{{ item.type }}</span>
-              <h6 class="mt-2 mb-1 fw-bold">{{ item.name }}</h6>
-              <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ item.bought_at if item.bought_at else 'Just now' }}</small>
-            </div>
-            <span class="tag tag-active h-100">{{ item.status|upper if item.status else 'ACTIVE' }}</span>
-          </div>
-          <div class="row mt-3 g-0 text-center bg-light rounded-3 p-2">
-            <div class="col-4"><small class="text-muted d-block" style="font-size:11px">PRICE</small><b>GHS {{ "%.2f"|format(item.investment|float) }}</b></div>
-            <div class="col-4 border-start border-end"><small class="text-muted d-block" style="font-size:11px">DAILY</small><b class="text-success">GHS {{ "%.2f"|format(item.daily|float) }}</b></div>
-            <div class="col-4"><small class="text-muted d-block" style="font-size:11px">DAYS</small><b>{{ item.duration }}</b></div>
-          </div>
-          <form method="POST" action="{{ url_for('my_plan') }}" class="mt-2">
-            <input type="hidden" name="user_plan_id" value="{{ item.id if item.id else loop.index }}">
-            <input type="hidden" name="type" value="{{ item.type|lower }}">
-            <button class="btn btn-sm w-100 rounded-pill" style="background:#1726a8;color:#fff;font-size:11px;font-weight:700;padding:8px">Claim Income</button>
-          </form>
+  <!-- PLANS TAB -->
+  <div id="plans-content">
+  {% if user_plans %}
+    {% for user_plan in user_plans %}
+    <div class="invest-card">
+      <div class="d-flex gap-2">
+        <div class="info-rows">
+          <div class="info-row"><span class="label">Price</span><span class="value">GHS {{ "%.2f"|format(user_plan.investment_amount|float if user_plan.investment_amount else user_plan.investment|float) }}</span></div>
+          <div class="info-row"><span class="label">Daily profit</span><span class="value">GHS {{ "%.2f"|format(user_plan.daily_income|float if user_plan.daily_income else user_plan.daily|float) }}</span></div>
+          <div class="info-row"><span class="label">Days</span><span class="value">{{ user_plan.duration }}</span></div>
+          <div class="info-row"><span class="label">Total profit</span><span class="value">GHS {{ "%.2f"|format((user_plan.daily_income|float if user_plan.daily_income else user_plan.daily|float) * (user_plan.duration|int)) }}</span></div>
         </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-box">
-          <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
-          <h6>No Investments Yet</h6>
-          <p class="text-muted small">Buy a Plan or Offer to start earning</p>
-          <a href="/dashboard" class="btn btn-primary rounded-pill px-4 mt-2">Buy Now</a>
+        <div class="product-graphic">
+          <div class="status-free">{{ 'FREE' if user_plan.can_claim else 'ACTIVE' }}</div>
+          <div style="font-weight:900;margin-top:10px">JOMA</div>
+          <div style="font-size:7px;color:#555">SPORT</div>
+          <div class="vip-badge">{{ user_plan.plan_name }}</div>
         </div>
-      {% endif %}
+      </div>
+      <div class="countdown-bar">
+        <span class="countdown-label">Settlement countdown</span>
+        <span class="countdown-timer {% if user_plan.can_claim %}ready{% endif %}" id="countdown-plan-{{ user_plan.id }}" data-next="{{ user_plan.next_income_at.isoformat() if user_plan.next_income_at else '' }}" data-can="{{ '1' if user_plan.can_claim else '0' }}">{% if user_plan.can_claim %}00:00:00{% else %}--:--:--{% endif %}</span>
+      </div>
+      <form method="POST" action="{{ url_for('my_plan') }}">
+        <input type="hidden" name="user_plan_id" value="{{ user_plan.id }}"><input type="hidden" name="type" value="plan">
+        <button type="submit" id="btn-plan-{{ user_plan.id }}" class="claim-button" {% if not user_plan.can_claim %}disabled{% endif %}>{% if user_plan.can_claim %}Claim Income{% else %}Income Not Ready{% endif %}</button>
+      </form>
     </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-box"><i class="fa-solid fa-box-open fa-2x text-muted mb-2"></i><h6>No Plans</h6><p class="text-muted" style="font-size:11px">You have no active plans</p><a href="/dashboard" class="btn btn-primary btn-sm rounded-pill">Buy Plan</a></div>
+  {% endif %}
+  </div>
 
-    <!-- PLANS ONLY -->
-    <div class="tab-pane fade" id="plans">
-      {% set plans = investments|selectattr('type','equalto','PLAN')|list if investments else [] %}
-      {% if plans|length > 0 %}
-        {% for item in plans %}
-        <div class="invest-card type-plan">
-          <div class="d-flex justify-content-between"><span class="tag tag-plan">PLAN</span><span class="tag tag-active">{{ item.status|upper if item.status else 'ACTIVE' }}</span></div>
-          <h6 class="mt-2 fw-bold">{{ item.name }}</h6>
-          <div class="row mt-2 text-center bg-light rounded-3 p-2"><div class="col-4"><small class="text-muted d-block" style="font-size:10px">PRICE</small><b style="font-size:13px">GHS {{ "%.2f"|format(item.investment|float) }}</b></div><div class="col-4 border-start border-end"><small class="text-muted d-block" style="font-size:10px">DAILY</small><b class="text-success" style="font-size:13px">GHS {{ "%.2f"|format(item.daily|float) }}</b></div><div class="col-4"><small class="text-muted d-block" style="font-size:10px">DAYS</small><b style="font-size:13px">{{ item.duration }}</b></div></div>
+  <!-- OFFERS TAB -->
+  <div id="offers-content" class="hidden">
+  {% if user_offers %}
+    {% for offer in user_offers %}
+    <div class="invest-card">
+      <div class="d-flex gap-2">
+        <div class="info-rows">
+          <div class="info-row"><span class="label">Price</span><span class="value">GHS {{ "%.2f"|format(offer.investment_amount|float if offer.investment_amount else offer.investment|float) }}</span></div>
+          <div class="info-row"><span class="label">Daily profit</span><span class="value">GHS {{ "%.2f"|format(offer.daily_income|float if offer.daily_income else offer.daily|float) }}</span></div>
+          <div class="info-row"><span class="label">Days</span><span class="value">{{ offer.duration }}</span></div>
+          <div class="info-row"><span class="label">Total profit</span><span class="value">GHS {{ "%.2f"|format((offer.daily_income|float if offer.daily_income else offer.daily|float) * (offer.duration|int)) }}</span></div>
         </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-box"><p class="text-muted">No Plans bought yet</p><a href="/dashboard" class="btn btn-primary rounded-pill btn-sm mt-2">Buy Plan</a></div>
-      {% endif %}
-    </div>
-
-    <!-- OFFERS ONLY -->
-    <div class="tab-pane fade" id="offers">
-      {% set offers = investments|selectattr('type','equalto','OFFER')|list if investments else [] %}
-      {% if offers|length > 0 %}
-        {% for item in offers %}
-        <div class="invest-card type-offer">
-          <div class="d-flex justify-content-between"><span class="tag tag-offer">OFFER</span><span class="tag tag-active">{{ item.status|upper if item.status else 'ACTIVE' }}</span></div>
-          <h6 class="mt-2 fw-bold">{{ item.name }}</h6>
-          <div class="row mt-2 text-center bg-light rounded-3 p-2"><div class="col-4"><small class="text-muted d-block" style="font-size:10px">PRICE</small><b style="font-size:13px">GHS {{ "%.2f"|format(item.investment|float) }}</b></div><div class="col-4 border-start border-end"><small class="text-muted d-block" style="font-size:10px">DAILY</small><b class="text-success" style="font-size:13px">GHS {{ "%.2f"|format(item.daily|float) }}</b></div><div class="col-4"><small class="text-muted d-block" style="font-size:10px">DAYS</small><b style="font-size:13px">{{ item.duration }}</b></div></div>
+        <div class="product-graphic offer">
+          <div class="status-free" style="background:#ff7a00">OFFER</div>
+          <div style="font-weight:900;margin-top:10px">JOMA</div>
+          <div style="font-size:7px;color:#555">OFFER</div>
+          <div class="vip-badge offer">{{ offer.plan_name }}</div>
         </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-box"><p class="text-muted">No Offers bought yet</p><a href="/dashboard" class="btn rounded-pill btn-sm mt-2" style="background:#ff9800;color:#fff">Buy Offer</a></div>
-      {% endif %}
+      </div>
+      <div class="countdown-bar offer-bg">
+        <span class="countdown-label">Settlement countdown</span>
+        <span class="countdown-timer {% if offer.can_claim %}ready{% endif %}" id="countdown-offer-{{ offer.id }}" data-next="{{ offer.next_income_at.isoformat() if offer.next_income_at else '' }}" data-can="{{ '1' if offer.can_claim else '0' }}">{% if offer.can_claim %}00:00:00{% else %}--:--:--{% endif %}</span>
+      </div>
+      <form method="POST" action="{{ url_for('my_plan') }}">
+        <input type="hidden" name="user_plan_id" value="{{ offer.id }}"><input type="hidden" name="type" value="offer">
+        <button type="submit" id="btn-offer-{{ offer.id }}" class="claim-button offer-btn" {% if not offer.can_claim %}disabled{% endif %}>{% if offer.can_claim %}Claim Income{% else %}Income Not Ready{% endif %}</button>
+      </form>
     </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-box"><i class="fa-solid fa-gift fa-2x text-muted mb-2"></i><h6>No Offers</h6><p class="text-muted" style="font-size:11px">You have no active offers</p><a href="/dashboard" class="btn btn-sm rounded-pill" style="background:#ff7a00;color:#fff">Buy Offer</a></div>
+  {% endif %}
   </div>
 </div>
 
-<!-- Bottom Navigation like Dashboard -->
 <nav class="bottom-nav">
   <a href="/dashboard" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
   <a href="/my_plan" class="nav-item active"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
@@ -138,9 +137,65 @@
   <a href="/invite" class="nav-item"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
   <a href="/profile" class="nav-item"><i class="fa-solid fa-user"></i><span>My</span></a>
 </nav>
-
 </div>
 
+<script>
+// Tab switch
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    if(t.dataset.tab==='plans'){
+      document.getElementById("plans-content").classList.remove("hidden");
+      document.getElementById("offers-content").classList.add("hidden");
+    }else{
+      document.getElementById("plans-content").classList.add("hidden");
+      document.getElementById("offers-content").classList.remove("hidden");
+    }
+  });
+});
+
+// Countdown logic for ALL cards
+function pad(n){return String(n).padStart(2,"0")}
+function format(ms){
+  if(ms<=0) return "00:00:00";
+  let s=Math.floor(ms/1000);
+  let h=Math.floor(s/3600); s%=3600;
+  let m=Math.floor(s/60); s%=60;
+  return pad(h)+":"+pad(m)+":"+pad(s);
+}
+function updateTimers(){
+  document.querySelectorAll(".countdown-timer").forEach(el=>{
+    let can = el.dataset.can === '1';
+    let nextStr = el.dataset.next;
+    let id = el.id.replace("countdown-","");
+    let btn = document.getElementById("btn-"+id);
+    if(can){
+      el.textContent="00:00:00";
+      el.classList.add("ready");
+      if(btn){btn.disabled=false; btn.textContent="Claim Income";}
+      return;
+    }
+    if(!nextStr){
+      el.textContent="--:--:--";
+      return;
+    }
+    let next = new Date(nextStr).getTime();
+    let diff = next - Date.now();
+    if(diff<=0){
+      el.textContent="00:00:00";
+      el.classList.add("ready");
+      if(btn){btn.disabled=false; btn.textContent="Claim Income";}
+    }else{
+      el.textContent=format(diff);
+      el.classList.remove("ready");
+      if(btn){btn.disabled=true; btn.textContent="Income Not Ready";}
+    }
+  });
+}
+updateTimers();
+setInterval(updateTimers,1000);
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
