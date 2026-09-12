@@ -78,6 +78,19 @@ settings = Settings()
 # ============================================================
 
 app = Flask(__name__)
+app.secret_key = 'joma-secret-key-123'  # you must have a secret key
+
+from flask_login import LoginManager, login_required, current_user, login_user, logout_user
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    # Change User to your user model name
+    return User.query.get(int(user_id))
+
 app.secret_key = settings.SECRET_KEY
 app.config["MAX_CONTENT_LENGTH"] = settings.MAX_CONTENT_LENGTH
 app.config["SESSION_COOKIE_HTTPONLY"] = True
