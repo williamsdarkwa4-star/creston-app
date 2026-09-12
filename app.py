@@ -12,6 +12,9 @@ Features:
 - No truncated strings or syntax errors.
 """
 
+"""
+app.py - Complete application (single-file)
+"""
 from __future__ import annotations
 
 import logging
@@ -23,8 +26,7 @@ from datetime import datetime, timezone, timedelta
 from decimal import Decimal, InvalidOperation
 from io import BytesIO
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
-from flask import Flask, render_template, redirect, url_for, request, flash
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+
 from flask import (
     Flask,
     abort,
@@ -36,25 +38,25 @@ from flask import (
     session,
     url_for,
 )
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+
 try:
     from pydantic_settings import BaseSettings
     from pydantic import Field
-except ImportError:  # Pydantic v1 compatibility
+except ImportError:
     from pydantic import BaseSettings, Field
 from werkzeug.security import check_password_hash, generate_password_hash
 
-# Optional import of psycopg2; raise helpful error if not available when DB used.
 try:
     import psycopg2
     from psycopg2.extras import RealDictCursor
-except Exception:  # pragma: no cover - environment dependent
+except Exception:
     psycopg2 = None
     RealDictCursor = None
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
-
 
 class Settings(BaseSettings):
     SECRET_KEY: str = Field("change-this-secret-key", env="SECRET_KEY")
@@ -63,13 +65,12 @@ class Settings(BaseSettings):
     ADMIN_PASSWORD: str = Field("Williams12", env="ADMIN_PASSWORD")
     PORT: int = Field(5000, env="PORT")
     FLASK_DEBUG: bool = Field(False, env="FLASK_DEBUG")
-    MAX_CONTENT_LENGTH: int = Field(5 * 1024 * 1024)  # 5 MB
+    MAX_CONTENT_LENGTH: int = Field(5 * 1024 * 1024)
     SESSION_PERMANENT_DAYS: int = Field(7, env="SESSION_PERMANENT_DAYS")
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-
 
 settings = Settings()
 
@@ -78,32 +79,53 @@ settings = Settings()
 # ============================================================
 
 app = Flask(__name__)
-app.secret_key = 'joma-secret-key-123'  # you must have a secret key
+app.secret_key = settings.SECRET_KEY
+app.config["MAX_CONTENT_LENGTH"] = settings.MAX_CONTENT_LENGTH
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = os.environ.get("SESSION_COOKIE_SECURE", "False").lower() in ("1","true","yes")
+app.permanent_session_lifetime = timedelta(days=settings.SESSION_PERMANENT_DAYS)
 
-from flask_login import LoginManager, login_required, current_user, login_user, logout_user
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+logger = logging.getLogger("zenith.app")
+
+# ============================================================
+# LOGIN MANAGER - FIXED FOR YOUR PSYCOPG2 DB
+# ============================================================
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# User class that works with Flask-Login + your postgres DB
+class User(UserMixin):
+    def __init__(self, id, username, email=None, password_hash=None, data=None):
+        self.id = str(id)
+        self.username = username
+        self.email = email
+        self.password_hash = password_hash
+        self._data = data or {}
+
+    def get_id(self):
+        return str(self.id)
+
 @login_manager.user_loader
 def load_user(user_id):
-    # Change User to your user model name
-    return User.query.get(int(user_id))
-
-app.secret_key = settings.SECRET_KEY
-app.config["MAX_CONTENT_LENGTH"] = settings.MAX_CONTENT_LENGTH
-app.config["SESSION_COOKIE_HTTPONLY"] = True
-app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-app.config["SESSION_COOKIE_SECURE"] = os.environ.get("SESSION_COOKIE_SECURE", "False").lower() in (
-    "1",
-    "true",
-    "yes",
-)
-app.permanent_session_lifetime = timedelta(days=settings.SESSION_PERMANENT_DAYS)
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
-logger = logging.getLogger("zenith.app")
+    try:
+        # Load user from your users table
+        row = query_one("SELECT * FROM users WHERE id = %s", (int(user_id),))
+        if not row:
+            return None
+        return User(
+            id=row.get('id'),
+            username=row.get('username') or row.get('phone') or f"user{row.get('id')}",
+            email=row.get('email'),
+            password_hash=row.get('password_hash') or row.get('password'),
+            data=row
+        )
+    except Exception as e:
+        logger.error(f"load_user error: {e}")
+        return None
 
 # ============================================================
 # PLATFORM SETTINGS & PLANS
