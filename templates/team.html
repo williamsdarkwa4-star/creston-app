@@ -4,123 +4,85 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>My Team - JOMA SPORT</title>
-<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:#080a1e;display:flex;justify-content:center;min-height:100vh}
-.phone{width:100%;max-width:393px;min-height:100vh;background:#f5f6fa;position:relative;padding-bottom:92px;overflow:hidden}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#f1f2f7;position:relative;padding-bottom:90px;overflow:hidden}
 /* TOP */
-.top-bar{height:52px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;background:#f5f6fa;position:sticky;top:0;z-index:10}
-.back{width:36px;height:36px;background:#fff;border:1px solid #e9ebf2;border-radius:12px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#1a1d3a}
-.top-bar h1{font-size:15px;font-weight:900;color:#1a1d3a}
-
+.top-bar{height:56px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;background:#f1f2f7;position:sticky;top:0;z-index:10}
+.back{width:36px;height:36px;background:#fff;border:1px solid #e8e9ef;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#202330}
+.top-bar h1{font-size:15px;font-weight:900;color:#202330}
 /* BANNER LIKE YOUR PHOTO */
-.banner{height:210px;position:relative;overflow:hidden;background:#000;margin:0}
+.banner{height:210px;position:relative;overflow:hidden;background:#000}
 .banner img{width:100%;height:100%;object-fit:cover;object-position:center 20%}
-.banner::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.2) 0%, rgba(0,0,0,0) 50%)}
-.banner-text{position:absolute;left:16px;top:26px;z-index:2;color:#fff;line-height:.9}
-.banner-text h2{font-size:34px;font-weight:900;letter-spacing:-1px;text-transform:uppercase}
+.banner::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.3) 0%, rgba(0,0,0,0) 60%)}
+.banner-text{position:absolute;left:16px;top:24px;z-index:2;color:#fff;line-height:.9}
+.banner-text h2{font-size:36px;font-weight:900;letter-spacing:-1px}
 .banner-text h2 span{color:#ffcc00}
-.banner-text p{font-size:14px;font-weight:700;margin-top:4px;opacity:.9}
-
-/* CODE CARD - LIKE PHOTO BUT JOMA STYLE */
-.card-wrap{padding:12px 16px 0}
-.code-card{background:#fff;border-radius:18px;padding:14px 14px 12px;border:1px solid #eceef4;box-shadow:0 10px 28px rgba(0,0,0,.08)}
-.code-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f1f6}
+/* CODE CARD */
+.card-wrap{padding:12px 14px 0}
+.code-card{background:#fff;border-radius:18px;padding:12px 14px;border:1px solid #e8e9ef;box-shadow:0 8px 24px rgba(25,34,90,.09)}
+.code-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #f0f1f6}
 .code-row:last-child{border:0}
-.code-left b{font-size:16px;font-weight:900;color:#1a1d3a;letter-spacing:.5px;display:block}
-.code-left small{font-size:11px;color:#8b8fa6;font-weight:600;display:block;margin-top:2px}
-.copy{border:0;background:#11142d;color:#fff;padding:10px 18px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;min-width:66px}
-.copy:active{transform:scale(.96)}
-
-.my-team-btn{margin:12px 16px 0;background:#fff;border:1px solid #eceef4;border-radius:20px;padding:14px;text-align:center;font-size:13px;font-weight:900;color:#1a1d3a;text-decoration:none;display:block;box-shadow:0 6px 18px rgba(0,0,0,.05)}
-
-/* COMMISSION TABLE - LIKE PHOTO BUT JOMA */
-.table-card{background:#11142d;border-radius:18px;margin:12px 16px 0;overflow:hidden;border:1px solid #22263f}
-.table-head{display:grid;grid-template-columns:2fr 1fr 1fr;padding:12px 14px;background:#171b36;color:#8b8fa6;font-size:10px;font-weight:800;text-transform:uppercase}
+.code-left b{font-size:15px;font-weight:900;color:#202330;letter-spacing:.5px;display:block}
+.code-left small{font-size:11px;color:#85899a;font-weight:600;display:block;margin-top:2px}
+.copy{border:0;background:#11142d;color:#fff;padding:9px 16px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;min-width:64px}
+.my-team-btn{margin:12px 14px 0;background:#fff;border:1px solid #e8e9ef;border-radius:18px;padding:14px;text-align:center;font-size:13px;font-weight:900;color:#202330;text-decoration:none;display:block;box-shadow:0 6px 18px rgba(25,34,90,.06)}
+/* TABLE */
+.table-card{background:#11142d;border-radius:18px;margin:12px 14px 0;overflow:hidden}
+.table-head{display:grid;grid-template-columns:2fr 1fr 1fr;padding:12px 14px;background:#171b36;color:#85899a;font-size:10px;font-weight:800;text-transform:uppercase}
 .table-row{display:grid;grid-template-columns:2fr 1fr 1fr;padding:12px 14px;border-top:1px solid #1e233f;color:#fff;font-size:11px;font-weight:700;align-items:center}
-.table-row span:last-child,.table-row span:nth-child(2){text-align:center;color:#c5c8dc}
+.table-row span:nth-child(2), .table-row span:last-child{text-align:center;color:#c5c8dc}
+.bottom-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 14px}
+.stat{background:#fff;border-radius:14px;padding:12px;border:1px solid #eef0f5;text-align:center}
+.stat b{display:block;font-size:13px;font-weight:900}
+.stat small{font-size:9px;color:#85899a;font-weight:700}
 
-/* BOTTOM STATS LIKE PHOTO */
-.bottom-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px}
-.stat{background:#fff;border-radius:14px;padding:12px;border:1px solid #eceef4;text-align:center}
-.stat b{display:block;font-size:13px;font-weight:900;color:#1a1d3a}
-.stat small{font-size:9px;color:#8b8fa6;font-weight:700}
-
-/* JOMA FLOATING NAV */
-.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:calc(100% - 24px);max-width:369px;background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.06);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:99;box-shadow:0 14px 32px rgba(0,0,0,0.15)}
-.nav-item{flex:1;text-decoration:none;color:#9aa0b6;font-size:9px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;border-radius:12px}
-.nav-item i{width:20px;height:20px}
-.nav-item.active{color:#1726a8;background:#eef0ff}
-.nav-center{flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none;gap:4px}
-.nav-c{width:48px;height:48px;background:#1726a8;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(23,38,168,.4)}
-.nav-c i{width:20px;height:20px;color:#fff}
-.nav-center span{font-size:9px;font-weight:800;color:#8b8fa6}
-.nav-center.active span{color:#1726a8}
+/* YOUR EXACT JOMA NAVIGATION BOTTOM */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:390px;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;align-items:flex-end;padding:5px 0 6px;z-index:1000;box-shadow:0 -2px 12px rgba(0,0,0,0.06)}
+.nav-item{flex:1;text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
+.nav-item i{font-size:19px}
+.nav-item.active{color:#1726a8;font-weight:800}
+.nav-center{position:relative;top:-14px;flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none}
+.nav-center-circle{width:48px;height:48px;background:#1726a8;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(23,38,168,0.4);border:3px solid #fff}
+.nav-center-circle i{color:#fff;font-size:20px}
+.nav-center-text{font-size:10px;color:#9aa0b6;margin-top:3px;font-weight:600}
 </style>
 </head>
 <body>
 <div class="phone">
-<div class="top-bar">
-  <a href="{{ url_for('dashboard') }}" class="back"><i data-lucide="chevron-left"></i></a>
-  <h1>My team</h1>
-  <div style="width:36px"></div>
-</div>
-
-<!-- BANNER LIKE YOUR PHOTO -->
+<div class="top-bar"><a href="{{ url_for('dashboard') }}" class="back"><i class="fa-solid fa-chevron-left"></i></a><h1>My team</h1><div style="width:36px"></div></div>
 <div class="banner">
   <img src="{{ url_for('static', filename='images/Screenshot_20260830_135812_Instagram.jpg') }}" alt="">
-  <div class="banner-text">
-    <h2>LIVE<br><span>CHARGED</span></h2>
-    <p>LIVE LOUD</p>
-  </div>
+  <div class="banner-text"><h2>LIVE<br><span>CHARGED</span></h2><p style="font-size:13px;font-weight:700;margin-top:6px;opacity:.9">LIVE LOUD</p></div>
 </div>
-
 <div class="card-wrap">
   <div class="code-card">
-    <div class="code-row">
-      <div class="code-left"><b id="codeText">{{ user.referral_code }}</b><small>Invitation code</small></div>
-      <button class="copy" onclick="copyText('codeText',this)">Copy</button>
-    </div>
-    <div class="code-row">
-      <div class="code-left"><b style="font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px" id="linkText">https://joma-sport.onrender.com/register?ref={{ user.referral_code }}</b><small>Invitation link</small></div>
-      <button class="copy" onclick="copyText('linkText',this)">Copy</button>
-    </div>
+    <div class="code-row"><div class="code-left"><b id="codeText">{{ user.referral_code }}</b><small>Invitation code</small></div><button class="copy" onclick="copyText('codeText',this)">Copy</button></div>
+    <div class="code-row"><div class="code-left"><b style="font-size:10px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="linkText">https://joma-sport.onrender.com/register?ref={{ user.referral_code }}</b><small>Invitation link</small></div><button class="copy" onclick="copyText('linkText',this)">Copy</button></div>
   </div>
 </div>
-
 <a href="{{ url_for('team_members') }}" class="my-team-btn">My team ></a>
-
 <div class="table-card">
   <div class="table-head"><span>Commission rate</span><span>Valid users</span><span>Income</span></div>
   <div class="table-row"><span>Level 1 Team 20%</span><span>{{ level1_count|default(0) }}</span><span>0</span></div>
   <div class="table-row"><span>Level 2 Team 3%</span><span>{{ level2_count|default(0) }}</span><span>0</span></div>
   <div class="table-row"><span>Level 3 Team 1%</span><span>{{ level3_count|default(0) }}</span><span>0</span></div>
 </div>
+<div class="bottom-stats"><div class="stat"><b>{{ total_team|default(0) }}</b><small>Total Team</small></div><div class="stat"><b>GHS {{ "%.2f"|format(referral_income|default(0)|float) }}</b><small>Total Income</small></div></div>
 
-<div class="bottom-stats">
-  <div class="stat"><b>{{ total_team|default(0) }}</b><small>Total Team</small></div>
-  <div class="stat"><b>GHS {{ "%.2f"|format(referral_income|default(0)|float) }}</b><small>Total Income</small></div>
-</div>
-
+<!-- YOUR EXACT JOMA NAV -->
 <nav class="bottom-nav">
-  <a href="{{ url_for('dashboard') }}" class="nav-item"><i data-lucide="home"></i><span>Product</span></a>
-  <a href="{{ url_for('my_plan') }}" class="nav-item"><i data-lucide="layout-grid"></i><span>My product</span></a>
-  <a href="{{ url_for('team') }}" class="nav-center active"><div class="nav-c"><i data-lucide="star"></i></div><span>My team</span></a>
-  <a href="{{ url_for('profile') }}" class="nav-item"><i data-lucide="user"></i><span>Mine</span></a>
+  <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="{{ url_for('my_plan') }}" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
+  <a href="{{ url_for('team') }}" class="nav-center"><div class="nav-center-circle"><i class="fa-solid fa-gift"></i></div><span class="nav-center-text">Team</span></a>
+  <a href="{{ url_for('team') }}" class="nav-item"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
+  <a href="{{ url_for('profile') }}" class="nav-item"><i class="fa-solid fa-user"></i><span>My</span></a>
 </nav>
-
 </div>
 <script>
-lucide.createIcons();
-function copyText(id,btn){
-  const t=document.getElementById(id).innerText.trim();
-  navigator.clipboard.writeText(t).then(()=>{
-    const o=btn.innerText;btn.innerText="Copied";btn.style.background="#14b86e";
-    setTimeout(()=>{btn.innerText=o;btn.style.background="#11142d"},1200);
-  });
-}
+function copyText(id,btn){const t=document.getElementById(id).innerText.trim();navigator.clipboard.writeText(t).then(()=>{const o=btn.innerText;btn.innerText="Copied";btn.style.background="#27c77b";setTimeout(()=>{btn.innerText=o;btn.style.background="#11142d"},1200);});}
 </script>
 </body>
 </html>
