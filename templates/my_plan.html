@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Plan - JOMA SPORT</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+  body{background:#f0f2f5; font-family: 'Segoe UI', sans-serif; padding-bottom:80px}
+  .top-bar{background: linear-gradient(135deg, #1726a8 0%, #2a3fc0 100%); color:#fff; padding:20px; border-radius:0 0 24px 24px}
+  .balance-card{background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); border-radius:16px; padding:15px; margin-top:15px}
+  .invest-card{background:#fff; border-radius:18px; padding:16px; margin-bottom:14px; box-shadow:0 4px 12px rgba(0,0,0,0.05); border-left:6px solid #1726a8; position:relative; overflow:hidden}
+  .invest-card.type-offer{border-left-color:#ff9800}
+  .invest-card.type-plan{border-left-color:#1726a8}
+  .tag{font-size:10px; font-weight:700; padding:4px 10px; border-radius:20px; letter-spacing:0.5px}
+  .tag-plan{background:#eef0ff; color:#1726a8}
+  .tag-offer{background:#fff3e0; color:#ef6c00}
+  .tag-active{background:#e8f5e9; color:#2e7d32}
+  .amount{font-size:18px; font-weight:700}
+  .empty-box{background:#fff; border-radius:20px; padding:40px 20px; text-align:center; margin-top:30px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="d-flex justify-content-between align-items-center">
+    <h5 class="m-0"><i class="fa-solid fa-layer-group me-2"></i>My Investments</h5>
+    <a href="/dashboard" class="btn btn-light btn-sm rounded-pill px-3"><i class="fa-solid fa-arrow-left me-1"></i> Dashboard</a>
+  </div>
+
+  <div class="balance-card">
+    <div class="row text-center">
+      <div class="col-6 border-end border-white border-opacity-25">
+        <small class="opacity-75 d-block">Total Invested</small>
+        <span class="amount">${{ total_invested if total_invested else '0.00' }}</span>
+      </div>
+      <div class="col-6">
+        <small class="opacity-75 d-block">Daily Income</small>
+        <span class="amount">${{ total_daily if total_daily else '0.00' }}/day</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-3">
+
+  <!-- Tabs -->
+  <ul class="nav nav-pills bg-white rounded-pill p-1 mb-3 shadow-sm" id="myTab">
+    <li class="nav-item flex-fill"><button class="nav-link active w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#all">All ({{ investments|length if investments else 0 }})</button></li>
+    <li class="nav-item flex-fill"><button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#plans">Plans</button></li>
+    <li class="nav-item flex-fill"><button class="nav-link w-100 rounded-pill" data-bs-toggle="pill" data-bs-target="#offers">Offers</button></li>
+  </ul>
+
+  <div class="tab-content">
+    <!-- ALL -->
+    <div class="tab-pane fade show active" id="all">
+      {% if investments and investments|length > 0 %}
+        {% for item in investments %}
+        <div class="invest-card type-{{ item.type|lower }}">
+          <div class="d-flex justify-content-between">
+            <div>
+              <span class="tag {{ 'tag-offer' if item.type == 'OFFER' else 'tag-plan' }}"><i class="fa-solid {{ 'fa-gift' if item.type == 'OFFER' else 'fa-rocket' }} me-1"></i>{{ item.type }}</span>
+              <h6 class="mt-2 mb-1 fw-bold">{{ item.name }}</h6>
+              <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ item.bought_at if item.bought_at else 'Just now' }}</small>
+            </div>
+            <span class="tag tag-active h-100">{{ item.status|upper }}</span>
+          </div>
+          <div class="row mt-3 g-0 text-center bg-light rounded-3 p-2">
+            <div class="col-4"><small class="text-muted d-block" style="font-size:11px">PRICE</small><b>${{ item.investment }}</b></div>
+            <div class="col-4 border-start border-end"><small class="text-muted d-block" style="font-size:11px">DAILY</small><b class="text-success">${{ item.daily }}</b></div>
+            <div class="col-4"><small class="text-muted d-block" style="font-size:11px">DAYS</small><b>{{ item.duration }}</b></div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-box">
+          <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+          <h6>No Investments Yet</h6>
+          <p class="text-muted small">Buy a Plan or Offer to start earning</p>
+          <a href="/dashboard" class="btn btn-primary rounded-pill px-4 mt-2">Buy Now</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- PLANS ONLY -->
+    <div class="tab-pane fade" id="plans">
+      {% for item in investments if item.type == 'PLAN' %}
+      <div class="invest-card type-plan">
+        <span class="tag tag-plan">PLAN</span>
+        <h6 class="mt-2 fw-bold">{{ item.name }}</h6>
+        <div class="row mt-2 text-center"><div class="col-4"><b>${{ item.investment }}</b></div><div class="col-4"><b class="text-success">${{ item.daily }}</b></div><div class="col-4"><b>{{ item.duration }}D</b></div></div>
+      </div>
+      {% else %}
+      <div class="empty-box"><p class="text-muted">No Plans bought yet</p></div>
+      {% endfor %}
+    </div>
+
+    <!-- OFFERS ONLY -->
+    <div class="tab-pane fade" id="offers">
+      {% for item in investments if item.type == 'OFFER' %}
+      <div class="invest-card type-offer">
+        <span class="tag tag-offer">OFFER</span>
+        <h6 class="mt-2 fw-bold">{{ item.name }}</h6>
+        <div class="row mt-2 text-center"><div class="col-4"><b>${{ item.investment }}</b></div><div class="col-4"><b class="text-success">${{ item.daily }}</b></div><div class="col-4"><b>{{ item.duration }}D</b></div></div>
+      </div>
+      {% else %}
+      <div class="empty-box"><p class="text-muted">No Offers bought yet</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
