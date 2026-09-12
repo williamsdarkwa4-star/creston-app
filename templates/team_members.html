@@ -3,82 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>My Team Members - JOMA</title>
-<script src="https://unpkg.com/lucide@latest"></script>
+<title>My Team - JOMA</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,sans-serif}
-body{background:#080a1e;display:flex;justify-content:center;min-height:100vh}
-.phone{width:100%;max-width:393px;min-height:100vh;background:#fff;position:relative;padding-bottom:92px}
-.top{height:52px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #f0f1f6;background:#fff;position:sticky;top:0;z-index:10}
-.top a{width:36px;height:36px;background:#f5f6fa;border-radius:12px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#1a1d3a}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#fff;position:relative;padding-bottom:90px}
+.top{height:56px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e9e9ef;background:#fff;position:sticky;top:0;z-index:10}
+.top a{width:36px;height:36px;background:#f1f2f7;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#202330}
 .top h1{font-size:15px;font-weight:900}
 .tabs{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid #f0f1f6;background:#fff}
 .tab{padding:14px 4px;text-align:center;cursor:pointer;border-bottom:2px solid transparent}
-.tab b{display:block;font-size:14px;font-weight:900;color:#1a1d3a}
-.tab small{display:block;font-size:11px;color:#8b8fa6;margin-top:3px;font-weight:700}
+.tab b{display:block;font-size:14px;font-weight:900;color:#202330}
+.tab small{display:block;font-size:11px;color:#85899a;margin-top:3px;font-weight:700}
 .tab.active{border-bottom:2px solid #1726a8}
 .tab.active small{color:#1726a8}
-.content{padding:20px 16px}
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:#8b8fa6}
-.empty img{width:80px;opacity:.6;margin-bottom:12px}
-.empty p{font-size:12px}
-.member{background:#f7f8fd;border:1px solid #eceef4;border-radius:14px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.content{padding:16px 14px}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;color:#85899a}
+.empty p{font-size:12px;margin-top:10px}
+.member{background:#f7f8fb;border:1px solid #eef0f5;border-radius:14px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
 .member b{font-size:13px;font-weight:800}
-.member small{font-size:10px;color:#8b8fa6;display:block;margin-top:2px}
+.member small{font-size:10px;color:#85899a;display:block;margin-top:2px}
 .member span{background:#1726a8;color:#fff;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800}
-.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:calc(100% - 24px);max-width:369px;background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.06);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:99;box-shadow:0 14px 32px rgba(0,0,0,0.15)}
-.nav-item{flex:1;text-decoration:none;color:#9aa0b6;font-size:9px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;border-radius:12px}
-.nav-item i{width:20px;height:20px}
-.nav-item.active{color:#1726a8;background:#eef0ff}
-.nav-center{flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none;gap:4px}
-.nav-c{width:48px;height:48px;background:#1726a8;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(23,38,168,.4)}
-.nav-c i{width:20px;height:20px;color:#fff}
-.nav-center span{font-size:9px;font-weight:800;color:#8b8fa6}
-.nav-center.active span{color:#1726a8}
+/* YOUR EXACT JOMA NAVIGATION BOTTOM */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:390px;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;align-items:flex-end;padding:5px 0 6px;z-index:1000;box-shadow:0 -2px 12px rgba(0,0,0,0.06)}
+.nav-item{flex:1;text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
+.nav-item i{font-size:19px}
+.nav-item.active{color:#1726a8;font-weight:800}
+.nav-center{position:relative;top:-14px;flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none}
+.nav-center-circle{width:48px;height:48px;background:#1726a8;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(23,38,168,0.4);border:3px solid #fff}
+.nav-center-circle i{color:#fff;font-size:20px}
+.nav-center-text{font-size:10px;color:#9aa0b6;margin-top:3px;font-weight:600}
 </style>
 </head>
 <body>
 <div class="phone">
-<div class="top"><a href="{{ url_for('team') }}"><i data-lucide="chevron-left"></i></a><h1>My team</h1><div style="width:36px"></div></div>
-
+<div class="top"><a href="{{ url_for('team') }}"><i class="fa-solid fa-chevron-left"></i></a><h1>My team</h1><div style="width:36px"></div></div>
 <div class="tabs">
-  <div class="tab active" onclick="filterLevel(1)"><b>{{ "%.2f"|format(0) }}</b><small>Level 1({{ level1_count|default(0) }})</small></div>
-  <div class="tab" onclick="filterLevel(2)"><b>{{ "%.2f"|format(0) }}</b><small>Level 2({{ level2_count|default(0) }})</small></div>
-  <div class="tab" onclick="filterLevel(3)"><b>{{ "%.2f"|format(0) }}</b><small>Level 3({{ level3_count|default(0) }})</small></div>
+  <div class="tab active" onclick="filterLevel(1)"><b>0.00</b><small>Level 1({{ level1_count|default(0) }})</small></div>
+  <div class="tab" onclick="filterLevel(2)"><b>0.00</b><small>Level 2({{ level2_count|default(0) }})</small></div>
+  <div class="tab" onclick="filterLevel(3)"><b>0.00</b><small>Level 3({{ level3_count|default(0) }})</small></div>
 </div>
-
 <div class="content" id="content">
 {% if members %}
-  {% for member in members %}
-  <div class="member" data-level="{{ member.referral_level|default(1) }}">
-    <div><b>{{ member.username }}</b><small>{{ member.phone }}</small></div><span>Level {{ member.referral_level|default(1) }}</span>
-  </div>
-  {% endfor %}
+  {% for member in members %}<div class="member" data-level="{{ member.referral_level|default(1) }}"><div><b>{{ member.username }}</b><small>{{ member.phone }}</small></div><span>Lv {{ member.referral_level|default(1) }}</span></div>{% endfor %}
 {% else %}
-  <div class="empty"><img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"><p>No more data</p></div>
+  <div class="empty"><img src="https://cdn-icons-png.flaticon.com/512/6134/6134065.png" width="60" style="opacity:.4"><p>No more data</p></div>
 {% endif %}
 </div>
 
 <nav class="bottom-nav">
-  <a href="{{ url_for('dashboard') }}" class="nav-item"><i data-lucide="home"></i><span>Product</span></a>
-  <a href="{{ url_for('my_plan') }}" class="nav-item"><i data-lucide="layout-grid"></i><span>My product</span></a>
-  <a href="{{ url_for('team') }}" class="nav-center active"><div class="nav-c"><i data-lucide="star"></i></div><span>My team</span></a>
-  <a href="{{ url_for('profile') }}" class="nav-item"><i data-lucide="user"></i><span>Mine</span></a>
+  <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="{{ url_for('my_plan') }}" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
+  <a href="{{ url_for('team') }}" class="nav-center"><div class="nav-center-circle"><i class="fa-solid fa-gift"></i></div><span class="nav-center-text">Team</span></a>
+  <a href="{{ url_for('team') }}" class="nav-item"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
+  <a href="{{ url_for('profile') }}" class="nav-item"><i class="fa-solid fa-user"></i><span>My</span></a>
 </nav>
 </div>
 <script>
-lucide.createIcons();
-function filterLevel(l){
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active', i+1===l));
-  document.querySelectorAll('.member').forEach(m=>{
-    const lvl=parseInt(m.dataset.level||1);
-    m.style.display = (lvl===l) ? 'flex' : 'none';
-  });
-  const visible = [...document.querySelectorAll('.member')].some(m=>m.style.display!=='none');
-  if(!visible && document.querySelectorAll('.member').length>0){
-    document.getElementById('content').innerHTML += '<div class="empty"><img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"><p>No more data</p></div>';
-  }
-}
+function filterLevel(l){document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i+1===l));let found=false;document.querySelectorAll('.member').forEach(m=>{const lv=parseInt(m.dataset.level||1);const show=lv===l;m.style.display=show?'flex':'none';if(show)found=true;});}
 </script>
 </body>
 </html>
