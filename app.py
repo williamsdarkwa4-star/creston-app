@@ -781,72 +781,112 @@ def buy_plan(plan_id: int):
             "duration": plan["duration"],
         },
     )
-@app.route('/confirm_offer/<int:offer_id>', methods=['GET', 'POST'])
-@login_required
-def confirm_offer(offer_id):
-    """Confirm and purchase an admin-created offer using the same PostgreSQL model as the rest of the app."""
+@app.route("/confirm_offer/<int:offer_id>", methods=["GET", "POST"])
+def confirm_offer(offer_id: int):
+    """Display and purchase an active admin offer using the app's PostgreSQL/session system.
+
+    This route intentionally does NOT use flask_login's @login_required because this
+    application uses its own session["user_id"] authentication system.
+    """
     user = current_user()
     if not user:
-        return redirect(url_for('login'))
+        # Preserve the requested page so the login page can return here after login.
+        return redirect(url_for("login", next=request.full_path))
 
-    offer = query_one("SELECT * FROM admin_offer WHERE id=%s AND active=TRUE", (offer_id,))
+    offer = query_one(
+        "SELECT * FROM admin_offer WHERE id=%s AND active=TRUE",
+        (offer_id,),
+    )
     if not offer:
-        flash('Offer not found or no longer active.', 'error')
-        return redirect(url_for('dashboard'))
+        flash("Offer not found or no longer active.", "error")
+        return redirect(url_for("dashboard"))
 
-    account = current_account(user['id'])
-    price = money(offer.get('price'))
+    account = current_account(user["id"])
+    price = money(offer.get("price"))
 
-    if request.method == 'GET':
-        return render_template('confirm_offer.html', offer=offer, account=account)
+    if price <= Decimal("0.00"):
+        flash("This offer has an invalid price.", "error")
+        return redirect(url_for("dashboard"))
+
+    if request.method == "GET":
+        return render_template(
+            "confirm_offer.html",
+            offer=offer,
+            account=account_for_display(account),
+        )
 
     try:
         with db_cursor(commit=True, dict_cursor=True) as cur:
-            ensure_account(cur, user['id'], STARTING_DEPOSIT_BALANCE)
+            # Make sure the account exists and lock it during the purchase.
+            ensure_account(cur, user["id"], STARTING_DEPOSIT_BALANCE)
             cur.execute(
-                "SELECT deposit_account FROM accounts WHERE user_id=%s FOR UPDATE",
-                (user['id'],),
+                """
+                SELECT deposit_account
+                FROM accounts
+                WHERE user_id=%s
+                FOR UPDATE
+                """,
+                (user["id"],),
             )
-            row = cur.fetchone() or {}
-            balance = money(row.get('deposit_account'))
+            locked_account = cur.fetchone()
+            balance = money((locked_account or {}).get("deposit_account"))
 
             if balance < price:
+                # The transaction is still safe because nothing has been changed.
                 return render_template(
-                    'insufficient_balance_offer.html',
+                    "insufficient_balance_offer.html",
                     offer=offer,
-                    account=account,
+                    account=account_for_display(locked_account or account),
                 )
 
+            # Deduct only when enough balance is still available.
             cur.execute(
-                "UPDATE accounts SET deposit_account=deposit_account-%s WHERE user_id=%s AND deposit_account >= %s",
-                (price, user['id'], price),
+                """
+                UPDATE accounts
+                SET deposit_account = deposit_account - %s
+                WHERE user_id=%s AND deposit_account >= %s
+                """,
+                (price, user["id"], price),
             )
             if cur.rowcount != 1:
-                raise ValueError('Insufficient deposit balance.')
+                raise ValueError("Insufficient deposit balance.")
 
             started_at = utcnow()
+            daily_amount = money(offer.get("daily_amount"))
+            duration = max(0, int(offer.get("duration") or 0))
+
+            # Negative plan_id values identify admin offers and avoid colliding with
+            # the normal numbered plans already used by the application.
             cur.execute(
                 """
                 INSERT INTO plans (
-                    user_id, plan_id, plan_name, investment_amount,
-                    daily_income, duration, started_at, last_claim_at, active
+                    user_id,
+                    plan_id,
+                    plan_name,
+                    investment_amount,
+                    daily_income,
+                    duration,
+                    started_at,
+                    last_claim_at,
+                    active
                 )
                 VALUES (%s,%s,%s,%s,%s,%s,%s,NULL,TRUE)
                 RETURNING id
                 """,
                 (
-                    user['id'],
-                    -int(offer['id']),
-                    offer['name'],
+                    user["id"],
+                    -int(offer["id"]),
+                    offer["name"],
                     price,
-                    money(offer.get('daily_amount')),
-                    max(0, int(offer.get('duration') or 0)),
+                    daily_amount,
+                    duration,
                     started_at,
                 ),
             )
             plan_row = cur.fetchone()
-            plan_record_id = fetch_id(plan_row, 'id')
+            plan_record_id = fetch_id(plan_row, "id")
 
+            # Keep a transaction record so the purchase appears in history/admin logs.
             cur.execute(
                 """
                 INSERT INTO transactions
@@ -854,22 +894,23 @@ def confirm_offer(offer_id):
                 VALUES (%s,'plan_purchase',%s,'successful',%s,%s)
                 """,
                 (
-                    user['id'],
+                    user["id"],
                     price,
-                    generate_reference('OFFER'),
+                    generate_reference("OFFER"),
                     f"Offer purchase: {offer['name']} (plan record #{plan_record_id})",
                 ),
             )
 
-        flash(f"{offer['name']} activated successfully.", 'success')
-        return redirect(url_for('my_plan'))
-    except ValueError as exc:
-        flash(str(exc), 'error')
-    except Exception:
-        logger.exception('CONFIRM OFFER ERROR')
-        flash('Unable to purchase the offer.', 'error')
+        flash(f"{offer['name']} activated successfully.", "success")
+        return redirect(url_for("my_plan"))
 
-    return redirect(url_for('dashboard'))
+    except ValueError as exc:
+        flash(str(exc), "error")
+    except Exception:
+        logger.exception("CONFIRM OFFER ERROR")
+        flash("Unable to purchase the offer. Please try again.", "error")
+
+    return redirect(url_for("dashboard"))
 
 
 @app.route("/confirm_buy_plan/<int:plan_id>", methods=["POST"])
