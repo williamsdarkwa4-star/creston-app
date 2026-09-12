@@ -1,21 +1,7 @@
 #!/usr/bin/env python3
-"""
-app.py - Complete application (single-file)
-
-Features:
-- All routes included (user, admin, team, deposits, withdrawals, plans).
-- Database initialization included.
-- Existing registration/account behaviour is preserved; withdrawal minimum is controlled by MIN_WITHDRAWAL.
-- Gift-code rewards are credited directly to withdraw_account and recorded as successful transactions.
-- Withdrawals are allowed only when the user has at least one active plan.
-- Defensive handling for DB fetchone() results and legacy plaintext passwords.
-- No truncated strings or syntax errors.
-"""
-
-"""
-app.py - Complete application (single-file)
-"""
 from __future__ import annotations
+
+"""JOMA Flask application."""
 
 import logging
 import os
@@ -798,42 +784,92 @@ def buy_plan(plan_id: int):
 @app.route('/confirm_offer/<int:offer_id>', methods=['GET', 'POST'])
 @login_required
 def confirm_offer(offer_id):
-    # Get offer
-    offer = Offer.query.get_or_404(offer_id)
-    account = Account.query.filter_by(user_id=current_user.id).first()
+    """Confirm and purchase an admin-created offer using the same PostgreSQL model as the rest of the app."""
+    user = current_user()
+    if not user:
+        return redirect(url_for('login'))
 
-    # If user just opens the page (GET) - show confirm page
+    offer = query_one("SELECT * FROM admin_offer WHERE id=%s AND active=TRUE", (offer_id,))
+    if not offer:
+        flash('Offer not found or no longer active.', 'error')
+        return redirect(url_for('dashboard'))
+
+    account = current_account(user['id'])
+    price = money(offer.get('price'))
+
     if request.method == 'GET':
         return render_template('confirm_offer.html', offer=offer, account=account)
 
-    # If user clicks Confirm button (POST) - buy the offer
-    if request.method == 'POST':
-        price = float(offer.price)
+    try:
+        with db_cursor(commit=True, dict_cursor=True) as cur:
+            ensure_account(cur, user['id'], STARTING_DEPOSIT_BALANCE)
+            cur.execute(
+                "SELECT deposit_account FROM accounts WHERE user_id=%s FOR UPDATE",
+                (user['id'],),
+            )
+            row = cur.fetchone() or {}
+            balance = money(row.get('deposit_account'))
 
-        # Check balance
-        if float(account.deposit_account) < price:
-            # Not enough money - show insufficient page
-            return render_template('insufficient_balance_offer.html', offer=offer, account=account)
+            if balance < price:
+                return render_template(
+                    'insufficient_balance_offer.html',
+                    offer=offer,
+                    account=account,
+                )
 
-        # Deduct from deposit account
-        account.deposit_account = float(account.deposit_account) - price
+            cur.execute(
+                "UPDATE accounts SET deposit_account=deposit_account-%s WHERE user_id=%s AND deposit_account >= %s",
+                (price, user['id'], price),
+            )
+            if cur.rowcount != 1:
+                raise ValueError('Insufficient deposit balance.')
 
-        # Create user offer record
-        new_user_offer = UserOffer(
-            user_id=current_user.id,
-            offer_id=offer.id,
-            offer_name=offer.name,
-            price=price,
-            daily_amount=offer.daily_amount,
-            duration=offer.duration,
-            status='active'
-        )
+            started_at = utcnow()
+            cur.execute(
+                """
+                INSERT INTO plans (
+                    user_id, plan_id, plan_name, investment_amount,
+                    daily_income, duration, started_at, last_claim_at, active
+                )
+                VALUES (%s,%s,%s,%s,%s,%s,%s,NULL,TRUE)
+                RETURNING id
+                """,
+                (
+                    user['id'],
+                    -int(offer['id']),
+                    offer['name'],
+                    price,
+                    money(offer.get('daily_amount')),
+                    max(0, int(offer.get('duration') or 0)),
+                    started_at,
+                ),
+            )
+            plan_row = cur.fetchone()
+            plan_record_id = fetch_id(plan_row, 'id')
 
-        db.session.add(new_user_offer)
-        db.session.commit()
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, transaction_type, amount, status, reference, description)
+                VALUES (%s,'plan_purchase',%s,'successful',%s,%s)
+                """,
+                (
+                    user['id'],
+                    price,
+                    generate_reference('OFFER'),
+                    f"Offer purchase: {offer['name']} (plan record #{plan_record_id})",
+                ),
+            )
 
-        flash(f'Successfully purchased {offer.name}!', 'success')
+        flash(f"{offer['name']} activated successfully.", 'success')
         return redirect(url_for('my_plan'))
+    except ValueError as exc:
+        flash(str(exc), 'error')
+    except Exception:
+        logger.exception('CONFIRM OFFER ERROR')
+        flash('Unable to purchase the offer.', 'error')
+
+    return redirect(url_for('dashboard'))
 
 
 @app.route("/confirm_buy_plan/<int:plan_id>", methods=["POST"])
