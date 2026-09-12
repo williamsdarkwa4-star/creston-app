@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Team Members - JOMA SPORT</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#080a1e;display:flex;justify-content:center;min-height:100vh}
+.phone{width:100%;max-width:393px;min-height:100vh;background:#f5f6fa;position:relative;padding-bottom:92px;overflow:hidden}
+
+/* TOP */
+.top-bar{height:56px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;background:#f5f6fa;position:sticky;top:0;z-index:20}
+.top-left{display:flex;align-items:center;gap:10px}
+.back-btn{width:36px;height:36px;background:#fff;border:1px solid #e9ebf2;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#1a1d3a;text-decoration:none}
+.logo{font-size:17px;font-weight:900;letter-spacing:-0.5px;color:#1a1d3a;display:flex;align-items:center;gap:8px}
+.logo b{width:32px;height:32px;background:#1726a8;color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.top-icon{width:36px;height:36px;background:#fff;border:1px solid #e9ebf2;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#1a1d3a;text-decoration:none}
+
+.header-banner{background:linear-gradient(135deg,#1726a8 0%,#2a3cd1 100%);margin:8px 16px 0;padding:18px 16px;border-radius:20px;color:#fff;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.header-banner:after{content:'';position:absolute;top:-20px;right:-20px;width:90px;height:90px;background:rgba(255,255,255,.08);border-radius:50%}
+.icon-box{width:48px;height:48px;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.icon-box i{width:22px;height:22px;color:#fff}
+.banner-text{position:relative}
+.banner-text h1{font-size:16px;font-weight:900}
+.banner-text p{font-size:11px;opacity:.8;margin-top:2px}
+
+.container{padding:14px 16px}
+.summary{background:#fff;border:1px solid #eceef4;border-radius:18px;padding:14px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,.06);margin-bottom:12px}
+.summary-icon{width:46px;height:46px;background:#eef0ff;border-radius:13px;display:flex;align-items:center;justify-content:center;color:#1726a8;flex-shrink:0}
+.summary-icon i{width:20px;height:20px}
+.summary-title{font-size:14px;font-weight:900;color:#1a1d3a}
+.summary-text{font-size:11px;color:#8b8fa6;margin-top:2px}
+
+.member{background:#fff;border:1px solid #eceef4;border-radius:18px;padding:14px;margin-bottom:10px;box-shadow:0 6px 20px rgba(0,0,0,.05)}
+.member-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.member-name{font-size:14px;font-weight:900;color:#1a1d3a;word-break:break-word}
+.member-level{background:#1726a8;color:#fff;padding:5px 11px;border-radius:20px;font-size:9px;font-weight:900;white-space:nowrap}
+.member-info{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.info-item{background:#f7f8fd;border:1px solid #eceef4;border-radius:12px;padding:10px;color:#8b8fa6;font-size:10px;font-weight:700;text-transform:uppercase}
+.info-item strong{display:block;color:#1a1d3a;font-size:12px;margin-top:4px;text-transform:none;word-break:break-word}
+.status-active{color:#1726a8 !important}
+
+.empty{background:#fff;border:1px solid #eceef4;border-radius:18px;padding:36px 16px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.empty-icon{width:56px;height:56px;background:#eef0ff;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#1726a8}
+.empty-icon i{width:26px;height:26px}
+.empty-title{font-size:14px;font-weight:900;color:#1a1d3a}
+.empty-text{font-size:11px;color:#8b8fa6;margin-top:6px;line-height:1.5}
+
+/* JOMA FLOATING BOTTOM NAV - SAME AS DASHBOARD */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:calc(100% - 24px);max-width:369px;background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.06);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:99;box-shadow:0 14px 32px rgba(0,0,0,0.15)}
+.nav-item{flex:1;text-decoration:none;color:#9aa0b6;font-size:9px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;border-radius:12px}
+.nav-item i{width:20px;height:20px}
+.nav-item.active{color:#1726a8;background:#eef0ff}
+.nav-center{flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none;gap:4px}
+.nav-c{width:48px;height:48px;background:#1726a8;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(23,38,168,.4)}
+.nav-c i{width:20px;height:20px;color:#fff}
+.nav-center span{font-size:9px;font-weight:800;color:#8b8fa6}
+.nav-center.active span{color:#1726a8}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<div class="top-bar">
+  <div class="top-left">
+    <a href="{{ url_for('team') }}" class="back-btn"><i data-lucide="chevron-left"></i></a>
+    <div class="logo"><b>J</b> Team Members</div>
+  </div>
+  <a href="{{ url_for('profile') }}" class="top-icon"><i data-lucide="user"></i></a>
+</div>
+
+<div class="header-banner">
+  <div class="icon-box"><i data-lucide="users"></i></div>
+  <div class="banner-text">
+    <h1>My Team Members</h1>
+    <p>{{ total_team|default(0) }} member{% if total_team|default(0) != 1 %}s{% endif %} in your network</p>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="summary">
+  <div class="summary-icon"><i data-lucide="users-round"></i></div>
+  <div>
+    <div class="summary-title">Total Team Size</div>
+    <div class="summary-text">{{ total_team|default(0) }} member{% if total_team|default(0) != 1 %}s{% endif %} • Active referral network</div>
+  </div>
+</div>
+
+{% if members %}
+  {% for member in members %}
+  <div class="member">
+    <div class="member-top">
+      <div class="member-name">{{ member.username }}</div>
+      <div class="member-level">Level {{ member.referral_level|default(1) }}</div>
+    </div>
+    <div class="member-info">
+      <div class="info-item">Phone<strong>{% set phone = member.phone|string %}{% if phone|length > 5 %}{{ phone[:3] }}**{{ phone[-2:] }}{% else %}**{{ phone[-2:] }}{% endif %}</strong></div>
+      <div class="info-item">Investment<strong>GHS {{ "%.2f"|format(member.invest_amount|default(0)|float) }}</strong></div>
+      <div class="info-item">Joined<strong>{% if member.created_at %}{{ member.created_at.strftime("%d %b %Y") }}{% else %}N/A{% endif %}</strong></div>
+      <div class="info-item">Status<strong class="{% if member.invest_amount|default(0)|float > 0 %}status-active{% endif %}">{% if member.invest_amount|default(0)|float > 0 %}Active{% else %}Registered{% endif %}</strong></div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <div class="empty">
+    <div class="empty-icon"><i data-lucide="users"></i></div>
+    <div class="empty-title">No Team Members Yet</div>
+    <div class="empty-text">Share your invite code to start<br>building your team.</div>
+  </div>
+{% endif %}
+
+</div>
+
+<!-- SAME JOMA NAVIGATION AS DASHBOARD -->
+<nav class="bottom-nav">
+  <a href="{{ url_for('dashboard') }}" class="nav-item"><i data-lucide="home"></i><span>Home</span></a>
+  <a href="{{ url_for('my_plan') }}" class="nav-item"><i data-lucide="trending-up"></i><span>Income</span></a>
+  <a href="{{ url_for('team_members') }}" class="nav-center active"><div class="nav-c"><i data-lucide="users"></i></div><span>Team</span></a>
+  <a href="{{ url_for('team') }}" class="nav-item"><i data-lucide="share-2"></i><span>Share</span></a>
+  <a href="{{ url_for('profile') }}" class="nav-item"><i data-lucide="user"></i><span>My</span></a>
+</nav>
+
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>
