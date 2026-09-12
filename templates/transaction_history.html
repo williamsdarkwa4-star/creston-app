@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Transaction History - JOMA SPORT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#f1f2f7;position:relative;padding-bottom:90px;overflow:hidden}
+
+/* TOP LIKE PHOTO */
+.top{height:52px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e9e9ef;position:sticky;top:0;z-index:20}
+.top a{width:36px;height:36px;background:#f1f2f7;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#202330}
+.top h1{font-size:15px;font-weight:900}
+
+/* TABS LIKE PHOTO - All message / Deposit message / Withdraw message */
+.tabs{display:flex;gap:8px;padding:12px 14px;background:#fff;border-bottom:1px solid #e9e9ef;overflow-x:auto;white-space:nowrap}
+.tab{border:0;padding:8px 14px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;background:#f1f2f7;color:#85899a;flex-shrink:0}
+.tab.active{background:#1726a8;color:#fff;box-shadow:0 4px 12px rgba(23,38,168,.25)}
+
+.content{padding:14px}
+
+.back{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px;margin-bottom:12px;text-decoration:none;color:#1726a8;background:#fff;border:1px solid #e9e9ef;border-radius:12px;font-size:11px;font-weight:800}
+
+/* SUMMARY */
+.summary{background:linear-gradient(135deg,#1726a8,#2a3cd1);border-radius:16px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;color:#fff;margin-bottom:12px;box-shadow:0 8px 20px rgba(23,38,168,.25)}
+.summary small{font-size:9px;opacity:.8;display:block;font-weight:700}
+.summary b{font-size:15px;font-weight:900;margin-top:3px;display:block}
+.summary-icon{width:40px;height:40px;background:rgba(255,255,255,.18);border-radius:11px;display:flex;align-items:center;justify-content:center}
+
+/* TRANSACTION CARD - JOMA STYLE */
+.transaction{background:#fff;border:1px solid #eef0f5;border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 6px 18px rgba(25,34,90,.06)}
+.transaction-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.transaction-title{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:800;color:#202330}
+.t-icon{width:36px;height:36px;border-radius:10px;background:#eef0ff;color:#1726a8;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.amount{color:#1726a8;font-size:13px;font-weight:900;white-space:nowrap}
+.details{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #f0f1f6;font-size:10px}
+.details-label{color:#85899a}
+.details-value{color:#202330;font-weight:600;text-align:right;word-break:break-all}
+.description{background:#f7f8fb;border:1px solid #eef0f5;border-radius:9px;padding:9px;margin:8px 0;color:#666;font-size:10px;line-height:1.5}
+.status{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:5px 10px;border-radius:20px;font-size:9px;font-weight:800}
+.status.successful{background:#e8f9ef;color:#16a34a;border:1px solid #c6f6d5}
+.status.pending{background:#fff7ed;color:#ea580c;border:1px solid #ffdfc0}
+.status.failed,.status.rejected{background:#fff0f0;color:#dc2626;border:1px solid #ffd0d0}
+.status.other{background:#f1f2f7;color:#85899a;border:1px solid #e9e9ef}
+
+.empty{background:#fff;border:1px solid #eef0f5;border-radius:16px;padding:36px 20px;text-align:center;box-shadow:0 6px 18px rgba(25,34,90,.06)}
+.empty-icon{width:54px;height:54px;margin:0 auto 12px;border-radius:50%;background:#eef0ff;color:#1726a8;display:flex;align-items:center;justify-content:center}
+.empty h2{font-size:14px;font-weight:900;color:#202330}
+.empty p{color:#85899a;font-size:11px;margin-top:6px;line-height:1.5}
+
+.loading{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:5000;backdrop-filter:blur(3px)}
+.loading-box{width:110px;padding:18px;background:#fff;border-radius:14px;text-align:center}
+.loader{width:30px;height:30px;border:3px solid #eef0f5;border-top-color:#1726a8;border-radius:50%;animation:spin .8s linear infinite;margin:auto}
+.loading-text{color:#85899a;font-size:10px;margin-top:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* YOUR EXACT JOMA NAV */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:390px;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;align-items:flex-end;padding:5px 0 6px;z-index:1000;box-shadow:0 -2px 12px rgba(0,0,0,0.06)}
+.nav-item{flex:1;text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
+.nav-item i{font-size:19px}
+.nav-item.active{color:#1726a8;font-weight:800}
+.nav-center{position:relative;top:-14px;flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none}
+.nav-center-circle{width:48px;height:48px;background:#1726a8;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(23,38,168,0.4);border:3px solid #fff}
+.nav-center-circle i{color:#fff;font-size:20px}
+.nav-center-text{font-size:10px;color:#9aa0b6;margin-top:3px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<div class="top">
+  <a href="{{ url_for('profile') }}"><i class="fa-solid fa-chevron-left"></i></a>
+  <h1>Transaction History</h1>
+  <div style="width:36px"></div>
+</div>
+
+<!-- TABS LIKE PHOTO - All message / Deposit / Withdraw -->
+<div class="tabs">
+  <button class="tab active" data-filter="all" onclick="filterMsg('all')">All message</button>
+  <button class="tab" data-filter="deposit" onclick="filterMsg('deposit')">Deposit message</button>
+  <button class="tab" data-filter="withdrawal" onclick="filterMsg('withdrawal')">Withdraw message</button>
+  <button class="tab" data-filter="income" onclick="filterMsg('income')">Income message</button>
+</div>
+
+<div class="content">
+
+  <div class="summary">
+    <div><small>ACCOUNT ACTIVITY</small><b>Transaction Records</b></div>
+    <div class="summary-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+  </div>
+
+  {% for transaction in transactions %}
+  <div class="transaction" data-type="{{ transaction.transaction_type }}">
+    <div class="transaction-top">
+      <div class="transaction-title">
+        <div class="t-icon">
+          {% if transaction.transaction_type == "deposit" %}<i class="fa-solid fa-credit-card"></i>
+          {% elif transaction.transaction_type == "plan_purchase" %}<i class="fa-solid fa-box"></i>
+          {% elif transaction.transaction_type == "income_claim" %}<i class="fa-solid fa-arrow-trend-up"></i>
+          {% elif transaction.transaction_type == "withdrawal" %}<i class="fa-solid fa-wallet"></i>
+          {% else %}<i class="fa-solid fa-receipt"></i>{% endif %}
+        </div>
+        <span>
+          {% if transaction.transaction_type == "deposit" %}Deposit
+          {% elif transaction.transaction_type == "plan_purchase" %}Plan Purchase
+          {% elif transaction.transaction_type == "income_claim" %}Income
+          {% elif transaction.transaction_type == "withdrawal" %}Withdrawal
+          {% else %}Transaction{% endif %}
+        </span>
+      </div>
+      <div class="amount">GHS {{ "%.2f"|format(transaction.amount or 0) }}</div>
+    </div>
+
+    {% if transaction.description %}<div class="description">{{ transaction.description }}</div>{% endif %}
+    {% if transaction.reference %}<div class="details"><span class="details-label">Reference</span><span class="details-value">{{ transaction.reference }}</span></div>{% endif %}
+    <div class="details"><span class="details-label">Date</span><span class="details-value">{{ transaction.created_at.strftime("%d %b %Y, %H:%M") if transaction.created_at else "N/A" }}</span></div>
+
+    {% if transaction.status == "successful" %}<div class="status successful"><i class="fa-solid fa-circle-check"></i> Successful</div>
+    {% elif transaction.status == "pending" %}<div class="status pending"><i class="fa-solid fa-clock"></i> Pending</div>
+    {% elif transaction.status in ["failed", "rejected"] %}<div class="status {{ transaction.status }}"><i class="fa-solid fa-circle-xmark"></i> {{ transaction.status|capitalize }}</div>
+    {% else %}<div class="status other"><i class="fa-solid fa-circle-info"></i> {{ transaction.status|capitalize }}</div>{% endif %}
+  </div>
+  {% else %}
+  <div class="empty">
+    <div class="empty-icon"><i class="fa-solid fa-receipt"></i></div>
+    <h2>No Transactions</h2>
+    <p>Your transaction history will appear here<br>when you make an account activity.</p>
+  </div>
+  {% endfor %}
+
+</div>
+
+<div class="loading" id="loading"><div class="loading-box"><div class="loader"></div><div class="loading-text">Loading...</div></div></div>
+
+<!-- YOUR EXACT JOMA NAV -->
+<nav class="bottom-nav">
+  <a href="{{ url_for('dashboard') }}" class="nav-item loading-link"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="{{ url_for('my_plan') }}" class="nav-item loading-link"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
+  <a href="{{ url_for('team') }}" class="nav-center loading-link"><div class="nav-center-circle"><i class="fa-solid fa-gift"></i></div><span class="nav-center-text">Team</span></a>
+  <a href="{{ url_for('team') }}" class="nav-item loading-link"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
+  <a href="{{ url_for('profile') }}" class="nav-item loading-link"><i class="fa-solid fa-user"></i><span>My</span></a>
+</nav>
+
+</div>
+
+<script>
+function filterMsg(type){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.filter===type));
+  document.querySelectorAll('.transaction').forEach(card=>{
+    const t = card.dataset.type;
+    if(type==='all') card.style.display='block';
+    else if(type==='deposit' && t==='deposit') card.style.display='block';
+    else if(type==='withdrawal' && t==='withdrawal') card.style.display='block';
+    else if(type==='income' && (t==='income_claim' || t==='plan_purchase')) card.style.display='block';
+    else card.style.display='none';
+  });
+}
+const loading = document.getElementById("loading");
+document.querySelectorAll(".loading-link").forEach(function(link){
+  link.addEventListener("click", function(e){
+    e.preventDefault(); const dest=this.href; loading.style.display="flex";
+    setTimeout(()=>{window.location.href=dest},300);
+  });
+});
+</script>
+</body>
+</html>
