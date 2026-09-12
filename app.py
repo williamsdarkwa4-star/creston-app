@@ -759,37 +759,46 @@ def buy_plan(plan_id: int):
             "duration": plan["duration"],
         },
     )
-# ---------------------------
-# View/Confirm Offer
-# ---------------------------
-@app.route("/confirm_offer/<int:offer_id>")
-def confirm_offer(offer_id: int):
-    user = current_user()
+@app.route('/confirm_offer/<int:offer_id>', methods=['GET', 'POST'])
+@login_required
+def confirm_offer(offer_id):
+    # Get offer
+    offer = Offer.query.get_or_404(offer_id)
+    account = Account.query.filter_by(user_id=current_user.id).first()
 
-    if not user:
-        return redirect(url_for("login"))
+    # If user just opens the page (GET) - show confirm page
+    if request.method == 'GET':
+        return render_template('confirm_offer.html', offer=offer, account=account)
 
-    offer = query_one(
-        """
-        SELECT *
-        FROM admin_offer
-        WHERE id=%s AND active=TRUE
-        """,
-        (offer_id,)
-    )
+    # If user clicks Confirm button (POST) - buy the offer
+    if request.method == 'POST':
+        price = float(offer.price)
 
-    if not offer:
-        flash("Offer not found or no longer available.", "error")
-        return redirect(url_for("dashboard"))
+        # Check balance
+        if float(account.deposit_account) < price:
+            # Not enough money - show insufficient page
+            return render_template('insufficient_balance_offer.html', offer=offer, account=account)
 
-    account = account_for_display(current_account(user["id"]))
+        # Deduct from deposit account
+        account.deposit_account = float(account.deposit_account) - price
 
-    return render_template(
-        "confirm_offer.html",
-        user=user,
-        account=account,
-        offer=offer
-    )
+        # Create user offer record
+        new_user_offer = UserOffer(
+            user_id=current_user.id,
+            offer_id=offer.id,
+            offer_name=offer.name,
+            price=price,
+            daily_amount=offer.daily_amount,
+            duration=offer.duration,
+            status='active'
+        )
+
+        db.session.add(new_user_offer)
+        db.session.commit()
+
+        flash(f'Successfully purchased {offer.name}!', 'success')
+        return redirect(url_for('my_plan'))
+
 
 @app.route("/confirm_buy_plan/<int:plan_id>", methods=["POST"])
 def confirm_buy_plan(plan_id: int):
