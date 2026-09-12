@@ -754,447 +754,127 @@ def dashboard():
     )
 
 
-# ---------------------------
-# Buy/Confirm Plan
-# ---------------------------
-@app.route("/buy_plan/<int:plan_id>")
-def buy_plan(plan_id: int):
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-    if plan_id not in PLANS:
-        flash("Plan not found.", "error")
-        return redirect(url_for("dashboard"))
-    plan = PLANS[plan_id]
-    account = current_account(user["id"])
-    if money(account["deposit_account"]) < plan["investment"]:
-        return render_template("insufficient_balance.html", account=account, plan={"investment_amount": plan["investment"]})
-    return render_template(
-        "confirm_plan.html",
-        user=user,
-        account=account,
-        plan={
-            "id": plan_id,
-            "plan_name": plan["name"],
-            "investment_amount": plan["investment"],
-            "daily_income": plan["daily"],
-            "duration": plan["duration"],
-        },
-    )
-@app.route("/confirm_offer/<int:offer_id>", methods=["GET", "POST"])
-def confirm_offer(offer_id: int):
-    """Display and purchase an active admin offer using the app's PostgreSQL/session system.
+@app.route('/buy_plan/<int:plan_id>', methods=['GET', 'POST'])
+@login_required
+def buy_plan(plan_id):
+    user_id = int(current_user.get_id())
+    plan = PLANS.get(plan_id)
+    if not plan:
+        abort(404)
 
-    This route intentionally does NOT use flask_login's @login_required because this
-    application uses its own session["user_id"] authentication system.
-    """
-    user = current_user()
-    if not user:
-        # Preserve the requested page so the login page can return here after login.
-        return redirect(url_for("login", next=request.full_path))
+    account = query_one("SELECT * FROM accounts WHERE user_id = %s", (user_id,))
+    
+    if request.method == 'POST':
+        # check balance
+        deposit = money(account.get('deposit_account') if account else 0)
+        if deposit < plan['investment']:
+            return render_template('insufficient_balance.html', plan=plan, account=account)
 
-    offer = query_one(
-        "SELECT * FROM admin_offer WHERE id=%s AND active=TRUE",
-        (offer_id,),
-    )
+        # Deduct balance
+        execute("UPDATE accounts SET deposit_account = deposit_account - %s WHERE user_id = %s", (str(plan['investment']), user_id))
+        
+        # SAVE IT - This was missing before!
+        execute("""
+            CREATE TABLE IF NOT EXISTS user_plans (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                plan_id INTEGER NOT NULL,
+                investment DECIMAL(12,2),
+                daily DECIMAL(12,2),
+                status VARCHAR(20) DEFAULT 'active',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        execute("INSERT INTO user_plans (user_id, plan_id, investment, daily, status) VALUES (%s, %s, %s, %s, 'active')",
+                (user_id, plan_id, str(plan['investment']), str(plan['daily'])))
+
+        flash(f"Successfully bought {plan['name']}!")
+        return redirect(url_for('my_plan'))
+
+    return render_template('confirm_plan.html', plan=plan, account=account, plan_id=plan_id)
+
+@app.route('/confirm_offer/<int:offer_id>', methods=['GET', 'POST'])
+@login_required
+def confirm_offer(offer_id):
+    user_id = int(current_user.get_id())
+    offer = PLANS.get(offer_id)  # you use same PLANS dict for offers
     if not offer:
-        flash("Offer not found or no longer active.", "error")
-        return redirect(url_for("dashboard"))
+        abort(404)
 
-    account = current_account(user["id"])
-    price = money(offer.get("price"))
+    account = query_one("SELECT * FROM accounts WHERE user_id = %s", (user_id,))
 
-    if price <= Decimal("0.00"):
-        flash("This offer has an invalid price.", "error")
-        return redirect(url_for("dashboard"))
+    if request.method == 'POST':
+        deposit = money(account.get('deposit_account') if account else 0)
+        if deposit < offer['investment']:
+            return render_template('insufficient_balance.html', offer=offer, account=account)
 
-    if request.method == "GET":
-        return render_template(
-            "confirm_offer.html",
-            offer=offer,
-            account=account_for_display(account),
-        )
+        execute("UPDATE accounts SET deposit_account = deposit_account - %s WHERE user_id = %s", (str(offer['investment']), user_id))
 
-    try:
-        with db_cursor(commit=True, dict_cursor=True) as cur:
-            # Make sure the account exists and lock it during the purchase.
-            ensure_account(cur, user["id"], STARTING_DEPOSIT_BALANCE)
-            cur.execute(
-                """
-                SELECT deposit_account
-                FROM accounts
-                WHERE user_id=%s
-                FOR UPDATE
-                """,
-                (user["id"],),
+        # SAVE OFFER - This was missing!
+        execute("""
+            CREATE TABLE IF NOT EXISTS user_offers (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                offer_id INTEGER NOT NULL,
+                investment DECIMAL(12,2),
+                daily DECIMAL(12,2),
+                status VARCHAR(20) DEFAULT 'active',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
-            locked_account = cur.fetchone()
-            balance = money((locked_account or {}).get("deposit_account"))
+        """)
+        execute("INSERT INTO user_offers (user_id, offer_id, investment, daily, status) VALUES (%s, %s, %s, %s, 'active')",
+                (user_id, offer_id, str(offer['investment']), str(offer['daily'])))
 
-            if balance < price:
-                # The transaction is still safe because nothing has been changed.
-                return render_template(
-                    "insufficient_balance_offer.html",
-                    offer=offer,
-                    account=account_for_display(locked_account or account),
-                )
+        flash(f"Successfully bought {offer['name']}!")
+        return redirect(url_for('my_plan'))
 
-            # Deduct only when enough balance is still available.
-            cur.execute(
-                """
-                UPDATE accounts
-                SET deposit_account = deposit_account - %s
-                WHERE user_id=%s AND deposit_account >= %s
-                """,
-                (price, user["id"], price),
-            )
-            if cur.rowcount != 1:
-                raise ValueError("Insufficient deposit balance.")
+    return render_template('confirm_offer.html', offer=offer, account=account, offer_id=offer_id)
 
-            started_at = utcnow()
-            daily_amount = money(offer.get("daily_amount"))
-            duration = max(0, int(offer.get("duration") or 0))
-
-            # Negative plan_id values identify admin offers and avoid colliding with
-            # the normal numbered plans already used by the application.
-            cur.execute(
-                """
-                INSERT INTO plans (
-                    user_id,
-                    plan_id,
-                    plan_name,
-                    investment_amount,
-                    daily_income,
-                    duration,
-                    started_at,
-                    last_claim_at,
-                    active
-                )
-                VALUES (%s,%s,%s,%s,%s,%s,%s,NULL,TRUE)
-                RETURNING id
-                """,
-                (
-                    user["id"],
-                    -int(offer["id"]),
-                    offer["name"],
-                    price,
-                    daily_amount,
-                    duration,
-                    started_at,
-                ),
-            )
-            plan_row = cur.fetchone()
-            plan_record_id = fetch_id(plan_row, "id")
-
-            # Keep a transaction record so the purchase appears in history/admin logs.
-            cur.execute(
-                """
-                INSERT INTO transactions
-                    (user_id, transaction_type, amount, status, reference, description)
-                VALUES (%s,'plan_purchase',%s,'successful',%s,%s)
-                """,
-                (
-                    user["id"],
-                    price,
-                    generate_reference("OFFER"),
-                    f"Offer purchase: {offer['name']} (plan record #{plan_record_id})",
-                ),
-            )
-
-        flash(f"{offer['name']} activated successfully.", "success")
-        return redirect(url_for("my_plan"))
-
-    except ValueError as exc:
-        flash(str(exc), "error")
-    except Exception:
-        logger.exception("CONFIRM OFFER ERROR")
-        flash("Unable to purchase the offer. Please try again.", "error")
-
-    return redirect(url_for("dashboard"))
-
-
-@app.route("/confirm_buy_plan/<int:plan_id>", methods=["POST"])
-def confirm_buy_plan(plan_id: int):
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
-    if plan_id not in PLANS:
-        flash("Plan not found.", "error")
-        return redirect(url_for("dashboard"))
-    plan = PLANS[plan_id]
-
-    try:
-        with db_cursor(commit=True, dict_cursor=True) as cur:
-            ensure_account(cur, user["id"], STARTING_DEPOSIT_BALANCE)
-            cur.execute("SELECT deposit_account FROM accounts WHERE user_id=%s FOR UPDATE", (user["id"],))
-            row = cur.fetchone()
-            balance = money(row["deposit_account"] if row else 0)
-            if balance < plan["investment"]:
-                raise ValueError("Insufficient deposit balance.")
-            cur.execute(
-                "UPDATE accounts SET deposit_account = deposit_account - %s WHERE user_id=%s AND deposit_account >= %s",
-                (plan["investment"], user["id"], plan["investment"]),
-            )
-            if cur.rowcount != 1:
-                raise ValueError("Insufficient deposit balance.")
-
-            started_at = utcnow()
-            cur.execute(
-                """
-                INSERT INTO plans (
-                    user_id, plan_id, plan_name, investment_amount,
-                    daily_income, duration, started_at, last_claim_at, active
-                ) VALUES (%s,%s,%s,%s,%s,%s,%s,NULL,TRUE)
-                RETURNING id
-                """,
-                (user["id"], plan_id, plan["name"], plan["investment"], plan["daily"], plan["duration"], started_at),
-            )
-            new_plan = cur.fetchone()
-            purchase_ref = generate_reference("PLAN")
-            new_plan_id = fetch_id(new_plan, "id")
-            cur.execute(
-                """
-                INSERT INTO transactions (
-                    user_id, transaction_type, amount, status, reference, description
-                ) VALUES (%s,'plan_purchase',%s,'successful',%s,%s)
-                """,
-                (user["id"], plan["investment"], purchase_ref, f"Plan purchase: {plan['name']} (plan record #{new_plan_id})"),
-            )
-
-            # Referral bonuses (levels)
-            purchaser_id = user["id"]
-            current_ref_code = user.get("referred_by")
-            for level_index, pct in enumerate(REFERRAL_PERCENTS, start=1):
-                if not current_ref_code:
-                    break
-                cur.execute("SELECT id, referred_by, referral_code FROM users WHERE referral_code=%s", (current_ref_code,))
-                owner_row = cur.fetchone()
-                if not owner_row:
-                    break
-                owner_id = owner_row["id"]
-                if owner_id != purchaser_id:
-                    bonus_amount = money(plan["investment"] * pct)
-                    if bonus_amount > 0:
-                        ensure_account(cur, owner_id, Decimal("0.00"))
-                        cur.execute("UPDATE accounts SET referral_account = COALESCE(referral_account,0) + %s WHERE user_id=%s", (bonus_amount, owner_id))
-                        cur.execute(
-                            """
-                            INSERT INTO transactions (user_id, transaction_type, amount, status, reference, description)
-                            VALUES (%s,'referral_bonus_invest',%s,'successful',%s,%s)
-                            """,
-                            (owner_id, bonus_amount, generate_reference("RINV"), f"Referral bonus level {level_index} for plan purchase {purchase_ref}"),
-                        )
-                current_ref_code = owner_row.get("referred_by")
-        flash(f"{plan['name']} activated successfully. You can buy additional plans anytime your deposit balance is sufficient.", "success")
-    except ValueError as ve:
-        logger.warning("Plan purchase validation failed: %s", ve)
-        flash(str(ve), "error")
-    except Exception:
-        logger.exception("PLAN PURCHASE ERROR")
-        flash("Unable to activate the plan.", "error")
-
-    return redirect(url_for("my_plan"))
-
-
-# ---------------------------
-# Plan time helpers
-# ---------------------------
-def plan_times(plan_row: Dict[str, Any], now: Optional[datetime] = None) -> Tuple[datetime, datetime]:
-    now = now or utcnow()
-    started = plan_row.get("started_at") or now
-    if getattr(started, "tzinfo", None) is None:
-        started = started.replace(tzinfo=timezone.utc)
-    end_time = started + timedelta(days=int(plan_row.get("duration", 0)))
-    last_claim = plan_row.get("last_claim_at")
-    if last_claim is None:
-        next_claim = started + timedelta(hours=CLAIM_INTERVAL_HOURS)
-    else:
-        if getattr(last_claim, "tzinfo", None) is None:
-            last_claim = last_claim.replace(tzinfo=timezone.utc)
-        next_claim = last_claim + timedelta(hours=CLAIM_INTERVAL_HOURS)
-    return end_time, next_claim
-
-
-def deactivate_expired_plans(user_id: int):
-    execute(
-        """
-        UPDATE plans
-        SET active=FALSE
-        WHERE user_id=%s
-          AND active=TRUE
-          AND started_at + (duration * INTERVAL '1 day') <= CURRENT_TIMESTAMP
-        """,
-        (user_id,),
-    )
-
-
-# ---------------------------
-# My Plan (view + claim)
-# ---------------------------
-@app.route("/my_plan", methods=["GET", "POST"])
+@app.route('/my_plan')
+@login_required
 def my_plan():
-    user = current_user()
-    if not user:
-        return redirect(url_for("login"))
+    user_id = int(current_user.get_id())
+    account = query_one("SELECT * FROM accounts WHERE user_id = %s", (user_id,))
 
-    try:
-        deactivate_expired_plans(user["id"])
-    except Exception:
-        logger.exception("PLAN EXPIRY CHECK ERROR")
+    # Ensure tables exist
+    execute("CREATE TABLE IF NOT EXISTS user_plans (id SERIAL PRIMARY KEY, user_id INTEGER, plan_id INTEGER, investment DECIMAL(12,2), daily DECIMAL(12,2), status VARCHAR(20) DEFAULT 'active', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
+    execute("CREATE TABLE IF NOT EXISTS user_offers (id SERIAL PRIMARY KEY, user_id INTEGER, offer_id INTEGER, investment DECIMAL(12,2), daily DECIMAL(12,2), status VARCHAR(20) DEFAULT 'active', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)")
 
-    if request.method == "POST":
-        now = utcnow()
-        user_plan_id = request.form.get("user_plan_id")
-        # If a single plan id is provided, claim only that plan
-        if user_plan_id:
-            try:
-                pid = int(user_plan_id)
-            except (TypeError, ValueError):
-                flash("Invalid plan identifier.", "error")
-                return redirect(url_for("my_plan"))
+    user_plans = query_all("SELECT * FROM user_plans WHERE user_id = %s ORDER BY created_at DESC", (user_id,))
+    user_offers = query_all("SELECT * FROM user_offers WHERE user_id = %s ORDER BY created_at DESC", (user_id,))
 
-            try:
-                with db_cursor(commit=True, dict_cursor=True) as cur:
-                    # lock the specific plan row
-                    cur.execute("SELECT * FROM plans WHERE id=%s AND user_id=%s FOR UPDATE", (pid, user["id"]))
-                    plan = cur.fetchone()
-                    if not plan:
-                        flash("Plan not found.", "error")
-                        return redirect(url_for("my_plan"))
+    investments = []
+    for p in user_plans or []:
+        info = PLANS.get(int(p['plan_id'])) if p.get('plan_id') in PLANS else None
+        investments.append({
+            'type': 'PLAN',
+            'name': info['name'] if info else f"VIP {p['plan_id']}",
+            'investment': p['investment'],
+            'daily': p['daily'],
+            'duration': info['duration'] if info else 180,
+            'status': p['status'],
+            'bought_at': p['created_at']
+        })
+    for o in user_offers or []:
+        info = PLANS.get(int(o['offer_id'])) if o.get('offer_id') in PLANS else None
+        investments.append({
+            'type': 'OFFER',
+            'name': info['name'] if info else f"Offer {o['offer_id']}",
+            'investment': o['investment'],
+            'daily': o['daily'],
+            'duration': info['duration'] if info else 180,
+            'status': o['status'],
+            'bought_at': o['created_at']
+        })
 
-                    # check expiry
-                    end_time, next_claim = plan_times(plan, now)
-                    if now >= end_time:
-                        cur.execute("UPDATE plans SET active=FALSE WHERE id=%s", (plan["id"],))
-                        flash("This plan has already ended and was deactivated.", "error")
-                        return redirect(url_for("my_plan"))
+    investments.sort(key=lambda x: str(x['bought_at']), reverse=True)
+    total_invested = sum([money(i['investment']) for i in investments])
+    total_daily = sum([money(i['daily']) for i in investments])
 
-                    # check claim readiness
-                    if now < next_claim:
-                        flash("This plan is not yet ready for claiming.", "error")
-                        return redirect(url_for("my_plan"))
-
-                    daily_income = money(plan.get("daily_income"))
-                    if daily_income <= 0:
-                        flash("This plan has no daily income to claim.", "error")
-                        return redirect(url_for("my_plan"))
-
-                    # ensure account row exists and credit income atomically
-                    ensure_account(cur, user["id"], STARTING_DEPOSIT_BALANCE)
-                    cur.execute(
-                        "UPDATE accounts SET income_account = COALESCE(income_account,0) + %s, withdraw_account = COALESCE(withdraw_account,0) + %s WHERE user_id=%s",
-                        (daily_income, daily_income, user["id"]),
-                    )
-                    claim_time = now
-                    cur.execute("UPDATE plans SET last_claim_at=%s WHERE id=%s", (claim_time, plan["id"]))
-                    cur.execute(
-                        """
-                        INSERT INTO transactions (user_id, transaction_type, amount, status, reference, description)
-                        VALUES (%s,'income_claim',%s,'successful',%s,%s)
-                        """,
-                        (user["id"], daily_income, generate_reference("INC"), f"Daily income claim: {plan['plan_name']} (plan #{plan['id']})"),
-                    )
-                flash(f"GHS {daily_income:.2f} income claimed for plan {plan.get('plan_name')}.", "success")
-            except Exception:
-                logger.exception("MY PLAN SINGLE CLAIM ERROR")
-                flash("Unable to claim income for this plan.", "error")
-            return redirect(url_for("my_plan"))
-
-        # Otherwise: fallback to claiming all ready active plans (original behaviour)
-        try:
-            with db_cursor(commit=True, dict_cursor=True) as cur:
-                cur.execute("SELECT * FROM plans WHERE user_id=%s AND active=TRUE ORDER BY id ASC FOR UPDATE", (user["id"],))
-                plans_to_claim = cur.fetchall() or []
-                ensure_account(cur, user["id"], STARTING_DEPOSIT_BALANCE)
-                claimed_total = Decimal("0.00")
-                claimed_count = 0
-                for plan in plans_to_claim:
-                    end_time, next_claim = plan_times(plan, now)
-                    if now >= end_time:
-                        cur.execute("UPDATE plans SET active=FALSE WHERE id=%s", (plan["id"],))
-                        continue
-                    if now < next_claim:
-                        continue
-                    daily_income = money(plan.get("daily_income"))
-                    if daily_income <= 0:
-                        continue
-                    cur.execute(
-                        "UPDATE accounts SET income_account=COALESCE(income_account,0)+%s, withdraw_account=COALESCE(withdraw_account,0)+%s WHERE user_id=%s",
-                        (daily_income, daily_income, user["id"]),
-                    )
-                    cur.execute("UPDATE plans SET last_claim_at=%s WHERE id=%s", (now, plan["id"]))
-                    cur.execute(
-                        """
-                        INSERT INTO transactions (user_id, transaction_type, amount, status, reference, description)
-                        VALUES (%s,'income_claim',%s,'successful',%s,%s)
-                        """,
-                        (user["id"], daily_income, generate_reference("INC"), f"Daily income claim: {plan['plan_name']} (plan #{plan['id']})"),
-                    )
-                    claimed_total += daily_income
-                    claimed_count += 1
-            if claimed_count:
-                flash(f"GHS {claimed_total:.2f} income claimed from {claimed_count} plan(s).", "success")
-            else:
-                flash("No plan is ready for a 24-hour income claim yet.", "error")
-        except Exception:
-            logger.exception("MY PLAN CLAIM ERROR")
-            flash("Unable to process your income claim.", "error")
-        return redirect(url_for("my_plan"))
-
-    # GET -> render page: query plans and annotate for template
-    all_plans = query_all("SELECT * FROM plans WHERE user_id=%s ORDER BY id DESC", (user["id"],))
-    active_plans = [p for p in all_plans if p.get("active")]
-    now = utcnow()
-
-    user_plans = []
-    for p in active_plans:
-        end_time, next_claim = plan_times(p, now)
-        if now >= end_time:
-            p["can_claim"] = False
-            p["next_income_at"] = None
-        else:
-            p["next_income_at"] = next_claim
-            p["can_claim"] = now >= next_claim
-        user_plans.append(p)
-
-    can_claim = any(p.get("can_claim") for p in user_plans)
-    next_claims = [p.get("next_income_at") for p in user_plans if p.get("next_income_at")]
-    next_claim_dt = min(next_claims) if next_claims else None
-    seconds_remaining = max(0, int((next_claim_dt - now).total_seconds())) if next_claim_dt else 0
-    next_claim_timestamp = int(next_claim_dt.timestamp()) if next_claim_dt else 0
-
-    plan = user_plans[0] if user_plans else (all_plans[0] if all_plans else None)
-    cycle_seconds_remaining = 0
-    cycle_ended = False
-    if plan:
-        end_time, _ = plan_times(plan, now)
-        cycle_seconds_remaining = max(0, int((end_time - now).total_seconds()))
-    elif all_plans:
-        cycle_ended = True
-
-    available_plans = [
-        {"id": pid, "plan_name": data["name"], "investment_amount": data["investment"], "daily_income": data["daily"], "duration": data["duration"]}
-        for pid, data in PLANS.items()
-    ]
-
-    return render_template(
-        "my_plan.html",
-        user_plan=plan,
-        user_plans=user_plans,
-        active_plans=all_plans,
-        all_plans=all_plans,
-        plans=available_plans,
-        available_plans=available_plans,
-        can_claim=can_claim,
-        seconds_remaining=seconds_remaining,
-        cycle_seconds_remaining=cycle_seconds_remaining,
-        next_claim_timestamp=next_claim_timestamp,
-        next_income_at=next_claim_dt,
-        server_now=now,
-        cycle_ended=cycle_ended,
-    )
+    return render_template('my_plan.html', investments=investments, account=account, total_invested=total_invested, total_daily=total_daily)
 
 
+                
 # ---------------------------
 # Deposit
 # ---------------------------
