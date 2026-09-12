@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Gift Code - JOMA SPORT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#f1f2f7;position:relative;padding-bottom:90px;overflow:hidden}
+
+/* TOP HEADER LIKE PHOTO */
+.top{height:52px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e9e9ef;position:sticky;top:0;z-index:10}
+.top a{width:36px;height:36px;background:#f1f2f7;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#202330;font-size:14px}
+.top h1{font-size:15px;font-weight:900;color:#202330}
+
+/* BANNER LIKE PHOTO */
+.banner{width:100%;height:260px;position:relative;overflow:hidden;background:#dde6ff}
+.banner img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+
+/* CONTENT LIKE PHOTO - LIGHT GREY BG */
+.content{padding:18px 16px 20px;background:#f1f2f7}
+
+/* TELEGRAM GROUP ROW LIKE PHOTO */
+.tele-row{background:#fff;border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;text-decoration:none;color:#202330;box-shadow:0 4px 14px rgba(25,34,90,.06);border:1px solid #eef0f5;margin-bottom:18px}
+.tele-left{display:flex;align-items:center;gap:10px}
+.tele-icon{width:36px;height:36px;background:#2aabee;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.tele-row span{font-size:13px;font-weight:700}
+.tele-row i.fa-chevron-right{color:#202330;font-size:14px}
+
+/* INPUT LIKE PHOTO */
+.input-box{width:100%;height:52px;background:#fff;border:1px solid #eef0f5;border-radius:12px;padding:0 14px;font-size:13px;outline:none;box-shadow:0 4px 14px rgba(25,34,90,.04);margin-bottom:20px}
+.input-box::placeholder{color:#9aa0b6}
+.input-box:focus{border-color:#1726a8}
+
+/* BUTTON LIKE PHOTO - BLACK GRADIENT */
+.btn{width:78%;margin:0 auto;display:block;height:46px;border:0;border-radius:24px;background:linear-gradient(180deg,#2a2f3a 0%,#12141c 100%);color:#fff;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.btn:active{transform:scale(.97)}
+.info{ text-align:center;color:#85899a;font-size:11px;margin-top:10px }
+
+/* FLASH */
+.flash{margin-bottom:12px;padding:11px 12px;border-radius:10px;background:#fff;font-size:11px;border:1px solid #e8e9ef;box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.flash.error{background:#fff0f0;border-color:#ffd0d0;color:#d33}
+.flash.success{background:#f0fff4;border-color:#c6f6d5;color:#1a7a3a}
+
+/* YOUR EXACT JOMA NAVIGATION BOTTOM */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:390px;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;align-items:flex-end;padding:5px 0 6px;z-index:1000;box-shadow:0 -2px 12px rgba(0,0,0,0.06)}
+.nav-item{flex:1;text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
+.nav-item i{font-size:19px}
+.nav-item.active{color:#1726a8;font-weight:800}
+.nav-center{position:relative;top:-14px;flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none}
+.nav-center-circle{width:48px;height:48px;background:#1726a8;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(23,38,168,0.4);border:3px solid #fff}
+.nav-center-circle i{color:#fff;font-size:20px}
+.nav-center-text{font-size:10px;color:#9aa0b6;margin-top:3px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<div class="top">
+  <a href="{{ url_for('dashboard') }}"><i class="fa-solid fa-chevron-left"></i></a>
+  <h1>Gift Code</h1>
+  <div style="width:36px"></div>
+</div>
+
+<!-- BANNER SAME AS PHOTO BUT JOMA -->
+<div class="banner">
+  <img src="https://img.freepik.com/premium-vector/futuristic-3d-characters-with-gift-box-metaverse-concept_1029473-726423.jpg" alt="Gift Code" onerror="this.src='{{ url_for('static', filename='images/Screenshot_20260830_135812_Instagram.jpg') }}'">
+</div>
+
+<div class="content">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- TELEGRAM GROUP LIKE PHOTO -->
+  <a href="https://t.me/JOMASPORT96" target="_blank" class="tele-row">
+    <div class="tele-left">
+      <div class="tele-icon"><i class="fa-brands fa-telegram"></i></div>
+      <span>Telegram group</span>
+    </div>
+    <i class="fa-solid fa-chevron-right"></i>
+  </a>
+
+  <!-- FORM -->
+  <form method="POST">
+    <input class="input-box" type="text" name="code" placeholder="Please enter gift code" maxlength="120" autocomplete="off" required>
+    <button class="btn" type="submit">Click to get rewards</button>
+  </form>
+
+  <div class="info">You can get gift codes in the group</div>
+</div>
+
+<!-- YOUR EXACT JOMA NAV -->
+<nav class="bottom-nav">
+  <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="{{ url_for('my_plan') }}" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
+  <a href="{{ url_for('team_members') }}" class="nav-center"><div class="nav-center-circle"><i class="fa-solid fa-gift"></i></div><span class="nav-center-text">Team</span></a>
+  <a href="{{ url_for('team') }}" class="nav-item"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
+  <a href="{{ url_for('profile') }}" class="nav-item"><i class="fa-solid fa-user"></i><span>My</span></a>
+</nav>
+
+</div>
+</body>
+</html>
