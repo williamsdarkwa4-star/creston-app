@@ -7,7 +7,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
-  body{background:#f0f2f5; font-family: 'Segoe UI', sans-serif; padding-bottom:80px}
+  body{background:#f0f2f5; font-family: 'Segoe UI', sans-serif; padding-bottom:90px}
   .top-bar{background: linear-gradient(135deg, #1726a8 0%, #2a3fc0 100%); color:#fff; padding:20px; border-radius:0 0 24px 24px}
   .balance-card{background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); border-radius:16px; padding:15px; margin-top:15px}
   .invest-card{background:#fff; border-radius:18px; padding:16px; margin-bottom:14px; box-shadow:0 4px 12px rgba(0,0,0,0.05); border-left:6px solid #1726a8; position:relative; overflow:hidden}
@@ -19,25 +19,33 @@
   .tag-active{background:#e8f5e9; color:#2e7d32}
   .amount{font-size:18px; font-weight:700}
   .empty-box{background:#fff; border-radius:20px; padding:40px 20px; text-align:center; margin-top:30px}
+  /* Bottom Nav like Dashboard */
+  .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;padding:8px 0 12px;z-index:1000;max-width:420px;margin:0 auto;box-shadow:0 -4px 20px rgba(0,0,0,0.06);border-radius:20px 20px 0 0}
+  .nav-item{text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+  .nav-item i{font-size:18px}
+  .nav-item.active{color:#1726a8}
+  .nav-item.active i{background:#eef0ff;width:36px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:10px}
+  .app-wrapper{max-width:420px;margin:0 auto;position:relative;min-height:100vh;background:#f0f2f5}
 </style>
 </head>
 <body>
 
+<div class="app-wrapper">
 <div class="top-bar">
   <div class="d-flex justify-content-between align-items-center">
     <h5 class="m-0"><i class="fa-solid fa-layer-group me-2"></i>My Investments</h5>
-    <a href="/dashboard" class="btn btn-light btn-sm rounded-pill px-3"><i class="fa-solid fa-arrow-left me-1"></i> Dashboard</a>
+    <span class="badge bg-white text-primary rounded-pill px-3">JOMA</span>
   </div>
 
   <div class="balance-card">
     <div class="row text-center">
       <div class="col-6 border-end border-white border-opacity-25">
         <small class="opacity-75 d-block">Total Invested</small>
-        <span class="amount">${{ total_invested if total_invested else '0.00' }}</span>
+        <span class="amount">GHS {{ "%.2f"|format(total_invested|float) if total_invested else '0.00' }}</span>
       </div>
       <div class="col-6">
         <small class="opacity-75 d-block">Daily Income</small>
-        <span class="amount">${{ total_daily if total_daily else '0.00' }}/day</span>
+        <span class="amount">GHS {{ "%.2f"|format(total_daily|float) if total_daily else '0.00' }}/day</span>
       </div>
     </div>
   </div>
@@ -64,13 +72,18 @@
               <h6 class="mt-2 mb-1 fw-bold">{{ item.name }}</h6>
               <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>{{ item.bought_at if item.bought_at else 'Just now' }}</small>
             </div>
-            <span class="tag tag-active h-100">{{ item.status|upper }}</span>
+            <span class="tag tag-active h-100">{{ item.status|upper if item.status else 'ACTIVE' }}</span>
           </div>
           <div class="row mt-3 g-0 text-center bg-light rounded-3 p-2">
-            <div class="col-4"><small class="text-muted d-block" style="font-size:11px">PRICE</small><b>${{ item.investment }}</b></div>
-            <div class="col-4 border-start border-end"><small class="text-muted d-block" style="font-size:11px">DAILY</small><b class="text-success">${{ item.daily }}</b></div>
+            <div class="col-4"><small class="text-muted d-block" style="font-size:11px">PRICE</small><b>GHS {{ "%.2f"|format(item.investment|float) }}</b></div>
+            <div class="col-4 border-start border-end"><small class="text-muted d-block" style="font-size:11px">DAILY</small><b class="text-success">GHS {{ "%.2f"|format(item.daily|float) }}</b></div>
             <div class="col-4"><small class="text-muted d-block" style="font-size:11px">DAYS</small><b>{{ item.duration }}</b></div>
           </div>
+          <form method="POST" action="{{ url_for('my_plan') }}" class="mt-2">
+            <input type="hidden" name="user_plan_id" value="{{ item.id if item.id else loop.index }}">
+            <input type="hidden" name="type" value="{{ item.type|lower }}">
+            <button class="btn btn-sm w-100 rounded-pill" style="background:#1726a8;color:#fff;font-size:11px;font-weight:700;padding:8px">Claim Income</button>
+          </form>
         </div>
         {% endfor %}
       {% else %}
@@ -85,30 +98,47 @@
 
     <!-- PLANS ONLY -->
     <div class="tab-pane fade" id="plans">
-      {% for item in investments if item.type == 'PLAN' %}
-      <div class="invest-card type-plan">
-        <span class="tag tag-plan">PLAN</span>
-        <h6 class="mt-2 fw-bold">{{ item.name }}</h6>
-        <div class="row mt-2 text-center"><div class="col-4"><b>${{ item.investment }}</b></div><div class="col-4"><b class="text-success">${{ item.daily }}</b></div><div class="col-4"><b>{{ item.duration }}D</b></div></div>
-      </div>
+      {% set plans = investments|selectattr('type','equalto','PLAN')|list if investments else [] %}
+      {% if plans|length > 0 %}
+        {% for item in plans %}
+        <div class="invest-card type-plan">
+          <div class="d-flex justify-content-between"><span class="tag tag-plan">PLAN</span><span class="tag tag-active">{{ item.status|upper if item.status else 'ACTIVE' }}</span></div>
+          <h6 class="mt-2 fw-bold">{{ item.name }}</h6>
+          <div class="row mt-2 text-center bg-light rounded-3 p-2"><div class="col-4"><small class="text-muted d-block" style="font-size:10px">PRICE</small><b style="font-size:13px">GHS {{ "%.2f"|format(item.investment|float) }}</b></div><div class="col-4 border-start border-end"><small class="text-muted d-block" style="font-size:10px">DAILY</small><b class="text-success" style="font-size:13px">GHS {{ "%.2f"|format(item.daily|float) }}</b></div><div class="col-4"><small class="text-muted d-block" style="font-size:10px">DAYS</small><b style="font-size:13px">{{ item.duration }}</b></div></div>
+        </div>
+        {% endfor %}
       {% else %}
-      <div class="empty-box"><p class="text-muted">No Plans bought yet</p></div>
-      {% endfor %}
+        <div class="empty-box"><p class="text-muted">No Plans bought yet</p><a href="/dashboard" class="btn btn-primary rounded-pill btn-sm mt-2">Buy Plan</a></div>
+      {% endif %}
     </div>
 
     <!-- OFFERS ONLY -->
     <div class="tab-pane fade" id="offers">
-      {% for item in investments if item.type == 'OFFER' %}
-      <div class="invest-card type-offer">
-        <span class="tag tag-offer">OFFER</span>
-        <h6 class="mt-2 fw-bold">{{ item.name }}</h6>
-        <div class="row mt-2 text-center"><div class="col-4"><b>${{ item.investment }}</b></div><div class="col-4"><b class="text-success">${{ item.daily }}</b></div><div class="col-4"><b>{{ item.duration }}D</b></div></div>
-      </div>
+      {% set offers = investments|selectattr('type','equalto','OFFER')|list if investments else [] %}
+      {% if offers|length > 0 %}
+        {% for item in offers %}
+        <div class="invest-card type-offer">
+          <div class="d-flex justify-content-between"><span class="tag tag-offer">OFFER</span><span class="tag tag-active">{{ item.status|upper if item.status else 'ACTIVE' }}</span></div>
+          <h6 class="mt-2 fw-bold">{{ item.name }}</h6>
+          <div class="row mt-2 text-center bg-light rounded-3 p-2"><div class="col-4"><small class="text-muted d-block" style="font-size:10px">PRICE</small><b style="font-size:13px">GHS {{ "%.2f"|format(item.investment|float) }}</b></div><div class="col-4 border-start border-end"><small class="text-muted d-block" style="font-size:10px">DAILY</small><b class="text-success" style="font-size:13px">GHS {{ "%.2f"|format(item.daily|float) }}</b></div><div class="col-4"><small class="text-muted d-block" style="font-size:10px">DAYS</small><b style="font-size:13px">{{ item.duration }}</b></div></div>
+        </div>
+        {% endfor %}
       {% else %}
-      <div class="empty-box"><p class="text-muted">No Offers bought yet</p></div>
-      {% endfor %}
+        <div class="empty-box"><p class="text-muted">No Offers bought yet</p><a href="/dashboard" class="btn rounded-pill btn-sm mt-2" style="background:#ff9800;color:#fff">Buy Offer</a></div>
+      {% endif %}
     </div>
   </div>
+</div>
+
+<!-- Bottom Navigation like Dashboard -->
+<nav class="bottom-nav">
+  <a href="/dashboard" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="/my_plan" class="nav-item active"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
+  <a href="/team" class="nav-item"><i class="fa-solid fa-users"></i><span>Team</span></a>
+  <a href="/invite" class="nav-item"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
+  <a href="/profile" class="nav-item"><i class="fa-solid fa-user"></i><span>My</span></a>
+</nav>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
