@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Team - JOMA SPORT</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#080a1e;display:flex;justify-content:center;min-height:100vh;padding-bottom:0}
+.phone{width:100%;max-width:393px;min-height:100vh;background:#f5f6fa;position:relative;padding-bottom:92px;overflow:hidden}
+
+/* TOP */
+.top-bar{height:56px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;background:#f5f6fa;position:sticky;top:0;z-index:20}
+.logo{font-size:18px;font-weight:900;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px;color:#1a1d3a}
+.logo b{width:32px;height:32px;background:#1726a8;color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.top-icon{width:36px;height:36px;background:#fff;border:1px solid #e9ebf2;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#1a1d3a;text-decoration:none}
+
+/* HEADER BANNER */
+.page-header{background:linear-gradient(135deg,#1726a8 0%,#2a3cd1 100%);padding:22px 20px 20px;text-align:center;position:relative;overflow:hidden;margin:8px 16px 0;border-radius:20px}
+.page-header:after{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,.08);border-radius:50%}
+.page-header h1{color:#fff;font-size:20px;font-weight:900;position:relative}
+.page-header p{color:rgba(255,255,255,.75);font-size:11px;margin-top:4px;position:relative}
+
+.container{padding:14px 16px}
+.card{background:#fff;border:1px solid #eceef4;border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.card h2{color:#1a1d3a;font-size:14px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 i{width:16px;height:16px;color:#1726a8}
+
+.code-box{background:#f7f8fd;border:1px solid #eceef4;border-radius:14px;padding:13px}
+.code-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.code-header i{color:#1726a8;width:16px;height:16px}
+.code-title{color:#1a1d3a;font-size:12px;font-weight:800}
+.code-description{color:#8b8fa6;font-size:10px;margin-bottom:10px;line-height:1.5}
+.code-row{display:flex;align-items:center;gap:8px}
+.code-value{flex:1;min-width:0;background:#fff;border:1px solid #e2e4ef;color:#1726a8;padding:11px 12px;border-radius:11px;font-size:12px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy-btn{border:none;background:#1726a8;color:#fff;padding:11px 14px;border-radius:11px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(23,38,168,.25)}
+.copy-btn:active{transform:scale(.96)}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat-box{background:#f7f8fd;border:1px solid #eceef4;padding:16px 8px;border-radius:14px;text-align:center}
+.number{color:#1726a8;font-size:20px;font-weight:900;margin-bottom:4px}
+.stat-label{color:#8b8fa6;font-size:10px;font-weight:700;text-transform:uppercase}
+
+.level-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.level-box{background:#f7f8fd;border:1px solid #eceef4;padding:14px 5px;border-radius:14px;text-align:center}
+.level-box h3{color:#1726a8;font-size:11px;font-weight:800;margin-bottom:6px}
+.level-count{color:#1a1d3a;font-size:16px;font-weight:900}
+.level-limit{color:#8b8fa6;font-size:9px;margin-top:3px}
+
+.commission-level{display:flex;justify-content:space-between;align-items:center;background:#f7f8fd;border:1px solid #eceef4;padding:12px 14px;border-radius:12px;margin-bottom:8px}
+.commission-level:last-child{margin-bottom:0}
+.commission-name{color:#5a5f7a;font-size:12px;font-weight:600}
+.commission-percent{color:#fff;background:#1726a8;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800}
+
+.members-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#1726a8;color:#fff;padding:14px;border-radius:14px;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 8px 18px rgba(23,38,168,.3)}
+.members-btn:active{transform:scale(.98)}
+
+/* JOMA DASHBOARD NAVIGATION BOTTOM - FLOATING REAL APP */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:calc(100% - 24px);max-width:369px;background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);border:1px solid rgba(0,0,0,0.06);border-radius:22px;display:flex;justify-content:space-around;align-items:center;padding:8px 6px;z-index:99;box-shadow:0 14px 32px rgba(0,0,0,0.15)}
+.nav-item{flex:1;text-decoration:none;color:#9aa0b6;font-size:9px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;border-radius:12px}
+.nav-item i{width:20px;height:20px}
+.nav-item.active{color:#1726a8;background:#eef0ff}
+.nav-center{flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none;gap:4px}
+.nav-c{width:48px;height:48px;background:#1726a8;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(23,38,168,.4)}
+.nav-c i{width:20px;height:20px;color:#fff}
+.nav-center span{font-size:9px;font-weight:800;color:#8b8fa6}
+.nav-center.active span{color:#1726a8}
+.nav-center.active .nav-c{background:#1726a8}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<div class="top-bar">
+  <div class="logo"><b>J</b> JOMA SPORT</div>
+  <a class="top-icon" href="{{ url_for('profile') }}"><i data-lucide="user"></i></a>
+</div>
+
+<div class="page-header">
+  <h1>My Team</h1>
+  <p>Build and manage your referral network</p>
+</div>
+
+<div class="container">
+
+<div class="card">
+  <h2><i data-lucide="user-plus"></i> Invite Code</h2>
+  <div class="code-box">
+    <div class="code-description">Give this code to someone when they register through your referral.</div>
+    <div class="code-row">
+      <div class="code-value" id="inviteCode">{{ user.referral_code }}</div>
+      <button type="button" class="copy-btn" onclick="copyCode('inviteCode', this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><i data-lucide="users"></i> Team Code</h2>
+  <div class="code-box">
+    <div class="code-description">This is your separate team identification code.</div>
+    <div class="code-row">
+      <div class="code-value" id="teamCode">{% if user.team_code %}{{ user.team_code }}{% else %}Not Assigned{% endif %}</div>
+      <button type="button" class="copy-btn" onclick="copyCode('teamCode', this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><i data-lucide="link"></i> Referral Link</h2>
+  <div class="code-box">
+    <div class="code-description">Share this link with people you want to invite.</div>
+    <div class="code-row">
+      <div class="code-value" id="referralLink" style="font-size:10px">https://joma-sport.onrender.com/register?ref={{ user.referral_code }}</div>
+      <button type="button" class="copy-btn" onclick="copyCode('referralLink', this)">Copy</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><i data-lucide="bar-chart-3"></i> Team Overview</h2>
+  <div class="stats">
+    <div class="stat-box">
+      <div class="number">{{ total_team|default(0) }}</div>
+      <div class="stat-label">Total Team</div>
+    </div>
+    <div class="stat-box">
+      <div class="number">GHS {{ "%.2f"|format(referral_income|default(0)|float) }}</div>
+      <div class="stat-label">Referral Income</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><i data-lucide="layers"></i> Team Levels</h2>
+  <div class="level-grid">
+    <div class="level-box">
+      <h3>Level 1</h3>
+      <div class="level-count">{{ level1_count|default(0) }}/5</div>
+      <div class="level-limit">Max 5</div>
+    </div>
+    <div class="level-box">
+      <h3>Level 2</h3>
+      <div class="level-count">{{ level2_count|default(0) }}/10</div>
+      <div class="level-limit">2 per L1</div>
+    </div>
+    <div class="level-box">
+      <h3>Level 3</h3>
+      <div class="level-count">{{ level3_count|default(0) }}/300</div>
+      <div class="level-limit">Max 300</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><i data-lucide="percent"></i> Referral Commission</h2>
+  <div class="commission-level"><span class="commission-name">Level 1</span><span class="commission-percent">20%</span></div>
+  <div class="commission-level"><span class="commission-name">Level 2</span><span class="commission-percent">3%</span></div>
+  <div class="commission-level"><span class="commission-name">Level 3</span><span class="commission-percent">1%</span></div>
+</div>
+
+<div class="card">
+  <h2><i data-lucide="users-round"></i> Team Members</h2>
+  <a href="{{ url_for('team_members') }}" class="members-btn"><i data-lucide="users"></i> View Team Members</a>
+</div>
+
+</div>
+
+<!-- JOMA DASHBOARD NAVIGATION -->
+<nav class="bottom-nav">
+  <a href="{{ url_for('dashboard') }}" class="nav-item">
+    <i data-lucide="home"></i><span>Home</span>
+  </a>
+  <a href="{{ url_for('my_plan') }}" class="nav-item">
+    <i data-lucide="trending-up"></i><span>Income</span>
+  </a>
+  <a href="{{ url_for('team_members') }}" class="nav-center active">
+    <div class="nav-c"><i data-lucide="users"></i></div><span>Team</span>
+  </a>
+  <a href="{{ url_for('team') }}" class="nav-item">
+    <i data-lucide="share-2"></i><span>Share</span>
+  </a>
+  <a href="{{ url_for('profile') }}" class="nav-item">
+    <i data-lucide="user"></i><span>My</span>
+  </a>
+</nav>
+
+</div>
+
+<script>
+lucide.createIcons();
+function copyCode(id, btn){
+  const el=document.getElementById(id);
+  const code=el.innerText.trim();
+  navigator.clipboard.writeText(code).then(()=>{
+    const orig=btn.innerText;
+    btn.innerText="Copied ✓";
+    btn.style.background="#12b86e";
+    setTimeout(()=>{btn.innerText=orig;btn.style.background="#1726a8"},1500);
+  }).catch(()=>alert("Unable to copy"));
+}
+</script>
+</body>
+</html>
