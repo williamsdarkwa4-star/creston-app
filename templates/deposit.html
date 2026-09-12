@@ -2,368 +2,215 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Creston - Deposit</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Deposit - JOMA SPORT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#f1f2f7;position:relative;padding-bottom:90px;overflow:hidden}
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
+/* HEADER JOMA */
+.top{height:56px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;background:#f1f2f7;position:sticky;top:0;z-index:20}
+.top-left{display:flex;align-items:center;gap:10px}
+.back{width:36px;height:36px;background:#fff;border:1px solid #e9e9ef;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#202330}
+.top h1{font-size:15px;font-weight:900;color:#202330}
+.notif{width:36px;height:36px;background:#fff;border:1px solid #e9e9ef;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#202330}
 
-body{
-    background:#111;
-    color:white;
-    min-height:100vh;
-}
+/* BRAND */
+.brand-area{padding:18px 16px 8px;text-align:center}
+.brand-logo{width:60px;height:60px;margin:auto;border-radius:18px;background:#1726a8;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;box-shadow:0 8px 20px rgba(23,38,168,.25)}
+.brand-name{margin-top:10px;font-size:18px;font-weight:900;letter-spacing:.5px;color:#202330}
+.brand-name span{color:#1726a8}
+.brand-subtitle{margin-top:4px;color:#85899a;font-size:11px}
 
+.content{padding:14px}
+.deposit-card{background:#fff;border:1px solid #eef0f5;border-radius:18px;padding:18px;box-shadow:0 8px 24px rgba(25,34,90,.09)}
+.section-title h2{font-size:16px;font-weight:900;color:#202330}
+.section-title p{color:#85899a;font-size:11px;margin-top:4px;line-height:1.5}
 
-.header{
-    background:#181818;
-    padding:20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #333;
-}
+.flash-message{padding:11px;border-radius:10px;margin-bottom:12px;font-size:11px;text-align:center;font-weight:700}
+.flash-success{background:#e8f9ef;border:1px solid #c6f6d5;color:#16a34a}
+.flash-error{background:#fff0f0;border:1px solid #ffd0d0;color:#d33}
 
-.header a{
-    color:white;
-    text-decoration:none;
-    font-weight:bold;
-}
+label{display:block;color:#202330;font-size:10px;font-weight:800;margin-bottom:6px;margin-top:12px;text-transform:uppercase;letter-spacing:.3px}
+input[type="number"],input[type="tel"],input[type="text"],input[type="file"]{width:100%;padding:13px 12px;border:1px solid #e9e9ef;border-radius:12px;background:#f7f8fb;color:#202330;outline:none;font-size:12px;font-weight:600}
+input:focus{border-color:#1726a8;background:#fff;box-shadow:0 0 0 3px rgba(23,38,168,.08)}
+input::placeholder{color:#9aa0b6}
+input[type="file"]{padding:8px;cursor:pointer}
+input[type="file"]::file-selector-button{border:0;background:#1726a8;color:#fff;padding:8px 12px;border-radius:8px;margin-right:8px;font-weight:800;cursor:pointer}
 
+.amount-title{color:#85899a;font-size:9px;font-weight:800;margin:14px 0 8px;letter-spacing:.5px}
+.amount-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.amount-buttons button{padding:11px 5px;border:1px solid #e9e9ef;border-radius:10px;background:#f7f8fb;color:#1726a8;font-size:11px;font-weight:800;cursor:pointer}
+.amount-buttons button:active{background:#1726a8;color:#fff;transform:scale(.96)}
 
-.container{
-    padding:20px;
-}
+.next-button,.submit-button{width:100%;padding:14px;border:0;border-radius:12px;background:#1726a8;color:#fff;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 6px 16px rgba(23,38,168,.25)}
+.next-button:active,.submit-button:active{transform:scale(.98)}
+.submit-button:disabled{opacity:.5}
 
+.payment-card{display:none;margin-top:4px}
+.payment-title{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.payment-icon{width:38px;height:38px;border-radius:11px;background:#eef0ff;color:#1726a8;display:flex;align-items:center;justify-content:center}
+.payment-title h3{font-size:13px;font-weight:900}
+.payment-title p{color:#85899a;font-size:10px;margin-top:2px}
 
-.card{
-    background:#1f1f1f;
-    padding:25px;
-    border-radius:18px;
-    margin-bottom:20px;
-    border:1px solid #333;
-}
+.amount-display{background:linear-gradient(135deg,#1726a8,#2a3cd1);padding:14px;border-radius:12px;font-size:10px;color:rgba(255,255,255,.8);margin-bottom:12px}
+.amount-display strong{display:block;color:#fff;font-size:22px;margin-top:4px}
+.amount-display span{color:#fff}
+.payment-description{color:#666;font-size:11px;line-height:1.6;margin-bottom:12px}
+.payment-label{color:#85899a;font-size:9px;font-weight:800;margin-bottom:6px}
+.payment-number{display:flex;align-items:center;gap:7px;margin-bottom:14px}
+.payment-number input{flex:1;margin:0;background:#f7f8fb;font-weight:800;letter-spacing:.5px}
+.copy-button{padding:12px 14px;border:0;border-radius:10px;background:#1726a8;color:#fff;font-size:10px;font-weight:900;cursor:pointer}
 
+.warning{background:#fff7ed;border:1px solid #ffdfc0;color:#9a6a2a;padding:11px;border-radius:10px;font-size:10px;line-height:1.5;margin-bottom:14px}
+.preview-box{display:none;margin-bottom:14px;background:#f7f8fb;border:1px solid #eef0f5;border-radius:12px;padding:10px;text-align:center}
+.preview-box img{max-width:100%;max-height:200px;border-radius:8px;object-fit:contain}
+.preview-text{color:#85899a;font-size:9px;margin-top:6px}
+.back-button{width:100%;margin-bottom:8px;padding:12px;border:1px solid #e9e9ef;border-radius:12px;background:#fff;color:#666;font-size:11px;font-weight:700;cursor:pointer}
+.info-box{margin-top:14px;background:#f7f8fb;border:1px solid #eef0f5;border-radius:12px;padding:11px;display:flex;gap:10px;align-items:center}
+.info-icon{width:32px;height:32px;border-radius:9px;background:#eef0ff;color:#1726a8;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.info-text{color:#85899a;font-size:9px;line-height:1.5}
+.note{text-align:center;color:#9aa0b6;font-size:9px;margin-top:14px;line-height:1.6}
+.note strong{color:#1726a8}
 
-.title{
-    font-size:24px;
-    font-weight:800;
-    margin-bottom:10px;
-}
+.loading{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:5000;backdrop-filter:blur(3px)}
+.loading-box{width:110px;padding:18px;background:#fff;border-radius:14px;text-align:center}
+.loader{width:30px;height:30px;border:3px solid #eef0f5;border-top-color:#1726a8;border-radius:50%;animation:spin.8s linear infinite;margin:auto}
+.loading-text{color:#85899a;font-size:10px;margin-top:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-
-.subtitle{
-    color:#aaa;
-    font-size:14px;
-}
-
-
-
-.balance{
-    color:#b6ff00;
-    font-size:30px;
-    font-weight:bold;
-}
-
-
-
-label{
-    display:block;
-    margin-bottom:8px;
-    color:#aaa;
-}
-
-
-input, select{
-
-    width:100%;
-    padding:16px;
-    border-radius:12px;
-    background:#2b2b2b;
-    border:1px solid #444;
-    color:white;
-    font-size:16px;
-    outline:none;
-    margin-bottom:20px;
-
-}
-
-
-
-.amount-grid{
-
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin-bottom:20px;
-
-}
-
-
-
-.amount{
-
-    background:#292929;
-    padding:15px;
-    text-align:center;
-    border-radius:12px;
-    border:1px solid #444;
-    cursor:pointer;
-    font-weight:bold;
-
-}
-
-
-.amount:hover{
-
-    border-color:#b6ff00;
-    color:#b6ff00;
-
-}
-
-
-
-button{
-
-    width:100%;
-    padding:18px;
-    background:#b6ff00;
-    color:#111;
-    border:none;
-    border-radius:15px;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-
-}
-
-
-
-button:hover{
-
-    background:#9bd900;
-
-}
-
-
-
-.notice{
-
-    background:#191919;
-    padding:18px;
-    border-radius:15px;
-    color:#aaa;
-    font-size:14px;
-    line-height:1.6;
-
-}
-
-
-.flash{
-
-    background:#e53935;
-    padding:15px;
-    text-align:center;
-    font-weight:bold;
-
-}
-
-
+/* YOUR EXACT JOMA NAV */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:390px;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;align-items:flex-end;padding:5px 0 6px;z-index:1000;box-shadow:0 -2px 12px rgba(0,0,0,0.06)}
+.nav-item{flex:1;text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
+.nav-item i{font-size:19px}
+.nav-item.active{color:#1726a8;font-weight:800}
+.nav-center{position:relative;top:-14px;flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none}
+.nav-center-circle{width:48px;height:48px;background:#1726a8;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(23,38,168,0.4);border:3px solid #fff}
+.nav-center-circle i{color:#fff;font-size:20px}
+.nav-center-text{font-size:10px;color:#9aa0b6;margin-top:3px;font-weight:600}
 </style>
-
 </head>
-
-
 <body>
+<div class="phone">
 
+<header class="top">
+  <div class="top-left">
+    <a href="/dashboard" class="back loading-link"><i class="fa-solid fa-chevron-left"></i></a>
+    <h1>Deposit</h1>
+  </div>
+  <div class="notif"><i class="fa-solid fa-bell"></i></div>
+</header>
 
-<div class="header">
-
-<a href="/dashboard">
-← Dashboard
-</a>
-
-<a href="/history">
-History
-</a>
-
+<div class="brand-area">
+  <div class="brand-logo">J</div>
+  <div class="brand-name">JOMA <span>SPORT</span></div>
+  <div class="brand-subtitle">Secure Deposit Center</div>
 </div>
 
+<main class="content">
+<div class="deposit-card">
+  <div class="section-title"><h2>Deposit Funds</h2><p>Enter your details and create a deposit request for administrator review.</p></div>
 
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="flash-message {% if category == 'success' %}flash-success{% else %}flash-error{% endif %}">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
 
-{% with messages=get_flashed_messages() %}
-{% if messages %}
-{% for msg in messages %}
+  <div id="stepOne">
+    <label>Phone Number</label>
+    <input type="tel" id="phone" placeholder="Enter your phone number" required>
+    <label>Deposit Amount</label>
+    <input type="number" id="amount" placeholder="Minimum GHS 100" min="100" step="0.01" required>
+    <div class="amount-title">QUICK AMOUNTS</div>
+    <div class="amount-buttons">
+      <button type="button" onclick="setAmount(100)">GHS 100</button>
+      <button type="button" onclick="setAmount(200)">GHS 200</button>
+      <button type="button" onclick="setAmount(300)">GHS 300</button>
+      <button type="button" onclick="setAmount(600)">GHS 600</button>
+      <button type="button" onclick="setAmount(1000)">GHS 1000</button>
+      <button type="button" onclick="setAmount(2000)">GHS 2000</button>
+    </div>
+    <button type="button" class="next-button" onclick="showPaymentCard()">Continue to Payment</button>
+  </div>
 
-<div class="flash">
-{{msg}}
+  <div class="payment-card" id="paymentCard">
+    <div class="payment-title"><div class="payment-icon"><i class="fa-solid fa-wallet"></i></div><div><h3>Payment Instructions</h3><p>Complete your payment carefully</p></div></div>
+    <div class="amount-display">Selected Deposit<strong>GHS <span id="displayAmount">0.00</span></strong></div>
+    <p class="payment-description">Send the exact amount to the payment number below. After completing the payment, upload a clear screenshot of the successful transaction.</p>
+    <div class="payment-label">PAYMENT NUMBER</div>
+    <div class="payment-number"><input type="text" id="paymentNumber" value="0257425844" readonly><button type="button" class="copy-button" onclick="copyNumber()">Copy</button></div>
+    <div class="warning">⚠️ Make sure the payment is successful before submitting. Your deposit remains pending until reviewed and approved.</div>
+
+    <form method="POST" action="{{ url_for('deposit') }}" enctype="multipart/form-data" onsubmit="return validateDeposit()">
+      <input type="hidden" name="amount" id="finalAmount">
+      <input type="hidden" name="phone" id="finalPhone">
+      <input type="hidden" name="payment_number" id="finalPaymentNumber">
+      <label>Payment Screenshot</label>
+      <input type="file" id="screenshot" name="screenshot" accept="image/jpeg,image/png,image/webp" required>
+      <div class="preview-box" id="previewBox"><img id="previewImage" alt="preview"><div class="preview-text">Screenshot selected successfully.</div></div>
+      <button type="button" class="back-button" onclick="goBack()">← Change Amount</button>
+      <button type="submit" class="submit-button" id="submitButton">Submit Deposit Request</button>
+    </form>
+
+    <div class="info-box"><div class="info-icon"><i class="fa-solid fa-shield-check"></i></div><div class="info-text">Your screenshot is uploaded securely. The deposit will be credited to your account after 2 minutes. THANKS FOR YOUR UNDERSTANDING</div></div>
+  </div>
+
+  <div class="note">Minimum deposit: <strong>GHS 100</strong>.<br>Your deposit balance is credited after 2 minutes.</div>
 </div>
+</main>
 
-{% endfor %}
-{% endif %}
-{% endwith %}
+<div class="loading" id="loading"><div class="loading-box"><div class="loader"></div><div class="loading-text">Loading...</div></div></div>
 
-
-
-<div class="container">
-
-
-<div class="card">
-
-<div class="title">
-Deposit Funds
-</div>
-
-<div class="subtitle">
-Add money to your Creston account
-</div>
-
-<br>
-
-<div>
-Available Balance
-</div>
-
-<div class="balance">
-GHS {{available_balance}}
-</div>
-
-</div>
-
-
-
-
-<form action="/deposit" method="POST">
-
-
-<div class="card">
-
-
-<label>
-Quick Amount
-</label>
-
-
-<div class="amount-grid">
-
-<div class="amount" onclick="setAmount(60)">
-60
-</div>
-
-<div class="amount" onclick="setAmount(100)">
-100
-</div>
-
-<div class="amount" onclick="setAmount(300)">
-300
-</div>
-
-<div class="amount" onclick="setAmount(500)">
-500
-</div>
-
-<div class="amount" onclick="setAmount(1000)">
-1000
-</div>
-
-<div class="amount" onclick="setAmount(2000)">
-2000
-</div>
+<nav class="bottom-nav">
+  <a href="{{ url_for('dashboard') }}" class="nav-item loading-link active"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="{{ url_for('my_plan') }}" class="nav-item loading-link"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
+  <a href="{{ url_for('team') }}" class="nav-center loading-link"><div class="nav-center-circle"><i class="fa-solid fa-gift"></i></div><span class="nav-center-text">Team</span></a>
+  <a href="{{ url_for('team') }}" class="nav-item loading-link"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
+  <a href="{{ url_for('profile') }}" class="nav-item loading-link"><i class="fa-solid fa-user"></i><span>My</span></a>
+</nav>
 
 </div>
-
-
-
-<label>
-Deposit Amount (GHS)
-</label>
-
-
-<input 
-type="number"
-id="amount"
-name="amount"
-placeholder="Enter amount"
-min="50"
-required>
-
-
-
-<label>
-Payment Method
-</label>
-
-
-<select name="channel">
-
-<option value="MTN">
-MTN Mobile Money
-</option>
-
-
-<option value="Telecel">
-Telecel Cash
-</option>
-
-
-<option value="AirtelTigo">
-AirtelTigo Money
-</option>
-
-
-</select>
-
-
-
-<button>
-Continue Deposit
-</button>
-
-
-</div>
-
-
-</form>
-
-
-
-<div class="notice">
-
-<b>Deposit Rules</b>
-
-<br><br>
-
-• Minimum deposit: GHS 60
-<br>
-• Use your correct mobile money details
-<br>
-• Deposits are reviewed before approval
-
-</div>
-
-
-
-</div>
-
-
-
 <script>
-
-function setAmount(value){
-
-document.getElementById("amount").value=value;
-
+const loading=document.getElementById("loading");
+document.querySelectorAll(".loading-link").forEach(function(link){
+  link.addEventListener("click",function(e){e.preventDefault();const d=this.href;loading.style.display="flex";setTimeout(()=>{window.location.href=d},300);});
+});
+function setAmount(v){document.getElementById("amount").value=v}
+function showPaymentCard(){
+  const phone=document.getElementById("phone").value.trim();
+  const amount=parseFloat(document.getElementById("amount").value);
+  if(!phone){alert("Please enter your phone number.");return;}
+  if(!amount||amount<100){alert("Minimum deposit is GHS 100.");return;}
+  document.getElementById("displayAmount").textContent=amount.toFixed(2);
+  document.getElementById("finalAmount").value=amount.toFixed(2);
+  document.getElementById("finalPhone").value=phone;
+  document.getElementById("finalPaymentNumber").value=document.getElementById("paymentNumber").value.trim();
+  document.getElementById("paymentCard").style.display="block";
+  document.getElementById("stepOne").style.display="none";
+  window.scrollTo({top:0,behavior:"smooth"});
 }
-
+function goBack(){document.getElementById("paymentCard").style.display="none";document.getElementById("stepOne").style.display="block";}
+function copyNumber(){const n=document.getElementById("paymentNumber").value;if(navigator.clipboard){navigator.clipboard.writeText(n).then(()=>{alert("Payment number copied.")})}}
+document.getElementById("screenshot").addEventListener("change",function(){
+  const f=this.files[0];if(!f)return;if(!f.type.startsWith("image/")){alert("Please select an image file.");this.value="";return;}
+  const r=new FileReader();r.onload=function(e){document.getElementById("previewImage").src=e.target.result;document.getElementById("previewBox").style.display="block";};r.readAsDataURL(f);
+});
+function validateDeposit(){
+  const amount=parseFloat(document.getElementById("finalAmount").value);
+  const phone=document.getElementById("finalPhone").value.trim();
+  const pay=document.getElementById("finalPaymentNumber").value.trim();
+  const file=document.getElementById("screenshot").files[0];
+  if(!phone){alert("Phone number is required.");return false;}
+  if(!amount||amount<100){alert("Minimum deposit is GHS 100.");return false;}
+  if(!pay){alert("Payment number is missing.");return false;}
+  if(!file){alert("Please upload your payment screenshot.");return false;}
+  const allowed=["image/jpeg","image/png","image/webp"];if(!allowed.includes(file.type)){alert("Only JPG, PNG, WEBP allowed.");return false;}
+  if(file.size>5*1024*1024){alert("Max 5 MB.");return false;}
+  const b=document.getElementById("submitButton");b.disabled=true;b.innerHTML="Uploading...";loading.style.display="flex";return true;
+}
 </script>
-
-
 </body>
 </html>
