@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Support - JOMA SPORT</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
+.phone{width:100%;max-width:390px;min-height:100vh;background:#f1f2f7;position:relative;padding-bottom:90px;overflow:hidden}
+
+/* HEADER JOMA */
+.support-header{position:relative;width:100%;min-height:110px;margin:0;padding:14px;background:linear-gradient(135deg,#1726a8,#2a3cd1);border-radius:0 0 20px 20px;overflow:hidden;box-shadow:0 8px 20px rgba(23,38,168,.25)}
+.support-header::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 20%, rgba(255,255,255,.18), transparent 55%), radial-gradient(circle at 85% 80%, rgba(255,255,255,.09), transparent 50%)}
+.header-content{position:relative;z-index:2;display:flex;align-items:center;gap:12px;height:100%}
+.header-icon{width:44px;height:44px;flex-shrink:0;border-radius:12px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
+.header-text{flex:1}
+.header-text h1{color:#fff;font-size:17px;font-weight:900;letter-spacing:1.5px}
+.header-text p{margin-top:4px;color:rgba(255,255,255,.7);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700}
+.header-status{padding:5px 10px;border-radius:20px;background:#fff;color:#1726a8;font-size:8px;font-weight:900}
+
+.main-scroll{width:100%;height:calc(100vh - 110px);overflow-y:auto;padding:14px;padding-bottom:90px}
+.main-scroll::-webkit-scrollbar{display:none}
+
+.intro-card{background:#fff;border:1px solid #eef0f5;border-radius:14px;padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:11px;box-shadow:0 6px 18px rgba(25,34,90,.06)}
+.intro-icon{width:40px;height:40px;flex-shrink:0;border-radius:10px;background:#eef0ff;color:#1726a8;display:flex;align-items:center;justify-content:center;font-size:16px}
+.intro-text h3{color:#202330;font-size:12px;font-weight:800;margin-bottom:3px}
+.intro-text p{color:#85899a;font-size:10px;line-height:1.5}
+
+.section-header{display:flex;align-items:center;justify-content:space-between;margin:6px 2px 9px}
+.section-title{color:#202330;font-size:13px;font-weight:800}
+.section-count{color:#85899a;font-size:9px;font-weight:700}
+
+.support-card{width:100%;background:#fff;border:1px solid #eef0f5;border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 6px 18px rgba(25,34,90,.06)}
+.support-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.support-icon{width:42px;height:42px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.telegram{background:#e8f4ff;color:#229ed9;border:1px solid #d0e8ff}
+.whatsapp{background:#e8f9ef;color:#25d366;border:1px solid #c6f6d5}
+.customer{background:#eef0ff;color:#1726a8;border:1px solid #d9dcff}
+.support-info{flex:1;min-width:0}
+.support-info h2{color:#202330;font-size:12px;font-weight:800;margin-bottom:2px}
+.support-info p{color:#85899a;font-size:9px;line-height:1.4}
+.status{flex-shrink:0;color:#fff;background:#1726a8;padding:4px 8px;border-radius:20px;font-size:7px;font-weight:800}
+
+.support-btn{width:100%;min-height:38px;padding:7px;border-radius:10px;border:1px solid #1726a8;background:#1726a8;color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;font-size:10px;font-weight:800;box-shadow:0 4px 12px rgba(23,38,168,.2)}
+.support-btn:active{transform:scale(.98)}
+.support-btn i{font-size:12px}
+
+.info-card{margin-top:12px;padding:12px;background:#fff;border:1px solid #eef0f5;border-radius:14px;box-shadow:0 6px 18px rgba(25,34,90,.06)}
+.info-title{display:flex;align-items:center;gap:7px;color:#202330;font-size:11px;font-weight:800;margin-bottom:6px}
+.info-title i{color:#1726a8}
+.info-card p{color:#85899a;font-size:9px;line-height:1.5}
+.info-row{display:flex;align-items:center;gap:8px;margin-top:9px}
+.info-row i{width:17px;color:#1726a8;font-size:10px;text-align:center}
+.info-row span{color:#666;font-size:9px;line-height:1.4}
+
+.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px)}
+.loading-overlay.active{display:flex}
+.loading-box{width:100px;padding:16px;background:#fff;border:1px solid #eef0f5;border-radius:12px;text-align:center}
+.loading-spinner{width:26px;height:26px;margin:0 auto 8px;border:3px solid #eef0f5;border-top-color:#1726a8;border-radius:50%;animation:spin .8s linear infinite}
+.loading-text{color:#85899a;font-size:9px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* YOUR EXACT JOMA NAV */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:390px;background:#fff;border-top:1px solid #e9e9ef;display:flex;justify-content:space-around;align-items:flex-end;padding:5px 0 6px;z-index:1000;box-shadow:0 -2px 12px rgba(0,0,0,0.06)}
+.nav-item{flex:1;text-align:center;text-decoration:none;color:#9aa0b6;font-size:10px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0}
+.nav-item i{font-size:19px}
+.nav-item.active{color:#1726a8;font-weight:800}
+.nav-center{position:relative;top:-14px;flex:1;display:flex;flex-direction:column;align-items:center;text-decoration:none}
+.nav-center-circle{width:48px;height:48px;background:#1726a8;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(23,38,168,0.4);border:3px solid #fff}
+.nav-center-circle i{color:#fff;font-size:20px}
+.nav-center-text{font-size:10px;color:#9aa0b6;margin-top:3px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="phone">
+
+<section class="support-header">
+  <div class="header-content">
+    <div class="header-icon"><i class="fa-solid fa-headset"></i></div>
+    <div class="header-text"><h1>SUPPORT</h1><p>JOMA SPORT CENTER</p></div>
+    <div class="header-status">ONLINE</div>
+  </div>
+</section>
+
+<main class="main-scroll">
+
+  <section class="intro-card">
+    <div class="intro-icon"><i class="fa-solid fa-circle-question"></i></div>
+    <div class="intro-text"><h3>How can we help?</h3><p>Choose one of the support channels below to get assistance or receive platform updates.</p></div>
+  </section>
+
+  <div class="section-header"><h2 class="section-title">Contact & Community</h2><span class="section-count">3 CHANNELS</span></div>
+
+  <section class="support-card">
+    <div class="support-top">
+      <div class="support-icon telegram"><i class="fa-brands fa-telegram"></i></div>
+      <div class="support-info"><h2>Telegram Channel</h2><p>Get announcements, updates and community information.</p></div>
+      <span class="status">ACTIVE</span>
+    </div>
+    <a class="support-btn" href="https://t.me/JOMASPORT96" target="_blank"><i class="fa-brands fa-telegram"></i> Join Telegram</a>
+  </section>
+
+  <section class="support-card">
+    <div class="support-top">
+      <div class="support-icon telegram"><i class="fa-brands fa-whatsapp"></i></div>
+      <div class="support-info"><h2> telegram Group</h2><p>Connect with the community and receive important updates.</p></div>
+      <span class="status">ACTIVE</span>
+    </div>
+    <a class="support-btn" href="https://t.me/JOMASPORT95" target="_blank"><i class="fa-brands fa-whatsapp"></i> Join WhatsApp</a>
+  </section>
+
+  <section class="support-card">
+    <div class="support-top">
+      <div class="support-icon customer"><i class="fa-solid fa-headset"></i></div>
+      <div class="support-info"><h2>Customer Service</h2><p>Contact the support team for assistance with your account.</p></div>
+      <span class="status">ONLINE</span>
+    </div>
+    <a class="support-btn" href="https://t.me/Jomasportcs" target="_blank"><i class="fa-brands fa-telegram"></i> Contact Support</a>
+  </section>
+
+  <section class="info-card">
+    <div class="info-title"><i class="fa-solid fa-circle-info"></i><span>Support Information</span></div>
+    <p>For account-related assistance, please use the official support channel and provide the relevant information needed to identify your request.</p>
+    <div class="info-row"><i class="fa-solid fa-shield-halved"></i><span>Never share your password or security PIN.</span></div>
+    <div class="info-row"><i class="fa-solid fa-clock"></i><span>Please allow time for your request to be reviewed.</span></div>
+  </section>
+
+</main>
+
+<nav class="bottom-nav">
+  <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="{{ url_for('my_plan') }}" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>Income</span></a>
+  <a href="{{ url_for('team_members') }}" class="nav-center"><div class="nav-center-circle"><i class="fa-solid fa-gift"></i></div><span class="nav-center-text">Team</span></a>
+  <a href="{{ url_for('team') }}" class="nav-item"><i class="fa-solid fa-share-nodes"></i><span>Share</span></a>
+  <a href="{{ url_for('profile') }}" class="nav-item"><i class="fa-solid fa-user"></i><span>My</span></a>
+</nav>
+
+<div id="loadingOverlay" class="loading-overlay"><div class="loading-box"><div class="loading-spinner"></div><div class="loading-text">Loading...</div></div></div>
+
+</div>
+
+<script>
+document.addEventListener("click", function (event) {
+  const link = event.target.closest("a");
+  const button = event.target.closest("button");
+  if (!link && !button) return;
+  if (button && button.disabled) return;
+  const overlay = document.getElementById("loadingOverlay");
+  if (overlay) overlay.classList.add("active");
+});
+document.addEventListener("submit", function () {
+  const overlay = document.getElementById("loadingOverlay");
+  if (overlay) overlay.classList.add("active");
+});
+</script>
+</body>
+</html>
