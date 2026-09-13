@@ -17,7 +17,7 @@
   .label{color:#777b86;font-size:9px;font-weight:600}.value{color:#26306f;font-size:11px;font-weight:800}
   .product-graphic{width:105px;min-width:105px;height:165px;border-radius:10px;overflow:hidden;position:relative;background:#eef0ff;border:1px solid #d0d6ff}
   .product-graphic img{width:100%;height:100%;object-fit:cover}
-  .vip-badge{position:absolute;bottom:0;left:0;right:0;padding:7px 0;background:rgba(0,0,0,.85);color:#fff;text-align:center;font-size:8px;font-weight:800}
+  .vip-badge{position:absolute;bottom:0;left:0;right:0;padding:7px 0;background:rgba(0,0,0,.85);color:#fff;text-align:center;font-size:9px;font-weight:800}
   .status-free{position:absolute;top:0;left:0;right:0;padding:5px 0;text-align:center;font-size:8px;font-weight:700;z-index:2;color:#fff}
   .countdown-bar{width:100%;margin-top:8px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;background:#eef0ff;border-radius:8px;border:1px solid #d0d6ff}
   .countdown-label{color:#6b6e9a;font-size:8px;font-weight:600}.countdown-timer{color:#101d85;font-size:11px;font-weight:900}.countdown-timer.ready{color:#15965d}
@@ -43,61 +43,51 @@
 </div>
 
 <div class="container mt-3">
-  <h6 class="mb-3" style="font-size:13px;font-weight:700">My Products & Offers ({{ investments|length if investments else user_plans|length }})</h6>
+  <h6 class="mb-3" style="font-size:13px;font-weight:700">My VIP Plans ({{ investments|length if investments else user_plans|length }})</h6>
 
   {% set all_invest = investments if investments else user_plans %}
   {% if all_invest %}
     {% for p in all_invest %}
     {% set raw = p.raw if p.raw is defined else p %}
     {% set name = (p.name if p.name is defined else p.plan_name) %}
-    {% set ptype = (p.type if p.type is defined else 'PLAN') %}
 
-    <!-- PHOTO LOGIC: OFFERS from DB, VIP from name -->
-    {% if ptype == 'OFFER' %}
-      <!-- FOR OFFERS - Try all possible image fields from admin_offers -->
-      {% if p.image_url is defined and p.image_url %}{% set photo = p.image_url %}
-      {% elif p.image is defined and p.image %}{% set photo = p.image %}
-      {% elif raw.image_url is defined and raw.image_url %}{% set photo = raw.image_url %}
-      {% elif raw.image is defined and raw.image %}{% set photo = raw.image %}
-      {% elif raw.offer and raw.offer.image_url is defined %}{% set photo = raw.offer.image_url %}
-      {% elif raw.offer and raw.offer.image is defined %}{% set photo = raw.offer.image %}
-      {% else %}{% set photo = 'images/default_offer.jpg' %}
-      {% endif %}
-      {% set is_offer = true %}
+    <!-- ===== ADD YOUR PHOTOS HERE ONLY - BY PLAN NAME ===== -->
+    {% if name == "JOMA VIP 1" %}
+      {% set photo = "images/Screenshot_20260826_034656_Google.jpg" %}
+    {% elif name == "JOMA VIP 2" %}
+      {% set photo = "images/Screenshot_20260901_041628_Chrome.jpg" %}
+    {% elif name == "JOMA VIP 3" %}
+      {% set photo = "images/Screenshot_20260901_041818_Chrome.jpg" %}
+    {% elif name == "JOMA VIP 4" %}
+      {% set photo = "images/Screenshot_20260901_041933_Chrome.jpg" %}
+    {% elif name == "JOMA VIP 5" %}
+      {% set photo = "images/Screenshot_20260901_041800_Chrome.jpg" %}
+    {% elif name == "JOMA VIP 6" %}
+      {% set photo = "images/Screenshot_20260901_041835_Chrome.jpg" %}
+    {% elif name == "JOMA VIP 7" %}
+      {% set photo = "images/Screenshot_20260901_041628_Chrome.jpg" %}
+    {% elif name == "JOMA VIP 8" %}
+      {% set photo = "images/Screenshot_20260901_041835_Chrome.jpg" %}
+    {% elif name == "JOMA VIP 9" %}
+      {% set photo = "images/Screenshot_20260901_041720_Chrome.jpg" %}
+    {% elif name == "JOMA VIP 10" %}
+      {% set photo = "images/Screenshot_20260901_041818_Chrome.jpg" %}
     {% else %}
-      <!-- FOR VIP PLANS - Map by name -->
-      {% if name == "JOMA VIP 1" %}{% set photo = "images/Screenshot_20260826_034656_Google.jpg" %}
-      {% elif name == "JOMA VIP 2" %}{% set photo = "images/Screenshot_20260901_041628_Chrome.jpg" %}
-      {% elif name == "JOMA VIP 3" %}{% set photo = "images/Screenshot_20260901_041818_Chrome.jpg" %}
-      {% elif name == "JOMA VIP 4" %}{% set photo = "images/Screenshot_20260901_041933_Chrome.jpg" %}
-      {% elif name == "JOMA VIP 5" %}{% set photo = "images/Screenshot_20260901_041800_Chrome.jpg" %}
-      {% elif name == "JOMA VIP 6" %}{% set photo = "images/Screenshot_20260901_041835_Chrome.jpg" %}
-      {% elif name == "JOMA VIP 7" %}{% set photo = "images/Screenshot_20260901_041628_Chrome.jpg" %}
-      {% elif name == "JOMA VIP 8" %}{% set photo = "images/Screenshot_20260901_041835_Chrome.jpg" %}
-      {% elif name == "JOMA VIP 9" %}{% set photo = "images/Screenshot_20260901_041720_Chrome.jpg" %}
-      {% elif name == "JOMA VIP 10" %}{% set photo = "images/Screenshot_20260901_041818_Chrome.jpg" %}
-      {% else %}{% set photo = "images/default.jpg" %}
-      {% endif %}
-      {% set is_offer = false %}
+      {% set photo = "images/default.jpg" %}
     {% endif %}
+    <!-- ===== END PHOTO MAP ===== -->
 
     <div class="invest-card">
       <div class="d-flex gap-2">
         <div class="info-rows">
-          <div class="info-row"><span class="label">Type</span><span class="value" style="background:{% if is_offer %}#ff7a00{% else %}#1726a8{% endif %};color:#fff;padding:2px 8px;border-radius:20px;font-size:8px">{{ 'OFFER' if is_offer else 'VIP' }}</span></div>
-          <div class="info-row"><span class="label">Plan</span><span class="value">{{ name }}</span></div>
+          <div class="info-row"><span class="label">Plan</span><span class="value" style="background:#1726a8;color:#fff;padding:2px 8px;border-radius:20px;font-size:8px">{{ name }}</span></div>
           <div class="info-row"><span class="label">Price</span><span class="value">GHS {{ "%.2f"|format(p.investment|float if p.investment is defined else p.investment_amount|float) }}</span></div>
           <div class="info-row"><span class="label">Daily profit</span><span class="value">GHS {{ "%.2f"|format(p.daily|float if p.daily is defined else p.daily_income|float) }}</span></div>
           <div class="info-row"><span class="label">Days</span><span class="value">{{ p.duration }}</span></div>
         </div>
         <div class="product-graphic">
-          <div class="status-free" style="background:{% if raw.can_claim %}#32c982{% else %}{% if is_offer %}#ff7a00{% else %}#1726a8{% endif %}{% endif %}">{{ 'READY' if raw.can_claim else 'ACTIVE' }}</div>
-          <!-- This will auto detect if photo is full URL or static file -->
-          {% if photo.startswith('http') or photo.startswith('https') %}
-            <img src="{{ photo }}" alt="{{ name }}">
-          {% else %}
-            <img src="{{ url_for('static', filename=photo) }}" alt="{{ name }}" onerror="this.src='https://via.placeholder.com/105x165?text={{ name|replace(' ', '+') }}'">
-          {% endif %}
+          <div class="status-free" style="background:{% if raw.can_claim %}#32c982{% else %}#1726a8{% endif %}">{{ 'READY' if raw.can_claim else 'ACTIVE' }}</div>
+          <img src="{{ url_for('static', filename=photo) }}" alt="{{ name }}">
           <div class="vip-badge">{{ name }}</div>
         </div>
       </div>
@@ -107,12 +97,12 @@
       </div>
       <form method="POST" action="{{ url_for('my_plan') }}">
         <input type="hidden" name="user_plan_id" value="{{ raw.id }}">
-        <button class="claim-button" id="btn-{{ raw.id }}" {% if not raw.can_claim %}disabled{% endif %} style="background:{% if is_offer %}#ff7a00{% else %}#1726a8{% endif %}">{{ "Claim Income" if raw.can_claim else "Income Not Ready" }}</button>
+        <button class="claim-button" id="btn-{{ raw.id }}" {% if not raw.can_claim %}disabled{% endif %}>{{ "Claim Income" if raw.can_claim else "Income Not Ready" }}</button>
       </form>
     </div>
     {% endfor %}
   {% else %}
-    <div style="background:#fff;border-radius:20px;padding:40px 20px;text-align:center;margin-top:20px"><i class="fa-solid fa-box-open fa-2x text-muted mb-2"></i><h6>No Investments Yet</h6><p class="text-muted" style="font-size:11px">Buy a plan or offer to start earning</p><a href="/dashboard" class="btn btn-primary btn-sm rounded-pill">Buy Now</a></div>
+    <div style="background:#fff;border-radius:20px;padding:40px 20px;text-align:center;margin-top:20px"><i class="fa-solid fa-box-open fa-2x text-muted mb-2"></i><h6>No Investments Yet</h6><p class="text-muted" style="font-size:11px">Buy a VIP plan to start earning</p><a href="/dashboard" class="btn btn-primary btn-sm rounded-pill">Buy Now</a></div>
   {% endif %}
 </div>
 
