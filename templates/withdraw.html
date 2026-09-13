@@ -140,7 +140,7 @@ body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
 
 <div class="notice">
   <div class="notice-title"><i class="fa-solid fa-circle-exclamation"></i> Withdrawal Notice</div>
-  <p>Minimum withdrawal: <strong>GHS 30.00</strong><br>Withdrawal fee: <strong>18%</strong><br>Please verify your withdrawal account before submitting your request.</p>
+  <p>Minimum withdrawal: <strong>GHS 32.00</strong><br>Withdrawal fee: <strong>17%</strong><br>Please verify your withdrawal account before submitting your request.</p>
 </div>
 
 <div class="card">
@@ -164,7 +164,7 @@ body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
   <div class="card-title"><i class="fa-solid fa-money-bill-trend-up"></i><span>Withdrawal Request</span></div>
   <form method="POST" action="{{ url_for('request_withdrawal') }}" id="withdrawForm" onsubmit="return validateWithdrawal()">
     <label class="input-label">Withdrawal Amount</label>
-    <div class="input-wrapper"><span class="currency">₵</span><input type="number" id="withdrawAmount" name="amount" min="30" step="0.01" max="{{ account.withdraw_account or 0 }}" placeholder="Enter amount" required></div>
+    <div class="input-wrapper"><span class="currency">₵</span><input type="number" id="withdrawAmount" name="amount" min="32" step="0.01" max="{{ account.withdraw_account or 0 }}" placeholder="Enter amount" required></div>
     <div class="quick-title">QUICK AMOUNT</div>
     <div class="quick-amounts">
       <button type="button" class="quick-btn" onclick="setAmount(32)">GHS 32</button>
@@ -176,7 +176,7 @@ body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
     </div>
     <div class="fee-box">
       <div class="fee-row"><span>Withdrawal Amount</span><strong id="displayAmount">GHS 0.00</strong></div>
-      <div class="fee-row"><span>Withdrawal Fee (18%)</span><strong id="displayFee">GHS 0.00</strong></div>
+      <div class="fee-row"><span>Withdrawal Fee (17%)</span><strong id="displayFee">GHS 0.00</strong></div>
       <div class="fee-row total"><span>You Receive</span><strong id="displayReceive">GHS 0.00</strong></div>
     </div>
     <label class="input-label">Withdrawal Password</label>
