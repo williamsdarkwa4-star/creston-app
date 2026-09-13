@@ -369,14 +369,15 @@
                         {% endif %}
                     </a>
 
-                    <a
-                        href="{{ url_for('admin_delete_offer',
-                                         offer_id=offer.id) }}"
-                        class="btn"
-                        style="background:#fff0f0;color:#d64545;"
-                        onclick="return confirm('Delete this offer?');">
-                        Delete
-                    </a>
+                    <form method="POST"
+      action="{{ url_for('admin_delete_offer', offer_id=offer.id) }}"
+      onsubmit="return confirm('Delete this offer?');">
+
+    <button type="submit">
+        Delete
+    </button>
+
+</form>
 
                 </div>
 
