@@ -231,7 +231,7 @@ function validateWithdrawal(){
   const selectedAccount=document.querySelector('input[name="account_id"]:checked');
   const password=document.querySelector('input[name="password"]');
   if(!selectedAccount){alert("Please select a withdrawal account.");return false;}
-  if(amount<30){alert("Minimum withdrawal amount is GHS 30.00.");return false;}
+  if(amount<32){alert("Minimum withdrawal amount is GHS 32.00.");return false;}
   if(amount>maxBalance){alert("Withdrawal amount cannot be greater than your available balance.");return false;}
   if(!password||!password.value.trim()){alert("Please enter your withdrawal password.");return false;}
   const button=document.getElementById("submitButton");
