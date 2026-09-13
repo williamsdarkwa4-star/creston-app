@@ -117,23 +117,24 @@ def load_user(user_id):
 # PLATFORM SETTINGS & PLANS
 # ============================================================
 
-MIN_DEPOSIT = Decimal("100.00")
-MIN_WITHDRAWAL = Decimal("32.00")
+MIN_DEPOSIT = Decimal("70.00")
+MIN_WITHDRAWAL = Decimal("10.00")
 STARTING_DEPOSIT_BALANCE = Decimal("0")
 CLAIM_INTERVAL_HOURS = 24
 
 REFERRAL_PERCENTS: List[Decimal] = [Decimal("0.20"), Decimal("0.03"), Decimal("0.01")]
 
 PLANS = {
-    1: {"name": "JOMA VIP 1", "investment": Decimal("100.00"), "daily": Decimal("20.00"), "duration": 180, "image_url": "images/Screenshot_20260826_034656_Google.jpg"},
-    2: {"name": "JOMA VIP 2", "investment": Decimal("250.00"), "daily": Decimal("45.00"), "duration": 180,"image_url":"images/Screenshot_20260901_041628_Chrome.jpg"},
-    3: {"name": "JOMA VIP 3", "investment": Decimal("600.00"), "daily": Decimal("120.00"), "duration": 180,"image_url":"images/Screenshot_20260901_041818_Chrome.jpg"},
-    4: {"name": "JOMA VIP 4", "investment": Decimal("1000.00"), "daily": Decimal("120.00"), "duration": 180},
-    5: {"name": "INFINIX 5", "investment": Decimal("2500.00"), "daily": Decimal("500.00"), "duration": 180},
-    6: {"name": "INFINIX 6", "investment": Decimal("5000.00"), "daily": Decimal("1000.00"), "duration": 180},
-    7: {"name": "INFINIX 7", "investment": Decimal("8000.00"), "daily": Decimal("1600.00"), "duration": 180},
-    8: {"name": "INFINIX 8", "investment": Decimal("10000.00"), "daily": Decimal("2000.00"), "duration": 180},
-    9: {"name": "JOMA VIP 9", "investment": Decimal("20000.00"), "daily": Decimal("3600.00"), "duration": 180},
+    1: {"name": "JOMA VIP 1", "investment": Decimal("70.00"), "daily": Decimal("8.00"), "duration": 200, "image_url": "images/Screenshot_20260826_034656_Google.jpg"},
+    2: {"name": "JOMA VIP 2", "investment": Decimal("120.00"), "daily": Decimal("25.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041628_Chrome.jpg"},
+    3: {"name": "JOMA VIP 3", "investment": Decimal("250.00"), "daily": Decimal("45.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041818_Chrome.jpg"},
+    4: {"name": "JOMA VIP 4", "investment": Decimal("300.00"), "daily": Decimal("50.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041933_Chrome.jpg"},
+    5: {"name": "JOMA VIP 5", "investment": Decimal("450.00"), "daily": Decimal("85.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041800_Chrome.jpg"},
+    6: {"name": "JOMA VIP 6", "investment": Decimal("600.00"), "daily": Decimal("100.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041835_Chrome.jpg"},
+    7: {"name": "JOMA VIP 7", "investment": Decimal("850.00"), "daily": Decimal("188.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041628_Chrome.jpg"},
+    8: {"name": "JOMA VIP 8", "investment": Decimal("1000.00"), "daily": Decimal("300.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041835_Chrome.jpg"},
+    9: {"name": "JOMA VIP 9", "investment": Decimal("1600.00"), "daily": Decimal("450.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041720_Chrome.jpg"},
+    10: {"name": "JOMA VIP 10", "investment": Decimal("2000.00"), "daily": Decimal("600.00"), "duration": 200,"image_url":"images/Screenshot_20260901_041818_Chrome.jpg"},
 }
 
 # ============================================================
