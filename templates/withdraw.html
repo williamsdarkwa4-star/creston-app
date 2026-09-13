@@ -167,12 +167,12 @@ body{background:#0b0e2a;display:flex;justify-content:center;min-height:100vh}
     <div class="input-wrapper"><span class="currency">₵</span><input type="number" id="withdrawAmount" name="amount" min="30" step="0.01" max="{{ account.withdraw_account or 0 }}" placeholder="Enter amount" required></div>
     <div class="quick-title">QUICK AMOUNT</div>
     <div class="quick-amounts">
-      <button type="button" class="quick-btn" onclick="setAmount(30)">GHS 30</button>
-      <button type="button" class="quick-btn" onclick="setAmount(45)">GHS 45</button>
+      <button type="button" class="quick-btn" onclick="setAmount(32)">GHS 32</button>
+      <button type="button" class="quick-btn" onclick="setAmount(50)">GHS 50</button>
       <button type="button" class="quick-btn" onclick="setAmount(100)">GHS 100</button>
-      <button type="button" class="quick-btn" onclick="setAmount(200)">GHS 200</button>
       <button type="button" class="quick-btn" onclick="setAmount(300)">GHS 300</button>
-      <button type="button" class="quick-btn" onclick="setAmount(400)">GHS 400</button>
+      <button type="button" class="quick-btn" onclick="setAmount(450)">GHS 450</button>
+      <button type="button" class="quick-btn" onclick="setAmount(1000)">GHS 1000</button>
     </div>
     <div class="fee-box">
       <div class="fee-row"><span>Withdrawal Amount</span><strong id="displayAmount">GHS 0.00</strong></div>
@@ -215,7 +215,7 @@ const displayReceive=document.getElementById("displayReceive");
 function calculateWithdrawal(){
   if(!amountInput) return;
   const amount=parseFloat(amountInput.value)||0;
-  const fee=amount*0.18;
+  const fee=amount*0.19;
   const receive=amount-fee;
   displayAmount.textContent="GHS "+amount.toFixed(2);
   displayFee.textContent="GHS "+fee.toFixed(2);
