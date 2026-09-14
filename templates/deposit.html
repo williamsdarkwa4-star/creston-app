@@ -123,7 +123,7 @@ input[type="file"]::file-selector-button{border:0;background:#1726a8;color:#fff;
     <label>Phone Number</label>
     <input type="tel" id="phone" placeholder="Enter your phone number" required>
     <label>Deposit Amount</label>
-    <input type="number" id="amount" placeholder="Minimum GHS 100" min="100" step="0.01" required>
+    <input type="number" id="amount" placeholder="Minimum GHS 70" min="70" step="0.01" required>
     <div class="amount-title">QUICK AMOUNTS</div>
     <div class="amount-buttons">
       <button type="button" onclick="setAmount(70)">GHS 70</button>
@@ -183,7 +183,7 @@ function showPaymentCard(){
   const phone=document.getElementById("phone").value.trim();
   const amount=parseFloat(document.getElementById("amount").value);
   if(!phone){alert("Please enter your phone number.");return;}
-  if(!amount||amount<100){alert("Minimum deposit is GHS 70.");return;}
+  if(!amount||amount<70){alert("Minimum deposit is GHS 70.");return;}
   document.getElementById("displayAmount").textContent=amount.toFixed(2);
   document.getElementById("finalAmount").value=amount.toFixed(2);
   document.getElementById("finalPhone").value=phone;
