@@ -158,7 +158,7 @@ input[type="file"]::file-selector-button{border:0;background:#1726a8;color:#fff;
     <div class="info-box"><div class="info-icon"><i class="fa-solid fa-shield-check"></i></div><div class="info-text">Your screenshot is uploaded securely. The deposit will be credited to your account after 2 minutes. THANKS FOR YOUR UNDERSTANDING</div></div>
   </div>
 
-  <div class="note">Minimum deposit: <strong>GHS 100</strong>.<br>Your deposit balance is credited after 2 minutes.</div>
+  <div class="note">Minimum deposit: <strong>GHS 70</strong>.<br>Your deposit balance is credited after 2 minutes.</div>
 </div>
 </main>
 
@@ -183,7 +183,7 @@ function showPaymentCard(){
   const phone=document.getElementById("phone").value.trim();
   const amount=parseFloat(document.getElementById("amount").value);
   if(!phone){alert("Please enter your phone number.");return;}
-  if(!amount||amount<100){alert("Minimum deposit is GHS 100.");return;}
+  if(!amount||amount<100){alert("Minimum deposit is GHS 70.");return;}
   document.getElementById("displayAmount").textContent=amount.toFixed(2);
   document.getElementById("finalAmount").value=amount.toFixed(2);
   document.getElementById("finalPhone").value=phone;
@@ -204,7 +204,7 @@ function validateDeposit(){
   const pay=document.getElementById("finalPaymentNumber").value.trim();
   const file=document.getElementById("screenshot").files[0];
   if(!phone){alert("Phone number is required.");return false;}
-  if(!amount||amount<100){alert("Minimum deposit is GHS 100.");return false;}
+  if(!amount||amount<100){alert("Minimum deposit is GHS 70.");return false;}
   if(!pay){alert("Payment number is missing.");return false;}
   if(!file){alert("Please upload your payment screenshot.");return false;}
   const allowed=["image/jpeg","image/png","image/webp"];if(!allowed.includes(file.type)){alert("Only JPG, PNG, WEBP allowed.");return false;}
